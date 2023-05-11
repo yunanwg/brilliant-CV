@@ -92,6 +92,14 @@
   str
 )}
 
+#let headerQuoteStyle(str) = {text(
+  font: bodyFont,
+  size: 10pt,
+  weight: "medium",
+  fill: accentColor,
+  str
+)}
+
 #let sectionTitleStyle(str, color:black) = {text(
   font: bodyFont, 
   size: 16pt, 
@@ -236,7 +244,10 @@
   stroke: none,
   row-gutter: 6mm,
   [#headerFirstNameStyle(firstName) #h(5pt) #headerLastNameStyle(lastName)],
-  [#headerInfoStyle(makeHeaderInfo())]
+  [#headerInfoStyle(makeHeaderInfo())],
+  if headerQuote != "" [
+    #headerQuoteStyle(headerQuote)
+  ]
 )
 
 #let makeHeaderPhotoSection() = {

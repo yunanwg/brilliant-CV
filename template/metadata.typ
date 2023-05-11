@@ -20,6 +20,8 @@
   //extraInfo: "",
 )
 
+#let headerQuote = []
+
 #let cvFooterInternational = (
   "": "Cirriculum Vitae",
   "en": "Cirriculum Vitae",
