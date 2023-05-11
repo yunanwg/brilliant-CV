@@ -1,7 +1,7 @@
 // awesomeCV-Typst 2023-04-29 mintyfrankie
 // Github Repo: https://github.com/mintyfrankie/awesomeCV-Typst
 
-#import "metadata.typ": *
+#import "../metadata.typ": *
 
 /* Layout */
 
