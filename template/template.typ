@@ -57,8 +57,8 @@
 )
 
 #let regularColors = (
-  lightgray: rgb("#333333"),
-  darkgray: rgb("#5D5D5D"),
+  lightgray: rgb("#343a40"),
+  darkgray: rgb("#212529"),
 )
 
 #let accentColor = awesomeColors.at(awesomeColor)
@@ -66,8 +66,9 @@
 #let headerFont = "Roboto"
 #let bodyFont = "Source Sans Pro"
 
-#let beforeSectionSkip = 6pt
-#let beforeEntrySkip = 6pt
+#let beforeSectionSkip = 2pt
+#let beforeEntrySkip = 2pt
+#let beforeEntryDescriptionSkip = 2pt
 
 #let headerFirstNameStyle(str) = {text(
   font: headerFont,
@@ -110,7 +111,7 @@
 #let entryA2Style(str) = {align(right, text(
   font: bodyFont,
   size: 9pt,
-  weight: "light",
+  weight: "medium",
   fill: accentColor,
   style: "oblique",
   str
@@ -119,15 +120,15 @@
 #let entryB1Style(str) = {text(
   font: bodyFont,
   size: 8pt,
-  fill: regularColors.darkgray,
-  weight: "regular",
+  fill: accentColor,
+  weight: "medium",
   smallcaps(str)
 )}
 
 #let entryB2Style(str) = {align(right, text(
   font: bodyFont,
   size: 8pt,
-  weight: "regular",
+  weight: "medium",
   fill: gray,
   style: "oblique",
   str
@@ -136,9 +137,12 @@
 #let entryDescriptionStyle(str) = {text(
   font: bodyFont,
   size: 9pt,
-  weight: "light",
+  weight: "regular",
   fill: regularColors.lightgray,
-  str
+  {
+    v(beforeEntryDescriptionSkip)
+    str
+  }
 )}
 
 #let skillTypeStyle(str) = {align(right, text(
@@ -151,7 +155,7 @@
 #let skillInfoStyle(str) = {text(
   font: bodyFont,
   size: 9pt,
-  weight: "light",
+  weight: "regular",
   str
 )}
 
