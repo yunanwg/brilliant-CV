@@ -1,13 +1,16 @@
 // NOTICE: Copy this file to your root folder.
 
-// Optional: skyblue, red, nephritis, concrete, darknight
-#let awesomeColor = "skyblue" 
-// Leave blank if profil photo is not needed
-#let profilePhoto = "../src/avatar.png"
+/* Layout Setting */
 
-// INFO: value must matches folder suffix; i.e "zh" -> "./modules_zh"
-#let varLanguage = "fr"
-#let varEntrySocietyFirst = false
+#let awesomeColor = "skyblue" // Optional: skyblue, red, nephritis, concrete, darknight
+
+#let profilePhoto = "../src/avatar.png" // Leave blank if profil photo is not needed
+
+#let varLanguage = "fr" // INFO: value must matches folder suffix; i.e "zh" -> "./modules_zh"
+
+#let varEntrySocietyFirst = false // Decide if you want to put your company in bold or your position in bold
+
+/* Personal Information */
 
 #let firstName = "John"
 #let lastName = "Doe"
