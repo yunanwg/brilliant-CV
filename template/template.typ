@@ -303,9 +303,9 @@
     stroke: none,
     row-gutter: 6pt,
     align: auto,
-    {entryA1Style(title)},
+    {if varEntrySocietyFirst {entryA1Style(society)} else {entryA1Style(title)}},
     {entryA2Style(date)},
-    {entryB1Style(society)},
+    {if varEntrySocietyFirst {entryB1Style(title)} else {entryB1Style(society)}},
     {entryB2Style(location)},
   )
   entryDescriptionStyle(description)
