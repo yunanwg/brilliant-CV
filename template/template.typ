@@ -167,6 +167,36 @@
   str
 )}
 
+#let honorDateStyle(str) = {align(right, text(
+  font: bodyFont,
+  size: 9pt,
+  weight: "regular",
+  str))
+}
+
+#let honorTitleStyle(str) = {text(
+  font: bodyFont,
+  size: 9pt,
+  weight: "bold",
+  str
+)}
+
+#let honorIssuerStyle(str) = {text(
+  font: bodyFont,
+  size: 9pt,
+  weight: "regular",
+  str
+)}
+
+#let honorLocationStyle(str) = {align(right, text(
+  font: bodyFont,
+  size: 9pt,
+  weight: "medium",
+  fill: accentColor,
+  style: "oblique",
+  str
+))}
+
 #let footerStyle(str) = {text(
   font: bodyFont,
   size: 8pt,
@@ -322,6 +352,29 @@
     stroke: none,
     skillTypeStyle(type),
     skillInfoStyle(info),
+  )
+  v(-6pt)
+}
+
+#let cvHonor(
+  date: "1990",
+  title: "Title",
+  issuer: "",
+  location: ""
+) = {
+  table(
+    columns: (16%, 1fr, 15%),
+    inset: 0pt,
+    column-gutter: 10pt,
+    align: horizon,
+    stroke: none,
+    honorDateStyle(date),
+    if issuer == "" {
+      honorTitleStyle(title)
+    } else [
+      #honorTitleStyle(title), #honorIssuerStyle(issuer)
+    ],
+    honorLocationStyle(location)
   )
   v(-6pt)
 }
