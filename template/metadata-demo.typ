@@ -24,7 +24,7 @@
   //extraInfo: "",
 )
 
-#let headerQuote = []
+#let headerQuote = [Experienced Data Analyst looking for a full time job starting from now]
 
 #let cvFooterInternational = (
   "": "Cirriculum Vitae",
