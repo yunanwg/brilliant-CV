@@ -27,8 +27,8 @@
 #let headerQuote = [Experienced Data Analyst looking for a full time job starting from now]
 
 #let cvFooterInternational = (
-  "": "Cirriculum Vitae",
-  "en": "Cirriculum Vitae",
+  "": "Curriculum vitae",
+  "en": "Curriculum vitae",
   "fr": "Résumé"
 )
 
