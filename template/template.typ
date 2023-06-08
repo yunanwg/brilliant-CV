@@ -6,7 +6,7 @@
 /* Layout */
 
 #let layout(doc) = {
-  set text(font: "Source Sans Pro")
+  set text(font: ("Source Sans Pro", "Font Awesome 6 Brands", "Font Awesome 6 Free"))
   set align(left)
   set page(
     paper: "a4",
@@ -64,7 +64,6 @@
 #let accentColor = awesomeColors.at(awesomeColor)
 
 #let headerFont = "Roboto"
-#let bodyFont = "Source Sans Pro"
 
 #let beforeSectionSkip = 2pt
 #let beforeEntrySkip = 2pt
@@ -86,14 +85,12 @@
 )}
 
 #let headerInfoStyle(str) = {text(
-  font: (bodyFont, "Font Awesome 6 Brands", "Font Awesome 6 Free"),
   size: 10pt,
   fill: accentColor,
   str
 )}
 
 #let headerQuoteStyle(str) = {text(
-  font: bodyFont,
   size: 10pt,
   weight: "medium",
   fill: accentColor,
@@ -101,7 +98,6 @@
 )}
 
 #let sectionTitleStyle(str, color:black) = {text(
-  font: bodyFont, 
   size: 16pt, 
   weight: "bold", 
   fill: color,
@@ -109,7 +105,6 @@
 )}
 
 #let entryA1Style(str) = {text(
-  font: bodyFont,
   size: 10pt,
   weight: "bold",
   str
@@ -117,7 +112,6 @@
 
 
 #let entryA2Style(str) = {align(right, text(
-  font: bodyFont,
   size: 9pt,
   weight: "medium",
   fill: accentColor,
@@ -126,7 +120,6 @@
 ))}
 
 #let entryB1Style(str) = {text(
-  font: bodyFont,
   size: 8pt,
   fill: accentColor,
   weight: "medium",
@@ -134,7 +127,6 @@
 )}
 
 #let entryB2Style(str) = {align(right, text(
-  font: bodyFont,
   size: 8pt,
   weight: "medium",
   fill: gray,
@@ -143,7 +135,6 @@
 ))}
 
 #let entryDescriptionStyle(str) = {text(
-  font: bodyFont,
   size: 9pt,
   weight: "regular",
   fill: regularColors.lightgray,
@@ -154,42 +145,36 @@
 )}
 
 #let skillTypeStyle(str) = {align(right, text(
-  font: bodyFont,
   size: 10pt,
   weight: "bold",
   str))
 }
 
 #let skillInfoStyle(str) = {text(
-  font: bodyFont,
   size: 9pt,
   weight: "regular",
   str
 )}
 
 #let honorDateStyle(str) = {align(right, text(
-  font: bodyFont,
   size: 9pt,
   weight: "regular",
   str))
 }
 
 #let honorTitleStyle(str) = {text(
-  font: bodyFont,
   size: 9pt,
   weight: "bold",
   str
 )}
 
 #let honorIssuerStyle(str) = {text(
-  font: bodyFont,
   size: 9pt,
   weight: "regular",
   str
 )}
 
 #let honorLocationStyle(str) = {align(right, text(
-  font: bodyFont,
   size: 9pt,
   weight: "medium",
   fill: accentColor,
@@ -198,7 +183,6 @@
 ))}
 
 #let footerStyle(str) = {text(
-  font: bodyFont,
   size: 8pt,
   weight: "regular",
   fill: rgb("#999999"),
@@ -206,14 +190,12 @@
 )}
 
 #let letterHeaderNameStyle(str) = {text(
-  font: bodyFont,
   fill: accentColor,
   weight: "bold",
   str
 )}
 
 #let letterHeaderAddressStyle(str) = {text(
-  font: bodyFont,
   fill: gray,
   size: 0.9em,
   smallcaps(str)
