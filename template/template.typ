@@ -182,6 +182,11 @@
   str
 ))}
 
+#let publicationStyle(str) = {text(
+  size: 9pt,
+  str
+)}
+
 #let footerStyle(str) = {text(
   size: 8pt,
   weight: "regular",
@@ -360,6 +365,20 @@
   )
   v(-6pt)
 }
+
+#let cvPublication(
+  bibPath: "",
+  keyList: list(),
+  refStyle: "apa",
+) = {
+  show cite: it => hide(it)
+  show bibliography: it => publicationStyle(it)
+  bibliography(bibPath, title: none, style: refStyle)
+  for key in keyList {
+    cite(key)
+  }
+}
+
 
 #let cvFooter() = {
   place(
