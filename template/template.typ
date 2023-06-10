@@ -6,7 +6,11 @@
 /* Layout */
 
 #let layout(doc) = {
-  set text(font: ("Source Sans Pro", "Font Awesome 6 Brands", "Font Awesome 6 Free"))
+  set text(
+    font: ("Source Sans Pro", "Font Awesome 6 Brands", "Font Awesome 6 Free"),
+    weight: "regular",
+    size: 9pt,
+  )
   set align(left)
   set page(
     paper: "a4",
@@ -65,9 +69,9 @@
 
 #let headerFont = "Roboto"
 
-#let beforeSectionSkip = 2pt
-#let beforeEntrySkip = 2pt
-#let beforeEntryDescriptionSkip = 2pt
+#let beforeSectionSkip = 1pt
+#let beforeEntrySkip = 1pt
+#let beforeEntryDescriptionSkip = 1pt
 
 #let headerFirstNameStyle(str) = {text(
   font: headerFont,
@@ -93,6 +97,7 @@
 #let headerQuoteStyle(str) = {text(
   size: 10pt,
   weight: "medium",
+  style: "italic",
   fill: accentColor,
   str
 )}
@@ -112,7 +117,6 @@
 
 
 #let entryA2Style(str) = {align(right, text(
-  size: 9pt,
   weight: "medium",
   fill: accentColor,
   style: "oblique",
@@ -135,8 +139,6 @@
 ))}
 
 #let entryDescriptionStyle(str) = {text(
-  size: 9pt,
-  weight: "regular",
   fill: regularColors.lightgray,
   {
     v(beforeEntryDescriptionSkip)
@@ -151,31 +153,23 @@
 }
 
 #let skillInfoStyle(str) = {text(
-  size: 9pt,
-  weight: "regular",
   str
 )}
 
 #let honorDateStyle(str) = {align(right, text(
-  size: 9pt,
-  weight: "regular",
   str))
 }
 
 #let honorTitleStyle(str) = {text(
-  size: 9pt,
   weight: "bold",
   str
 )}
 
 #let honorIssuerStyle(str) = {text(
-  size: 9pt,
-  weight: "regular",
   str
 )}
 
 #let honorLocationStyle(str) = {align(right, text(
-  size: 9pt,
   weight: "medium",
   fill: accentColor,
   style: "oblique",
@@ -183,13 +177,11 @@
 ))}
 
 #let publicationStyle(str) = {text(
-  size: 9pt,
   str
 )}
 
 #let footerStyle(str) = {text(
   size: 8pt,
-  weight: "regular",
   fill: rgb("#999999"),
   smallcaps(str)
 )}
@@ -377,6 +369,7 @@
   for key in keyList {
     cite(key)
   }
+  v(-15pt)
 }
 
 
