@@ -1,20 +1,9 @@
 // NOTICE: Copy this file to your root folder.
 
-/* Layout Setting */
-
-#let awesomeColor = "skyblue" // Optional: skyblue, red, nephritis, concrete, darknight
-
-#let profilePhoto = "../src/avatar.png" // Leave blank if profil photo is not needed
-
-#let varLanguage = "" // INFO: value must matches folder suffix; i.e "zh" -> "./modules_zh"
-
-#let varEntrySocietyFirst = false // Decide if you want to put your company in bold or your position in bold
-
 /* Personal Information */
 
 #let firstName = "John"
 #let lastName = "Doe"
-
 #let personalInfo = (
   github: "mintyfrankie",
   phone: "+33 6 12 34 56 78",
@@ -23,9 +12,26 @@
   //homepage: "jd.me.org",
   //extraInfo: "",
 )
+#let headerQuote = [
+  Experienced Data Analyst looking for a full time job starting from now
+]
 
-#let headerQuote = [Experienced Data Analyst looking for a full time job starting from now]
 
+/* Layout Setting */
+
+// Optional: skyblue, red, nephritis, concrete, darknight
+#let awesomeColor = "skyblue"
+
+// Leave blank if profil photo is not needed
+#let profilePhoto = "../src/avatar.png" 
+
+// INFO: value must matches folder suffix; i.e "zh" -> "./modules_zh"
+#let varLanguage = "" 
+
+// Decide if you want to put your company in bold or your position in bold
+#let varEntrySocietyFirst = false 
+
+// for cvFooter and letterFooter arrays, add your own languages while the keys must match the varLanguage variable
 #let cvFooterInternational = (
   "": "Curriculum vitae",
   "en": "Curriculum vitae",
