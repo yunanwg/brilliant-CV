@@ -46,7 +46,7 @@
       break
     }
   }
-  panic("i18n: language value not matching any key in the dictionary")
+  panic("i18n: language value not matching any key in the array")
 }
 
 
