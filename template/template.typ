@@ -304,19 +304,40 @@
   date: "Date",
   location: "Location",
   description: "Description",
+  logo: ""
 ) = {
+  let setLogoLength(path) = {
+    return if path == "" { 0% } else { 4% }
+  }
+  let setLogoContent(path) = {
+    return if logo == "" [] else {
+      image(path, width: 100%)
+    }
+  }
+  let setLogoGutter(logo) = {
+    return if logo == "" { 0pt } else { 4pt }
+  }
   v(beforeEntrySkip)
   table(
-    columns: (1fr, auto),
+    columns: (setLogoLength(logo), 1fr),
     inset: 0pt,
     stroke: none,
-    row-gutter: 6pt,
-    align: auto,
-    {if varEntrySocietyFirst {entryA1Style(society)} else {entryA1Style(title)}},
-    {entryA2Style(date)},
-    {if varEntrySocietyFirst {entryB1Style(title)} else {entryB1Style(society)}},
-    {entryB2Style(location)},
+    align: horizon,
+    column-gutter: setLogoGutter(logo),
+    setLogoContent(logo),
+    table(
+      columns: (1fr, auto),
+      inset: 0pt,
+      stroke: none,
+      row-gutter: 6pt,
+      align: auto,
+      {if varEntrySocietyFirst {entryA1Style(society)} else {entryA1Style(title)}},
+      {entryA2Style(date)},
+      {if varEntrySocietyFirst {entryB1Style(title)} else {entryB1Style(society)}},
+      {entryB2Style(location)},
+    )
   )
+  
   entryDescriptionStyle(description)
 }
 
