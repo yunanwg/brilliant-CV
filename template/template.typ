@@ -306,24 +306,24 @@
   description: "Description",
   logo: ""
 ) = {
+  let ifLogo(path, ifTrue, ifFalse) = {
+    return if varDisplayLogo {
+      if path == "" { ifFalse } else { ifTrue }
+    } else { ifFalse }
+  }
   let setLogoLength(path) = {
     return if path == "" { 0% } else { 4% }
   }
   let setLogoContent(path) = {
-    return if logo == "" [] else {
-      image(path, width: 100%)
-    }
-  }
-  let setLogoGutter(logo) = {
-    return if logo == "" { 0pt } else { 4pt }
+    return if logo == "" [] else {image(path, width: 100%)}
   }
   v(beforeEntrySkip)
   table(
-    columns: (setLogoLength(logo), 1fr),
+    columns: (ifLogo(logo, 4%, 0%), 1fr),
     inset: 0pt,
     stroke: none,
     align: horizon,
-    column-gutter: setLogoGutter(logo),
+    column-gutter: ifLogo(logo, 4pt, 0pt),
     setLogoContent(logo),
     table(
       columns: (1fr, auto),
@@ -337,7 +337,6 @@
       {entryB2Style(location)},
     )
   )
-  
   entryDescriptionStyle(description)
 }
 

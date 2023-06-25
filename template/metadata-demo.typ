@@ -31,6 +31,9 @@
 // Decide if you want to put your company in bold or your position in bold
 #let varEntrySocietyFirst = false 
 
+// Decide if you want to display organisation logo or not
+#let varDisplayLogo = true
+
 // for cvFooter and letterFooter arrays, add your own languages while the keys must match the varLanguage variable
 #let cvFooterInternational = (
   "": "Curriculum vitae",
