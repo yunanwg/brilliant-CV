@@ -1,7 +1,10 @@
-// awesomeCV-Typst 2023-04-29 mintyfrankie
+// awesomeCV-Typst 2023-07-05 mintyfrankie
 // Github Repo: https://github.com/mintyfrankie/awesomeCV-Typst
+// Typst version: 0.6.0
 
+/* Packages */
 #import "../metadata.typ": *
+#import "@preview/fontawesome:0.1.0": *
 
 /* Layout */
 
@@ -214,11 +217,11 @@
 
 #let makeHeaderInfo() = {
   let personalInfoIcons = (
-    phone: [\u{f2c1}],
-    email: [\u{f0e0}],
-    linkedin: [\u{f08c}],
-    homepage: [\u{1f5d6}],
-    github: [\u{f092}],
+    phone: fa-phone(),
+    email: fa-envelope(),
+    linkedin: fa-linkedin(),
+    homepage: fa-pager(),
+    github: fa-square-github(),
     extraInfo: "",
   )
   let n = 1
