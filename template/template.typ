@@ -222,6 +222,8 @@
     linkedin: fa-linkedin(),
     homepage: fa-pager(),
     github: fa-square-github(),
+    orcid: fa-orcid(),
+    researchgate: fa-researchgate(),
     extraInfo: "",
   )
   let n = 1
@@ -242,6 +244,10 @@
         link("https://github.com/" + v)[#v]
       } else if k == "homepage" {
         link("https://" + v)[#v]
+      } else if k == "orcid" {
+        link("https://orcid.org/" + v)[#v]
+      } else if k == "researchgate" {
+        link("https://www.researchgate.net/profile/" + v)[#v]
       } else {
         v
       }
