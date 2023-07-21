@@ -315,6 +315,9 @@
   description: "Description",
   logo: ""
 ) = {
+  let ifSocietyFirst(condition, field1, field2) = {
+    return if condition {field1} else {field2}
+  }
   let ifLogo(path, ifTrue, ifFalse) = {
     return if varDisplayLogo {
       if path == "" { ifFalse } else { ifTrue }
@@ -340,9 +343,9 @@
       stroke: none,
       row-gutter: 6pt,
       align: auto,
-      {if varEntrySocietyFirst {entryA1Style(society)} else {entryA1Style(title)}},
+      {entryA1Style(ifSocietyFirst(varEntrySocietyFirst, society, title))},
       {entryA2Style(date)},
-      {if varEntrySocietyFirst {entryB1Style(title)} else {entryB1Style(society)}},
+      {entryB1Style(ifSocietyFirst(varEntrySocietyFirst, title, society))},
       {entryB2Style(location)},
     )
   )
