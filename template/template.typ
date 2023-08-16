@@ -263,9 +263,7 @@
   row-gutter: 6mm,
   [#headerFirstNameStyle(firstName) #h(5pt) #headerLastNameStyle(lastName)],
   [#headerInfoStyle(makeHeaderInfo())],
-  if headerQuote != "" [
-    #headerQuoteStyle(headerQuote)
-  ]
+  [#headerQuoteStyle(languageSwitch(headerQuoteInternational))]
 )
 
 #let makeHeaderPhotoSection() = {
