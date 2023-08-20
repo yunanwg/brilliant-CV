@@ -222,6 +222,7 @@
     linkedin: fa-linkedin(),
     homepage: fa-pager(),
     github: fa-square-github(),
+    gitlab: fa-gitlab(),
     orcid: fa-orcid(),
     researchgate: fa-researchgate(),
     extraInfo: "",
@@ -242,6 +243,8 @@
         link("https://www.linkedin.com/in/" + v)[#v]
       } else if k == "github" {
         link("https://github.com/" + v)[#v]
+      } else if k == "gitlab" {
+        link("https://gitlab.com/" + v)[#v]
       } else if k == "homepage" {
         link("https://" + v)[#v]
       } else if k == "orcid" {
