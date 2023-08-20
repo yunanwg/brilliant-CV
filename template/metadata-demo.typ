@@ -9,6 +9,7 @@
   phone: "+33 6 12 34 56 78",
   email: "john.doe@me.org",
   linkedin: "johndoe",
+  //gitlab: "mintyfrankie",
   //homepage: "jd.me.org",
   //orcid: "0000-0000-0000-0000",
   //researchgate: "John-Doe",
