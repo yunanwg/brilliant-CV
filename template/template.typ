@@ -1,6 +1,6 @@
-// awesomeCV-Typst 2023-07-05 mintyfrankie
-// Github Repo: https://github.com/mintyfrankie/awesomeCV-Typst
-// Typst version: 0.6.0
+// brilliant-CV 2023-08-29 mintyfrankie
+// Github Repo: https://github.com/mintyfrankie/brilliant-CV
+// Typst version: 0.7.0
 
 /* Packages */
 #import "../metadata.typ": *
