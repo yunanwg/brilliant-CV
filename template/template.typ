@@ -1,6 +1,6 @@
-// brilliant-CV 2023-08-29 mintyfrankie
+// brilliant-CV 2023-09-13 mintyfrankie
 // Github Repo: https://github.com/mintyfrankie/brilliant-CV
-// Typst version: 0.7.0
+// Typst version: 0.8.0
 
 /* Packages */
 #import "../metadata.typ": *
