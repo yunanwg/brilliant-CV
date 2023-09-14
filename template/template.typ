@@ -7,7 +7,6 @@
 #import "@preview/fontawesome:0.1.0": *
 
 /* Layout */
-
 #let layout(doc) = {
   set text(
     font: ("Source Sans Pro", "Font Awesome 6 Brands", "Font Awesome 6 Free"),
@@ -27,8 +26,8 @@
   doc
 }
 
-/* Utility Functions */
 
+/* Utility Functions */
 #let hBar() = [
   #h(5pt) | #h(5pt)
 ]
@@ -54,7 +53,6 @@
 
 
 /* Styles */
-
 #let awesomeColors = (
   skyblue: rgb("#0395DE"),
   red: rgb("#DC3522"),
@@ -213,74 +211,75 @@
   underline(str)
 )}
 
+
 /* Functions */
-
-#let makeHeaderInfo() = {
-  let personalInfoIcons = (
-    phone: fa-phone(),
-    email: fa-envelope(),
-    linkedin: fa-linkedin(),
-    homepage: fa-pager(),
-    github: fa-square-github(),
-    gitlab: fa-gitlab(),
-    orcid: fa-orcid(),
-    researchgate: fa-researchgate(),
-    extraInfo: "",
-  )
-  let n = 1
-  for (k, v) in personalInfo {
-    if v != "" {
-      // Adds hBar
-      if n != 1 {
-        hBar()
-      }
-      // Adds icons
-      personalInfoIcons.at(k) + h(5pt)
-      // Adds hyperlinks
-      if k == "email" {
-        link("mailto:" + v)[#v]
-      } else if k == "linkedin" {
-        link("https://www.linkedin.com/in/" + v)[#v]
-      } else if k == "github" {
-        link("https://github.com/" + v)[#v]
-      } else if k == "gitlab" {
-        link("https://gitlab.com/" + v)[#v]
-      } else if k == "homepage" {
-        link("https://" + v)[#v]
-      } else if k == "orcid" {
-        link("https://orcid.org/" + v)[#v]
-      } else if k == "researchgate" {
-        link("https://www.researchgate.net/profile/" + v)[#v]
-      } else {
-        v
-      }
-    }
-    n = n + 1
-  }
-}
-
-#let makeHeaderNameSection() = table(
-  columns: 1fr,
-  inset: 0pt,
-  stroke: none,
-  row-gutter: 6mm,
-  [#headerFirstNameStyle(firstName) #h(5pt) #headerLastNameStyle(lastName)],
-  [#headerInfoStyle(makeHeaderInfo())],
-  [#headerQuoteStyle(languageSwitch(headerQuoteInternational))]
-)
-
-#let makeHeaderPhotoSection() = {
-  if profilePhoto != "" {
-    image(profilePhoto, height: 3.6cm)
-  } else {
-    v(3.6cm)
-  }
-} 
-
 #let cvHeader(
   align: left,
   hasPhoto: true
 ) = {
+  let makeHeaderInfo() = {
+    let personalInfoIcons = (
+      phone: fa-phone(),
+      email: fa-envelope(),
+      linkedin: fa-linkedin(),
+      homepage: fa-pager(),
+      github: fa-square-github(),
+      gitlab: fa-gitlab(),
+      orcid: fa-orcid(),
+      researchgate: fa-researchgate(),
+      extraInfo: "",
+    )
+    let n = 1
+    for (k, v) in personalInfo {
+      if v != "" {
+        // Adds hBar
+        if n != 1 {
+          hBar()
+        }
+        // Adds icons
+        personalInfoIcons.at(k) + h(5pt)
+        // Adds hyperlinks
+        if k == "email" {
+          link("mailto:" + v)[#v]
+        } else if k == "linkedin" {
+          link("https://www.linkedin.com/in/" + v)[#v]
+        } else if k == "github" {
+          link("https://github.com/" + v)[#v]
+        } else if k == "gitlab" {
+          link("https://gitlab.com/" + v)[#v]
+        } else if k == "homepage" {
+          link("https://" + v)[#v]
+        } else if k == "orcid" {
+          link("https://orcid.org/" + v)[#v]
+        } else if k == "researchgate" {
+          link("https://www.researchgate.net/profile/" + v)[#v]
+        } else {
+          v
+        }
+      }
+      n = n + 1
+    }
+  }
+
+  let makeHeaderNameSection() = table(
+    columns: 1fr,
+    inset: 0pt,
+    stroke: none,
+    row-gutter: 6mm,
+    [#headerFirstNameStyle(firstName) #h(5pt) #headerLastNameStyle(lastName)],
+    [#headerInfoStyle(makeHeaderInfo())],
+    [#headerQuoteStyle(languageSwitch(headerQuoteInternational))]
+  )
+
+
+  let makeHeaderPhotoSection() = {
+    if profilePhoto != "" {
+      image(profilePhoto, height: 3.6cm)
+    } else {
+      v(3.6cm)
+    }
+  } 
+
   let makeHeader(leftComp, rightComp, columns, align) = table(
     columns: columns,
     inset: 0pt,
@@ -290,6 +289,7 @@
     {leftComp},
     {rightComp}
   )
+
   if hasPhoto {
     makeHeader(makeHeaderNameSection(), makeHeaderPhotoSection(), (auto, 20%), align)
   } else {
@@ -404,7 +404,6 @@
   }
   v(-15pt)
 }
-
 
 #let cvFooter() = {
   place(
