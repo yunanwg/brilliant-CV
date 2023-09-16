@@ -31,19 +31,21 @@
   "": "Curriculum vitae",
   "en": "Curriculum vitae",
   "fr": "Résumé",
-  "zh": ""
+  "zh": "简历"
 )
 
 #let letterFooterInternational = (
   "": "Cover Letter",
   "en": "Cover Letter",
   "fr": "Lettre de motivation",
-  "zh": ""
+  "zh": "申请信"
 )
 
 #let nonLatinOverwriteInfo = (
-  "firstName": "约翰道尔",
-  "lastName": ""
+  "customFont": "Heiti SC",
+  "firstName": "王道尔",
+  "lastName": "",
+  // submit an issue if you think other variables should be in this array
 )
 
 /* Layout Setting */
@@ -51,7 +53,7 @@
 
 #let profilePhoto = "../src/avatar.png" // Leave blank if profil photo is not needed
 
-#let varLanguage = "zh" // INFO: value must matches folder suffix; i.e "zh" -> "./modules_zh"
+#let varLanguage = "" // INFO: value must matches folder suffix; i.e "zh" -> "./modules_zh"
 
 #let varEntrySocietyFirst = false // Decide if you want to put your company in bold or your position in bold
 
