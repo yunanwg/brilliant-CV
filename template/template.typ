@@ -312,8 +312,12 @@
   let normalText = title.slice(3)
 
   v(beforeSectionSkip)
-  sectionTitleStyle(highlightText, color: accentColor)
-  sectionTitleStyle(normalText, color: black)
+  if nonLatinOverwrite {
+    sectionTitleStyle(title, color: accentColor)
+  } else {
+    sectionTitleStyle(highlightText, color: accentColor)
+    sectionTitleStyle(normalText, color: black)
+  }
   h(2pt)
   box(width: 1fr, line(stroke: 0.9pt, length: 100%))
 }
