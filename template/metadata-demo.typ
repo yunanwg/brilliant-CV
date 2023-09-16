@@ -1,9 +1,10 @@
 // NOTICE: Copy this file to your root folder.
 
 /* Personal Information */
-
 #let firstName = "John"
+
 #let lastName = "Doe"
+
 #let personalInfo = (
   github: "mintyfrankie",
   phone: "+33 6 12 34 56 78",
@@ -15,39 +16,43 @@
   //researchgate: "John-Doe",
   //extraInfo: "",
 )
+
+
+/* Language-specific */
+// Add your own languages while the keys must match the varLanguage variable
 #let headerQuoteInternational = (
   "": [Experienced Data Analyst looking for a full time job starting from now],
   "en": [Experienced Data Analyst looking for a full time job starting from now],
-  "fr": [Analyste de données expérimenté à la recherche d’un emploi à temps plein disponible dès maintenant]
+  "fr": [Analyste de données expérimenté à la recherche d'un emploi à temps plein disponible dès maintenant],
+  "zh": [具有丰富经验的数据分析师，随时可入职]
 )
 
-
-/* Layout Setting */
-
-// Optional: skyblue, red, nephritis, concrete, darknight
-#let awesomeColor = "skyblue"
-
-// Leave blank if profil photo is not needed
-#let profilePhoto = "../src/avatar.png" 
-
-// INFO: value must matches folder suffix; i.e "zh" -> "./modules_zh"
-#let varLanguage = "" 
-
-// Decide if you want to put your company in bold or your position in bold
-#let varEntrySocietyFirst = false 
-
-// Decide if you want to display organisation logo or not
-#let varDisplayLogo = true
-
-// for cvFooter and letterFooter arrays, add your own languages while the keys must match the varLanguage variable
 #let cvFooterInternational = (
   "": "Curriculum vitae",
   "en": "Curriculum vitae",
-  "fr": "Résumé"
+  "fr": "Résumé",
+  "zh": ""
 )
 
 #let letterFooterInternational = (
   "": "Cover Letter",
   "en": "Cover Letter",
   "fr": "Lettre de motivation",
+  "zh": ""
 )
+
+#let nonLatinOverwriteInfo = (
+  "firstName": "约翰道尔",
+  "lastName": ""
+)
+
+/* Layout Setting */
+#let awesomeColor = "skyblue" // Optional: skyblue, red, nephritis, concrete, darknight
+
+#let profilePhoto = "../src/avatar.png" // Leave blank if profil photo is not needed
+
+#let varLanguage = "zh" // INFO: value must matches folder suffix; i.e "zh" -> "./modules_zh"
+
+#let varEntrySocietyFirst = false // Decide if you want to put your company in bold or your position in bold
+
+#let varDisplayLogo = true // Decide if you want to display organisation logo or not

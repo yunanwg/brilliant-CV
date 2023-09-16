@@ -51,6 +51,16 @@
   panic("i18n: language value not matching any key in the array")
 }
 
+/* Language-specific Macros */
+#let nonLatinOverwrite = false
+#let nonLatinLanguageCode = ("zh", "ja", "ko", "ru")
+#for lang in nonLatinLanguageCode {
+  if varLanguage == lang {
+    nonLatinOverwrite = true
+    firstName = nonLatinOverwriteInfo.at("firstName")
+    lastName = nonLatinOverwriteInfo.at("lastName")
+  }
+}
 
 /* Styles */
 #let awesomeColors = (
