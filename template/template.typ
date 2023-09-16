@@ -6,24 +6,18 @@
 #import "../metadata.typ": *
 #import "@preview/fontawesome:0.1.0": *
 
-/* Layout */
-#let layout(doc) = {
-  set text(
-    font: ("Source Sans Pro", "Font Awesome 6 Brands", "Font Awesome 6 Free"),
-    weight: "regular",
-    size: 9pt,
-  )
-  set align(left)
-  set page(
-    paper: "a4",
-    margin: (
-      left: 1.4cm,
-      right: 1.4cm,
-      top: .8cm,
-      bottom: .4cm,
-    ),
-  )
-  doc
+
+/* Language-specific Macros */
+#let nonLatinOverwrite = false
+#let nonLatinFont = ""
+#let nonLatinLanguageCode = ("zh", "ja", "ko", "ru")
+#for lang in nonLatinLanguageCode {
+  if varLanguage == lang {
+    nonLatinOverwrite = true
+    firstName = nonLatinOverwriteInfo.at("firstName")
+    lastName = nonLatinOverwriteInfo.at("lastName")
+    nonLatinFont = nonLatinOverwriteInfo.at("customFont")
+  }
 }
 
 
@@ -51,18 +45,11 @@
   panic("i18n: language value not matching any key in the array")
 }
 
-/* Language-specific Macros */
-#let nonLatinOverwrite = false
-#let nonLatinLanguageCode = ("zh", "ja", "ko", "ru")
-#for lang in nonLatinLanguageCode {
-  if varLanguage == lang {
-    nonLatinOverwrite = true
-    firstName = nonLatinOverwriteInfo.at("firstName")
-    lastName = nonLatinOverwriteInfo.at("lastName")
-  }
-}
-
 /* Styles */
+#let fontList = (nonLatinFont, "Source Sans Pro", "Font Awesome 6 Brands", "Font Awesome 6 Free")
+
+#let headerFont = (nonLatinFont, "Roboto")
+
 #let awesomeColors = (
   skyblue: rgb("#0395DE"),
   red: rgb("#DC3522"),
@@ -77,8 +64,6 @@
 )
 
 #let accentColor = awesomeColors.at(awesomeColor)
-
-#let headerFont = "Roboto"
 
 #let beforeSectionSkip = 1pt
 #let beforeEntrySkip = 1pt
@@ -469,4 +454,25 @@
       footerStyle(languageSwitch(letterFooterInternational)),
     )
   )
+}
+
+
+/* Layout */
+#let layout(doc) = {
+  set text(
+    font: fontList,
+    weight: "regular",
+    size: 9pt,
+  )
+  set align(left)
+  set page(
+    paper: "a4",
+    margin: (
+      left: 1.4cm,
+      right: 1.4cm,
+      top: .8cm,
+      bottom: .4cm,
+    ),
+  )
+  doc
 }
