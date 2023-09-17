@@ -46,9 +46,9 @@
 }
 
 /* Styles */
-#let fontList = (nonLatinFont, "Source Sans Pro", "Font Awesome 6 Brands", "Font Awesome 6 Free")
+#let fontList = ("Source Sans Pro", nonLatinFont, "Font Awesome 6 Brands", "Font Awesome 6 Free")
 
-#let headerFont = (nonLatinFont, "Roboto")
+#let headerFont = ("Roboto", nonLatinFont)
 
 #let awesomeColors = (
   skyblue: rgb("#0395DE"),
