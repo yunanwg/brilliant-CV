@@ -49,7 +49,10 @@
 )
 
 /* Layout Setting */
-#let awesomeColor = "skyblue" // Optional: skyblue, red, nephritis, concrete, darknight
+
+// This can be any of the predefined colors: skyblue, red, nephritis, concrete, darknight
+// or alternatively you can define your own using `rgb("#AABBCC")`
+#let awesomeColor = "skyblue"
 
 #let profilePhoto = "../src/avatar.png" // Leave blank if profil photo is not needed
 
