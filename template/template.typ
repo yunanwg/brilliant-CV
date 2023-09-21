@@ -63,7 +63,13 @@
   darkgray: rgb("#212529"),
 )
 
-#let accentColor = awesomeColors.at(awesomeColor)
+#let accentColor = {
+  if type(awesomeColor) == color {
+    awesomeColor
+  } else {
+    awesomeColors.at(awesomeColor)
+  }
+}
 
 #let beforeSectionSkip = 1pt
 #let beforeEntrySkip = 1pt
