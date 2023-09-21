@@ -45,6 +45,7 @@
   panic("i18n: language value not matching any key in the array")
 }
 
+
 /* Styles */
 #let fontList = ("Source Sans Pro", nonLatinFont, "Font Awesome 6 Brands", "Font Awesome 6 Free")
 
