@@ -60,6 +60,7 @@
 )
 
 #let regularColors = (
+  subtlegray: rgb("#ededee"),
   lightgray: rgb("#343a40"),
   darkgray: rgb("#212529"),
 )
@@ -148,6 +149,24 @@
     str
   }
 )}
+
+#let entryTagStyle(str) = {align(center, text(
+  size: 8pt,
+  weight: "regular",
+  str
+))}
+
+#let entryTagListStyle(tags) = {for tag in tags {
+  box(
+    inset: (x: 0.25em),
+    outset: (y: 0.25em),
+    fill: regularColors.subtlegray, 
+    radius: 3pt,
+    entryTagStyle(tag),
+  )
+  h(5pt)
+}}
+
 
 #let skillTypeStyle(str) = {align(right, text(
   size: 10pt,
@@ -320,7 +339,8 @@
   date: "Date",
   location: "Location",
   description: "Description",
-  logo: ""
+  logo: "",
+  tags: ()
 ) = {
   let ifSocietyFirst(condition, field1, field2) = {
     return if condition {field1} else {field2}
@@ -357,6 +377,7 @@
     )
   )
   entryDescriptionStyle(description)
+  entryTagListStyle(tags)
 }
 
 #let cvSkill(
