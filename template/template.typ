@@ -248,6 +248,7 @@
       gitlab: fa-gitlab(),
       orcid: fa-orcid(),
       researchgate: fa-researchgate(),
+      location: fa-location-dot(),
       extraInfo: "",
     )
     let n = 1
