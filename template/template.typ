@@ -253,11 +253,14 @@
     )
     let n = 1
     for (k, v) in personalInfo {
-      if v != "" {
-        // Adds hBar
-        if n != 1 {
-          hBar()
-        }
+      // A dirty trick to add linebreaks with "linebreak" as key in personalInfo
+      if k == "linebreak" {
+        n = 0
+        linebreak()
+        continue
+      }
+      if v != "" {box({
+        
         // Adds icons
         personalInfoIcons.at(k) + h(5pt)
         // Adds hyperlinks
@@ -278,7 +281,11 @@
         } else {
           v
         }
-      }
+      })} 
+      // Adds hBar
+        if n != 0 {
+          hBar() 
+        }
       n = n + 1
     }
   }
