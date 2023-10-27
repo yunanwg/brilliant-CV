@@ -283,7 +283,7 @@
         }
       })} 
       // Adds hBar
-        if n != 0 {
+        if n != personalInfo.len() {
           hBar() 
         }
       n = n + 1
