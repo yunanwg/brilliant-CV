@@ -1,6 +1,6 @@
-// brilliant-CV 2023-09-13 mintyfrankie
+// brilliant-CV 2023-11-01 mintyfrankie
 // Github Repo: https://github.com/mintyfrankie/brilliant-CV
-// Typst version: 0.8.0
+// Typst version: 0.9.0
 
 /* Packages */
 #import "../metadata.typ": *
@@ -435,13 +435,8 @@
   keyList: list(),
   refStyle: "apa",
 ) = {
-  show cite: it => hide(it)
   show bibliography: it => publicationStyle(it)
-  bibliography(bibPath, title: none, style: refStyle)
-  for key in keyList {
-    cite(key)
-  }
-  v(-15pt)
+  bibliography(bibPath, title: none, style: refStyle, full: true)
 }
 
 #let cvFooter() = {
