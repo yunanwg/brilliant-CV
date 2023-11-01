@@ -326,16 +326,20 @@
   }
 }
 
-#let cvSection(title) = {
-  let highlightText = title.slice(0,3)
-  let normalText = title.slice(3)
+#let cvSection(title, highlighted: true, letters: 3) = {
+  let highlightText = title.slice(0,letters)
+  let normalText = title.slice(letters)
 
   v(beforeSectionSkip)
   if nonLatinOverwrite {
     sectionTitleStyle(title, color: accentColor)
   } else {
+    if highlighted {
     sectionTitleStyle(highlightText, color: accentColor)
     sectionTitleStyle(normalText, color: black)
+    } else {
+      sectionTitleStyle(title, color: black)
+    }
   }
   h(2pt)
   box(width: 1fr, line(stroke: 0.9pt, length: 100%))
