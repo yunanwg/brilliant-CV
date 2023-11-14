@@ -10,6 +10,7 @@
   phone: "+33 6 12 34 56 78",
   email: "john.doe@me.org",
   linkedin: "johndoe",
+  //custom-1: (icon: "", text: "example", link: "https://example.com"),
   //gitlab: "mintyfrankie",
   //homepage: "jd.me.org",
   //orcid: "0000-0000-0000-0000",
@@ -49,9 +50,7 @@
 )
 
 /* Layout Setting */
-// This can be any of the predefined colors: skyblue, red, nephritis, concrete, darknight
-// or alternatively you can define your own using `rgb("#AABBCC")`
-#let awesomeColor = "skyblue"
+#let awesomeColor = "skyblue" // Optional: skyblue, red, nephritis, concrete, darknight
 
 #let profilePhoto = "../src/avatar.png" // Leave blank if profil photo is not needed
 
