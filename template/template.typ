@@ -449,9 +449,10 @@
   bibPath: "",
   keyList: list(),
   refStyle: "apa",
+  refFull: true,
 ) = {
   show bibliography: it => publicationStyle(it)
-  bibliography(bibPath, title: none, style: refStyle, full: true)
+  bibliography(bibPath, title: none, style: refStyle, full: refFull)
 }
 
 #let cvFooter() = {
