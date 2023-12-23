@@ -435,7 +435,7 @@
     honorDateStyle(date),
     if issuer == "" {
       honorTitleStyle(title)
-    } else if link != "" { [
+    } else if url != "" { [
       #honorTitleStyle(link(url)[#title]), #honorIssuerStyle(issuer)
     ] } else { [
       #honorTitleStyle(title), #honorIssuerStyle(issuer)
