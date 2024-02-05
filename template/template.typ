@@ -395,9 +395,9 @@
       row-gutter: 6pt,
       align: auto,
       {entryA1Style(ifSocietyFirst(varEntrySocietyFirst, society, title))},
-      {entryA2Style(date)},
+      {entryA2Style(ifSocietyFirst(varEntrySocietyFirst, location,date))},
       {entryB1Style(ifSocietyFirst(varEntrySocietyFirst, title, society))},
-      {entryB2Style(location)},
+      {entryB2Style(ifSocietyFirst(varEntrySocietyFirst, date,location))},
     )
   )
   entryDescriptionStyle(description)
