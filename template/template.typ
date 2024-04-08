@@ -269,9 +269,7 @@
           h(5pt)
           link(link_value)[#text]
         })
-        continue
-      }
-      if v != "" {box({
+      } else if v != "" {box({
         
         // Adds icons
         personalInfoIcons.at(k) + h(5pt)
