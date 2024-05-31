@@ -18,28 +18,28 @@
   //extraInfo: "",
 )
 
-
 /* Language-specific */
 // Add your own languages while the keys must match the varLanguage variable
 #let headerQuoteInternational = (
   "": [Experienced Data Analyst looking for a full time job starting from now],
   "en": [Experienced Data Analyst looking for a full time job starting from now],
-  "fr": [Analyste de données expérimenté à la recherche d'un emploi à temps plein disponible dès maintenant],
-  "zh": [具有丰富经验的数据分析师，随时可入职]
+  "fr": [Analyste de données expérimenté à la recherche d'un emploi à temps plein
+    disponible dès maintenant],
+  "zh": [具有丰富经验的数据分析师，随时可入职],
 )
 
 #let cvFooterInternational = (
   "": "Curriculum vitae",
   "en": "Curriculum vitae",
   "fr": "Résumé",
-  "zh": "简历"
+  "zh": "简历",
 )
 
 #let letterFooterInternational = (
   "": "Cover Letter",
   "en": "Cover Letter",
   "fr": "Lettre de motivation",
-  "zh": "申请信"
+  "zh": "申请信",
 )
 
 #let nonLatinOverwriteInfo = (
@@ -59,3 +59,7 @@
 #let varEntrySocietyFirst = false // Decide if you want to put your company in bold or your position in bold
 
 #let varDisplayLogo = true // Decide if you want to display organisation logo or not
+
+#let ifAIInjection = false // Decide if you want to inject AI prompt or not
+
+#let keywordsInjectionList = ("Data Analyst", "GCP", "Python", "SQL", "Tableau",) // Leave blank if you don't want to inject keywords
