@@ -30,8 +30,14 @@
   set text(font: fontList, weight: "regular", size: 9pt)
   set align(left)
   set page(
-    paper: "a4",
-    margin: (left: 1.4cm, right: 1.4cm, top: 1cm, bottom: 1cm),
+    paper: {metadata.layout.paper-size},
+    margin: {
+      if metadata.layout.paper-size == "us-letter" {
+        (left: 2cm, right: 1.4cm, top: 1.2cm, bottom: 1.2cm)
+        } else {
+        (left: 1.4cm, right: 1.4cm, top: 1cm, bottom: 1cm)
+      }
+    },
     footer: _cvFooter(metadata),
   )
 

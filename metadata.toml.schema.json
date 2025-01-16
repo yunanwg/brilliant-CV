@@ -31,6 +31,11 @@
           "description": "Spacing before entry descriptions",
           "pattern": "^[0-9]+pt$"
         },
+        "paper-size" : {
+          "type": "string",
+          "description": "Paper type",
+          "pattern": "^(a4|us-letter|#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}))$"
+        },
         "fonts": {
           "type": "object",
           "properties": {
