@@ -31,9 +31,9 @@
           "description": "Spacing before entry descriptions",
           "pattern": "^[0-9]+pt$"
         },
-        "paper-size" : {
+        "paper_size" : {
           "type": "string",
-          "description": "Paper type",
+          "description": "Sets paper size and standard marigins, Optional values: us-letter. Default is a4.",
           "pattern": "^(a4|us-letter|#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}))$"
         },
         "fonts": {
