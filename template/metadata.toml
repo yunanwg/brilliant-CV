@@ -14,6 +14,9 @@ language = "en"
     before_entry_skip = "1pt"
     before_entry_description_skip = "1pt"
 
+    # Optional: sets paper size and margins. Possible values: a4 (default), us-letter
+    paper_size = "a4"
+
     [layout.fonts]
         regular_fonts = ["Source Sans Pro", "Source Sans 3"]
         header_font = "Roboto"

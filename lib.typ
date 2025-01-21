@@ -29,9 +29,16 @@
   // Page layout
   set text(font: fontList, weight: "regular", size: 9pt)
   set align(left)
+  let paper_size = metadata.layout.at("paper_size", default: "a4")
   set page(
-    paper: "a4",
-    margin: (left: 1.4cm, right: 1.4cm, top: 1cm, bottom: 1cm),
+    paper: {paper_size},
+    margin: {
+      if paper_size == "us-letter" {
+        (left: 2cm, right: 1.4cm, top: 1.2cm, bottom: 1.2cm)
+        } else {
+        (left: 1.4cm, right: 1.4cm, top: 1cm, bottom: 1cm)
+      }
+    },
     footer: _cvFooter(metadata),
   )
 
@@ -61,9 +68,16 @@
   // Page layout
   set text(font: fontList, weight: "regular", size: 9pt)
   set align(left)
+  let paper_size = metadata.layout.at("paper_size", default: "a4")
   set page(
-    paper: "a4",
-    margin: (left: 1.4cm, right: 1.4cm, top: 1cm, bottom: 1cm),
+    paper: {paper_size},
+    margin: {
+      if paper_size == "us-letter" {
+        (left: 2cm, right: 2cm, top: 1.2cm, bottom: 1.2cm)
+        } else {
+        (left: 1.4cm, right: 1.4cm, top: 1cm, bottom: 1cm)
+      }
+    },
     footer: _letterFooter(metadata),
   )
   set text(size: 12pt)
