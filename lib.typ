@@ -73,7 +73,7 @@
     paper: {paper_size},
     margin: {
       if paper_size == "us-letter" {
-        (left: 2cm, right: 1.4cm, top: 1.2cm, bottom: 1.2cm)
+        (left: 2cm, right: 2cm, top: 1.2cm, bottom: 1.2cm)
         } else {
         (left: 1.4cm, right: 1.4cm, top: 1cm, bottom: 1cm)
       }
