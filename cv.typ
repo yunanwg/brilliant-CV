@@ -32,6 +32,7 @@
   let lastName = metadata.personal.last_name
   let headerQuote = metadata.lang.at(metadata.language).header_quote
   let displayProfilePhoto = metadata.layout.header.display_profile_photo
+  let headerInfoFontSize = metadata.layout.header.info_font_size
   // let profilePhoto = metadata.layout.header.profile_photo_path
   let accentColor = setAccentColor(awesomeColors, metadata)
   let nonLatinName = ""
@@ -61,7 +62,7 @@
     text(font: headerFont, size: 32pt, weight: "bold", str)
   }
   let headerInfoStyle(str) = {
-    text(size: 10pt, fill: accentColor, str)
+    text(size: headerInfoFontSize, fill: accentColor, str)
   }
   let headerQuoteStyle(str) = {
     text(size: 10pt, weight: "medium", style: "italic", fill: accentColor, str)

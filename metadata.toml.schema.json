@@ -61,6 +61,11 @@
             "display_profile_photo": {
               "type": "boolean",
               "description": "Display profile photo or not"
+            },
+            "info_font_size": {
+              "type": "string",
+              "description": "Font size for personal info",
+              "pattern": "^[0-9]+pt$"
             }
           },
           "required": ["header_align", "display_profile_photo"]
