@@ -36,7 +36,10 @@
   title: [数据分析实习生],
   society: [PQR 公司],
   logo: image("../src/logos/pqr_corp.png"),
-  date: [2017年夏季],
+  date: list(
+    [2017年夏季],
+    [2016年夏季],
+  ),
   location: [芝加哥, IL],
   description: list([协助使用 Python 和 Excel 进行数据清洗、处理和分析，参与团队会议并为项目规划和执行做出贡献]),
 )
