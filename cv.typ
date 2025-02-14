@@ -261,8 +261,8 @@
 /// Add an entry to the CV.
 ///
 /// - title (str): The title of the entry.
-/// - society (str): The society of the entr (company, university, etc.).
-/// - date (str): The date of the entry.
+/// - society (str): The society of the entry (company, university, etc.).
+/// - date (str | content): The date(s) of the entry.
 /// - location (str): The location of the entry.
 /// - description (array): The description of the entry. It can be a string or an array of strings.
 /// - logo (image): The logo of the society. If empty, no logo will be displayed.
@@ -306,6 +306,12 @@
       right,
       text(size: 8pt, weight: "medium", fill: gray, style: "oblique", str),
     )
+  }
+  let entryDatesStyle(dates) = {
+    [
+      #set list(marker: [])
+      #dates
+    ]
   }
   let entryDescriptionStyle(str) = {
     text(
@@ -366,59 +372,78 @@
 
   v(beforeEntrySkip)
   table(
-    columns: (ifLogo(logo, 4%, 0%), 1fr),
+    columns: (1fr, auto),
     inset: 0pt,
     stroke: none,
-    align: horizon,
-    column-gutter: ifLogo(logo, 4pt, 0pt),
-    setLogoContent(logo),
-    table(
-      columns: (1fr, auto),
-      inset: 0pt,
-      stroke: none,
-      row-gutter: 6pt,
-      align: auto,
-      {
-        entryA1Style(
-          ifSocietyFirst(
-            metadata.layout.entry.display_entry_society_first,
-            society,
-            title,
-          ),
-        )
-      },
-      {
-        entryA2Style(
-          ifSocietyFirst(
-            metadata.layout.entry.display_entry_society_first,
-            location,
-            date,
-          ),
-        )
-      },
+    gutter: 6pt,
+    align: auto,
+    {
+      table(
+        columns: (ifLogo(logo, 4%, 0%), 1fr),
+        inset: 0pt,
+        stroke: none,
+        align: horizon,
+        column-gutter: ifLogo(logo, 4pt, 0pt),
+        setLogoContent(logo),
+        table(
+          columns: auto,
+          inset: 0pt,
+          stroke: none,
+          row-gutter: 6pt,
+          align: auto,
+          {
+            entryA1Style(
+              ifSocietyFirst(
+                metadata.layout.entry.display_entry_society_first,
+                society,
+                title,
+              ),
+            )
+          },
 
-      {
-        entryB1Style(
-          ifSocietyFirst(
-            metadata.layout.entry.display_entry_society_first,
-            title,
-            society,
-          ),
-        )
-      },
-      {
-        entryB2Style(
-          ifSocietyFirst(
-            metadata.layout.entry.display_entry_society_first,
-            date,
-            location,
-          ),
-        )
-      },
-    ),
+          {
+            entryB1Style(
+              ifSocietyFirst(
+                metadata.layout.entry.display_entry_society_first,
+                title,
+                society,
+              ),
+            )
+          },
+        ),
+      )
+      entryDescriptionStyle(description)
+      entryTagListStyle(tags)
+    },
+    {
+      table(
+        columns: auto,
+        inset: 0pt,
+        stroke: none,
+        row-gutter: 6pt,
+        align: auto,
+        {
+          entryA2Style(
+            ifSocietyFirst(
+              metadata.layout.entry.display_entry_society_first,
+              location,
+              entryDatesStyle(date),
+            ),
+          )
+        },
+
+        {
+          entryB2Style(
+            ifSocietyFirst(
+              metadata.layout.entry.display_entry_society_first,
+              entryDatesStyle(date),
+              location,
+            ),
+          )
+        }
+      )
+    },
   )
-  entryDescriptionStyle(description)
-  entryTagListStyle(tags)
 }
 
 /// Add a skill to the CV.
