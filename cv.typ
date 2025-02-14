@@ -30,7 +30,7 @@
   let personalInfo = metadata.personal.info
   let firstName = metadata.personal.first_name
   let lastName = metadata.personal.last_name
-  let headerQuote = metadata.lang.at(metadata.language).header_quote
+  let headerQuote = metadata.lang.at(metadata.language).at("header_quote", default: none)
   let displayProfilePhoto = metadata.layout.header.display_profile_photo
   // let profilePhoto = metadata.layout.header.profile_photo_path
   let accentColor = setAccentColor(awesomeColors, metadata)
@@ -138,17 +138,32 @@
     }
   }
 
-  let makeHeaderNameSection() = table(
-    columns: 1fr,
-    inset: 0pt,
-    stroke: none,
-    row-gutter: 6mm,
-    if nonLatin {
-      headerFirstNameStyle(nonLatinName)
-    } else [#headerFirstNameStyle(firstName) #h(5pt) #headerLastNameStyle(lastName)],
-    [#headerInfoStyle(makeHeaderInfo())],
-    [#headerQuoteStyle(headerQuote)],
-  )
+  let makeHeaderNameSection() = {
+    if headerQuote == none {
+      table(
+        columns: 1fr,
+        inset: 0pt,
+        stroke: none,
+        row-gutter: 6mm,
+        if nonLatin {
+          headerFirstNameStyle(nonLatinName)
+        } else [#headerFirstNameStyle(firstName) #h(5pt) #headerLastNameStyle(lastName)],
+        [#headerInfoStyle(makeHeaderInfo())],
+      )
+    } else {
+      table(
+        columns: 1fr,
+        inset: 0pt,
+        stroke: none,
+        row-gutter: 6mm,
+        if nonLatin {
+          headerFirstNameStyle(nonLatinName)
+        } else [#headerFirstNameStyle(firstName) #h(5pt) #headerLastNameStyle(lastName)],
+        [#headerInfoStyle(makeHeaderInfo())],
+        [#headerQuoteStyle(headerQuote)],
+      )
+    }
+  }
 
   let makeHeaderPhotoSection() = {
     set image(height: 3.6cm)
