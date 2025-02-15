@@ -435,7 +435,7 @@
   }
 
   table(
-    columns: (16%, 1fr),
+    columns: (17%, 1fr),
     inset: 0pt,
     column-gutter: 10pt,
     stroke: none,

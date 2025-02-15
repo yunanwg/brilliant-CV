@@ -83,6 +83,11 @@ language = "en"
     cv_footer = "简历"
     letter_footer = "申请信"
 
+[lang.it]
+    header_quote = "Senior data analyst attualmente disponibile per una posizione di lavoro full-time"
+    cv_footer = "Curriculum vitae"
+    letter_footer = "Lettera di presentazione"
+
  # For languages that are not written in Latin script
  # Currently supported non-latin language codes: ("zh", "ja", "ko", "ru")
 [lang.non_latin]
