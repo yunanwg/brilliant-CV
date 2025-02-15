@@ -57,7 +57,7 @@ In order to make Typst render correctly, you will have to install the required f
 
 ### 2. Check Documentation
 
-A [documentation](https://mintyfrankie.github.io/brilliant-CV/docs.pdf) on CV functions is provided for reference.
+A [documentation](https://yunanwg.github.io/brilliant-CV/docs.pdf) on CV functions is provided for reference.
 
 ### 3. Bootstrap Template
 
@@ -116,7 +116,7 @@ With an existing CV project using the `v1` version of the template, a migration 
 4. For the module files in `/modules_*` folders:
    1. Delete the old import `#import "../brilliant-CV/template.typ": *`, and replace it by the import statements in the new template files.
    2. Due to the Typst path handling mecanism, one cannot directly pass the path string to some functions anymore. This concerns, for example, the `logo` argument in `cvEntry`, but also on `cvPublication` as well. Some parameter names were changed, but most importantly, **you should pass a function instead of a string (i.e. `image("logo.png")` instead of `"logo.png"`).** Refer to new template files for reference.
-5. You might need to install `Roboto` and `Source Sans Pro` on your local system now, as new Typst package discourages including these large files.
+5. You might need to install `FontAwesome 6`, `Roboto` and `Source Sans Pro` on your local system now, as new Typst package discourages including these large files.
 6. Run `typst c cv.typ` without passing the `font-path` flag. All should be good now, congrats!
 
 Feel free to raise an issue for more assistance should you encounter a problem that you cannot solve on your own :)
