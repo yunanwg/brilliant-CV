@@ -188,7 +188,7 @@
               "type": "string"
             }
           },
-          "required": ["header_quote", "cv_footer", "letter_footer"]
+          "required": ["cv_footer", "letter_footer"]
         },
         "^non_latin$": {
           "type": "object",
