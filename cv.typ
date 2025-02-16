@@ -424,7 +424,7 @@
 /// Add a skill to the CV.
 ///
 /// - type (str): The type of the skill. It is displayed on the left side.
-/// - info (str | content): The information about the skill. It is displayed on the right side. Items can be seperated by `#hbar()`.
+/// - info (str | content): The information about the skill. It is displayed on the right side. Items can be separated by `#hbar()`.
 /// -> content
 #let cvSkill(type: "Type", info: "Info") = {
   let skillTypeStyle(str) = {
@@ -440,6 +440,43 @@
     column-gutter: 10pt,
     stroke: none,
     skillTypeStyle(type), skillInfoStyle(info),
+  )
+  v(-6pt)
+}
+
+/// Add a skill with a level to the CV.
+///
+/// - type (str): The type of the skill. It is displayed on the left side.
+/// - level (int): The level of the skill. It is displayed in as circles in the middle. The minimum level is 0 and the maximum level is 5.
+/// - info (str | content): The information about the skill. It is displayed on the right side.
+/// -> content
+#let cvSkillWithLevel(
+  type: "Type",
+  level: 3,
+  info: "Info"
+) = {
+  let skillTypeStyle(str) = {
+    align(right, text(size: 10pt, weight: "bold", str))
+  }
+  let skillInfoStyle(str) = {
+    text(str)
+  }
+  let skillLevelStyle(str) = {
+    set text(size: 10pt, fill: regularColors.darkgray)
+    for x in range(0, level) {
+      [#fa-icon("circle", solid: true) ]
+    }
+    for x in range(level, 5) {
+      [#fa-icon("circle") ]
+    }
+  }
+
+  table(
+    columns: (17%, auto, 1fr),
+    inset: 0pt,
+    column-gutter: 10pt,
+    stroke: none,
+    skillTypeStyle(type), skillLevelStyle(level), skillInfoStyle(info),
   )
   v(-6pt)
 }
