@@ -138,19 +138,17 @@
     }
   }
 
-  let makeHeaderNameSection() = {
-    table(
-      columns: 1fr,
-      inset: 0pt,
-      stroke: none,
-      row-gutter: 6mm,
-      if nonLatin {
-        headerFirstNameStyle(nonLatinName)
-      } else [#headerFirstNameStyle(firstName) #h(5pt) #headerLastNameStyle(lastName)],
-      [#headerInfoStyle(makeHeaderInfo())],
-      .. if headerQuote != none { ([#headerQuoteStyle(headerQuote)],) },
-    )
-  }
+  let makeHeaderNameSection() = table(
+    columns: 1fr,
+    inset: 0pt,
+    stroke: none,
+    row-gutter: 6mm,
+    if nonLatin {
+      headerFirstNameStyle(nonLatinName)
+    } else [#headerFirstNameStyle(firstName) #h(5pt) #headerLastNameStyle(lastName)],
+    [#headerInfoStyle(makeHeaderInfo())],
+    .. if headerQuote != none { ([#headerQuoteStyle(headerQuote)],) },
+  )
 
   let makeHeaderPhotoSection() = {
     set image(height: 3.6cm)
