@@ -139,30 +139,17 @@
   }
 
   let makeHeaderNameSection() = {
-    if headerQuote == none {
-      table(
-        columns: 1fr,
-        inset: 0pt,
-        stroke: none,
-        row-gutter: 6mm,
-        if nonLatin {
-          headerFirstNameStyle(nonLatinName)
-        } else [#headerFirstNameStyle(firstName) #h(5pt) #headerLastNameStyle(lastName)],
-        [#headerInfoStyle(makeHeaderInfo())],
-      )
-    } else {
-      table(
-        columns: 1fr,
-        inset: 0pt,
-        stroke: none,
-        row-gutter: 6mm,
-        if nonLatin {
-          headerFirstNameStyle(nonLatinName)
-        } else [#headerFirstNameStyle(firstName) #h(5pt) #headerLastNameStyle(lastName)],
-        [#headerInfoStyle(makeHeaderInfo())],
-        [#headerQuoteStyle(headerQuote)],
-      )
-    }
+    table(
+      columns: 1fr,
+      inset: 0pt,
+      stroke: none,
+      row-gutter: 6mm,
+      if nonLatin {
+        headerFirstNameStyle(nonLatinName)
+      } else [#headerFirstNameStyle(firstName) #h(5pt) #headerLastNameStyle(lastName)],
+      [#headerInfoStyle(makeHeaderInfo())],
+      .. if headerQuote != none { ([#headerQuoteStyle(headerQuote)],) },
+    )
   }
 
   let makeHeaderPhotoSection() = {
