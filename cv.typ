@@ -446,6 +446,179 @@
   )
 }
 
+/// Add a continued entry to the CV.
+///
+/// - title (str): The title of the entry.
+/// - society (str): The society of the entry (company, university, etc.).
+/// - date (str | content): The date(s) of the entry.
+/// - location (str): The location of the entry.
+/// - description (array): The description of the entry. It can be a string or an array of strings.
+/// - logo (image): The logo of the society. If empty, no logo will be displayed.
+/// - tags (array): The tags of the entry.
+/// - metadata (array): (optional) the metadata read from the TOML file.
+/// - awesomeColors (array): (optional) the awesome colors of the CV.
+/// -> content
+#let cvEntryContinued(
+  title: "Title",
+  society: "Society",
+  date: "Date",
+  location: "Location",
+  description: "Description",
+  logo: "",
+  tags: (),
+  metadata: metadata,
+  awesomeColors: awesomeColors,
+) = {
+  let accentColor = setAccentColor(awesomeColors, metadata)
+  let beforeEntrySkip = eval(
+    metadata.layout.at("before_entry_skip", default: 1pt),
+  )
+  let beforeEntryDescriptionSkip = eval(
+    metadata.layout.at("before_entry_description_skip", default: 1pt),
+  )
+
+  let entryA1Style(str) = {
+    text(size: 10pt, weight: "bold", str)
+  }
+  let entryA2Style(str) = {
+    align(
+      right,
+      text(weight: "medium", fill: accentColor, style: "oblique", str),
+    )
+  }
+  let entryB1Style(str) = {
+    text(size: 8pt, fill: accentColor, weight: "medium", smallcaps(str))
+  }
+  let entryB2Style(str) = {
+    align(
+      right,
+      text(size: 8pt, weight: "medium", fill: gray, style: "oblique", str),
+    )
+  }
+  let entryDatesStyle(dates) = {
+    [
+      #set list(marker: [])
+      #dates
+    ]
+  }
+  let entryDescriptionStyle(str) = {
+    text(
+      fill: regularColors.lightgray,
+      {
+        v(beforeEntryDescriptionSkip)
+        str
+      },
+    )
+  }
+  let entryTagStyle(str) = {
+    align(center, text(size: 8pt, weight: "regular", str))
+  }
+  let entryTagListStyle(tags) = {
+    for tag in tags {
+      box(
+        inset: (x: 0.25em),
+        outset: (y: 0.25em),
+        fill: regularColors.subtlegray,
+        radius: 3pt,
+        entryTagStyle(tag),
+      )
+      h(5pt)
+    }
+  }
+
+  let ifSocietyFirst(condition, field1, field2) = {
+    return if condition {
+      field1
+    } else {
+      field2
+    }
+  }
+  let ifLogo(path, ifTrue, ifFalse) = {
+    return if metadata.layout.entry.display_logo {
+      if path == "" {
+        ifFalse
+      } else {
+        ifTrue
+      }
+    } else {
+      ifFalse
+    }
+  }
+  let setLogoLength(path) = {
+    return if path == "" {
+      0%
+    } else {
+      4%
+    }
+  }
+  let setLogoContent(path) = {
+    return if logo == "" [] else {
+      set image(width: 100%)
+      logo
+    }
+  }
+
+  // To use cvEntryContinued, you need to set display_entry_society_first to false in the metadata.toml file.
+  if not metadata.layout.entry.display_entry_society_first {
+    panic("display_entry_society_first must be false to use cvEntryContinued")
+  }
+
+  v(beforeEntrySkip)
+  table(
+    columns: (1fr, auto),
+    inset: 0pt,
+    stroke: none,
+    gutter: 6pt,
+    align: auto,
+    {
+      table(
+        columns: (ifLogo(logo, 4%, 0%), 1fr),
+        inset: 0pt,
+        stroke: none,
+        align: horizon,
+        column-gutter: ifLogo(logo, 4pt, 0pt),
+        [],
+        table(
+          columns: auto,
+          inset: 0pt,
+          stroke: none,
+          row-gutter: 6pt,
+          align: auto,
+          {
+            entryB1Style(
+              ifSocietyFirst(
+                metadata.layout.entry.display_entry_society_first,
+                title,
+                society,
+              ),
+            )
+          },
+        ),
+      )
+      entryDescriptionStyle(description)
+      entryTagListStyle(tags)
+    },
+    {
+      table(
+        columns: auto,
+        inset: 0pt,
+        stroke: none,
+        row-gutter: 6pt,
+        align: auto,
+        {
+          entryB2Style(
+            ifSocietyFirst(
+              metadata.layout.entry.display_entry_society_first,
+              entryDatesStyle(date),
+              location,
+            ),
+          )
+        }
+      )
+    },
+  )
+}
+
 /// Add a skill to the CV.
 ///
 /// - type (str): The type of the skill. It is displayed on the left side.
