@@ -356,13 +356,6 @@
       ifFalse
     }
   }
-  let setLogoLength(path) = {
-    return if path == "" {
-      0%
-    } else {
-      4%
-    }
-  }
   let setLogoContent(path) = {
     return if logo == "" [] else {
       set image(width: 100%)
@@ -415,43 +408,34 @@
       entryDescriptionStyle(description)
       entryTagListStyle(tags)
     },
-    {
-      table(
-        columns: auto,
-        inset: 0pt,
-        stroke: none,
-        row-gutter: 6pt,
-        align: auto,
-        {
-          entryA2Style(
-            ifSocietyFirst(
-              metadata.layout.entry.display_entry_society_first,
-              location,
-              entryDatesStyle(date),
-            ),
-          )
-        },
-
-        {
-          entryB2Style(
-            ifSocietyFirst(
-              metadata.layout.entry.display_entry_society_first,
-              entryDatesStyle(date),
-              location,
-            ),
-          )
-        }
-      )
-    },
+    table(
+      columns: auto,
+      inset: 0pt,
+      stroke: none,
+      row-gutter: 6pt,
+      align: auto,
+      entryA2Style(
+        ifSocietyFirst(
+          metadata.layout.entry.display_entry_society_first,
+          location,
+          entryDatesStyle(date),
+        ),
+      ),
+      entryB2Style(
+        ifSocietyFirst(
+          metadata.layout.entry.display_entry_society_first,
+          entryDatesStyle(date),
+          location,
+        ),
+      ),
+    ),
   )
 }
 
 /// Add a continued entry to the CV.
 ///
 /// - title (str): The title of the entry.
-/// - society (str): The society of the entry (company, university, etc.).
 /// - date (str | content): The date(s) of the entry.
-/// - location (str): The location of the entry.
 /// - description (array): The description of the entry. It can be a string or an array of strings.
 /// - logo (image): The logo of the society. If empty, no logo will be displayed.
 /// - tags (array): The tags of the entry.
@@ -460,15 +444,18 @@
 /// -> content
 #let cvEntryContinued(
   title: "Title",
-  society: "Society",
   date: "Date",
-  location: "Location",
   description: "Description",
   logo: "",
   tags: (),
   metadata: metadata,
   awesomeColors: awesomeColors,
 ) = {
+  // To use cvEntryContinued, you need to set display_entry_society_first to true in the metadata.toml file.
+  if not metadata.layout.entry.display_entry_society_first {
+    panic("display_entry_society_first must be true to use cvEntryContinued")
+  }
+  
   let accentColor = setAccentColor(awesomeColors, metadata)
   let beforeEntrySkip = eval(
     metadata.layout.at("before_entry_skip", default: 1pt),
@@ -525,14 +512,6 @@
       h(5pt)
     }
   }
-
-  let ifSocietyFirst(condition, field1, field2) = {
-    return if condition {
-      field1
-    } else {
-      field2
-    }
-  }
   let ifLogo(path, ifTrue, ifFalse) = {
     return if metadata.layout.entry.display_logo {
       if path == "" {
@@ -543,24 +522,6 @@
     } else {
       ifFalse
     }
-  }
-  let setLogoLength(path) = {
-    return if path == "" {
-      0%
-    } else {
-      4%
-    }
-  }
-  let setLogoContent(path) = {
-    return if logo == "" [] else {
-      set image(width: 100%)
-      logo
-    }
-  }
-
-  // To use cvEntryContinued, you need to set display_entry_society_first to false in the metadata.toml file.
-  if not metadata.layout.entry.display_entry_society_first {
-    panic("display_entry_society_first must be false to use cvEntryContinued")
   }
 
   v(beforeEntrySkip)
@@ -578,44 +539,12 @@
         align: horizon,
         column-gutter: ifLogo(logo, 4pt, 0pt),
         [],
-        table(
-          columns: auto,
-          inset: 0pt,
-          stroke: none,
-          row-gutter: 6pt,
-          align: auto,
-          {
-            entryB1Style(
-              ifSocietyFirst(
-                metadata.layout.entry.display_entry_society_first,
-                title,
-                society,
-              ),
-            )
-          },
-        ),
+        entryB1Style(title),
       )
       entryDescriptionStyle(description)
       entryTagListStyle(tags)
     },
-    {
-      table(
-        columns: auto,
-        inset: 0pt,
-        stroke: none,
-        row-gutter: 6pt,
-        align: auto,
-        {
-          entryB2Style(
-            ifSocietyFirst(
-              metadata.layout.entry.display_entry_society_first,
-              entryDatesStyle(date),
-              location,
-            ),
-          )
-        }
-      )
-    },
+    entryB2Style(entryDatesStyle(date)),
   )
 }
 
