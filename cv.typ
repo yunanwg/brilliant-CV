@@ -5,7 +5,7 @@
 #import "@preview/fontawesome:0.2.1": *
 #import "./utils/injection.typ": inject
 #import "./utils/styles.typ": latinFontList, latinHeaderFont, awesomeColors, regularColors, setAccentColor, hBar
-#import "./utils/lang.typ": isNonLatin
+#import "./utils/lang.typ": isNonLatin, dateWidth
 
 /// Insert the header section of the CV.
 ///
@@ -365,11 +365,11 @@
 
   v(beforeEntrySkip)
   table(
-    columns: (1fr, auto),
+    columns: (1fr, dateWidth(metadata.language)),
     inset: 0pt,
     stroke: none,
     gutter: 6pt,
-    align: auto,
+    align: (x, y) => if x == 1 { right } else { auto },
     {
       table(
         columns: (ifLogo(logo, 4%, 0%), 1fr),
@@ -527,7 +527,7 @@
 
   v(beforeEntrySkip)
   table(
-    columns: (ifLogo(logo, 4%, 0%), 1fr, auto),
+    columns: (ifLogo(logo, 4%, 0%), 1fr, dateWidth(metadata.language)),
     inset: 0pt,
     stroke: none,
     gutter: 6pt,
@@ -536,6 +536,7 @@
     entryA1Style(society),
     entryA2Style(location),
   )
+  v(-10pt)
 }
 
 /// Add a continued entry to the CV.
@@ -610,7 +611,7 @@
 
   v(beforeEntrySkip)
   table(
-    columns: (1fr, auto),
+    columns: (1fr, dateWidth(metadata.language)),
     inset: 0pt,
     stroke: none,
     gutter: 6pt,
