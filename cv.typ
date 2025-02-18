@@ -469,15 +469,6 @@
       text(weight: "medium", fill: accentColor, style: "oblique", str),
     )
   }
-  let entryB1Style(str) = {
-    text(size: 8pt, fill: accentColor, weight: "medium", smallcaps(str))
-  }
-  let entryB2Style(str) = {
-    align(
-      right,
-      text(size: 8pt, weight: "medium", fill: gray, style: "oblique", str),
-    )
-  }
   let entryDatesStyle(dates) = {
     [
       #set list(marker: [])
@@ -577,15 +568,6 @@
     metadata.layout.at("before_entry_description_skip", default: 1pt),
   )
 
-  let entryA1Style(str) = {
-    text(size: 10pt, weight: "bold", str)
-  }
-  let entryA2Style(str) = {
-    align(
-      right,
-      text(weight: "medium", fill: accentColor, style: "oblique", str),
-    )
-  }
   let entryB1Style(str) = {
     text(size: 8pt, fill: accentColor, weight: "medium", smallcaps(str))
   }
