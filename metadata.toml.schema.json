@@ -36,6 +36,11 @@
           "description": "Sets paper size and standard marigins, Optional values: us-letter. Default is a4.",
           "pattern": "^(a4|us-letter|#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}))$"
         },
+        "date_width": {
+          "type": "string",
+          "description": "Width of the right column of a cvEntry",
+          "pattern": "^\\d+(\\.\\d+)?(pt|mm|cm|in|em)$"
+        },
         "fonts": {
           "type": "object",
           "properties": {

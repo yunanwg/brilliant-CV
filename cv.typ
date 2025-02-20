@@ -5,7 +5,7 @@
 #import "@preview/fontawesome:0.2.1": *
 #import "./utils/injection.typ": inject
 #import "./utils/styles.typ": latinFontList, latinHeaderFont, awesomeColors, regularColors, setAccentColor, hBar
-#import "./utils/lang.typ": isNonLatin, dateWidth
+#import "./utils/lang.typ": isNonLatin, defaultDateWidth
 
 /// Insert the header section of the CV.
 ///
@@ -288,6 +288,12 @@
   let beforeEntryDescriptionSkip = eval(
     metadata.layout.at("before_entry_description_skip", default: 1pt),
   )
+  let dateWidth = metadata.layout.at("date_width", default: none)
+  let dateWidth = if dateWidth == none {
+    defaultDateWidth(metadata.language)
+  } else {
+    eval(dateWidth)
+  }
 
   let entryA1Style(str) = {
     text(size: 10pt, weight: "bold", str)
@@ -365,7 +371,7 @@
 
   v(beforeEntrySkip)
   table(
-    columns: (1fr, dateWidth(metadata.language)),
+    columns: (1fr, dateWidth),
     inset: 0pt,
     stroke: none,
     gutter: 6pt,
@@ -459,7 +465,13 @@
   let beforeEntryDescriptionSkip = eval(
     metadata.layout.at("before_entry_description_skip", default: 1pt),
   )
-
+  let dateWidth = metadata.layout.at("date_width", default: none)
+  let dateWidth = if dateWidth == none {
+    defaultDateWidth(metadata.language)
+  } else {
+    eval(dateWidth)
+  }
+  
   let entryA1Style(str) = {
     text(size: 10pt, weight: "bold", str)
   }
@@ -527,7 +539,7 @@
 
   v(beforeEntrySkip)
   table(
-    columns: (ifLogo(logo, 4%, 0%), 1fr, dateWidth(metadata.language)),
+    columns: (ifLogo(logo, 4%, 0%), 1fr, dateWidth),
     inset: 0pt,
     stroke: none,
     gutter: 6pt,
@@ -568,6 +580,12 @@
   let beforeEntryDescriptionSkip = eval(
     metadata.layout.at("before_entry_description_skip", default: 1pt),
   )
+  let dateWidth = metadata.layout.at("date_width", default: none)
+  let dateWidth = if dateWidth == none {
+    defaultDateWidth(metadata.language)
+  } else {
+    eval(dateWidth)
+  }
 
   let entryB1Style(str) = {
     text(size: 8pt, fill: accentColor, weight: "medium", smallcaps(str))
@@ -611,7 +629,7 @@
 
   v(beforeEntrySkip)
   table(
-    columns: (1fr, dateWidth(metadata.language)),
+    columns: (1fr, dateWidth),
     inset: 0pt,
     stroke: none,
     gutter: 6pt,

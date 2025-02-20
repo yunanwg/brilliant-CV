@@ -3,7 +3,7 @@
   return nonLatinLanguageCode.contains(lang)
 }
 
-#let dateWidth(lang) = {
+#let defaultDateWidth(lang) = {
   return if lang == "en" {
     3.6cm
   } else if lang == "fr" {
@@ -13,6 +13,7 @@
   } else if lang == "it" {
     3.9cm
   } else {
-    panic("Unsupported language")
+    // default to English
+    3.6cm
   }
 }

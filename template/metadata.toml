@@ -17,6 +17,9 @@ language = "en"
     # Optional: sets paper size and margins. Possible values: a4 (default), us-letter
     paper_size = "a4"
 
+    # Optional: sets the width of the right column of a cvEntry. If not set, values known to work well are used
+    #date_width = "3.6cm"
+
     [layout.fonts]
         regular_fonts = ["Source Sans Pro", "Source Sans 3"]
         header_font = "Roboto"
