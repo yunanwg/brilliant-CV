@@ -35,7 +35,10 @@
 #cvEntry(
   title: [Stagiaire en Analyse de Données],
   society: [PQR Corporation],
-  date: [été 2017],
+  date: list(
+    [été 2017],
+    [été 2016],
+  ),
   location: [Chicago, IL],
   logo: image("../src/logos/pqr_corp.png"),
   description: list([Aider à la préparation, au traitement et à l'analyse de données à l'aide de Python et Excel, participer aux réunions d'équipe et contribuer à la planification et à l'exécution de projets]),
