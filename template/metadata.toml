@@ -1,4 +1,4 @@
-#:schema https://raw.githubusercontent.com/mintyfrankie/brilliant-CV/main/metadata.toml.schema.json
+#:schema https://raw.githubusercontent.com/yunanwg/brilliant-CV/main/metadata.toml.schema.json
 
 # Set the output language
 # INFO: value must matches folder suffix; i.e "zh" -> "./modules_zh"
