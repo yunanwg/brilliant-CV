@@ -6,7 +6,7 @@
 
 <br>
 
-> If my work helps you drift through tedious job seeking journey, don't hesitate to think about [buying me a Coke Zero](https://github.com/sponsors/mintyfrankie)... or a lot of them! 🥤
+> If my work helps you drift through tedious job seeking journey, don't hesitate to think about [buying me a Coke Zero](https://github.com/sponsors/yunanwg)... or a lot of them! 🥤
 
 
 
