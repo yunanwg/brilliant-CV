@@ -20,9 +20,9 @@
 )
 
 #let regularColors = (
-  subtlegray: rgb("#ededee"),
-  lightgray: rgb("#343a40"),
-  darkgray: rgb("#212529"),
+  subtlegray: luma(0%, 10%),
+  lightgray: luma(0%, 50%),
+  darkgray: luma(0%, 80%),
 )
 
 /// Set the accent color for the document

@@ -42,9 +42,9 @@
   let personalInfo = metadata.personal.info
   let firstName = metadata.personal.first_name
   let lastName = metadata.personal.last_name
-  let headerQuote = metadata.lang.at(metadata.language).at("header_quote", default: none)
+  let headerQuote = metadata.lang.at(metadata.language).header_quote
   let displayProfilePhoto = metadata.layout.header.display_profile_photo
-  let headerInfoFontSize = eval(metadata.layout.header.at("info_font_size", default: "10pt"))
+  // let profilePhoto = metadata.layout.header.profile_photo_path
   let accentColor = setAccentColor(awesomeColors, metadata)
   let nonLatinName = ""
   let nonLatin = isNonLatin(metadata.language)
@@ -65,7 +65,6 @@
       font: headerFont,
       size: fontSize * 1.75,
       weight: "light",
-      fill: regularColors.darkgray,
       str,
     )
   }
@@ -82,8 +81,8 @@
   // Components
   let makeHeaderInfo() = {
     let personalInfoIcons = (
-      phone: [🕻],
-      email: [🖂],
+      phone: fa-phone(),
+      email: fa-envelope(),
       linkedin: fa-linkedin(),
       homepage: fa-pager(),
       github: fa-square-github(),
@@ -159,7 +158,7 @@
       headerFirstNameStyle(nonLatinName)
     } else [#headerFirstNameStyle(firstName) #h(5pt) #headerLastNameStyle(lastName)],
     [#headerInfoStyle(makeHeaderInfo())],
-    .. if headerQuote != none { ([#headerQuoteStyle(headerQuote)],) },
+    [#headerQuoteStyle(headerQuote)],
   )
 
   let makeHeaderPhotoSection() = {
@@ -270,8 +269,8 @@
 /// Add an entry to the CV.
 ///
 /// - title (str): The title of the entry.
-/// - society (str): The society of the entry (company, university, etc.).
-/// - date (str | content): The date(s) of the entry.
+/// - society (str): The society of the entr (company, university, etc.).
+/// - date (str): The date of the entry.
 /// - location (str): The location of the entry.
 /// - description (array): The description of the entry. It can be a string or an array of strings.
 /// - logo (image): The logo of the society. If empty, no logo will be displayed.
@@ -302,7 +301,7 @@
   let entryA2Style(str) = {
     align(
       right,
-      text(weight: "medium", fill: accentColor, style: "oblique", str),
+      text(weight: "medium", fill: accentColor, str),
     )
   }
   let entryB1Style(str) = {
@@ -313,12 +312,6 @@
       right,
       text(size: fontSize, weight: "medium", str),
     )
-  }
-  let entryDatesStyle(dates) = {
-    [
-      #set list(marker: [])
-      #dates
-    ]
   }
   let entryDescriptionStyle(str) = {
     text(
@@ -362,6 +355,13 @@
       ifFalse
     }
   }
+  let setLogoLength(path) = {
+    return if path == "" {
+      0%
+    } else {
+      4%
+    }
+  }
   let setLogoContent(path) = {
     return if logo == "" [] else {
       set image(width: 100%)
@@ -402,253 +402,34 @@
         )
       },
 
-          {
-            entryB1Style(
-              ifSocietyFirst(
-                metadata.layout.entry.display_entry_society_first,
-                title,
-                society,
-              ),
-            )
-          },
-        ),
-      )
-      entryDescriptionStyle(description)
-      entryTagListStyle(tags)
-    },
-    table(
-      columns: auto,
-      inset: 0pt,
-      stroke: none,
-      row-gutter: 6pt,
-      align: auto,
-      entryA2Style(
-        ifSocietyFirst(
-          metadata.layout.entry.display_entry_society_first,
-          location,
-          entryDatesStyle(date),
-        ),
-      ),
-      entryB2Style(
-        ifSocietyFirst(
-          metadata.layout.entry.display_entry_society_first,
-          entryDatesStyle(date),
-          location,
-        ),
-      ),
+      {
+        entryB1Style(
+          ifSocietyFirst(
+            metadata.layout.entry.display_entry_society_first,
+            title,
+            society,
+          ),
+        )
+      },
+      {
+        entryB2Style(
+          ifSocietyFirst(
+            metadata.layout.entry.display_entry_society_first,
+            date,
+            location,
+          ),
+        )
+      },
     ),
   )
-}
-
-/// Add the start of an entry to the CV.
-///
-/// - society (str): The society of the entry (company, university, etc.).
-/// - location (str): The location of the entry.
-/// - logo (image): The logo of the society. If empty, no logo will be displayed.
-/// - metadata (array): (optional) the metadata read from the TOML file.
-/// - awesomeColors (array): (optional) the awesome colors of the CV.
-/// -> content
-#let cvEntryStart(
-  society: "Society",
-  location: "Location",
-  logo: "",
-  metadata: metadata,
-  awesomeColors: awesomeColors,
-) = {
-  // To use cvEntryStart, you need to set display_entry_society_first to true in the metadata.toml file.
-  if not metadata.layout.entry.display_entry_society_first {
-    panic("display_entry_society_first must be true to use cvEntryStart")
-  }
-
-  let accentColor = setAccentColor(awesomeColors, metadata)
-  let beforeEntrySkip = eval(
-    metadata.layout.at("before_entry_skip", default: 1pt),
-  )
-  let beforeEntryDescriptionSkip = eval(
-    metadata.layout.at("before_entry_description_skip", default: 1pt),
-  )
-  let dateWidth = metadata.layout.at("date_width", default: none)
-  let dateWidth = if dateWidth == none {
-    defaultDateWidth(metadata.language)
-  } else {
-    eval(dateWidth)
-  }
-  
-  let entryA1Style(str) = {
-    text(size: 10pt, weight: "bold", str)
-  }
-  let entryA2Style(str) = {
-    align(
-      right,
-      text(weight: "medium", fill: accentColor, style: "oblique", str),
-    )
-  }
-  let entryDatesStyle(dates) = {
-    [
-      #set list(marker: [])
-      #dates
-    ]
-  }
-  let entryDescriptionStyle(str) = {
-    text(
-      fill: regularColors.lightgray,
-      {
-        v(beforeEntryDescriptionSkip)
-        str
-      },
-    )
-  }
-  let entryTagStyle(str) = {
-    align(center, text(size: 8pt, weight: "regular", str))
-  }
-  let entryTagListStyle(tags) = {
-    for tag in tags {
-      box(
-        inset: (x: 0.25em),
-        outset: (y: 0.25em),
-        fill: regularColors.subtlegray,
-        radius: 3pt,
-        entryTagStyle(tag),
-      )
-      h(5pt)
-    }
-  }
-
-  let ifSocietyFirst(condition, field1, field2) = {
-    return if condition {
-      field1
-    } else {
-      field2
-    }
-  }
-  let ifLogo(path, ifTrue, ifFalse) = {
-    return if metadata.layout.entry.display_logo {
-      if path == "" {
-        ifFalse
-      } else {
-        ifTrue
-      }
-    } else {
-      ifFalse
-    }
-  }
-  let setLogoContent(path) = {
-    return if logo == "" [] else {
-      set image(width: 100%)
-      logo
-    }
-  }
-
-  v(beforeEntrySkip)
-  table(
-    columns: (ifLogo(logo, 4%, 0%), 1fr, dateWidth),
-    inset: 0pt,
-    stroke: none,
-    gutter: 6pt,
-    align: horizon,
-    setLogoContent(logo),
-    entryA1Style(society),
-    entryA2Style(location),
-  )
-  v(-10pt)
-}
-
-/// Add a continued entry to the CV.
-///
-/// - title (str): The title of the entry.
-/// - date (str | content): The date(s) of the entry.
-/// - description (array): The description of the entry. It can be a string or an array of strings.
-/// - tags (array): The tags of the entry.
-/// - metadata (array): (optional) the metadata read from the TOML file.
-/// - awesomeColors (array): (optional) the awesome colors of the CV.
-/// -> content
-#let cvEntryContinued(
-  title: "Title",
-  date: "Date",
-  description: "Description",
-  tags: (),
-  metadata: metadata,
-  awesomeColors: awesomeColors,
-) = {
-  // To use cvEntryContinued, you need to set display_entry_society_first to true in the metadata.toml file.
-  if not metadata.layout.entry.display_entry_society_first {
-    panic("display_entry_society_first must be true to use cvEntryContinued")
-  }
-  
-  let accentColor = setAccentColor(awesomeColors, metadata)
-  let beforeEntrySkip = eval(
-    metadata.layout.at("before_entry_skip", default: 1pt),
-  )
-  let beforeEntryDescriptionSkip = eval(
-    metadata.layout.at("before_entry_description_skip", default: 1pt),
-  )
-  let dateWidth = metadata.layout.at("date_width", default: none)
-  let dateWidth = if dateWidth == none {
-    defaultDateWidth(metadata.language)
-  } else {
-    eval(dateWidth)
-  }
-
-  let entryB1Style(str) = {
-    text(size: 8pt, fill: accentColor, weight: "medium", smallcaps(str))
-  }
-  let entryB2Style(str) = {
-    align(
-      right,
-      text(size: 8pt, weight: "medium", fill: gray, style: "oblique", str),
-    )
-  }
-  let entryDatesStyle(dates) = {
-    [
-      #set list(marker: [])
-      #dates
-    ]
-  }
-  let entryDescriptionStyle(str) = {
-    text(
-      fill: regularColors.lightgray,
-      {
-        v(beforeEntryDescriptionSkip)
-        str
-      },
-    )
-  }
-  let entryTagStyle(str) = {
-    align(center, text(size: 8pt, weight: "regular", str))
-  }
-  let entryTagListStyle(tags) = {
-    for tag in tags {
-      box(
-        inset: (x: 0.25em),
-        outset: (y: 0.25em),
-        fill: regularColors.subtlegray,
-        radius: 3pt,
-        entryTagStyle(tag),
-      )
-      h(5pt)
-    }
-  }
-
-  v(beforeEntrySkip)
-  table(
-    columns: (1fr, dateWidth),
-    inset: 0pt,
-    stroke: none,
-    gutter: 6pt,
-    align: auto,
-    {
-      entryB1Style(title)
-      entryDescriptionStyle(description)
-      entryTagListStyle(tags)
-    },
-    entryB2Style(entryDatesStyle(date)),
-  )
+  entryDescriptionStyle(description)
+  entryTagListStyle(tags)
 }
 
 /// Add a skill to the CV.
 ///
 /// - type (str): The type of the skill. It is displayed on the left side.
-/// - info (str | content): The information about the skill. It is displayed on the right side. Items can be separated by `#hbar()`.
+/// - info (str | content): The information about the skill. It is displayed on the right side. Items can be seperated by `#hbar()`.
 /// -> content
 #let cvSkill(type: "Type", info: "Info", metadata: metadata) = {
   let fontSize = latinFontList
@@ -661,67 +442,13 @@
   }
 
   table(
-    columns: (17%, 1fr),
+    columns: (16%, 1fr),
     inset: 0pt,
     column-gutter: 10pt,
     stroke: none,
     skillTypeStyle(type), skillInfoStyle(info),
   )
   v(-6pt)
-}
-
-/// Add a skill with a level to the CV.
-///
-/// - type (str): The type of the skill. It is displayed on the left side.
-/// - level (int): The level of the skill. It is displayed in as circles in the middle. The minimum level is 0 and the maximum level is 5.
-/// - info (str | content): The information about the skill. It is displayed on the right side.
-/// -> content
-#let cvSkillWithLevel(
-  type: "Type",
-  level: 3,
-  info: "Info"
-) = {
-  let skillTypeStyle(str) = {
-    align(right, text(size: 10pt, weight: "bold", str))
-  }
-  let skillInfoStyle(str) = {
-    text(str)
-  }
-  let skillLevelStyle(str) = {
-    set text(size: 10pt, fill: regularColors.darkgray)
-    for x in range(0, level) {
-      [#fa-icon("circle", solid: true) ]
-    }
-    for x in range(level, 5) {
-      [#fa-icon("circle") ]
-    }
-  }
-
-  table(
-    columns: (17%, auto, 1fr),
-    inset: 0pt,
-    column-gutter: 10pt,
-    stroke: none,
-    skillTypeStyle(type), skillLevelStyle(level), skillInfoStyle(info),
-  )
-  v(-6pt)
-}
-
-/// Add a skill tag to the CV.
-/// 
-/// - skill (str | content): The skill to be displayed.
-/// -> content
-#let cvSkillTag(skill) = {
-  let entryTagStyle(str) = {
-    align(center, text(size: 10pt, weight: "regular", str))
-  }
-  box(
-    inset: (x: 0.5em, y: 0.5em),
-    fill: regularColors.subtlegray,
-    radius: 3pt,
-    entryTagStyle(skill),
-  )
-  h(5pt)
 }
 
 /// Add a Honor to the CV.
@@ -757,7 +484,7 @@
   let honorLocationStyle(str) = {
     align(
       right,
-      text(weight: "medium", fill: accentColor, style: "oblique", str),
+      text(weight: "medium", fill: accentColor, str),
     )
   }
 
