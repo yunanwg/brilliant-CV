@@ -82,8 +82,8 @@
   // Components
   let makeHeaderInfo() = {
     let personalInfoIcons = (
-      phone: fa-phone(),
-      email: fa-envelope(),
+      phone: [🕻],
+      email: [🖂],
       linkedin: fa-linkedin(),
       homepage: fa-pager(),
       github: fa-square-github(),
@@ -311,12 +311,11 @@
   let entryB2Style(str) = {
     align(
       right,
-      text(size: fontSize, weight: "medium", fill: gray, style: "oblique", str),
+      text(size: fontSize, weight: "medium", str),
     )
   }
   let entryDescriptionStyle(str) = {
     text(
-      fill: regularColors.lightgray,
       {
         v(beforeEntryDescriptionSkip)
         str
