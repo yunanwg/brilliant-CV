@@ -5,7 +5,7 @@
 #let cvHonor = cvHonor.with(metadata: metadata)
 
 
-#cvSection("Certificates")
+#cvSection("Certificazioni")
 
 #cvHonor(
   date: [2022],
@@ -21,6 +21,6 @@
 
 #cvHonor(
   date: [],
-  title: [SQL Fundamentals Track],
+  title: [Fondamenti di SQL],
   issuer: [Datacamp],
 )

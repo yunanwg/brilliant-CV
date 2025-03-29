@@ -1,22 +1,22 @@
-// Import
+// Imports
 #import "@preview/brilliant-cv:2.0.5": cvSection, cvSkill, hBar
 #let metadata = toml("../metadata.toml")
 #let cvSection = cvSection.with(metadata: metadata)
 
 
-#cvSection("技能与兴趣")
+#cvSection("Competenze")
 
 #cvSkill(
-  type: [语言],
-  info: [英语 #hBar() 法语 #hBar() 中文],
+  type: [Lingue],
+  info: [Inglese #hBar() Francese #hBar() Cinese],
 )
 
 #cvSkill(
-  type: [技术栈],
+  type: [Tecnologie],
   info: [Tableau #hBar() Python (Pandas/Numpy) #hBar() PostgreSQL],
 )
 
 #cvSkill(
-  type: [个人兴趣],
-  info: [游泳 #hBar() 烹饪 #hBar() 阅读],
+  type: [Interessi personali],
+  info: [Nuoto #hBar() Cucina #hBar() Lettura],
 )

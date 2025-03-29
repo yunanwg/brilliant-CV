@@ -1,5 +1,5 @@
 // Imports
-#import "@preview/brilliant-cv:2.0.4": cvSection, cvEntry
+#import "@preview/brilliant-cv:2.0.5": cvSection, cvEntry
 #let metadata = toml("../metadata.toml")
 #let cvSection = cvSection.with(metadata: metadata)
 #let cvEntry = cvEntry.with(metadata: metadata)
@@ -36,7 +36,10 @@
   title: [Data Analysis Intern],
   society: [PQR Corporation],
   logo: image("../src/logos/pqr_corp.png"),
-  date: [Summer 2017],
+  date: list(
+    [Summer 2017],
+    [Summer 2016],
+  ),
   location: [Chicago, IL],
   description: list([Assisted with data cleaning, processing, and analysis using Python and Excel, participated in team meetings and contributed to project planning and execution]),
 )

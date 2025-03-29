@@ -6,7 +6,7 @@
 
 <br>
 
-> If my work helps you drift through tedious job seeking journey, don't hesitate to think about [buying me a Coke Zero](https://github.com/sponsors/mintyfrankie)... or a lot of them! 🥤
+> If my work helps you drift through tedious job seeking journey, don't hesitate to think about [buying me a Coke Zero](https://github.com/sponsors/yunanwg)... or a lot of them! 🥤
 
 
 
@@ -99,7 +99,7 @@ It is recommended to:
 For the time being, upgrade can be achieved by manually "find and replace" the import statements in batch in your favorite IDE. For example:
 
 ```typst
-#import "@preview/brilliant-cv:2.0.0" -> #import "@preview/brilliant-cv:2.0.4"
+#import "@preview/brilliant-cv:2.0.0" -> #import "@preview/brilliant-cv:2.0.5"
 ```
 
 **Make sure you read the release notes to notice any breaking changes. We estimate that there would still be some as Typst has not reached to a stable release neither.**

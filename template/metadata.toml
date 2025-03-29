@@ -1,4 +1,4 @@
-#:schema https://raw.githubusercontent.com/mintyfrankie/brilliant-CV/main/metadata.toml.schema.json
+#:schema https://raw.githubusercontent.com/yunanwg/brilliant-CV/main/metadata.toml.schema.json
 
 # Set the output language
 # INFO: value must matches folder suffix; i.e "zh" -> "./modules_zh"
@@ -17,6 +17,9 @@ language = "en"
     # Optional: sets paper size and margins. Possible values: a4 (default), us-letter
     paper_size = "a4"
 
+    # Optional: sets the width of the right column of a cvEntry. If not set, values known to work well are used
+    #date_width = "3.6cm"
+
     [layout.fonts]
         regular_fonts = ["Source Sans Pro", "Source Sans 3"]
         header_font = "Roboto"
@@ -27,6 +30,7 @@ language = "en"
 
         # Decide if you want to display profile photo or not
         display_profile_photo = true
+        info_font_size = "10pt"
 
     [layout.entry]
         # Decide if you want to put your company in bold or your position in bold
@@ -50,11 +54,11 @@ language = "en"
     # The order of this section will affect how the entries are displayed
     # The custom value is for any additional information you want to add, name it as custom-1, custom-2, etc.
     [personal.info]
-        github = "mintyfrankie"
+        github = "yunanwg"
         phone = "+33 6 12 34 56 78"
         email = "john.doe@me.org"
         linkedin = "johndoe"
-        # gitlab = "mintyfrankie"
+        # gitlab = "yunanwg"
         # homepage = "jd.me.org"
         # orcid = "0000-0000-0000-0000"
         # researchgate = "John-Doe"
@@ -82,6 +86,11 @@ language = "en"
     header_quote = "具有丰富经验的数据分析师，随时可入职"
     cv_footer = "简历"
     letter_footer = "申请信"
+
+[lang.it]
+    header_quote = "Senior data analyst attualmente disponibile per una posizione di lavoro full-time"
+    cv_footer = "Curriculum vitae"
+    letter_footer = "Lettera di presentazione"
 
  # For languages that are not written in Latin script
  # Currently supported non-latin language codes: ("zh", "ja", "ko", "ru")
