@@ -1,11 +1,22 @@
 /*
-* Functions for the CV template
-*/
+ * Functions for the CV template
+ */
 
 #import "@preview/fontawesome:0.2.1": *
 #import "./utils/injection.typ": inject
-#import "./utils/styles.typ": latinFontList, latinHeaderFont, awesomeColors, regularColors, setAccentColor, hBar
+#import "./utils/styles.typ": (
+  latinFontList,
+  latinHeaderFont,
+  awesomeColors,
+  regularColors,
+  setAccentColor,
+  hBar,
+  overwriteFonts,
+  latinFontSize,
+)
 #import "./utils/lang.typ": isNonLatin
+
+
 
 /// Insert the header section of the CV.
 ///
@@ -20,6 +31,7 @@
   headerFont,
   regularColors,
   awesomeColors,
+  fontSize,
 ) = {
   // Parameters
   let hasPhoto = metadata.layout.header.display_profile_photo
@@ -51,20 +63,20 @@
   let headerFirstNameStyle(str) = {
     text(
       font: headerFont,
-      size: 32pt,
+      size: fontSize * 1.75,
       weight: "light",
       fill: regularColors.darkgray,
       str,
     )
   }
   let headerLastNameStyle(str) = {
-    text(font: headerFont, size: 32pt, weight: "bold", str)
+    text(font: headerFont, size: fontSize * 1.75, weight: "bold", str)
   }
   let headerInfoStyle(str) = {
-    text(size: 10pt, fill: accentColor, str)
+    text(size: fontSize, fill: accentColor, str)
   }
   let headerQuoteStyle(str) = {
-    text(size: 10pt, weight: "medium", style: "italic", fill: accentColor, str)
+    text(size: fontSize, weight: "medium", style: "italic", fill: accentColor, str)
   }
 
   // Components
@@ -154,8 +166,6 @@
     set image(height: 3.6cm)
     if displayProfilePhoto {
       box(profilePhoto, radius: 50%, clip: true)
-    } else {
-      v(3.6cm)
     }
   }
 
@@ -211,7 +221,6 @@
     stroke: none,
     footerStyle([#firstName #lastName]), footerStyle(footerText),
   )
-
 }
 
 /// Add the title of a section.
@@ -231,16 +240,16 @@
   metadata: metadata,
   awesomeColors: awesomeColors,
 ) = {
+  let fontSize = latinFontList
+  fontSize = overwriteFonts(metadata, latinFontList, latinHeaderFont, latinFontSize).fontSize
   let lang = metadata.language
   let nonLatin = isNonLatin(lang)
-  let beforeSectionSkip = eval(
-    metadata.layout.at("before_section_skip", default: 1pt),
-  )
+  let beforeSectionSkip = eval(metadata.layout.at("before_section_skip", default: 1pt))
   let accentColor = setAccentColor(awesomeColors, metadata)
   let highlightText = title.slice(0, letters)
   let normalText = title.slice(letters)
   let sectionTitleStyle(str, color: black) = {
-    text(size: 16pt, weight: "bold", fill: color, str)
+    text(size: fontSize, weight: "bold", fill: color, str)
   }
 
   v(beforeSectionSkip)
@@ -281,16 +290,14 @@
   metadata: metadata,
   awesomeColors: awesomeColors,
 ) = {
+  let fontSize = latinFontList
+  fontSize = overwriteFonts(metadata, latinFontList, latinHeaderFont, latinFontSize).fontSize
   let accentColor = setAccentColor(awesomeColors, metadata)
-  let beforeEntrySkip = eval(
-    metadata.layout.at("before_entry_skip", default: 1pt),
-  )
-  let beforeEntryDescriptionSkip = eval(
-    metadata.layout.at("before_entry_description_skip", default: 1pt),
-  )
+  let beforeEntrySkip = eval(metadata.layout.at("before_entry_skip", default: 1pt))
+  let beforeEntryDescriptionSkip = eval(metadata.layout.at("before_entry_description_skip", default: 1pt))
 
   let entryA1Style(str) = {
-    text(size: 10pt, weight: "bold", str)
+    text(size: fontSize, weight: "bold", str)
   }
   let entryA2Style(str) = {
     align(
@@ -299,12 +306,12 @@
     )
   }
   let entryB1Style(str) = {
-    text(size: 8pt, fill: accentColor, weight: "medium", smallcaps(str))
+    text(size: fontSize, fill: accentColor, weight: "medium", smallcaps(str))
   }
   let entryB2Style(str) = {
     align(
       right,
-      text(size: 8pt, weight: "medium", fill: gray, style: "oblique", str),
+      text(size: fontSize, weight: "medium", fill: gray, style: "oblique", str),
     )
   }
   let entryDescriptionStyle(str) = {
@@ -317,7 +324,7 @@
     )
   }
   let entryTagStyle(str) = {
-    align(center, text(size: 8pt, weight: "regular", str))
+    align(center, text(size: fontSize, weight: "regular", str))
   }
   let entryTagListStyle(tags) = {
     for tag in tags {
@@ -371,7 +378,7 @@
     stroke: none,
     align: horizon,
     column-gutter: ifLogo(logo, 4pt, 0pt),
-    setLogoContent(logo),
+    align(center+horizon)[#setLogoContent(logo)],
     table(
       columns: (1fr, auto),
       inset: 0pt,
@@ -426,9 +433,11 @@
 /// - type (str): The type of the skill. It is displayed on the left side.
 /// - info (str | content): The information about the skill. It is displayed on the right side. Items can be seperated by `#hbar()`.
 /// -> content
-#let cvSkill(type: "Type", info: "Info") = {
+#let cvSkill(type: "Type", info: "Info", metadata: metadata) = {
+  let fontSize = latinFontList
+  fontSize = overwriteFonts(metadata, latinFontList, latinHeaderFont, latinFontSize).fontSize
   let skillTypeStyle(str) = {
-    align(right, text(size: 10pt, weight: "bold", str))
+    align(right, text(size: fontSize, weight: "bold", str))
   }
   let skillInfoStyle(str) = {
     text(str)

@@ -18,8 +18,10 @@
   let lang = metadata.language
   let fontList = latinFontList
   let headerFont = latinHeaderFont
-  fontList = overwriteFonts(metadata, latinFontList, latinHeaderFont).regularFonts
-  headerFont = overwriteFonts(metadata, latinFontList, latinHeaderFont).headerFont
+  let fontSize = latinFontSize
+  fontList = overwriteFonts(metadata, latinFontList, latinHeaderFont, latinFontSize).regularFonts
+  headerFont = overwriteFonts(metadata, latinFontList, latinHeaderFont, latinFontSize).headerFont
+  fontSize = overwriteFonts(metadata, latinFontList, latinHeaderFont, latinFontSize).fontSize
   if isNonLatin(lang) {
     let nonLatinFont = metadata.lang.non_latin.font
     fontList.insert(2, nonLatinFont)
@@ -27,7 +29,7 @@
   }
 
   // Page layout
-  set text(font: fontList, weight: "regular", size: 9pt)
+  set text(font: fontList, weight: "regular", size: fontSize)
   set align(left)
   let paper_size = metadata.layout.at("paper_size", default: "a4")
   set page(
@@ -36,13 +38,14 @@
       if paper_size == "us-letter" {
         (left: 2cm, right: 1.4cm, top: 1.2cm, bottom: 1.2cm)
         } else {
-        (left: 1.4cm, right: 1.4cm, top: 1cm, bottom: 1cm)
+        (left: 1.5cm, right: 1.5cm, top: 1.5cm, bottom: 1.5cm)
       }
     },
     footer: _cvFooter(metadata),
   )
 
-  _cvHeader(metadata, profilePhoto, headerFont, regularColors, awesomeColors)
+  _cvHeader(metadata, profilePhoto, headerFont, regularColors, awesomeColors,
+  fontSize)
   doc
 }
 
@@ -59,14 +62,16 @@
   // Non Latin Logic
   let lang = metadata.language
   let fontList = latinFontList
-  fontList = overwriteFonts(metadata, latinFontList, latinHeaderFont).regularFonts
+  fontList = overwriteFonts(metadata, latinFontList, latinHeaderFont, latinFontSize).regularFonts
+  let fontSize = latinFontList
+  fontSize = overwriteFonts(metadata, latinFontList, latinHeaderFont, latinFontSize).fontSize
   if isNonLatin(lang) {
     let nonLatinFont = metadata.lang.non_latin.font
     fontList.insert(2, nonLatinFont)
   }
 
   // Page layout
-  set text(font: fontList, weight: "regular", size: 9pt)
+  set text(font: fontList, weight: "regular", size: fontSize)
   set align(left)
   let paper_size = metadata.layout.at("paper_size", default: "a4")
   set page(

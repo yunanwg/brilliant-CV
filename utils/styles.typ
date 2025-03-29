@@ -9,6 +9,7 @@
 )
 
 #let latinHeaderFont = ("Roboto")
+#let latinFontSize = 10pt
 
 #let awesomeColors = (
   skyblue: rgb("#0395DE"),
@@ -36,17 +37,20 @@
 
 /// Overwrite the default fonts if the metadata has custom font values
 /// 
-/// - metadata (array): the metadata object
+/// - metadata (dictionary): the metadata object
 /// - latinFontList (array): the default list of latin fonts
 /// - latinHeaderFont (string): the default header font
 /// -> array
-#let overwriteFonts(metadata, latinFontList, latinHeaderFont) = {
-  let metadataFonts = metadata.layout.at("fonts", default: [])
+#let overwriteFonts(metadata, latinFontList, latinHeaderFont, latinFontSize) = {
+  let metadataLayout = metadata.at("layout")
+  let metadataFonts = metadataLayout.at("fonts", default: [])
   let regularFonts = latinFontList
   let headerFont = latinHeaderFont
+  let fontSize = latinFontSize
   if metadataFonts.len() > 0 {
     regularFonts = metadataFonts.at("regular_fonts")
     headerFont = metadataFonts.at("header_font")
+    fontSize = eval(metadataFonts.at("font_size"))
   }
-  return (regularFonts: regularFonts, headerFont: headerFont)
+  return (regularFonts: regularFonts, headerFont: headerFont, fontSize: fontSize)
 }
