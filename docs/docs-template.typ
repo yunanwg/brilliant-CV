@@ -6,7 +6,7 @@
   version: "",
   doc,
 ) = {
-  import "@preview/codly:0.2.0": *
+  import "@preview/codly:1.2.0": *
   set document(author: authors, title: title)
   set page(numbering: "1", number-align: center)
   set text(font: "Source Sans 3", lang: "en")

@@ -2,7 +2,7 @@
 * Documentation of the functions used in the template, powered by tidy.
 */
 
-#import "@preview/tidy:0.3.0"
+#import "@preview/tidy:0.4.2"
 #import "./docs-template.typ": *
 #let version = toml("/typst.toml").package.version
 
