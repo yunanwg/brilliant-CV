@@ -5,7 +5,7 @@
 #let cvEntry = cvEntry.with(metadata: metadata)
 
 
-#cvSection("Projects & Associations")
+#cvSection("Projekte und Verbände")
 
 #cvEntry(
   title: [Ehrenamtlicher Datenanalyst],
