@@ -4,7 +4,7 @@
 #let cvSection = cvSection.with(metadata: metadata)
 
 
-#cvSection("Skills")
+#cvSection("Fähigkeiten")
 
 #cvSkill(
   type: [Sprachen],
