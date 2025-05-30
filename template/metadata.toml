@@ -72,6 +72,11 @@ language = "en"
 # add a new section if you want to include the language of your choice
 # i.e. [[lang.ru]]
 # each section must contains the following fields
+[lang.de]
+    header_quote = "Erfahrener Datenanalyst sucht ab sofort eine Vollzeitstelle"
+    cv_footer = "Lebenslauf"
+    letter_footer = "Anschreiben"
+
 [lang.en]
     header_quote = "Experienced Data Analyst looking for a full time job starting from now"
     cv_footer = "Curriculum vitae"
