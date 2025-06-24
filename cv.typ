@@ -325,15 +325,15 @@
     align(center, text(size: fontSize, weight: "regular", str))
   }
   let entryTagListStyle(tags) = {
-    for tag in tags {
+    for i in range(0, tags.len()) {
       box(
-        inset: (x: 0.25em),
+        inset: (x: 0.125em),
         outset: (y: 0.25em),
         fill: regularColors.subtlegray,
         radius: 3pt,
-        entryTagStyle(tag),
+        entryTagStyle(tags.at(i)),
       )
-      h(5pt)
+      if (i < tags.len() - 1) [, ]
     }
   }
 
@@ -423,6 +423,7 @@
     ),
   )
   entryDescriptionStyle(description)
+  v(-0.3em)
   entryTagListStyle(tags)
 }
 
