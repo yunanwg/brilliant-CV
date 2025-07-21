@@ -125,6 +125,8 @@
             link("https://orcid.org/" + v)[#v]
           } else if k == "researchgate" {
             link("https://www.researchgate.net/profile/" + v)[#v]
+          } else if k == "phone" {
+            link("tel:" + v.replace(" ",""))[#v]
           } else {
             v
           }
