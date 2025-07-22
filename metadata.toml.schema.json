@@ -67,6 +67,11 @@
               "type": "boolean",
               "description": "Display profile photo or not"
             },
+            "profile_photo_radius": {
+              "type": "string",
+              "description": "Radius in % to clip profile photo at. Default: 50%",
+              "pattern": "(?:0|[1-9]\\d*)%"
+            },
             "info_font_size": {
               "type": "string",
               "description": "Font size for personal info",

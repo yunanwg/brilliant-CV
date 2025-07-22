@@ -116,6 +116,8 @@ header_align = "left"
 
  # Decide if you want to display profile photo or not
 display_profile_photo = true
+# Radius in % to clip profile photo at
+display_profile_photo = "50%"
 profile_photo_path = "template/src/avatar.png"
 
 [layout.entry]
