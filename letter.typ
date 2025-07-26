@@ -1,4 +1,4 @@
-#import "brilliant-CV/template.typ": *
+#import "template/template.typ": *
 #show: layout
 #set text(size: 12pt) //set global font size
 
@@ -30,4 +30,3 @@ Sincerely,
 
 #letterSignature("/src/signature.png")
 #letterFooter()
-
