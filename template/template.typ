@@ -276,8 +276,8 @@
 }
 
 #let cvSection(title, highlighted: true, letters: 3) = {
-  let highlightText = title.slice(0, letters)
-  let normalText = title.slice(letters)
+  let highlightText = title.codepoints().slice(0, letters).join()
+  let normalText = title.codepoints().slice(letters).join()
 
   v(beforeSectionSkip)
   if nonLatinOverwrite {
