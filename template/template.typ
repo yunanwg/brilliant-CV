@@ -211,7 +211,9 @@
           // Adds icons
           personalInfoIcons.at(k) + h(5pt)
           // Adds hyperlinks
-          if k == "email" {
+          if k == "phone" {
+            link("tel:" + v)[#v]
+          } else if k == "email" {
             link("mailto:" + v)[#v]
           } else if k == "linkedin" {
             link("https://www.linkedin.com/in/" + v)[#v]
