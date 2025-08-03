@@ -25,6 +25,7 @@
   let hasPhoto = metadata.layout.header.display_profile_photo
   let align = eval(metadata.layout.header.header_align)
   let if_inject_ai_prompt = metadata.inject.inject_ai_prompt
+  let injected_ai_prompt = metadata.inject.injected_ai_prompt
   let if_inject_keywords = metadata.inject.inject_keywords
   let keywords_list = metadata.inject.injected_keywords_list
   let personalInfo = metadata.personal.info
@@ -44,6 +45,7 @@
   inject(
     if_inject_ai_prompt: if_inject_ai_prompt,
     if_inject_keywords: if_inject_keywords,
+    injected_ai_prompt: injected_ai_prompt,
     keywords_list: keywords_list,
   )
 
