@@ -2,6 +2,24 @@
 // Github Repo: https://github.com/mintyfrankie/brilliant-CV
 // Typst version: 0.11.0
 
+#{
+  // Version 0.12.0 requires system fonts, but otherwise compiles with warnings.
+  let typstVersions = (version(0, 9, 0), version(0, 12, 0))
+
+  let isCompatibleVersion = {
+    (typstVersions.at(0) <= sys.version) and (sys.version <= typstVersions.at(1))
+  }
+
+  let versionError = (
+    "typst", str(sys.version), "was not between", str(typstVersions.at(0)), "and", str(typstVersions.at(1)),
+  ).join(" ")
+
+  assert(
+    isCompatibleVersion,
+    message: versionError,
+  )
+}
+
 /* Packages */
 #import "../metadata.typ": *
 #import "./injection.typ": inject
