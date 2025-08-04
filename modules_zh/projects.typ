@@ -1,4 +1,4 @@
-#import "../brilliant-CV/template.typ": *
+#import "../template/template.typ": *
 
 #cvSection("项目与协会")
 
