@@ -143,7 +143,7 @@
   let makeHeaderNameSection() = table(
     columns: 1fr,
     inset: 0pt,
-    stroke: none,
+    stroke: 1pt,
     row-gutter: 6mm,
     if nonLatin {
       headerFirstNameStyle(nonLatinName)
@@ -164,7 +164,7 @@
   let makeHeader(leftComp, rightComp, columns, align) = table(
     columns: columns,
     inset: 0pt,
-    stroke: none,
+    stroke: 1pt,
     column-gutter: 15pt,
     align: align + horizon,
     {
@@ -210,7 +210,7 @@
   return table(
     columns: (1fr, auto),
     inset: -5pt,
-    stroke: none,
+    stroke: 1pt,
     footerStyle([#firstName #lastName]), footerStyle(footerText),
   )
 
@@ -375,21 +375,20 @@
   table(
     columns: (1fr, dateWidth),
     inset: 0pt,
-    stroke: none,
+    stroke: 1pt,
     gutter: 6pt,
     align: (x, y) => if x == 1 { right } else { auto },
-    {
-      table(
+    table(
         columns: (ifLogo(logo, 4%, 0%), 1fr),
         inset: 0pt,
-        stroke: none,
+        stroke: 1pt,
         align: horizon,
         column-gutter: ifLogo(logo, 4pt, 0pt),
         setLogoContent(logo),
         table(
           columns: auto,
           inset: 0pt,
-          stroke: none,
+          stroke: 1pt,
           row-gutter: 6pt,
           align: auto,
           {
@@ -412,14 +411,11 @@
             )
           },
         ),
-      )
-      entryDescriptionStyle(description)
-      entryTagListStyle(tags)
-    },
+      ),
     table(
       columns: auto,
       inset: 0pt,
-      stroke: none,
+      stroke: 1pt,
       row-gutter: 6pt,
       align: auto,
       entryA2Style(
@@ -438,6 +434,8 @@
       ),
     ),
   )
+  entryDescriptionStyle(description)
+  entryTagListStyle(tags)
 }
 
 /// Add the start of an entry to the CV.
@@ -543,7 +541,7 @@
   table(
     columns: (ifLogo(logo, 4%, 0%), 1fr, dateWidth),
     inset: 0pt,
-    stroke: none,
+    stroke: 1pt,
     gutter: 6pt,
     align: horizon,
     setLogoContent(logo),
@@ -633,7 +631,7 @@
   table(
     columns: (1fr, dateWidth),
     inset: 0pt,
-    stroke: none,
+    stroke: 1pt,
     gutter: 6pt,
     align: auto,
     {
@@ -662,7 +660,7 @@
     columns: (17%, 1fr),
     inset: 0pt,
     column-gutter: 10pt,
-    stroke: none,
+    stroke: 1pt,
     skillTypeStyle(type), skillInfoStyle(info),
   )
   v(-6pt)
@@ -699,7 +697,7 @@
     columns: (17%, auto, 1fr),
     inset: 0pt,
     column-gutter: 10pt,
-    stroke: none,
+    stroke: 1pt,
     skillTypeStyle(type), skillLevelStyle(level), skillInfoStyle(info),
   )
   v(-6pt)
@@ -764,7 +762,7 @@
     inset: 0pt,
     column-gutter: 10pt,
     align: horizon,
-    stroke: none,
+    stroke: 1pt,
     honorDateStyle(date),
     if issuer == "" {
       honorTitleStyle(title)
