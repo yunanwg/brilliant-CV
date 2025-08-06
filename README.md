@@ -54,28 +54,12 @@
 
 ### Installation
 
-You can either directly create a new repository by using this template, or you might want to add the submodule repository and build up your own Typst project.
-
-**Method 1: Jumpstart by clicking `Use this template` and create your own CV repository**
+You can either clone this repository, or you might want to use just the `template/` directory and build up your own Typst project.
 
 When compiling, use:
 
 ```
 typst compile ./cv.typ ./output/CV.pdf --font-path ./src/fonts/
-```
-
-**Method 2: Add the [submodule repository](https://github.com/mintyfrankie/brilliant-CV-Submodule) to your existing project**
-
-```bash
-cd your/CV/project
-git submodule add https://github.com/mintyfrankie/brilliant-CV-Submodule brilliant-CV
-typst compile cv.typ
-```
-
-When you want to get new features from the updated template module:
-
-```bash
-git submodule update --remote
 ```
 
 ### Tips
@@ -92,7 +76,7 @@ git submodule update --remote
 |
 |-- modules_*         --> multilingual sections of your CV
 |
-|-- brilliant-CV/
+|-- template/
 |   |- template.typ   --> the template file
 |   |- metadata-demo.typ -> the example metadata file
 |
