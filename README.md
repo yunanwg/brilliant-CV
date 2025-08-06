@@ -70,25 +70,25 @@ typst compile ./cv.typ ./output/CV.pdf --font-path ./src/fonts/
 ### Project Structure
 
 ```
-|
-|-- modules_en/          --> sections of your CV
-|   |- *.typ
-|
-|-- modules_*         --> multilingual sections of your CV
-|
-|-- template/
-|   |- template.typ   --> the template file
-|   |- metadata-demo.typ -> the example metadata file
-|
-|-- src/
-|   |- fonts/         --> local font files
-|   |- logos/         --> logos for your cvEntry
-|   |- *.png          --> images used in the documents
-|   |- *.bib          --> BibTeX file for Publications section
-|
-|-- cv.typ          --> CV file
-|-- letter.typ      --> Cover Letter file
-|-- metadata.typ    --> Personal Infos & Settings
+│
+├── modules_en/          --> sections of your CV
+│   └── *.typ
+│
+├── modules_*         --> multilingual sections of your CV
+│
+├── template/
+│   ├── template.typ   --> the template file
+│   └── metadata-demo.typ -> the example metadata file
+│
+├── src/
+│   ├── fonts/         --> local font files
+│   ├── logos/         --> logos for your cvEntry
+│   ├── *.png          --> images used in the documents
+│   └── *.bib          --> BibTeX file for Publications section
+│
+├── cv.typ          --> CV file
+├── letter.typ      --> Cover Letter file
+└── metadata.typ    --> Personal Infos & Settings
 ```
 
 
