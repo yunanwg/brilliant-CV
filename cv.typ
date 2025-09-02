@@ -32,6 +32,7 @@
   let lastName = metadata.personal.last_name
   let headerQuote = metadata.lang.at(metadata.language).at("header_quote", default: none)
   let displayProfilePhoto = metadata.layout.header.display_profile_photo
+  let profilePhotoRadius = eval(metadata.layout.header.at("profile_photo_radius", default: "50%"))
   let headerInfoFontSize = eval(metadata.layout.header.at("info_font_size", default: "10pt"))
   let accentColor = setAccentColor(awesomeColors, metadata)
   let nonLatinName = ""
@@ -155,7 +156,7 @@
   let makeHeaderPhotoSection() = {
     set image(height: 3.6cm)
     if displayProfilePhoto {
-      box(profilePhoto, radius: 50%, clip: true)
+      box(profilePhoto, radius: profilePhotoRadius, clip: true)
     } else {
       v(3.6cm)
     }
