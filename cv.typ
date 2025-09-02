@@ -162,32 +162,25 @@
     }
   }
 
-  let makeHeader(leftComp, rightComp, columns, align) = table(
+  let makeHeader(contents, columns, align) = table(
     columns: columns,
     inset: 0pt,
     stroke: none,
     column-gutter: 15pt,
     align: align + horizon,
-    {
-      leftComp
-    },
-    {
-      rightComp
-    },
+    ..contents,
   )
 
   if hasPhoto {
     makeHeader(
-      makeHeaderNameSection(),
-      makeHeaderPhotoSection(),
+      (makeHeaderNameSection(), makeHeaderPhotoSection()),
       (auto, 20%),
       align,
     )
   } else {
     makeHeader(
-      makeHeaderNameSection(),
-      makeHeaderPhotoSection(),
-      (auto, 0%),
+      (makeHeaderNameSection()),
+      (auto),
       align,
     )
   }
