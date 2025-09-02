@@ -1,4 +1,6 @@
 name: Compile Test
+permissions:
+  contents: read
 
 on:
     push:
