@@ -2,7 +2,7 @@
 * Functions for the CV template
 */
 
-#import "@preview/fontawesome:0.2.1": *
+#import "@preview/fontawesome:0.5.0": *
 #import "./utils/injection.typ": inject
 #import "./utils/styles.typ": latinFontList, latinHeaderFont, awesomeColors, regularColors, setAccentColor, hBar
 #import "./utils/lang.typ": isNonLatin, defaultDateWidth
