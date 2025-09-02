@@ -167,7 +167,7 @@
     stroke: none,
     column-gutter: 15pt,
     align: align + horizon,
-    contents,
+    ..contents,
   )
 
   if hasPhoto {
