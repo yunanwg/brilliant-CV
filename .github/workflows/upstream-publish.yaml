@@ -1,4 +1,4 @@
-name: Create PR for Upstream Publishing
+name: Upstream Publish to Typst Packages
 
 on:
   workflow_dispatch:
@@ -99,11 +99,11 @@ jobs:
           
           echo "✅ Package validation passed"
 
-      - name: Create test PR in forked repository
+      - name: Create PR in upstream repository
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          echo "=== Creating test PR in forked repository ==="
+          echo "=== Creating PR in upstream repository ==="
           
           # Set up git config
           git config --global user.name "github-actions[bot]"
@@ -113,8 +113,8 @@ jobs:
           gh repo clone yunanwg/our-Typst-packages temp-fork
           cd temp-fork
           
-          # Create new branch directly (no upstream syncing needed for testing!)
-          BRANCH_NAME="test-brilliant-cv-${{ steps.version.outputs.version }}"
+          # Create new branch for package submission
+          BRANCH_NAME="brilliant-cv-${{ steps.version.outputs.version }}"
           git checkout -b "$BRANCH_NAME"
           
           # Copy package files
@@ -123,14 +123,9 @@ jobs:
           
           # Commit changes
           git add .
-          git commit -m "test: add brilliant-cv v${{ steps.version.outputs.version }} (TEST)
+          git commit -m "bump: brilliant-cv to v${{ steps.version.outputs.version }}
 
-          This is a TEST of the automated upstream publishing workflow.
-          
-          Package: brilliant-cv v${{ steps.version.outputs.version }}
-          Source: ${{ github.server_url }}/${{ github.repository }}
-          
-          ⚠️ This is just a TEST - testing the automation workflow"
+          Update brilliant-cv package to version ${{ steps.version.outputs.version }}"
           
           # Configure git to use Personal Access Token for authentication
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/yunanwg/our-Typst-packages.git"
@@ -138,23 +133,28 @@ jobs:
           # Push branch
           git push -u origin "$BRANCH_NAME"
           
-          # Create test PR
+          # Create PR with proper format
           gh pr create \
             --repo yunanwg/our-Typst-packages \
-            --title "[TEST] brilliant-cv v${{ steps.version.outputs.version }}" \
-            --body "🧪 **TEST PR** - Testing the automated workflow
-
-          This PR tests the package submission automation.
+            --title "brilliant-cv:${{ steps.version.outputs.version }}" \
+            --body "I am submitting
+          - [ ] a new package
+          - [X] an update for a package
           
-          - Package: brilliant-cv v${{ steps.version.outputs.version }}
-          - Source: ${{ github.server_url }}/${{ github.repository }}
-          - Files added to: \`packages/preview/brilliant-cv/${{ steps.version.outputs.version }}/\`
+          Description: This update brings brilliant-cv to version ${{ steps.version.outputs.version }}, featuring a comprehensive CV and cover letter template system with advanced multilingual support and AI-powered customization capabilities. The template provides separation of style and content, allowing users to maintain their CV data in structured modules while automatically generating professional documents. Key improvements include enhanced language support for English, French, German, Chinese, and Italian, along with innovative AI prompt injection features for ATS optimization.
           
-          This is just a test of the automation - not a real submission." \
+          I have read and followed the submission guidelines and, in particular, I
+          - [X] selected [a name](https://github.com/typst/packages/blob/main/docs/manifest.md#naming-rules) that isn't the most obvious or canonical name for what the package does
+          - [X] added a [\`typst.toml\`](https://github.com/typst/packages/blob/main/docs/manifest.md#package-metadata) file with all required keys
+          - [X] added a [\`README.md\`](https://github.com/typst/packages/blob/main/docs/documentation.md) with documentation for my package
+          - [X] have chosen [a license](https://github.com/typst/packages/blob/main/docs/licensing.md) and added a \`LICENSE\` file or linked one in my \`README.md\`
+          - [X] tested my package locally on my system and it worked
+          - [X] [\`exclude\`d](https://github.com/typst/packages/blob/main/docs/tips.md#what-to-commit-what-to-exclude) PDFs or README images, if any, but not the LICENSE
+          - [X] ensured that my package is licensed such that users can use and distribute the contents of its template directory without restriction, after modifying them through normal use." \
             --head "$BRANCH_NAME" \
             --base main
 
-          echo "✅ Test PR created successfully in your forked repository"
+          echo "✅ PR created successfully in upstream repository"
 
       - name: Upload package as artifact
         uses: actions/upload-artifact@v4
@@ -163,18 +163,18 @@ jobs:
           path: packages/preview/brilliant-cv/${{ steps.version.outputs.version }}/
           retention-days: 7
 
-      - name: Test Summary
+      - name: Workflow Summary
         run: |
-          echo "=== TEST COMPLETED ==="
+          echo "=== UPSTREAM PUBLISH COMPLETED ==="
           echo "✅ Version: ${{ steps.version.outputs.version }}"
-          echo "✅ Test PR created in: yunanwg/our-Typst-packages"
+          echo "✅ PR created in: yunanwg/our-Typst-packages"
           echo "✅ Package uploaded as workflow artifact"
           echo ""
           echo "🔗 **Next Steps:**"
-          echo "1. Visit https://github.com/yunanwg/our-Typst-packages to review the test PR"
-          echo "2. Verify the package structure and files look correct"
-          echo "3. If everything works, the workflow is ready!"
-          echo "4. For production: adapt to target the real typst/packages repo"
+          echo "1. Visit https://github.com/yunanwg/our-Typst-packages to review the PR"
+          echo "2. Monitor the PR for any feedback from maintainers"
+          echo "3. Once merged, the package will be available via @preview/brilliant-cv:${{ steps.version.outputs.version }}"
+          echo "4. Update your documentation with the new import statement"
           
           # Restore original typst.toml
           if [ -f "typst.toml.backup" ]; then
