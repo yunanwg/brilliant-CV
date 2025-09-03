@@ -1,4 +1,4 @@
-name: TEST - Simple Upstream Publish to Forked Typst Packages
+name: Trigger PR Creation for Upstream Publishing
 
 on:
   workflow_dispatch:
