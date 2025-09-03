@@ -132,6 +132,9 @@ jobs:
           
           ⚠️ This is just a TEST - testing the automation workflow"
           
+          # Configure git to use GitHub token for authentication
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/yunanwg/our-Typst-packages.git"
+          
           # Push branch
           git push -u origin "$BRANCH_NAME"
           
