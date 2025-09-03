@@ -11,6 +11,9 @@ on:
         description: 'Dry run (skip actual PR creation)'
         type: boolean
         default: false
+  push:
+    branches: [ feat-upstream-publish-automation ]
+    paths: [ '.github/workflows/test-upstream-publish.yaml' ]
 
 jobs:
   test-create-upstream-pr:
