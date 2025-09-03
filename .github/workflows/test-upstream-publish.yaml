@@ -13,6 +13,10 @@ on:
         type: boolean
         default: false
 
+  push:
+    branches: [ feat-upstream-publish-automation ]
+    paths: [ '.github/workflows/test-upstream-publish.yaml' ]
+
 permissions:
   contents: read
   pull-requests: write
