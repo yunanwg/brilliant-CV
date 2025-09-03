@@ -101,7 +101,7 @@ jobs:
 
       - name: Create test PR in forked repository
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
           echo "=== Creating test PR in forked repository ==="
           
@@ -132,7 +132,7 @@ jobs:
           
           ⚠️ This is just a TEST - testing the automation workflow"
           
-          # Configure git to use GitHub token for authentication
+          # Configure git to use Personal Access Token for authentication
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/yunanwg/our-Typst-packages.git"
           
           # Push branch
