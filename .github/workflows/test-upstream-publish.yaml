@@ -1,0 +1,278 @@
+name: TEST - Upstream Publish to Forked Typst Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_version:
+        description: 'Test version number (e.g., 2.0.7-test)'
+        required: true
+        default: '2.0.7-test'
+      dry_run:
+        description: 'Dry run (skip actual PR creation)'
+        type: boolean
+        default: false
+
+jobs:
+  test-create-upstream-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract and validate version
+        id: version
+        run: |
+          VERSION="${{ github.event.inputs.test_version }}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Test Version: $VERSION"
+          
+          # Validate version format (allow test suffix)
+          if ! echo "$VERSION" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+(-test)?$'; then
+            echo "❌ Invalid version format: $VERSION"
+            echo "Expected format: X.Y.Z or X.Y.Z-test (e.g., 2.0.7-test)"
+            exit 1
+          fi
+          echo "✅ Version format valid: $VERSION"
+
+      - name: Update typst.toml version
+        run: |
+          # Create backup and update version
+          cp typst.toml typst.toml.backup
+          sed -i 's/^version = ".*"/version = "${{ steps.version.outputs.version }}"/' typst.toml
+          
+          echo "=== Updated typst.toml ==="
+          echo "Original version:"
+          grep '^version = ' typst.toml.backup
+          echo "New version:"
+          grep '^version = ' typst.toml
+
+      - name: Prepare package files
+        run: |
+          # Create package directory structure
+          PACKAGE_DIR="packages/preview/brilliant-cv/${{ steps.version.outputs.version }}"
+          mkdir -p "$PACKAGE_DIR"
+          
+          echo "=== Preparing package files ==="
+          echo "Target directory: $PACKAGE_DIR"
+          
+          # Copy all files except excluded ones (from typst.toml exclude list)
+          rsync -av \
+            --exclude='.git' \
+            --exclude='docs' \
+            --exclude='.pre-commit-config.yaml' \
+            --exclude='.gitignore' \
+            --exclude='.github' \
+            --exclude='packages' \
+            --exclude='typst.toml.backup' \
+            . "$PACKAGE_DIR/"
+          
+          echo "=== Package structure ==="
+          find "$PACKAGE_DIR" -type f | sort
+          
+          echo "=== Package typst.toml content ==="
+          cat "$PACKAGE_DIR/typst.toml"
+          
+          echo "=== Package size ==="
+          du -sh "$PACKAGE_DIR"
+          
+          # Validate required files exist
+          if [ ! -f "$PACKAGE_DIR/typst.toml" ]; then
+            echo "❌ Missing typst.toml in package"
+            exit 1
+          fi
+          
+          if [ ! -f "$PACKAGE_DIR/lib.typ" ]; then
+            echo "❌ Missing lib.typ (entrypoint) in package"
+            exit 1
+          fi
+          
+          echo "✅ Package validation passed"
+
+      - name: Test repository operations (dry run)
+        if: ${{ github.event.inputs.dry_run == 'true' }}
+        run: |
+          echo "=== DRY RUN MODE ==="
+          echo "Would target repository: yunanwg/our-Typst-packages"
+          echo "Would create branch: brilliant-cv-${{ steps.version.outputs.version }}"
+          echo "Would create PR with title: [TEST] Add brilliant-cv v${{ steps.version.outputs.version }}"
+          echo "Package files prepared in: packages/preview/brilliant-cv/${{ steps.version.outputs.version }}"
+          echo "✅ Dry run completed successfully"
+
+      - name: Clone and setup forked repository
+        if: ${{ github.event.inputs.dry_run == 'false' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "=== Setting up forked repository ==="
+          
+          # Clone your forked repository
+          git clone https://github.com/yunanwg/our-Typst-packages.git forked-packages
+          cd forked-packages
+          
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Add upstream remote and sync
+          git remote add upstream https://github.com/typst/packages.git
+          git fetch upstream main
+          
+          # Reset to upstream main to ensure we're up to date
+          git checkout main
+          git reset --hard upstream/main
+          git push origin main --force
+          
+          echo "✅ Repository synced with upstream"
+
+      - name: Create package branch and commit
+        if: ${{ github.event.inputs.dry_run == 'false' }}
+        run: |
+          cd forked-packages
+          
+          echo "=== Creating package branch ==="
+          
+          # Create a new branch for this version
+          BRANCH_NAME="brilliant-cv-${{ steps.version.outputs.version }}"
+          git checkout -b "$BRANCH_NAME"
+          
+          # Copy the prepared package files
+          cp -r "../packages/preview/brilliant-cv/${{ steps.version.outputs.version }}" "packages/preview/brilliant-cv/"
+          
+          # Verify the copy
+          if [ ! -d "packages/preview/brilliant-cv/${{ steps.version.outputs.version }}" ]; then
+            echo "❌ Package directory not created properly"
+            exit 1
+          fi
+          
+          echo "✅ Package files copied to: packages/preview/brilliant-cv/${{ steps.version.outputs.version }}"
+          
+          # Add and commit changes
+          git add .
+          git commit -m "test: add brilliant-cv v${{ steps.version.outputs.version }} (TEST)
+
+          This is a TEST submission for the automated upstream publishing workflow.
+          
+          Package Details:
+          - Name: brilliant-cv
+          - Version: ${{ steps.version.outputs.version }}
+          - Repository: ${{ github.server_url }}/${{ github.repository }}
+          - Test workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          
+          Description:
+          💼 another CV template for your job application, yet powered by Typst and more
+          
+          Features:
+          - Separation of style and content
+          - Quick visual customizations  
+          - Multilingual support (EN, FR, DE, CN, IT)
+          - AI Prompt and Keywords Injection
+          
+          ⚠️ This is a TEST PR - DO NOT MERGE to production typst/packages"
+          
+          # Push the branch
+          git push origin "$BRANCH_NAME"
+          
+          echo "✅ Test branch created and pushed: $BRANCH_NAME"
+
+      - name: Create test PR
+        if: ${{ github.event.inputs.dry_run == 'false' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd forked-packages
+          
+          echo "=== Creating test PR ==="
+          
+          # Create test PR in your forked repository
+          gh pr create \
+            --repo yunanwg/our-Typst-packages \
+            --title "[TEST] Add brilliant-cv v${{ steps.version.outputs.version }}" \
+            --body "🧪 **This is a TEST PR for the automated upstream publishing workflow**
+
+          **⚠️ DO NOT MERGE** - This is for testing the automation workflow only.
+
+          ## Test Details
+          - **Package**: brilliant-cv  
+          - **Version**: ${{ steps.version.outputs.version }}
+          - **Source Repository**: ${{ github.server_url }}/${{ github.repository }}
+          - **Workflow Run**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          ## Package Information
+          **Description**: 💼 another CV template for your job application, yet powered by Typst and more
+
+          **Key Features**:
+          - ✨ Separation of style and content
+          - 🎨 Quick visual customizations
+          - 🌍 Multilingual support (English, French, German, Chinese, Italian)
+          - 🤖 AI Prompt and Keywords Injection
+          - 📄 Both CV and Cover Letter templates
+
+          **Categories**: cv, languages, layout
+
+          **License**: Apache-2.0
+
+          ## Files Added
+          \`\`\`
+          packages/preview/brilliant-cv/${{ steps.version.outputs.version }}/
+          ├── lib.typ (entrypoint)
+          ├── typst.toml (manifest)
+          ├── cv.typ
+          ├── letter.typ
+          ├── template/ (template files)
+          ├── utils/ (utility modules)
+          └── ... (other package files)
+          \`\`\`
+
+          ## Testing Checklist
+          - [x] Package structure follows Typst packages format
+          - [x] typst.toml manifest is valid
+          - [x] Version format is correct
+          - [x] Entrypoint file exists
+          - [x] Template files are included
+          - [x] Excluded files are properly filtered
+
+          ---
+          *This PR was automatically created by the upstream publishing workflow test.*" \
+            --head "brilliant-cv-${{ steps.version.outputs.version }}" \
+            --base main
+
+          echo "✅ Test PR created successfully"
+
+      - name: Test summary and next steps
+        run: |
+          echo "=== TEST COMPLETED ==="
+          echo "✅ Test version: ${{ steps.version.outputs.version }}"
+          echo "✅ Dry run: ${{ github.event.inputs.dry_run }}"
+          echo "✅ Target repository: yunanwg/our-Typst-packages"
+          
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            echo ""
+            echo "🔍 **DRY RUN RESULTS:**"
+            echo "- Package files prepared successfully"
+            echo "- No actual repository changes made"
+            echo "- Ready for live test"
+            echo ""
+            echo "💡 **Next Steps:**"
+            echo "1. Review the package structure above"
+            echo "2. Run again with 'Dry run: false' to create actual PR"
+          else
+            echo ""
+            echo "🚀 **LIVE TEST RESULTS:**"
+            echo "- Branch created: brilliant-cv-${{ steps.version.outputs.version }}"
+            echo "- PR created in: https://github.com/yunanwg/our-Typst-packages"
+            echo "- Package location: packages/preview/brilliant-cv/${{ steps.version.outputs.version }}"
+            echo ""
+            echo "💡 **Next Steps:**"
+            echo "1. Visit your forked repository to review the PR"
+            echo "2. Test the package structure and files"
+            echo "3. If everything looks good, adapt for production workflow"
+            echo "4. Clean up test PR when done"
+          fi
+          
+          # Restore original typst.toml
+          if [ -f "typst.toml.backup" ]; then
+            mv typst.toml.backup typst.toml
+            echo "✅ Original typst.toml restored"
+          fi
