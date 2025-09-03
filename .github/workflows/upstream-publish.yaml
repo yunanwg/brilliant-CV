@@ -112,19 +112,6 @@ jobs:
           
           echo "✅ Package validation passed"
 
-      - name: Create package archive
-        if: ${{ steps.version.outputs.dry_run == 'false' }}
-        run: |
-          echo "=== Creating package archive ==="
-          
-          # Create a tar archive of the package
-          cd packages/preview/brilliant-cv/
-          tar -czf "../../../brilliant-cv-${{ steps.version.outputs.version }}.tar.gz" "${{ steps.version.outputs.version }}/"
-          cd ../../../
-          
-          echo "Package archive created: brilliant-cv-${{ steps.version.outputs.version }}.tar.gz"
-          ls -la *.tar.gz
-
       - name: Test repository operations (dry run)
         if: ${{ steps.version.outputs.dry_run == 'true' }}
         run: |
@@ -135,22 +122,69 @@ jobs:
           echo "Package files prepared in: packages/preview/brilliant-cv/${{ steps.version.outputs.version }}"
           echo "✅ Dry run completed successfully"
 
-      - name: Create test issue with package info
+      - name: Create PR in forked repository
         if: ${{ steps.version.outputs.dry_run == 'false' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "=== Creating test issue in forked repository ==="
+          echo "=== Creating PR in forked repository ==="
           
-          # Create an issue in your forked repository with package details
-          gh issue create \
+          # Set up git config
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Clone the forked repository using GitHub CLI
+          gh repo clone yunanwg/our-Typst-packages temp-fork
+          cd temp-fork
+          
+          # Sync with upstream
+          git remote add upstream https://github.com/typst/packages.git
+          git fetch upstream main
+          git checkout main
+          git reset --hard upstream/main
+          
+          # Create new branch
+          BRANCH_NAME="brilliant-cv-${{ steps.version.outputs.version }}"
+          git checkout -b "$BRANCH_NAME"
+          
+          # Copy package files
+          mkdir -p "packages/preview/brilliant-cv"
+          cp -r "../packages/preview/brilliant-cv/${{ steps.version.outputs.version }}" "packages/preview/brilliant-cv/"
+          
+          # Commit changes
+          git add .
+          git commit -m "feat: add brilliant-cv v${{ steps.version.outputs.version }} (TEST)
+
+          This is a TEST submission for the automated upstream publishing workflow.
+          
+          Package Details:
+          - Name: brilliant-cv
+          - Version: ${{ steps.version.outputs.version }}
+          - Repository: ${{ github.server_url }}/${{ github.repository }}
+          - Test workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          
+          Description:
+          💼 another CV template for your job application, yet powered by Typst and more
+          
+          Features:
+          - Separation of style and content
+          - Quick visual customizations  
+          - Multilingual support (EN, FR, DE, CN, IT)
+          - AI Prompt and Keywords Injection
+          
+          ⚠️ This is a TEST PR - DO NOT MERGE to production typst/packages"
+          
+          # Push branch and create PR using GitHub CLI
+          git push -u origin "$BRANCH_NAME"
+          
+          gh pr create \
             --repo yunanwg/our-Typst-packages \
-            --title "[TEST] Package Ready: brilliant-cv v${{ steps.version.outputs.version }}" \
-            --body "🧪 **TEST Package Submission Ready**
+            --title "[TEST] Add brilliant-cv v${{ steps.version.outputs.version }}" \
+            --body "🧪 **This is a TEST PR for the automated upstream publishing workflow**
 
-          **⚠️ This is a TEST issue** - Package files are ready for manual PR creation.
+          **⚠️ DO NOT MERGE** - This is for testing the automation workflow only.
 
-          ## Package Details
+          ## Test Details
           - **Package**: brilliant-cv  
           - **Version**: ${{ steps.version.outputs.version }}
           - **Source Repository**: ${{ github.server_url }}/${{ github.repository }}
@@ -169,13 +203,7 @@ jobs:
           **Categories**: cv, languages, layout
           **License**: Apache-2.0
 
-          ## Next Steps
-          1. Download the package files from the workflow artifacts
-          2. Manually create a branch in the forked repository
-          3. Add the package files to \`packages/preview/brilliant-cv/${{ steps.version.outputs.version }}/\`
-          4. Create a PR manually
-
-          ## Package Structure
+          ## Files Added
           \`\`\`
           packages/preview/brilliant-cv/${{ steps.version.outputs.version }}/
           ├── lib.typ (entrypoint)
@@ -187,10 +215,20 @@ jobs:
           └── ... (other package files)
           \`\`\`
 
-          ---
-          *This issue was automatically created by the upstream publishing workflow test.*"
+          ## Testing Checklist
+          - [x] Package structure follows Typst packages format
+          - [x] typst.toml manifest is valid
+          - [x] Version format is correct
+          - [x] Entrypoint file exists
+          - [x] Template files are included
+          - [x] Excluded files are properly filtered
 
-          echo "✅ Test issue created in forked repository"
+          ---
+          *This PR was automatically created by the upstream publishing workflow test.*" \
+            --head "$BRANCH_NAME" \
+            --base main
+
+          echo "✅ Test PR created successfully"
 
       - name: Upload package as artifact
         if: ${{ steps.version.outputs.dry_run == 'false' }}
@@ -216,19 +254,19 @@ jobs:
             echo ""
             echo "💡 **Next Steps:**"
             echo "1. Review the package structure above"
-            echo "2. Run again with 'Dry run: false' to create test issue and artifacts"
+            echo "2. Run again with 'Dry run: false' to create actual PR"
           else
             echo ""
             echo "🚀 **LIVE TEST RESULTS:**"
             echo "- Package files prepared and uploaded as artifacts"
-            echo "- Test issue created in: https://github.com/yunanwg/our-Typst-packages"
+            echo "- Test PR created in: https://github.com/yunanwg/our-Typst-packages"
             echo "- Package location: packages/preview/brilliant-cv/${{ steps.version.outputs.version }}"
             echo ""
             echo "💡 **Next Steps:**"
-            echo "1. Check the created issue in your forked repository"
-            echo "2. Download the workflow artifacts"
-            echo "3. Manually test creating a PR with the package files"
-            echo "4. If everything works, proceed to create production workflow"
+            echo "1. Visit your forked repository to review the PR"
+            echo "2. Test the package structure and files"
+            echo "3. If everything looks good, adapt for production workflow"
+            echo "4. Clean up test PR when done"
           fi
           
           # Restore original typst.toml
