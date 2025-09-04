@@ -1,6 +1,9 @@
 name: Upstream Publish to Typst Packages
 
 on:
+  release:
+    types: [published]
+    
   workflow_dispatch:
     inputs:
       version:
@@ -26,12 +29,20 @@ jobs:
       - name: Extract and validate version
         id: version
         run: |
-          VERSION="${{ github.event.inputs.version }}"
-          
-          # Fallback to default if input is empty
-          if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
-            echo "⚠️ version input is empty, using default"
-            VERSION="2.0.7"
+          # Extract version from release tag or manual input
+          if [ "${{ github.event_name }}" = "release" ]; then
+            # Extract version from release tag (remove 'v' prefix if present)
+            VERSION="${{ github.event.release.tag_name }}"
+            VERSION=${VERSION#v}
+            echo "Version from release tag: $VERSION"
+          else
+            # Use manual input for workflow_dispatch
+            VERSION="${{ github.event.inputs.version }}"
+            if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
+              echo "⚠️ version input is empty, using default"
+              VERSION="2.0.7"
+            fi
+            echo "Version from manual input: $VERSION"
           fi
           
           echo "version=$VERSION" >> $GITHUB_OUTPUT
@@ -141,7 +152,7 @@ jobs:
           - [ ] a new package
           - [X] an update for a package
           
-          Description: This update brings brilliant-cv to version ${{ steps.version.outputs.version }}, featuring a comprehensive CV and cover letter template system with advanced multilingual support and AI-powered customization capabilities. The template provides separation of style and content, allowing users to maintain their CV data in structured modules while automatically generating professional documents. Key improvements include enhanced language support for English, French, German, Chinese, and Italian, along with innovative AI prompt injection features for ATS optimization.
+          Description: This update brings brilliant-cv to version ${{ steps.version.outputs.version }}.
           
           I have read and followed the submission guidelines and, in particular, I
           - [X] selected [a name](https://github.com/typst/packages/blob/main/docs/manifest.md#naming-rules) that isn't the most obvious or canonical name for what the package does
