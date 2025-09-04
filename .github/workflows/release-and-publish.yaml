@@ -125,9 +125,14 @@ jobs:
         run: |
           echo "=== Creating PR in upstream repository ==="
           
-          # Set up git config
+          # Store the absolute path to the main workflow directory
+          MAIN_DIR="$(pwd)"
+          echo "Main workflow directory: $MAIN_DIR"
+          
+          # Set up git config and authentication first
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          gh auth setup-git
           
           # Clone your existing fork of the typst/packages repository
           echo "=== Using existing fork: yunanwg/our-Typst-packages ==="
@@ -145,13 +150,25 @@ jobs:
           git reset --hard upstream/main
           git push origin main --force
           
-          # Create new branch for package submission
+          # Create new branch for package submission (delete if exists)
           BRANCH_NAME="brilliant-cv-${{ steps.version.outputs.version }}"
+          
+          # Delete branch if it exists (both local and remote)
+          if git show-ref --verify --quiet refs/heads/$BRANCH_NAME; then
+            echo "⚠️ Local branch $BRANCH_NAME exists, deleting..."
+            git branch -D $BRANCH_NAME
+          fi
+          
+          if git ls-remote --heads origin $BRANCH_NAME | grep -q $BRANCH_NAME; then
+            echo "⚠️ Remote branch $BRANCH_NAME exists, deleting..."
+            git push origin --delete $BRANCH_NAME
+          fi
+          
           git checkout -b "$BRANCH_NAME"
           
-          # Copy package files
+          # Copy package files from the correct location
           mkdir -p "packages/preview/brilliant-cv"
-          cp -r "../packages/preview/brilliant-cv/${{ steps.version.outputs.version }}" "packages/preview/brilliant-cv/"
+          cp -r "$MAIN_DIR/packages/preview/brilliant-cv/${{ steps.version.outputs.version }}" "packages/preview/brilliant-cv/"
           
           # Commit changes
           git add .
@@ -159,8 +176,7 @@ jobs:
 
           Update brilliant-cv package to version ${{ steps.version.outputs.version }}"
           
-          # Push branch to YOUR fork using GitHub CLI (handles auth automatically)
-          gh auth setup-git
+          # Push branch to YOUR fork (auth already set up)
           git push -u origin "$BRANCH_NAME"
           
           # Create PR from your fork to upstream
@@ -185,6 +201,9 @@ jobs:
             --base main
 
           echo "✅ PR created successfully from fork to upstream repository"
+          
+          # Return to main directory for cleanup
+          cd "$MAIN_DIR"
 
       - name: Upload package as artifact
         uses: actions/upload-artifact@v4
