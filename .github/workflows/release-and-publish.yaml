@@ -9,7 +9,7 @@ on:
       version:
         description: 'Version number (e.g., 2.0.7 or 2.0.7-test)'
         required: true
-        default: '2.0.7'
+        default: '2.0.6'
         type: string
         
 permissions:
@@ -134,8 +134,10 @@ jobs:
           gh repo clone yunanwg/our-Typst-packages temp-fork
           cd temp-fork
           
-          # Add upstream remote
-          git remote add upstream https://github.com/typst/packages.git
+          # Add upstream remote (if it doesn't exist)
+          if ! git remote get-url upstream >/dev/null 2>&1; then
+            git remote add upstream https://github.com/typst/packages.git
+          fi
           
           # Fetch latest from upstream and sync fork
           git fetch upstream
