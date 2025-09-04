@@ -1,0 +1,164 @@
+name: Upstream Publish to Typst Packages
+
+on:
+  release:
+    types: [published]
+    
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 2.0.7 or 2.0.7-test)'
+        required: true
+        default: '2.0.7'
+        type: string
+        
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
+
+jobs:
+  create-upstream-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Update typst.toml version
+        run: |
+          # Create backup and update version
+          cp typst.toml typst.toml.backup
+          sed -i 's/^version = ".*"/version = "${{ steps.version.outputs.version }}"/' typst.toml
+          
+          echo "=== Updated typst.toml ==="
+          echo "Original version:"
+          grep '^version = ' typst.toml.backup
+          echo "New version:"
+          grep '^version = ' typst.toml
+
+      - name: Prepare package files
+        run: |
+          # Create package directory structure
+          PACKAGE_DIR="packages/preview/brilliant-cv/${{ steps.version.outputs.version }}"
+          mkdir -p "$PACKAGE_DIR"
+          
+          echo "=== Preparing package files ==="
+          echo "Target directory: $PACKAGE_DIR"
+          
+          # Copy all files except excluded ones (from typst.toml exclude list)
+          rsync -av \
+            --exclude='.git' \
+            --exclude='docs' \
+            --exclude='.pre-commit-config.yaml' \
+            --exclude='.gitignore' \
+            --exclude='.github' \
+            --exclude='packages' \
+            --exclude='typst.toml.backup' \
+            . "$PACKAGE_DIR/"
+          
+          echo "=== Package structure ==="
+          find "$PACKAGE_DIR" -type f | sort
+          
+          echo "=== Package typst.toml content ==="
+          cat "$PACKAGE_DIR/typst.toml"
+          
+          echo "=== Package size ==="
+          du -sh "$PACKAGE_DIR"
+          
+          # Validate required files exist
+          if [ ! -f "$PACKAGE_DIR/typst.toml" ]; then
+            echo "❌ Missing typst.toml in package"
+            exit 1
+          fi
+          
+          if [ ! -f "$PACKAGE_DIR/lib.typ" ]; then
+            echo "❌ Missing lib.typ (entrypoint) in package"
+            exit 1
+          fi
+          
+          echo "✅ Package validation passed"
+
+      - name: Create PR in upstream repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          echo "=== Creating PR in upstream repository ==="
+          
+          # Set up git config
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Clone the official typst/packages repository
+          gh repo clone typst/packages temp-fork
+          cd temp-fork
+          
+          # Create new branch for package submission
+          BRANCH_NAME="brilliant-cv-${{ steps.version.outputs.version }}"
+          git checkout -b "$BRANCH_NAME"
+          
+          # Copy package files
+          mkdir -p "packages/preview/brilliant-cv"
+          cp -r "../packages/preview/brilliant-cv/${{ steps.version.outputs.version }}" "packages/preview/brilliant-cv/"
+          
+          # Commit changes
+          git add .
+          git commit -m "bump: brilliant-cv to v${{ steps.version.outputs.version }}
+
+          Update brilliant-cv package to version ${{ steps.version.outputs.version }}"
+          
+          # Configure git to use Personal Access Token for authentication
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/typst/packages.git"
+          
+          # Push branch
+          git push -u origin "$BRANCH_NAME"
+          
+          # Create PR with proper format
+          gh pr create \
+            --repo typst/packages \
+            --title "brilliant-cv:${{ steps.version.outputs.version }}" \
+            --body "I am submitting
+          - [ ] a new package
+          - [X] an update for a package
+          
+          Description: This update brings brilliant-cv to version ${{ steps.version.outputs.version }}.
+          
+          I have read and followed the submission guidelines and, in particular, I
+          - [X] selected [a name](https://github.com/typst/packages/blob/main/docs/manifest.md#naming-rules) that isn't the most obvious or canonical name for what the package does
+          - [X] added a [\`typst.toml\`](https://github.com/typst/packages/blob/main/docs/manifest.md#package-metadata) file with all required keys
+          - [X] added a [\`README.md\`](https://github.com/typst/packages/blob/main/docs/documentation.md) with documentation for my package
+          - [X] have chosen [a license](https://github.com/typst/packages/blob/main/docs/licensing.md) and added a \`LICENSE\` file or linked one in my \`README.md\`
+          - [X] tested my package locally on my system and it worked
+          - [X] [\`exclude\`d](https://github.com/typst/packages/blob/main/docs/tips.md#what-to-commit-what-to-exclude) PDFs or README images, if any, but not the LICENSE
+          - [X] ensured that my package is licensed such that users can use and distribute the contents of its template directory without restriction, after modifying them through normal use." \
+            --head "$BRANCH_NAME" \
+            --base main
+
+          echo "✅ PR created successfully in upstream repository"
+
+      - name: Upload package as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: brilliant-cv-${{ steps.version.outputs.version }}
+          path: packages/preview/brilliant-cv/${{ steps.version.outputs.version }}/
+          retention-days: 7
+
+      - name: Workflow Summary
+        run: |
+          echo "=== UPSTREAM PUBLISH COMPLETED ==="
+          echo "✅ Version: ${{ steps.version.outputs.version }}"
+          echo "✅ PR created in: typst/packages"
+          echo "✅ Package uploaded as workflow artifact"
+          echo ""
+          echo "🔗 **Next Steps:**"
+          echo "1. Visit https://github.com/typst/packages to review the PR"
+          echo "2. Monitor the PR for any feedback from maintainers"
+          echo "3. Once merged, the package will be available via @preview/brilliant-cv:${{ steps.version.outputs.version }}"
+          echo "4. Update your documentation with the new import statement"
+          
+          # Restore original typst.toml
+          if [ -f "typst.toml.backup" ]; then
+            mv typst.toml.backup typst.toml
+            echo "✅ Original typst.toml restored"
+          fi
