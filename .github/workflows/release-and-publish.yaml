@@ -159,10 +159,8 @@ jobs:
 
           Update brilliant-cv package to version ${{ steps.version.outputs.version }}"
           
-          # Configure git to use Personal Access Token for authentication
-          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/yunanwg/our-Typst-packages.git"
-          
-          # Push branch to YOUR fork
+          # Push branch to YOUR fork using GitHub CLI (handles auth automatically)
+          gh auth setup-git
           git push -u origin "$BRANCH_NAME"
           
           # Create PR from your fork to upstream
