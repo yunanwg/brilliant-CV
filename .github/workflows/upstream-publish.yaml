@@ -26,36 +26,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Extract and validate version
-        id: version
-        run: |
-          # Extract version from release tag or manual input
-          if [ "${{ github.event_name }}" = "release" ]; then
-            # Extract version from release tag (remove 'v' prefix if present)
-            VERSION="${{ github.event.release.tag_name }}"
-            VERSION=${VERSION#v}
-            echo "Version from release tag: $VERSION"
-          else
-            # Use manual input for workflow_dispatch
-            VERSION="${{ github.event.inputs.version }}"
-            if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
-              echo "⚠️ version input is empty, using default"
-              VERSION="2.0.7"
-            fi
-            echo "Version from manual input: $VERSION"
-          fi
-          
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Version: $VERSION"
-          
-          # Validate version format (allow test suffix)
-          if ! echo "$VERSION" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+(-test)?$'; then
-            echo "❌ Invalid version format: $VERSION"
-            echo "Expected format: X.Y.Z or X.Y.Z-test (e.g., 2.0.7 or 2.0.7-test)"
-            exit 1
-          fi
-          echo "✅ Version format valid: $VERSION"
-
       - name: Update typst.toml version
         run: |
           # Create backup and update version
@@ -120,8 +90,8 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Clone YOUR forked repository
-          gh repo clone yunanwg/our-Typst-packages temp-fork
+          # Clone the official typst/packages repository
+          gh repo clone typst/packages temp-fork
           cd temp-fork
           
           # Create new branch for package submission
@@ -139,14 +109,14 @@ jobs:
           Update brilliant-cv package to version ${{ steps.version.outputs.version }}"
           
           # Configure git to use Personal Access Token for authentication
-          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/yunanwg/our-Typst-packages.git"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/typst/packages.git"
           
           # Push branch
           git push -u origin "$BRANCH_NAME"
           
           # Create PR with proper format
           gh pr create \
-            --repo yunanwg/our-Typst-packages \
+            --repo typst/packages \
             --title "brilliant-cv:${{ steps.version.outputs.version }}" \
             --body "I am submitting
           - [ ] a new package
@@ -178,11 +148,11 @@ jobs:
         run: |
           echo "=== UPSTREAM PUBLISH COMPLETED ==="
           echo "✅ Version: ${{ steps.version.outputs.version }}"
-          echo "✅ PR created in: yunanwg/our-Typst-packages"
+          echo "✅ PR created in: typst/packages"
           echo "✅ Package uploaded as workflow artifact"
           echo ""
           echo "🔗 **Next Steps:**"
-          echo "1. Visit https://github.com/yunanwg/our-Typst-packages to review the PR"
+          echo "1. Visit https://github.com/typst/packages to review the PR"
           echo "2. Monitor the PR for any feedback from maintainers"
           echo "3. Once merged, the package will be available via @preview/brilliant-cv:${{ steps.version.outputs.version }}"
           echo "4. Update your documentation with the new import statement"
