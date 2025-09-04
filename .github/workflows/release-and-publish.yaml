@@ -129,9 +129,19 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Clone the official typst/packages repository
-          gh repo clone typst/packages temp-fork
+          # Clone your existing fork of the typst/packages repository
+          echo "=== Using existing fork: yunanwg/our-Typst-packages ==="
+          gh repo clone yunanwg/our-Typst-packages temp-fork
           cd temp-fork
+          
+          # Add upstream remote
+          git remote add upstream https://github.com/typst/packages.git
+          
+          # Fetch latest from upstream and sync fork
+          git fetch upstream
+          git checkout main
+          git reset --hard upstream/main
+          git push origin main --force
           
           # Create new branch for package submission
           BRANCH_NAME="brilliant-cv-${{ steps.version.outputs.version }}"
@@ -148,12 +158,12 @@ jobs:
           Update brilliant-cv package to version ${{ steps.version.outputs.version }}"
           
           # Configure git to use Personal Access Token for authentication
-          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/typst/packages.git"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/yunanwg/our-Typst-packages.git"
           
-          # Push branch
+          # Push branch to YOUR fork
           git push -u origin "$BRANCH_NAME"
           
-          # Create PR with proper format
+          # Create PR from your fork to upstream
           gh pr create \
             --repo typst/packages \
             --title "brilliant-cv:${{ steps.version.outputs.version }}" \
@@ -171,10 +181,10 @@ jobs:
           - [X] tested my package locally on my system and it worked
           - [X] [\`exclude\`d](https://github.com/typst/packages/blob/main/docs/tips.md#what-to-commit-what-to-exclude) PDFs or README images, if any, but not the LICENSE
           - [X] ensured that my package is licensed such that users can use and distribute the contents of its template directory without restriction, after modifying them through normal use." \
-            --head "$BRANCH_NAME" \
+            --head "yunanwg:$BRANCH_NAME" \
             --base main
 
-          echo "✅ PR created successfully in upstream repository"
+          echo "✅ PR created successfully from fork to upstream repository"
 
       - name: Upload package as artifact
         uses: actions/upload-artifact@v4
