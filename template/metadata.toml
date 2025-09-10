@@ -41,6 +41,11 @@ language = "en"
         # Decide if you want to display organisation logo or not
         display_logo = true
 
+    [layout.footer]
+        # Decide if you want to display page counter or not
+        display_page_counter = false
+
+
 [inject]
     # Decide if you want to inject AI prompt or not
     inject_ai_prompt = false

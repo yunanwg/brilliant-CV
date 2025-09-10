@@ -9,7 +9,7 @@ default:
 dev:
     @echo "🚀 Starting development lifecycle..."
     @echo "🔗 Linking workspace..."
-    @utpm ws link --force || true
+    @just link || echo "⚠️  Link failed or already linked"
     @echo "👁️  Starting watch mode (Ctrl+C to exit and cleanup)..."
     @echo "💡 When you exit, we'll build final version and cleanup automatically"
     @mkdir -p temp
@@ -29,7 +29,7 @@ _dev-cleanup:
 # Link local package for development
 link:
     @echo "🔗 Linking local brilliant-cv package..."
-    utpm ws link --force
+    utpm ws link --force --no-copy
     @echo "✅ Local package linked successfully!"
     @echo "💡 Typst will now use your local changes instead of cached version"
 
