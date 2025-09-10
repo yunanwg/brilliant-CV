@@ -195,18 +195,31 @@
   let firstName = metadata.personal.first_name
   let lastName = metadata.personal.last_name
   let footerText = metadata.lang.at(metadata.language).cv_footer
+  let ifDisplayPageCounter = metadata.layout.at("footer", default: {}).at("display_page_counter", default: false)
 
   // Styles
   let footerStyle(str) = {
     text(size: 8pt, fill: rgb("#999999"), smallcaps(str))
   }
 
-  return table(
-    columns: (1fr, auto),
-    inset: -5pt,
-    stroke: none,
-    footerStyle([#firstName #lastName]), footerStyle(footerText),
-  )
+  return if ifDisplayPageCounter {
+    table(
+      columns: (1fr, 1fr, 1fr),
+      inset: -5pt,
+      stroke: none,
+      align(left, footerStyle([#firstName #lastName])),
+      align(center, footerStyle(footerText)),
+      align(right, footerStyle(counter(page).display())),
+    )
+  } else {
+    table(
+      columns: (1fr, auto),
+      inset: -5pt,
+      stroke: none,
+      footerStyle([#firstName #lastName]),
+      footerStyle(footerText),
+    )
+  }
 
 }
 
