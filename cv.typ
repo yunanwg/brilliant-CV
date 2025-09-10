@@ -2,7 +2,7 @@
 * Functions for the CV template
 */
 
-#import "@preview/fontawesome:0.2.1": *
+#import "@preview/fontawesome:0.6.0": *
 #import "./utils/injection.typ": inject
 #import "./utils/styles.typ": latinFontList, latinHeaderFont, awesomeColors, regularColors, setAccentColor, hBar
 #import "./utils/lang.typ": isNonLatin, defaultDateWidth
@@ -32,6 +32,7 @@
   let lastName = metadata.personal.last_name
   let headerQuote = metadata.lang.at(metadata.language).at("header_quote", default: none)
   let displayProfilePhoto = metadata.layout.header.display_profile_photo
+  let profilePhotoRadius = eval(metadata.layout.header.at("profile_photo_radius", default: "50%"))
   let headerInfoFontSize = eval(metadata.layout.header.at("info_font_size", default: "10pt"))
   let accentColor = setAccentColor(awesomeColors, metadata)
   let nonLatinName = ""
@@ -125,6 +126,8 @@
             link("https://orcid.org/" + v)[#v]
           } else if k == "researchgate" {
             link("https://www.researchgate.net/profile/" + v)[#v]
+          } else if k == "phone" {
+            link("tel:" + v.replace(" ",""))[#v]
           } else {
             v
           }
@@ -153,38 +156,31 @@
   let makeHeaderPhotoSection() = {
     set image(height: 3.6cm)
     if displayProfilePhoto {
-      box(profilePhoto, radius: 50%, clip: true)
+      box(profilePhoto, radius: profilePhotoRadius, clip: true)
     } else {
       v(3.6cm)
     }
   }
 
-  let makeHeader(leftComp, rightComp, columns, align) = table(
+  let makeHeader(contents, columns, align) = table(
     columns: columns,
     inset: 0pt,
     stroke: 1pt,
     column-gutter: 15pt,
     align: align + horizon,
-    {
-      leftComp
-    },
-    {
-      rightComp
-    },
+    ..contents,
   )
 
   if hasPhoto {
     makeHeader(
-      makeHeaderNameSection(),
-      makeHeaderPhotoSection(),
+      (makeHeaderNameSection(), makeHeaderPhotoSection()),
       (auto, 20%),
       align,
     )
   } else {
     makeHeader(
-      makeHeaderNameSection(),
-      makeHeaderPhotoSection(),
-      (auto, 0%),
+      (makeHeaderNameSection()),
+      (auto),
       align,
     )
   }
@@ -199,18 +195,31 @@
   let firstName = metadata.personal.first_name
   let lastName = metadata.personal.last_name
   let footerText = metadata.lang.at(metadata.language).cv_footer
+  let ifDisplayPageCounter = metadata.layout.at("footer", default: {}).at("display_page_counter", default: false)
 
   // Styles
   let footerStyle(str) = {
     text(size: 8pt, fill: rgb("#999999"), smallcaps(str))
   }
 
-  return table(
-    columns: (1fr, auto),
-    inset: -5pt,
-    stroke: 1pt,
-    footerStyle([#firstName #lastName]), footerStyle(footerText),
-  )
+  return if ifDisplayPageCounter {
+    table(
+      columns: (1fr, 1fr, 1fr),
+      inset: -5pt,
+      stroke: none,
+      align(left, footerStyle([#firstName #lastName])),
+      align(center, footerStyle(footerText)),
+      align(right, footerStyle(counter(page).display())),
+    )
+  } else {
+    table(
+      columns: (1fr, auto),
+      inset: -5pt,
+      stroke: none,
+      footerStyle([#firstName #lastName]),
+      footerStyle(footerText),
+    )
+  }
 
 }
 
