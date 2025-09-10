@@ -796,11 +796,19 @@
 /// - refStyle (str): The reference style of the publication list.
 /// - refFull (bool): Whether to show the full reference or not.
 /// -> content
-#let cvPublication(bib: "", keyList: list(), refStyle: "apa", refFull: true) = {
+#let cvPublication(bib: "", refStyle: "apa", refFull: true, keyList: list()) = {
   let publicationStyle(str) = {
     text(str)
   }
   show bibliography: it => publicationStyle(it)
   set bibliography(title: none, style: refStyle, full: refFull)
-  bib
+
+  if refFull {
+    bib
+  } else {
+    for key in keyList {
+      cite(label(key), form: none)
+    }
+    bib
+  }
 }
