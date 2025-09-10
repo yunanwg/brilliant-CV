@@ -643,11 +643,11 @@
     align: auto,
     {
       entryB1Style(title)
-      entryDescriptionStyle(description)
-      entryTagListStyle(tags)
     },
     entryB2Style(entryDatesStyle(date)),
-  )
+    )
+  entryDescriptionStyle(description)
+  entryTagListStyle(tags)
 }
 
 /// Add a skill to the CV.
