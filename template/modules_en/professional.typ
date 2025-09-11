@@ -26,7 +26,7 @@
 
 #cvEntryContinued(
   title: [Data Scientist],
-  date: [2017 - 2020],
+  date: [2017 - 2020 #linebreak() 2021 - 2022],
   description: list(
     [Analyze large datasets with SQL and Python, collaborate with teams to uncover business insights],
     [Create data visualizations and dashboards in Tableau, develop and maintain data pipelines with AWS],

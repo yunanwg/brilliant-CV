@@ -634,20 +634,45 @@
     }
   }
 
+  // If the date contains a linebreak, use legacy side-to-side layout
+  let multipleDates
+  if type(date) == content {
+    multipleDates = if linebreak() in date.fields().children { true } else { false }
+  } else {
+    multipleDates = false
+  }
+
   v(beforeEntrySkip)
-  table(
-    columns: (1fr, dateWidth),
-    inset: 0pt,
-    stroke: 1pt,
-    gutter: 6pt,
-    align: auto,
-    {
-      entryB1Style(title)
-    },
-    entryB2Style(entryDatesStyle(date)),
-    )
-  entryDescriptionStyle(description)
-  entryTagListStyle(tags)
+  if not multipleDates {
+    table(
+      columns: (1fr, dateWidth),
+      inset: 0pt,
+      stroke: 1pt,
+      gutter: 6pt,
+      align: auto,
+      {
+        entryB1Style(title)
+      },
+      entryB2Style(entryDatesStyle(date)),
+      )
+    entryDescriptionStyle(description)
+    entryTagListStyle(tags)
+  } else {
+    table(
+      columns: (1fr, dateWidth),
+      inset: 0pt,
+      stroke: 1pt,
+      gutter: 6pt,
+      align: auto,
+      {
+        entryB1Style(title)
+        entryDescriptionStyle(description)
+      },
+      entryB2Style(entryDatesStyle(date)),
+      )
+    entryTagListStyle(tags)
+  }
+  }
 }
 
 /// Add a skill to the CV.
