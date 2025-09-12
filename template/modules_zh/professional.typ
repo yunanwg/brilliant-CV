@@ -1,13 +1,13 @@
 // Imports
-#import "@preview/brilliant-cv:2.0.6": cvSection, cvEntry
+#import "@preview/brilliant-cv:2.0.6": cv-section, cv-entry
 #let metadata = toml("../metadata.toml")
-#let cvSection = cvSection.with(metadata: metadata)
-#let cvEntry = cvEntry.with(metadata: metadata)
+#let cv-section = cv-section.with(metadata: metadata)
+#let cv-entry = cv-entry.with(metadata: metadata)
 
 
-#cvSection("职业经历")
+#cv-section("职业经历")
 
-#cvEntry(
+#cv-entry(
   title: [数据科学主管],
   society: [XYZ 公司],
   logo: image("../src/logos/xyz_corp.png"),
@@ -20,7 +20,7 @@
   tags: ("标签示例", "Dataiku", "Snowflake", "SparkSQL"),
 )
 
-#cvEntry(
+#cv-entry(
   title: [数据分析师],
   society: [ABC 公司],
   logo: image("../src/logos/abc_company.png"),
@@ -32,7 +32,7 @@
   ),
 )
 
-#cvEntry(
+#cv-entry(
   title: [数据分析实习生],
   society: [PQR 公司],
   logo: image("../src/logos/pqr_corp.png"),
