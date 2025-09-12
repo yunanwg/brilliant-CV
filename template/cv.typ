@@ -12,7 +12,7 @@
 
 #show: cv.with(
   metadata,
-  profilePhoto: image("./src/avatar.png"),
+  profile-photo: image("./src/avatar.png"),
 )
 
 #import-modules((

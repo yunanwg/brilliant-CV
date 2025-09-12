@@ -8,10 +8,10 @@
 
 #cv-publication(
   bib: bibliography("../src/publications.bib"),
-  keyList: (
+  key-list: (
     "smith2020",
     "jones2021",
     "wilson2022",
   ),
-  refStyle: "apa",
+  ref-style: "apa",
 )
