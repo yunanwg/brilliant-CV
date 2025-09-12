@@ -272,8 +272,20 @@
   highlighted: true,
   letters: 3,
   metadata: metadata,
-  awesome-colors: _awesome-colors,
+  // New parameter names (recommended)
+  awesome-colors: none,
+  // Old parameter names (deprecated, for backward compatibility)
+  awesomeColors: _awesome-colors,
 ) = {
+  // Backward compatibility logic (remove this block when deprecating)
+  let awesome-colors = if awesome-colors != none { 
+    awesome-colors 
+  } else { 
+    // TODO: Add deprecation warning in future version
+    // Currently Typst doesn't have a standard warning mechanism for user functions
+    awesomeColors 
+  }
+  
   let lang = metadata.language
   let non-latin = _is-non-latin(lang)
   let before-section-skip = _get-layout-value(metadata, "before_section_skip", 1pt)
@@ -359,8 +371,19 @@
   logo: "",
   tags: (),
   metadata: metadata,
-  awesome-colors: _awesome-colors,
+  // New parameter names (recommended)
+  awesome-colors: none,
+  // Old parameter names (deprecated, for backward compatibility)
+  awesomeColors: _awesome-colors,
 ) = {
+  // Backward compatibility logic (remove this block when deprecating)
+  let awesome-colors = if awesome-colors != none { 
+    awesome-colors 
+  } else { 
+    // TODO: Add deprecation warning in future version
+    awesomeColors 
+  }
+  
   // Parameters
   let accent-color = _set-accent-color(awesome-colors, metadata)
   let before-entry-skip = eval(metadata.layout.at("before_entry_skip", default: 1pt))
@@ -441,8 +464,18 @@
   location: "Location",
   logo: "",
   metadata: metadata,
-  awesome-colors: _awesome-colors,
+  // New parameter names (recommended)
+  awesome-colors: none,
+  // Old parameter names (deprecated, for backward compatibility)
+  awesomeColors: _awesome-colors,
 ) = {
+  // Backward compatibility logic (remove this block when deprecating)
+  let awesome-colors = if awesome-colors != none { 
+    awesome-colors 
+  } else { 
+    // TODO: Add deprecation warning in future version
+    awesomeColors 
+  }
   // To use cvEntryStart, you need to set display_entry_society_first to true in the metadata.toml file.
   if not metadata.layout.entry.display_entry_society_first {
     panic("display_entry_society_first must be true to use cvEntryStart")
@@ -690,17 +723,31 @@
 /// - refStyle (str): The reference style of the publication list.
 /// - refFull (bool): Whether to show the full reference or not.
 /// -> content
-#let cv-publication(bib: "", refStyle: "apa", refFull: true, keyList: list()) = {
+#let cv-publication(
+  bib: "", 
+  // New parameter names (recommended)
+  ref-style: "apa", 
+  ref-full: true, 
+  key-list: list(),
+  // Old parameter names (deprecated, for backward compatibility)
+  refStyle: "apa", 
+  refFull: true, 
+  keyList: list()
+) = {
+  // Backward compatibility logic (remove this block when deprecating)
+  let ref-style = if ref-style != "apa" { ref-style } else { refStyle }
+  let ref-full = if ref-full != true { ref-full } else { refFull }
+  let key-list = if key-list != list() { key-list } else { keyList }
   let publication-style(str) = {
     text(str)
   }
   show bibliography: it => publication-style(it)
-  set bibliography(title: none, style: refStyle, full: refFull)
+  set bibliography(title: none, style: ref-style, full: ref-full)
 
-  if refFull {
+  if ref-full {
     bib
   } else {
-    for key in keyList {
+    for key in key-list {
       cite(label(key), form: none)
     }
     bib

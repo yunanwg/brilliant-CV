@@ -11,9 +11,19 @@
 /* Layout */
 #let cv(
   metadata,
-  profilePhoto: image("./template/src/avatar.png"),
   doc,
+  // New parameter names (recommended)
+  profile-photo: image("./template/src/avatar.png"),
+  // Old parameter names (deprecated, for backward compatibility)
+  profilePhoto: image("./template/src/avatar.png"),
 ) = {
+  // Backward compatibility logic (remove this block when deprecating)
+  let profile-photo = if profile-photo != image("./template/src/avatar.png") { 
+    profile-photo 
+  } else { 
+    // TODO: Add deprecation warning in future version
+    profilePhoto 
+  }
   // Non Latin Logic
   let lang = metadata.language
   let fonts = _latin-font-list
@@ -44,13 +54,18 @@
     footer: context _cv-footer(metadata),
   )
 
-  _cv-header(metadata, profilePhoto, header-font, _regular-colors, _awesome-colors)
+  _cv-header(metadata, profile-photo, header-font, _regular-colors, _awesome-colors)
   doc
 }
 
 #let letter(
   metadata,
   doc,
+  // New parameter names (recommended)
+  sender-address: "Your Address Here",
+  recipient-name: "Company Name Here", 
+  recipient-address: "Company Address Here",
+  // Old parameter names (deprecated, for backward compatibility)
   myAddress: "Your Address Here",
   recipientName: "Company Name Here",
   recipientAddress: "Company Address Here",
@@ -58,6 +73,10 @@
   subject: "Subject: Hey!",
   signature: "",
 ) = {
+  // Backward compatibility logic (remove this block when deprecating)
+  let sender-address = if sender-address != "Your Address Here" { sender-address } else { myAddress }
+  let recipient-name = if recipient-name != "Company Name Here" { recipient-name } else { recipientName }
+  let recipient-address = if recipient-address != "Company Address Here" { recipient-address } else { recipientAddress }
   // Non Latin Logic
   let lang = metadata.language
   let fonts = _latin-font-list
@@ -85,9 +104,9 @@
   set text(size: 12pt)
 
   _letter-header(
-      sender-address: myAddress,
-      recipient-name: recipientName,
-      recipient-address: recipientAddress,
+      sender-address: sender-address,
+      recipient-name: recipient-name,
+      recipient-address: recipient-address,
       date: date,
       subject: subject,
       metadata: metadata,

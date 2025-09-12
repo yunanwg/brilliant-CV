@@ -11,8 +11,18 @@
   date: "Today's Date",
   subject: "Subject: Hey!",
   metadata: metadata,
-  awesome-colors: _awesome-colors,
+  // New parameter names (recommended)
+  awesome-colors: none,
+  // Old parameter names (deprecated, for backward compatibility)
+  awesomeColors: _awesome-colors,
 ) = {
+  // Backward compatibility logic (remove this block when deprecating)
+  let awesome-colors = if awesome-colors != none { 
+    awesome-colors 
+  } else { 
+    // TODO: Add deprecation warning in future version
+    awesomeColors 
+  }
 
   let sender-name = metadata.personal.first_name + " " + metadata.personal.last_name
 
@@ -67,7 +77,7 @@
     text(size: 8pt, fill: rgb("#999999"), smallcaps(str))
   }
 
-  return table(
+  table(
     columns: (1fr, auto),
     inset: 0pt,
     stroke: none,
