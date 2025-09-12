@@ -1,16 +1,16 @@
 
 #let h-bar() = [#h(5pt) | #h(5pt)]
 
-#let latin-font-list = (
+#let _latin-font-list = (
   "Source Sans 3",
   "Linux Libertine",
   "Font Awesome 6 Brands",
   "Font Awesome 6 Free",
 )
 
-#let latin-header-font = ("Roboto")
+#let _latin-header-font = ("Roboto")
 
-#let awesome-colors = (
+#let _awesome-colors = (
   skyblue: rgb("#0395DE"),
   red: rgb("#DC3522"),
   nephritis: rgb("#27AE60"),
@@ -18,7 +18,7 @@
   darknight: rgb("#131A28"),
 )
 
-#let regular-colors = (
+#let _regular-colors = (
   subtlegray: rgb("#ededee"),
   lightgray: rgb("#343a40"),
   darkgray: rgb("#212529"),
@@ -26,13 +26,13 @@
 
 /// Set the accent color for the document
 /// 
-/// - awesomeColors (array): the awesome colors
+/// - awesome-colors (array): the awesome colors
 /// - metadata (array): the metadata object
 /// -> color
-#let set-accent-color(awesomeColors, metadata) = {
+#let _set-accent-color(awesome-colors, metadata) = {
   let param = metadata.layout.awesome_color
-  return if param in awesomeColors {
-    awesomeColors.at(param)
+  return if param in awesome-colors {
+    awesome-colors.at(param)
   } else {
     rgb(param)
   }
@@ -41,25 +41,19 @@
 /// Overwrite the default fonts if the metadata has custom font values
 /// 
 /// - metadata (array): the metadata object
-/// - latinFontList (array): the default list of latin fonts
-/// - latinHeaderFont (string): the default header font
+/// - latin-fonts (array): the default list of latin fonts
+/// - latin-header-font (string): the default header font
 /// -> array
-#let overwrite-fonts(metadata, latinFontList, latinHeaderFont) = {
-  let metadataFonts = metadata.layout.at("fonts", default: [])
-  let regularFonts = latinFontList
-  let headerFont = latinHeaderFont
-  if metadataFonts.len() > 0 {
-    regularFonts = metadataFonts.at("regular_fonts")
-    headerFont = metadataFonts.at("header_font")
+#let overwrite-fonts(metadata, latin-fonts, latin-header-font) = {
+  let user-defined-fonts = metadata.layout.at("fonts", default: [])
+  let regular-fonts = latin-fonts
+  let header-font = latin-header-font
+  if user-defined-fonts.len() > 0 {
+    regular-fonts = user-defined-fonts.at("regular_fonts")
+    header-font = user-defined-fonts.at("header_font")
   }
-  return (regularFonts: regularFonts, headerFont: headerFont)
+  return (regular-fonts: regular-fonts, header-font: header-font)
 }
 
 // Backward compatibility aliases
-#let setAccentColor = set-accent-color
-#let overwriteFonts = overwrite-fonts
 #let hBar = h-bar
-#let latinFontList = latin-font-list
-#let latinHeaderFont = latin-header-font
-#let awesomeColors = awesome-colors
-#let regularColors = regular-colors
