@@ -22,6 +22,12 @@
   quote: (str) => text(size: 10pt, weight: "medium", style: "italic", fill: accent-color, str),
 )
 
+/// Extract layout values with defaults
+/// -> any
+#let _get-layout-value(metadata, key, default) = {
+  eval(metadata.layout.at(key, default: default))
+}
+
 /// Personal info icons mapping
 /// -> dictionary
 #let _personal-info-icons = (
@@ -106,7 +112,7 @@
 /// Create header name section
 /// -> content
 #let _make-header-name-section(styles, non-latin, non-latin-name, first-name, last-name, personal-info, header-quote) = {
-  return table(
+  table(
     columns: 1fr,
     inset: 0pt,
     stroke: none,
@@ -133,7 +139,7 @@
 /// Create header table
 /// -> content
 #let _make-header(contents, columns, align) = {
-  return table(
+  table(
     columns: columns,
     inset: 0pt,
     stroke: none,
@@ -230,7 +236,7 @@
     text(size: 8pt, fill: rgb("#999999"), smallcaps(str))
   }
 
-  return if display-page-counter {
+  if display-page-counter {
     table(
       columns: (1fr, 1fr, 1fr),
       inset: -5pt,
@@ -270,9 +276,7 @@
 ) = {
   let lang = metadata.language
   let non-latin = _is-non-latin(lang)
-  let before-section-skip = eval(
-    metadata.layout.at("before_section_skip", default: 1pt),
-  )
+  let before-section-skip = _get-layout-value(metadata, "before_section_skip", 1pt)
   let accent-color = _set-accent-color(awesome-colors, metadata)
   let highlighted-text = title.slice(0, letters)
   let normal-text = title.slice(letters)
@@ -333,14 +337,6 @@
 }
 
 
-/// Set logo content
-/// -> content
-#let _set-logo-content(logo) = {
-  return if logo == "" [] else {
-    set image(width: 100%)
-    logo
-  }
-}
 
 /// Add an entry to the CV.
 ///
@@ -399,7 +395,10 @@
         stroke: none,
         align: horizon,
         column-gutter: if display-logo and logo != "" { 4pt } else { 0pt },
-        _set-logo-content(logo),
+        if logo == "" [] else {
+          set image(width: 100%)
+          logo
+        },
         table(
           columns: auto,
           inset: 0pt,
@@ -469,7 +468,10 @@
     stroke: none,
     gutter: 6pt,
     align: horizon,
-    _set-logo-content(logo),
+    if logo == "" [] else {
+      set image(width: 100%)
+      logo
+    },
     (styles.a1)(society),
     (styles.a2)(location),
   )
