@@ -1,13 +1,13 @@
 // Imports
-#import "@preview/brilliant-cv:2.0.6": cvSection, cvEntry
+#import "@preview/brilliant-cv:2.0.6": cv-section, cv-entry
 #let metadata = toml("../metadata.toml")
-#let cvSection = cvSection.with(metadata: metadata)
-#let cvEntry = cvEntry.with(metadata: metadata)
+#let cv-section = cv-section.with(metadata: metadata)
+#let cv-entry = cv-entry.with(metadata: metadata)
 
 
-#cvSection("Projects & Associations")
+#cv-section("Projects & Associations")
 
-#cvEntry(
+#cv-entry(
   title: [Volunteer Data Analyst],
   society: [ABC Nonprofit Organization],
   date: [2019 - Present],
