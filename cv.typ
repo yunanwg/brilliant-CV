@@ -3,7 +3,7 @@
 */
 
 #import "@preview/fontawesome:0.6.0": *
-#import "./utils/injection.typ": inject
+#import "./utils/injection.typ": _inject
 #import "./utils/styles.typ": latin-font-list, latin-header-font, awesome-colors, regular-colors, set-accent-color, h-bar
 #import "./utils/lang.typ": is-non-latin, default-date-width
 
@@ -42,10 +42,10 @@
   }
 
   // Injection
-  inject(
-    if_inject_ai_prompt: if_inject_ai_prompt,
-    if_inject_keywords: if_inject_keywords,
-    keywords_list: keywords_list,
+  _inject(
+    inject-ai-prompt: if_inject_ai_prompt,
+    inject-keywords: if_inject_keywords,
+    keywords: keywords_list,
   )
 
   // Styles
