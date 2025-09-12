@@ -4,66 +4,66 @@
 
 #import "./utils/styles.typ": _set-accent-color, _awesome-colors
 
-#let _letterHeader(
-  myAddress: "Your Address Here",
-  recipientName: "Company Name Here",
-  recipientAddress: "Company Address Here",
+#let _letter-header(
+  sender-address: "Your Address Here",
+  recipient-name: "Company Name Here",
+  recipient-address: "Company Address Here",
   date: "Today's Date",
   subject: "Subject: Hey!",
   metadata: metadata,
-  awesomeColors: _awesome-colors,
+  awesome-colors: _awesome-colors,
 ) = {
-  let accentColor = _set-accent-color(awesomeColors, metadata)
 
-  let letterHeaderNameStyle(str) = {
-    text(fill: accentColor, weight: "bold", str)
+  let sender-name = metadata.personal.first_name + " " + metadata.personal.last_name
+
+  let accent-color = _set-accent-color(awesome-colors, metadata)
+
+  let letter-header-name-style(str) = {
+    text(fill: accent-color, weight: "bold", str)
   }
-  let letterHeaderAddressStyle(str) = {
+  let letter-header-address-style(str) = {
     text(fill: gray, size: 0.9em, smallcaps(str))
   }
-  let letterDateStyle(str) = {
+  let letter-date-style(str) = {
     text(size: 0.9em, style: "italic", str)
   }
-  let letterSubjectStyle(str) = {
-    text(fill: accentColor, weight: "bold", underline(str))
+  let letter-subject-style(str) = {
+    text(fill: accent-color, weight: "bold", underline(str))
   }
 
-  letterHeaderNameStyle(metadata.personal.first_name + " " + metadata
-    .personal
-    .last_name)
+  letter-header-name-style(sender-name)
   v(1pt)
-  letterHeaderAddressStyle(myAddress)
+  letter-header-address-style(sender-address)
   v(1pt)
-  align(right, letterHeaderNameStyle(recipientName))
+  align(right, letter-header-name-style(sender-name))
   v(1pt)
-  align(right, letterHeaderAddressStyle(recipientAddress))
+  align(right, letter-header-address-style(recipient-address))
   v(1pt)
-  letterDateStyle(date)
+  letter-date-style(date)
   v(1pt)
-  letterSubjectStyle(subject)
+  letter-subject-style(subject)
   linebreak()
   linebreak()
 }
 
-#let _letterSignature(img) = {
+#let _letter-signature(img) = {
   set image(width: 25%)
   linebreak()
   place(right, dx: -5%, dy: 0%, img)
 }
 
-#let _letterFooter(metadata) = {
+#let _letter-footer(metadata) = {
   // Parameters
-  let firstName = metadata.personal.first_name
-  let lastName = metadata.personal.last_name
-  let footerText = metadata.lang.at(metadata.language).letter_footer
-  let ifDisplayFooter = metadata.layout.at("footer", default: {}).at("display_footer", default: true)
+  let sender-name = metadata.personal.first_name + " " + metadata.personal.last_name
+  let letter-footer-text = metadata.lang.at(metadata.language).letter_footer
+  let display-footer = metadata.layout.at("footer", default: {}).at("display_footer", default: true)
 
-  if not ifDisplayFooter {
+  if not display-footer {
     return none
   }
 
   // Styles
-  let footerStyle(str) = {
+  let footer-style(str) = {
     text(size: 8pt, fill: rgb("#999999"), smallcaps(str))
   }
 
@@ -71,7 +71,7 @@
     columns: (1fr, auto),
     inset: 0pt,
     stroke: none,
-    footerStyle([#firstName #lastName]),
-    footerStyle(metadata.lang.at(metadata.language).letter_footer),
+    footer-style([#sender-name]),
+    footer-style(letter-footer-text),
   )
 }
