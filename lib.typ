@@ -58,42 +58,42 @@
 ) = {
   // Non Latin Logic
   let lang = metadata.language
-  let fontList = _latin-font-list
-  fontList = overwrite-fonts(metadata, _latin-font-list, _latin-header-font).regularFonts
+  let fonts = _latin-font-list
+  fonts = overwrite-fonts(metadata, _latin-font-list, _latin-header-font).regular-fonts
   if _is-non-latin(lang) {
-    let nonLatinFont = metadata.lang.non_latin.font
-    fontList.insert(2, nonLatinFont)
+    let non-latin-font = metadata.lang.non_latin.font
+    fonts.insert(2, non-latin-font)
   }
 
   // Page layout
-  set text(font: fontList, weight: "regular", size: 9pt)
+  set text(font: fonts, weight: "regular", size: 9pt)
   set align(left)
-  let paper_size = metadata.layout.at("paper_size", default: "a4")
+  let paper-size = metadata.layout.at("paper_size", default: "a4")
   set page(
-    paper: {paper_size},
+    paper: {paper-size},
     margin: {
-      if paper_size == "us-letter" {
+      if paper-size == "us-letter" {
         (left: 2cm, right: 2cm, top: 1.2cm, bottom: 1.2cm)
         } else {
         (left: 1.4cm, right: 1.4cm, top: 1cm, bottom: 1cm)
       }
     },
-    footer: _letterFooter(metadata),
+    footer: _letter-footer(metadata),
   )
   set text(size: 12pt)
 
-  _letterHeader(
-      myAddress: myAddress,
-      recipientName: recipientName,
-      recipientAddress: recipientAddress,
+  _letter-header(
+      sender-address: myAddress,
+      recipient-name: recipientName,
+      recipient-address: recipientAddress,
       date: date,
       subject: subject,
       metadata: metadata,
-      awesomeColors: _awesome-colors,
+      awesome-colors: _awesome-colors,
     )
   doc
 
   if signature != "" {
-    _letterSignature(signature)
+    _letter-signature(signature)
   }
 }
