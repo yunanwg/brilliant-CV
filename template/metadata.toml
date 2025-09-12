@@ -21,7 +21,7 @@ language = "en"
     #date_width = "3.6cm"
 
     [layout.fonts]
-        regular_fonts = ["Source Sans Pro", "Source Sans 3"]
+        regular_fonts = ["Source Sans 3"]
         header_font = "Roboto"
 
     [layout.header]

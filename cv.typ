@@ -4,8 +4,8 @@
 
 #import "@preview/fontawesome:0.6.0": *
 #import "./utils/injection.typ": inject
-#import "./utils/styles.typ": latinFontList, latinHeaderFont, awesomeColors, regularColors, setAccentColor, hBar
-#import "./utils/lang.typ": isNonLatin, defaultDateWidth
+#import "./utils/styles.typ": latin-font-list, latin-header-font, awesome-colors, regular-colors, set-accent-color, h-bar
+#import "./utils/lang.typ": is-non-latin, default-date-width
 
 /// Insert the header section of the CV.
 ///
@@ -34,9 +34,9 @@
   let displayProfilePhoto = metadata.layout.header.display_profile_photo
   let profilePhotoRadius = eval(metadata.layout.header.at("profile_photo_radius", default: "50%"))
   let headerInfoFontSize = eval(metadata.layout.header.at("info_font_size", default: "10pt"))
-  let accentColor = setAccentColor(awesomeColors, metadata)
+  let accentColor = set-accent-color(awesome-colors, metadata)
   let nonLatinName = ""
-  let nonLatin = isNonLatin(metadata.language)
+  let nonLatin = is-non-latin(metadata.language)
   if nonLatin {
     nonLatinName = metadata.lang.non_latin.name
   }
@@ -135,7 +135,7 @@
       }
       // Adds hBar
       if n != personalInfo.len() {
-        hBar()
+        h-bar()
       }
       n = n + 1
     }
@@ -238,14 +238,14 @@
   highlighted: true,
   letters: 3,
   metadata: metadata,
-  awesomeColors: awesomeColors,
+  awesomeColors: awesome-colors,
 ) = {
   let lang = metadata.language
-  let nonLatin = isNonLatin(lang)
+  let nonLatin = is-non-latin(lang)
   let beforeSectionSkip = eval(
     metadata.layout.at("before_section_skip", default: 1pt),
   )
-  let accentColor = setAccentColor(awesomeColors, metadata)
+  let accentColor = set-accent-color(awesomeColors, metadata)
   let highlightText = title.slice(0, letters)
   let normalText = title.slice(letters)
   let sectionTitleStyle(str, color: black) = {
@@ -288,9 +288,9 @@
   logo: "",
   tags: (),
   metadata: metadata,
-  awesomeColors: awesomeColors,
+  awesomeColors: awesome-colors,
 ) = {
-  let accentColor = setAccentColor(awesomeColors, metadata)
+  let accentColor = set-accent-color(awesomeColors, metadata)
   let beforeEntrySkip = eval(
     metadata.layout.at("before_entry_skip", default: 1pt),
   )
@@ -299,7 +299,7 @@
   )
   let dateWidth = metadata.layout.at("date_width", default: none)
   let dateWidth = if dateWidth == none {
-    defaultDateWidth(metadata.language)
+    default-date-width(metadata.language)
   } else {
     eval(dateWidth)
   }
@@ -330,7 +330,7 @@
   }
   let entryDescriptionStyle(str) = {
     text(
-      fill: regularColors.lightgray,
+      fill: regular-colors.lightgray,
       {
         v(beforeEntryDescriptionSkip)
         str
@@ -345,7 +345,7 @@
       box(
         inset: (x: 0.25em),
         outset: (y: 0.25em),
-        fill: regularColors.subtlegray,
+        fill: regular-colors.subtlegray,
         radius: 3pt,
         entryTagStyle(tag),
       )
@@ -460,14 +460,14 @@
   location: "Location",
   logo: "",
   metadata: metadata,
-  awesomeColors: awesomeColors,
+  awesomeColors: awesome-colors,
 ) = {
   // To use cvEntryStart, you need to set display_entry_society_first to true in the metadata.toml file.
   if not metadata.layout.entry.display_entry_society_first {
     panic("display_entry_society_first must be true to use cvEntryStart")
   }
 
-  let accentColor = setAccentColor(awesomeColors, metadata)
+  let accentColor = set-accent-color(awesomeColors, metadata)
   let beforeEntrySkip = eval(
     metadata.layout.at("before_entry_skip", default: 1pt),
   )
@@ -476,7 +476,7 @@
   )
   let dateWidth = metadata.layout.at("date_width", default: none)
   let dateWidth = if dateWidth == none {
-    defaultDateWidth(metadata.language)
+    default-date-width(metadata.language)
   } else {
     eval(dateWidth)
   }
@@ -498,7 +498,7 @@
   }
   let entryDescriptionStyle(str) = {
     text(
-      fill: regularColors.lightgray,
+      fill: regular-colors.lightgray,
       {
         v(beforeEntryDescriptionSkip)
         str
@@ -513,7 +513,7 @@
       box(
         inset: (x: 0.25em),
         outset: (y: 0.25em),
-        fill: regularColors.subtlegray,
+        fill: regular-colors.subtlegray,
         radius: 3pt,
         entryTagStyle(tag),
       )
@@ -575,14 +575,14 @@
   description: "Description",
   tags: (),
   metadata: metadata,
-  awesomeColors: awesomeColors,
+  awesomeColors: awesome-colors,
 ) = {
   // To use cvEntryContinued, you need to set display_entry_society_first to true in the metadata.toml file.
   if not metadata.layout.entry.display_entry_society_first {
     panic("display_entry_society_first must be true to use cvEntryContinued")
   }
   
-  let accentColor = setAccentColor(awesomeColors, metadata)
+  let accentColor = set-accent-color(awesomeColors, metadata)
   let beforeEntrySkip = eval(
     metadata.layout.at("before_entry_skip", default: 1pt),
   )
@@ -591,7 +591,7 @@
   )
   let dateWidth = metadata.layout.at("date_width", default: none)
   let dateWidth = if dateWidth == none {
-    defaultDateWidth(metadata.language)
+    default-date-width(metadata.language)
   } else {
     eval(dateWidth)
   }
@@ -613,7 +613,7 @@
   }
   let entryDescriptionStyle(str) = {
     text(
-      fill: regularColors.lightgray,
+      fill: regular-colors.lightgray,
       {
         v(beforeEntryDescriptionSkip)
         str
@@ -628,7 +628,7 @@
       box(
         inset: (x: 0.25em),
         outset: (y: 0.25em),
-        fill: regularColors.subtlegray,
+        fill: regular-colors.subtlegray,
         radius: 3pt,
         entryTagStyle(tag),
       )
@@ -693,7 +693,7 @@
     text(str)
   }
   let skillLevelStyle(str) = {
-    set text(size: 10pt, fill: regularColors.darkgray)
+    set text(size: 10pt, fill: regular-colors.darkgray)
     for x in range(0, level) {
       [#fa-icon("circle", solid: true) ]
     }
@@ -722,7 +722,7 @@
   }
   box(
     inset: (x: 0.5em, y: 0.5em),
-    fill: regularColors.subtlegray,
+    fill: regular-colors.subtlegray,
     radius: 3pt,
     entryTagStyle(skill),
   )
@@ -745,10 +745,10 @@
   issuer: "",
   url: "",
   location: "",
-  awesomeColors: awesomeColors,
+  awesomeColors: awesome-colors,
   metadata: metadata,
 ) = {
-  let accentColor = setAccentColor(awesomeColors, metadata)
+  let accentColor = set-accent-color(awesomeColors, metadata)
 
   let honorDateStyle(str) = {
     align(right, text(str))
