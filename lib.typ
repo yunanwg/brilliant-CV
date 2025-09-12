@@ -44,7 +44,7 @@
     footer: context _cv-footer(metadata),
   )
 
-  _cvHeader(metadata, profilePhoto, header-font, _regular-colors, _awesome-colors)
+  _cv-header(metadata, profilePhoto, header-font, _regular-colors, _awesome-colors)
   doc
 }
 

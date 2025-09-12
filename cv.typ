@@ -7,6 +7,142 @@
 #import "./utils/styles.typ": _latin-font-list, _latin-header-font, _awesome-colors, _regular-colors, _set-accent-color, h-bar
 #import "./utils/lang.typ": _is-non-latin, _default-date-width
 
+/// Create header style functions
+/// -> dictionary
+#let _header-styles(header-font, regular-colors, accent-color, header-info-font-size) = (
+  first-name: (str) => text(
+    font: header-font,
+    size: 32pt,
+    weight: "light",
+    fill: regular-colors.darkgray,
+    str,
+  ),
+  last-name: (str) => text(font: header-font, size: 32pt, weight: "bold", str),
+  info: (str) => text(size: header-info-font-size, fill: accent-color, str),
+  quote: (str) => text(size: 10pt, weight: "medium", style: "italic", fill: accent-color, str),
+)
+
+/// Personal info icons mapping
+/// -> dictionary
+#let _personal-info-icons = (
+  phone: fa-phone(),
+  email: fa-envelope(),
+  linkedin: fa-linkedin(),
+  homepage: fa-pager(),
+  github: fa-square-github(),
+  gitlab: fa-gitlab(),
+  orcid: fa-orcid(),
+  researchgate: fa-researchgate(),
+  location: fa-location-dot(),
+  extraInfo: "",
+)
+
+/// Generate personal info section
+/// -> content
+#let _make-header-info(personal-info, icons) = {
+  let n = 1
+  for (k, v) in personal-info {
+    // A dirty trick to add linebreaks with "linebreak" as key in personalInfo
+    if k == "linebreak" {
+      n = 0
+      linebreak()
+      continue
+    }
+    if k.contains("custom") {
+      let img = v.at("image", default: "")
+      let awesome-icon = v.at("awesomeIcon", default: "")
+      let text = v.at("text", default: "")
+      let link-value = v.at("link", default: "")
+      let icon = ""
+      if img != "" {
+        icon = img.with(width: 10pt)
+      } else {
+        icon = fa-icon(awesome-icon)
+      }
+      box({
+        icon
+        h(5pt)
+          if link-value != "" {
+            link(link-value)[#text]
+          } else {
+            text
+          }
+      })
+    } else if v != "" {
+      box({
+        // Adds icons
+        icons.at(k)
+        h(5pt)
+        // Adds hyperlinks
+        if k == "email" {
+          link("mailto:" + v)[#v]
+        } else if k == "linkedin" {
+          link("https://www.linkedin.com/in/" + v)[#v]
+        } else if k == "github" {
+          link("https://github.com/" + v)[#v]
+        } else if k == "gitlab" {
+          link("https://gitlab.com/" + v)[#v]
+        } else if k == "homepage" {
+          link("https://" + v)[#v]
+        } else if k == "orcid" {
+          link("https://orcid.org/" + v)[#v]
+        } else if k == "researchgate" {
+          link("https://www.researchgate.net/profile/" + v)[#v]
+        } else if k == "phone" {
+          link("tel:" + v.replace(" ",""))[#v]
+        } else {
+          v
+        }
+      })
+    }
+    // Adds hBar
+    if n != personal-info.len() {
+      h-bar()
+    }
+    n = n + 1
+  }
+}
+
+/// Create header name section
+/// -> content
+#let _make-header-name-section(styles, non-latin, non-latin-name, first-name, last-name, personal-info, header-quote) = {
+  return table(
+    columns: 1fr,
+    inset: 0pt,
+    stroke: none,
+    row-gutter: 6mm,
+    if non-latin {
+      (styles.first-name)(non-latin-name)
+    } else [#(styles.first-name)(first-name) #h(5pt) #(styles.last-name)(last-name)],
+    [#(styles.info)(_make-header-info(personal-info, _personal-info-icons))],
+    .. if header-quote != none { ([#(styles.quote)(header-quote)],) },
+  )
+}
+
+/// Create header photo section
+/// -> content
+#let _make-header-photo-section(display-profile-photo, profile-photo, profile-photo-radius) = {
+  set image(height: 3.6cm)
+  if display-profile-photo {
+    box(profile-photo, radius: profile-photo-radius, clip: true)
+  } else {
+    v(3.6cm)
+  }
+}
+
+/// Create header table
+/// -> content
+#let _make-header(contents, columns, align) = {
+  return table(
+    columns: columns,
+    inset: 0pt,
+    stroke: none,
+    column-gutter: 15pt,
+    align: align + horizon,
+    ..contents,
+  )
+}
+
 /// Insert the header section of the CV.
 ///
 /// - metadata (array): the metadata read from the TOML file.
@@ -14,7 +150,7 @@
 /// - regular-colors (array): the regular colors of the CV.
 /// - awesome-colors (array): the awesome colors of the CV.
 /// -> content
-#let _cvHeader(
+#let _cv-header(
   metadata,
   profile-photo,
   header-font,
@@ -47,147 +183,27 @@
     keywords: keywords,
   )
 
-  // Styles
-  let header-first-name-style(str) = {
-    text(
-      font: header-font,
-      size: 32pt,
-      weight: "light",
-      fill: regular-colors.darkgray,
-      str,
-    )
-  }
-  let header-last-name-style(str) = {
-    text(font: header-font, size: 32pt, weight: "bold", str)
-  }
-  let header-info-style(str) = {
-    text(size: header-info-font-size, fill: accent-color, str)
-  }
-  let header-quote-style(str) = {
-    text(size: 10pt, weight: "medium", style: "italic", fill: accent-color, str)
-  }
-
-  // Components
-  let make-header-info() = {
-    let personal-info-icons = (
-      phone: fa-phone(),
-      email: fa-envelope(),
-      linkedin: fa-linkedin(),
-      homepage: fa-pager(),
-      github: fa-square-github(),
-      gitlab: fa-gitlab(),
-      orcid: fa-orcid(),
-      researchgate: fa-researchgate(),
-      location: fa-location-dot(),
-      extraInfo: "",
-    )
-    let n = 1
-    for (k, v) in personal-info {
-      // A dirty trick to add linebreaks with "linebreak" as key in personalInfo
-      if k == "linebreak" {
-        n = 0
-        linebreak()
-        continue
-      }
-      if k.contains("custom") {
-        let img = v.at("image", default: "")
-        let awesome-icon = v.at("awesomeIcon", default: "")
-        let text = v.at("text", default: "")
-        let link-value = v.at("link", default: "")
-        let icon = ""
-        if img != "" {
-          icon = img.with(width: 10pt)
-        } else {
-          icon = fa-icon(awesome-icon)
-        }
-        box({
-          icon
-          h(5pt)
-          if link-value != "" {
-            link(link-value)[#text]
-          } else {
-            text
-          }
-        })
-      } else if v != "" {
-        box({
-          // Adds icons
-          personal-info-icons.at(k)
-          h(5pt)
-          // Adds hyperlinks
-          if k == "email" {
-            link("mailto:" + v)[#v]
-          } else if k == "linkedin" {
-            link("https://www.linkedin.com/in/" + v)[#v]
-          } else if k == "github" {
-            link("https://github.com/" + v)[#v]
-          } else if k == "gitlab" {
-            link("https://gitlab.com/" + v)[#v]
-          } else if k == "homepage" {
-            link("https://" + v)[#v]
-          } else if k == "orcid" {
-            link("https://orcid.org/" + v)[#v]
-          } else if k == "researchgate" {
-            link("https://www.researchgate.net/profile/" + v)[#v]
-          } else if k == "phone" {
-            link("tel:" + v.replace(" ",""))[#v]
-          } else {
-            v
-          }
-        })
-      }
-      // Adds hBar
-      if n != personal-info.len() {
-        h-bar()
-      }
-      n = n + 1
-    }
-  }
-
-  let make-header-name-section() = table(
-    columns: 1fr,
-    inset: 0pt,
-    stroke: none,
-    row-gutter: 6mm,
-    if non-latin {
-      header-first-name-style(non-latin-name)
-    } else [#header-first-name-style(first-name) #h(5pt) #header-last-name-style(last-name)],
-    [#header-info-style(make-header-info())],
-    .. if header-quote != none { ([#header-quote-style(header-quote)],) },
+  // Create styles
+  let styles = _header-styles(header-font, regular-colors, accent-color, header-info-font-size)
+  
+  // Create components
+  let name-section = _make-header-name-section(
+    styles, non-latin, non-latin-name, first-name, last-name, personal-info, header-quote
   )
+  
+  let photo-section = _make-header-photo-section(display-profile-photo, profile-photo, profile-photo-radius)
 
-  let make-header-photo-section(
-    display-profile-photo: display-profile-photo,
-    profile-photo: profile-photo,
-    profile-photo-radius: profile-photo-radius,
-  ) = {
-    set image(height: 3.6cm)
-    if display-profile-photo {
-      box(profile-photo, radius: profile-photo-radius, clip: true)
-    } else {
-      v(3.6cm)
-    }
-  }
-
-  let make-header(contents, columns, align) = table(
-    columns: columns,
-    inset: 0pt,
-    stroke: none,
-    column-gutter: 15pt,
-    align: align + horizon,
-    ..contents,
-  )
-
+  // Render header
   if display-profile-photo {
-    make-header(
-      (make-header-name-section(), make-header-photo-section()),
+    _make-header(
+      (name-section, photo-section),
       (auto, 20%),
       header-alignment,
     )
   } else {
-    make-header(
-      (make-header-name-section()),
-      (auto),
+    _make-header(
+      (name-section,),
+      (auto,),
       header-alignment,
     )
   }
@@ -280,6 +296,52 @@
   box(width: 1fr, line(stroke: 0.9pt, length: 100%))
 }
 
+/// Create entry style functions
+/// -> dictionary
+#let _entry-styles(accent-color, before-entry-description-skip) = (
+  a1: (str) => text(size: 10pt, weight: "bold", str),
+  a2: (str) => align(right, text(weight: "medium", fill: accent-color, style: "oblique", str)),
+  b1: (str) => text(size: 8pt, fill: accent-color, weight: "medium", smallcaps(str)),
+  b2: (str) => align(right, text(size: 8pt, weight: "medium", fill: gray, style: "oblique", str)),
+  dates: (dates) => [
+    #set list(marker: [])
+    #dates
+  ],
+  description: (str) => text(
+    fill: _regular-colors.lightgray,
+    {
+      v(before-entry-description-skip)
+      str
+    },
+  ),
+  tag: (str) => align(center, text(size: 8pt, weight: "regular", str)),
+)
+
+/// Create entry tag list
+/// -> content
+#let _create-entry-tag-list(tags, tag-style) = {
+  for tag in tags {
+    box(
+      inset: (x: 0.25em),
+      outset: (y: 0.25em),
+      fill: _regular-colors.subtlegray,
+      radius: 3pt,
+      tag-style(tag),
+    )
+    h(5pt)
+  }
+}
+
+
+/// Set logo content
+/// -> content
+#let _set-logo-content(logo) = {
+  return if logo == "" [] else {
+    set image(width: 100%)
+    logo
+  }
+}
+
 /// Add an entry to the CV.
 ///
 /// - title (str): The title of the entry.
@@ -303,10 +365,9 @@
   metadata: metadata,
   awesome-colors: _awesome-colors,
 ) = {
+  // Parameters
   let accent-color = _set-accent-color(awesome-colors, metadata)
-  let before-entry-skip = eval(
-    metadata.layout.at("before_entry_skip", default: 1pt),
-  )
+  let before-entry-skip = eval(metadata.layout.at("before_entry_skip", default: 1pt))
   let before-entry-description-skip = eval(
     metadata.layout.at("before_entry_description_skip", default: 1pt),
   )
@@ -316,80 +377,13 @@
   } else {
     eval(date-width)
   }
-
-  let entry-a1-style(str) = {
-    text(size: 10pt, weight: "bold", str)
-  }
-  let entry-a2-style(str) = {
-    align(
-      right,
-      text(weight: "medium", fill: accent-color, style: "oblique", str),
-    )
-  }
-  let entry-b1-style(str) = {
-    text(size: 8pt, fill: accent-color, weight: "medium", smallcaps(str))
-  }
-  let entry-b2-style(str) = {
-    align(
-      right,
-      text(size: 8pt, weight: "medium", fill: gray, style: "oblique", str),
-    )
-  }
-  let entry-dates-style(dates) = {
-    [
-      #set list(marker: [])
-      #dates
-    ]
-  }
-  let entry-description-style(str) = {
-    text(
-      fill: _regular-colors.lightgray,
-      {
-        v(before-entry-description-skip)
-        str
-      },
-    )
-  }
-  let entry-tag-style(str) = {
-    align(center, text(size: 8pt, weight: "regular", str))
-  }
-  let entry-tag-list-style(tags) = {
-    for tag in tags {
-      box(
-        inset: (x: 0.25em),
-        outset: (y: 0.25em),
-        fill: _regular-colors.subtlegray,
-        radius: 3pt,
-        entry-tag-style(tag),
-      )
-      h(5pt)
-    }
-  }
-
-  let society-first(condition, field-1, field-2) = {
-    return if condition {
-      field-1
-    } else {
-      field-2
-    }
-  }
-  let display-society-logo(path, if-true, if-false) = {
-    return if metadata.layout.entry.display_logo {
-      if path == "" {
-        if-false
-      } else {
-        if-true
-      }
-    } else {
-      if-false
-    }
-  }
-  let set-logo-content(path) = {
-    return if logo == "" [] else {
-      set image(width: 100%)
-      logo
-    }
-  }
+  
+  // Create styles
+  let styles = _entry-styles(accent-color, before-entry-description-skip)
+  
+  // Layout settings
+  let display-logo = metadata.layout.entry.display_logo
+  let society-first-setting = metadata.layout.entry.display_entry_society_first
 
   v(before-entry-skip)
   table(
@@ -398,64 +392,41 @@
     stroke: none,
     gutter: 6pt,
     align: (x, y) => if x == 1 { right } else { auto },
-    table(
-      columns: (display-society-logo(logo, 4%, 0%), 1fr),
-      inset: 0pt,
-      stroke: none,
-      align: horizon,
-      column-gutter: display-society-logo(logo, 4pt, 0pt),
-      set-logo-content(logo),
+    {
       table(
-        columns: auto,
+        columns: (if display-logo and logo != "" { 4% } else { 0% }, 1fr),
         inset: 0pt,
         stroke: none,
-        row-gutter: 6pt,
-        align: auto,
-        {
-          entry-a1-style(
-            society-first(
-              metadata.layout.entry.display_entry_society_first,
-              society,
-              title,
-            ),
-          )
-        },
-
-        {
-          entry-b1-style(
-            society-first(
-              metadata.layout.entry.display_entry_society_first,
-              title,
-              society,
-            ),
-          )
-        },
-      ),
-    ),
+        align: horizon,
+        column-gutter: if display-logo and logo != "" { 4pt } else { 0pt },
+        _set-logo-content(logo),
+        table(
+          columns: auto,
+          inset: 0pt,
+          stroke: none,
+          row-gutter: 6pt,
+          align: auto,
+          {
+            (styles.a1)(if society-first-setting { society } else { title })
+          },
+          {
+            (styles.b1)(if society-first-setting { title } else { society })
+          },
+        ),
+      )
+      (styles.description)(description)
+      _create-entry-tag-list(tags, styles.tag)
+    },
     table(
       columns: auto,
       inset: 0pt,
       stroke: none,
       row-gutter: 6pt,
       align: auto,
-      entry-a2-style(
-        society-first(
-          metadata.layout.entry.display_entry_society_first,
-          location,
-          entry-dates-style(date),
-        ),
-      ),
-      entry-b2-style(
-        society-first(
-          metadata.layout.entry.display_entry_society_first,
-          entry-dates-style(date),
-          location,
-        ),
-      ),
+      (styles.a2)(if society-first-setting { location } else { (styles.dates)(date) }),
+      (styles.b2)(if society-first-setting { (styles.dates)(date) } else { location }),
     ),
   )
-  entry-description-style(description)
-  entry-tag-list-style(tags)
 }
 
 /// Add the start of an entry to the CV.
@@ -479,12 +450,7 @@
   }
 
   let accent-color = _set-accent-color(awesome-colors, metadata)
-  let before-entry-skip = eval(
-    metadata.layout.at("before_entry_skip", default: 1pt),
-  )
-  let before-entry-description-skip = eval(
-    metadata.layout.at("before_entry_description_skip", default: 1pt),
-  )
+  let before-entry-skip = eval(metadata.layout.at("before_entry_skip", default: 1pt))
   let date-width = metadata.layout.at("date_width", default: none)
   let date-width = if date-width == none {
     _default-date-width(metadata.language)
@@ -492,94 +458,24 @@
     eval(date-width)
   }
   
-  let entry-a1-style(str) = {
-    text(size: 10pt, weight: "bold", str)
-  }
-  let entry-a2-style(str) = {
-    align(
-      right,
-      text(weight: "medium", fill: accent-color, style: "oblique", str),
-    )
-  }
-  let entry-dates-style(dates) = {
-    [
-      #set list(marker: [])
-      #dates
-    ]
-  }
-  let entry-description-style(str) = {
-    text(
-      fill: _regular-colors.lightgray,
-      {
-        v(before-entry-description-skip)
-        str
-      },
-    )
-  }
-  let entry-tag-style(str) = {
-    align(center, text(size: 8pt, weight: "regular", str))
-  }
-  let entry-tag-list-style(tags) = {
-    for tag in tags {
-      box(
-        inset: (x: 0.25em),
-        outset: (y: 0.25em),
-        fill: _regular-colors.subtlegray,
-        radius: 3pt,
-        entry-tag-style(tag),
-      )
-      h(5pt)
-    }
-  }
-
-  let display-society-first(condition, field1, field2) = {
-    return if condition {
-      field1
-    } else {
-      field2
-    }
-  }
-  let display-society-logo(path, ifTrue, ifFalse) = {
-    return if metadata.layout.entry.display_logo {
-      if path == "" {
-        ifFalse
-      } else {
-        ifTrue
-      }
-    } else {
-      ifFalse
-    }
-  }
-  let set-logo-content(path) = {
-    return if logo == "" [] else {
-      set image(width: 100%)
-      logo
-    }
-  }
+  // Create styles
+  let styles = _entry-styles(accent-color, 0pt)
+  let display-logo = metadata.layout.entry.display_logo
 
   v(before-entry-skip)
   table(
-    columns: (display-society-logo(logo, 4%, 0%), 1fr, date-width),
+    columns: (if display-logo and logo != "" { 4% } else { 0% }, 1fr, date-width),
     inset: 0pt,
     stroke: none,
     gutter: 6pt,
     align: horizon,
-    set-logo-content(logo),
-    entry-a1-style(society),
-    entry-a2-style(location),
+    _set-logo-content(logo),
+    (styles.a1)(society),
+    (styles.a2)(location),
   )
   v(-10pt)
 }
 
-/// Add a continued entry to the CV.
-///
-/// - title (str): The title of the entry.
-/// - date (str | content): The date(s) of the entry.
-/// - description (array): The description of the entry. It can be a string or an array of strings.
-/// - tags (array): The tags of the entry.
-/// - metadata (array): (optional) the metadata read from the TOML file.
-/// - awesome-colors (array): (optional) the awesome colors of the CV.
-/// -> content
 #let cv-entry-continued(
   title: "Title",
   date: "Date",
@@ -594,9 +490,7 @@
   }
   
   let accent-color = _set-accent-color(awesome-colors, metadata)
-  let before-entry-skip = eval(
-    metadata.layout.at("before_entry_skip", default: 1pt),
-  )
+  let before-entry-skip = eval(metadata.layout.at("before_entry_skip", default: 1pt))
   let before-entry-description-skip = eval(
     metadata.layout.at("before_entry_description_skip", default: 1pt),
   )
@@ -607,45 +501,8 @@
     eval(date-width)
   }
 
-  let entry-b1-style(str) = {
-    text(size: 8pt, fill: accent-color, weight: "medium", smallcaps(str))
-  }
-  let entry-b2-style(str) = {
-    align(
-      right,
-      text(size: 8pt, weight: "medium", fill: gray, style: "oblique", str),
-    )
-  }
-  let entry-dates-style(dates) = {
-    [
-      #set list(marker: [])
-      #dates
-    ]
-  }
-  let entry-description-style(str) = {
-    text(
-      fill: _regular-colors.lightgray,
-      {
-        v(before-entry-description-skip)
-        str
-      },
-    )
-  }
-  let entry-tag-style(str) = {
-    align(center, text(size: 8pt, weight: "regular", str))
-  }
-  let entry-tag-list-style(tags) = {
-    for tag in tags {
-      box(
-        inset: (x: 0.25em),
-        outset: (y: 0.25em),
-        fill: _regular-colors.subtlegray,
-        radius: 3pt,
-        entry-tag-style(tag),
-      )
-      h(5pt)
-    }
-  }
+  // Create styles
+  let styles = _entry-styles(accent-color, before-entry-description-skip)
 
   // If the date contains a linebreak, use legacy side-to-side layout
   let multiple-dates
@@ -664,12 +521,12 @@
       gutter: 6pt,
       align: auto,
       {
-        entry-b1-style(title)
+        (styles.b1)(title)
       },
-      entry-b2-style(entry-dates-style(date)),
+      (styles.b2)((styles.dates)(date)),
     )
-    entry-description-style(description)
-    entry-tag-list-style(tags)
+    (styles.description)(description)
+    _create-entry-tag-list(tags, styles.tag)
   } else {
     table(
       columns: (1fr, date-width),
@@ -678,12 +535,12 @@
       gutter: 6pt,
       align: auto,
       {
-        entry-b1-style(title)
-        entry-description-style(description)
+        (styles.b1)(title)
+        (styles.description)(description)
       },
-      entry-b2-style(entry-dates-style(date)),
+      (styles.b2)((styles.dates)(date)),
     )
-    entry-tag-list-style(tags)
+    _create-entry-tag-list(tags, styles.tag)
   }
 }
 
