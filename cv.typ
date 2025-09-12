@@ -5,7 +5,7 @@
 #import "@preview/fontawesome:0.6.0": *
 #import "./utils/injection.typ": _inject
 #import "./utils/styles.typ": latin-font-list, latin-header-font, awesome-colors, regular-colors, set-accent-color, h-bar
-#import "./utils/lang.typ": is-non-latin, default-date-width
+#import "./utils/lang.typ": _is-non-latin, _default-date-width
 
 /// Insert the header section of the CV.
 ///
@@ -36,7 +36,7 @@
   let headerInfoFontSize = eval(metadata.layout.header.at("info_font_size", default: "10pt"))
   let accentColor = set-accent-color(awesome-colors, metadata)
   let nonLatinName = ""
-  let nonLatin = is-non-latin(metadata.language)
+  let nonLatin = _is-non-latin(metadata.language)
   if nonLatin {
     nonLatinName = metadata.lang.non_latin.name
   }
@@ -250,7 +250,7 @@
   awesomeColors: awesome-colors,
 ) = {
   let lang = metadata.language
-  let nonLatin = is-non-latin(lang)
+  let nonLatin = _is-non-latin(lang)
   let beforeSectionSkip = eval(
     metadata.layout.at("before_section_skip", default: 1pt),
   )
@@ -308,7 +308,7 @@
   )
   let dateWidth = metadata.layout.at("date_width", default: none)
   let dateWidth = if dateWidth == none {
-    default-date-width(metadata.language)
+    _default-date-width(metadata.language)
   } else {
     eval(dateWidth)
   }
@@ -483,7 +483,7 @@
   )
   let dateWidth = metadata.layout.at("date_width", default: none)
   let dateWidth = if dateWidth == none {
-    default-date-width(metadata.language)
+    _default-date-width(metadata.language)
   } else {
     eval(dateWidth)
   }
@@ -598,7 +598,7 @@
   )
   let dateWidth = metadata.layout.at("date_width", default: none)
   let dateWidth = if dateWidth == none {
-    default-date-width(metadata.language)
+    _default-date-width(metadata.language)
   } else {
     eval(dateWidth)
   }
