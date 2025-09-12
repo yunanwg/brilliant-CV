@@ -1,16 +1,16 @@
-#let hBar() = [#h(5pt) | #h(5pt)]
 
-#let latinFontList = (
+#let h-bar() = [#h(5pt) | #h(5pt)]
+
+#let latin-font-list = (
   "Source Sans 3",
   "Linux Libertine",
-  // "Source Sans Pro",
   "Font Awesome 6 Brands",
   "Font Awesome 6 Free",
 )
 
-#let latinHeaderFont = ("Roboto")
+#let latin-header-font = ("Roboto")
 
-#let awesomeColors = (
+#let awesome-colors = (
   skyblue: rgb("#0395DE"),
   red: rgb("#DC3522"),
   nephritis: rgb("#27AE60"),
@@ -18,14 +18,18 @@
   darknight: rgb("#131A28"),
 )
 
-#let regularColors = (
+#let regular-colors = (
   subtlegray: rgb("#ededee"),
   lightgray: rgb("#343a40"),
   darkgray: rgb("#212529"),
 )
 
 /// Set the accent color for the document
-#let setAccentColor(awesomeColors, metadata) = {
+/// 
+/// - awesomeColors (array): the awesome colors
+/// - metadata (array): the metadata object
+/// -> color
+#let set-accent-color(awesomeColors, metadata) = {
   let param = metadata.layout.awesome_color
   return if param in awesomeColors {
     awesomeColors.at(param)
@@ -40,7 +44,7 @@
 /// - latinFontList (array): the default list of latin fonts
 /// - latinHeaderFont (string): the default header font
 /// -> array
-#let overwriteFonts(metadata, latinFontList, latinHeaderFont) = {
+#let overwrite-fonts(metadata, latinFontList, latinHeaderFont) = {
   let metadataFonts = metadata.layout.at("fonts", default: [])
   let regularFonts = latinFontList
   let headerFont = latinHeaderFont
@@ -50,3 +54,12 @@
   }
   return (regularFonts: regularFonts, headerFont: headerFont)
 }
+
+// Backward compatibility aliases
+#let setAccentColor = set-accent-color
+#let overwriteFonts = overwrite-fonts
+#let hBar = h-bar
+#let latinFontList = latin-font-list
+#let latinHeaderFont = latin-header-font
+#let awesomeColors = awesome-colors
+#let regularColors = regular-colors
