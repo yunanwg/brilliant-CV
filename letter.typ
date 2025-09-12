@@ -2,7 +2,7 @@
 * Functions for the CV template
 */
 
-#import "./utils/styles.typ": set-accent-color, awesome-colors
+#import "./utils/styles.typ": _set-accent-color, _awesome-colors
 
 #let _letterHeader(
   myAddress: "Your Address Here",
@@ -11,9 +11,9 @@
   date: "Today's Date",
   subject: "Subject: Hey!",
   metadata: metadata,
-  awesomeColors: awesome-colors,
+  awesomeColors: _awesome-colors,
 ) = {
-  let accentColor = set-accent-color(awesomeColors, metadata)
+  let accentColor = _set-accent-color(awesomeColors, metadata)
 
   let letterHeaderNameStyle(str) = {
     text(fill: accentColor, weight: "bold", str)
