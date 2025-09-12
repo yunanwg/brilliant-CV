@@ -16,10 +16,10 @@
 ) = {
   // Non Latin Logic
   let lang = metadata.language
-  let fontList = latin-font-list
-  let headerFont = latin-header-font
-  fontList = overwrite-fonts(metadata, latin-font-list, latin-header-font).regularFonts
-  headerFont = overwrite-fonts(metadata, latin-font-list, latin-header-font).headerFont
+  let fontList = _latin-font-list
+  let headerFont = _latin-header-font
+  fontList = overwrite-fonts(metadata, _latin-font-list, _latin-header-font).regular-fonts
+  headerFont = overwrite-fonts(metadata, _latin-font-list, _latin-header-font).header-font
   if _is-non-latin(lang) {
     let nonLatinFont = metadata.lang.non_latin.font
     fontList.insert(2, nonLatinFont)
@@ -42,7 +42,7 @@
     footer: context _cvFooter(metadata),
   )
 
-  _cvHeader(metadata, profilePhoto, headerFont, regular-colors, awesome-colors)
+  _cvHeader(metadata, profilePhoto, headerFont, _regular-colors, _awesome-colors)
   doc
 }
 
@@ -58,8 +58,8 @@
 ) = {
   // Non Latin Logic
   let lang = metadata.language
-  let fontList = latin-font-list
-  fontList = overwrite-fonts(metadata, latin-font-list, latin-header-font).regularFonts
+  let fontList = _latin-font-list
+  fontList = overwrite-fonts(metadata, _latin-font-list, _latin-header-font).regularFonts
   if _is-non-latin(lang) {
     let nonLatinFont = metadata.lang.non_latin.font
     fontList.insert(2, nonLatinFont)
@@ -89,7 +89,7 @@
       date: date,
       subject: subject,
       metadata: metadata,
-      awesomeColors: awesome-colors,
+      awesomeColors: _awesome-colors,
     )
   doc
 
