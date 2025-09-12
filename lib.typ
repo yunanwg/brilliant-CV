@@ -16,18 +16,20 @@
 ) = {
   // Non Latin Logic
   let lang = metadata.language
-  let fontList = _latin-font-list
-  let headerFont = _latin-header-font
-  fontList = overwrite-fonts(metadata, _latin-font-list, _latin-header-font).regular-fonts
-  headerFont = overwrite-fonts(metadata, _latin-font-list, _latin-header-font).header-font
+  let fonts = _latin-font-list
+  let header-font = _latin-header-font
+
+  fonts = overwrite-fonts(metadata, _latin-font-list, _latin-header-font).regular-fonts
+  header-font = overwrite-fonts(metadata, _latin-font-list, _latin-header-font).header-font
+  
   if _is-non-latin(lang) {
     let nonLatinFont = metadata.lang.non_latin.font
-    fontList.insert(2, nonLatinFont)
-    headerFont = nonLatinFont
+    fonts.insert(2, nonLatinFont)
+    header-font = nonLatinFont
   }
 
   // Page layout
-  set text(font: fontList, weight: "regular", size: 9pt)
+  set text(font: fonts, weight: "regular", size: 9pt)
   set align(left)
   let paper_size = metadata.layout.at("paper_size", default: "a4")
   set page(
@@ -39,10 +41,10 @@
         (left: 1.4cm, right: 1.4cm, top: 1cm, bottom: 1cm)
       }
     },
-    footer: context _cvFooter(metadata),
+    footer: context _cv-footer(metadata),
   )
 
-  _cvHeader(metadata, profilePhoto, headerFont, _regular-colors, _awesome-colors)
+  _cvHeader(metadata, profilePhoto, header-font, _regular-colors, _awesome-colors)
   doc
 }
 
