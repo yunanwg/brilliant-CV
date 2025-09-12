@@ -20,7 +20,7 @@
   let headerFont = latin-header-font
   fontList = overwrite-fonts(metadata, latin-font-list, latin-header-font).regularFonts
   headerFont = overwrite-fonts(metadata, latin-font-list, latin-header-font).headerFont
-  if is-non-latin(lang) {
+  if _is-non-latin(lang) {
     let nonLatinFont = metadata.lang.non_latin.font
     fontList.insert(2, nonLatinFont)
     headerFont = nonLatinFont
@@ -60,7 +60,7 @@
   let lang = metadata.language
   let fontList = latin-font-list
   fontList = overwrite-fonts(metadata, latin-font-list, latin-header-font).regularFonts
-  if is-non-latin(lang) {
+  if _is-non-latin(lang) {
     let nonLatinFont = metadata.lang.non_latin.font
     fontList.insert(2, nonLatinFont)
   }

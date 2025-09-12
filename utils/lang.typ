@@ -1,9 +1,9 @@
-#let is-non-latin(lang) = {
-  let nonLatinLanguageCode = ("zh", "ja", "ko", "ru")
-  return nonLatinLanguageCode.contains(lang)
+#let _is-non-latin(lang) = {
+  let non-latin-language-code = ("zh", "ja", "ko", "ru")
+  return non-latin-language-code.contains(lang)
 }
 
-#let default-date-width(lang) = {
+#let _default-date-width(lang) = {
   return if lang == "en" {
     3.6cm
   } else if lang == "fr" {
@@ -17,7 +17,3 @@
     3.6cm
   }
 }
-
-// Backward compatibility aliases
-#let isNonLatin = is-non-latin
-#let defaultDateWidth = default-date-width
