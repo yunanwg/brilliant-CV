@@ -144,7 +144,7 @@
   let makeHeaderNameSection() = table(
     columns: 1fr,
     inset: 0pt,
-    stroke: 1pt,
+    stroke: 0pt,
     row-gutter: 6mm,
     if nonLatin {
       headerFirstNameStyle(nonLatinName)
@@ -165,7 +165,7 @@
   let makeHeader(contents, columns, align) = table(
     columns: columns,
     inset: 0pt,
-    stroke: 1pt,
+    stroke: 0pt,
     column-gutter: 15pt,
     align: align + horizon,
     ..contents,
@@ -382,20 +382,20 @@
   table(
     columns: (1fr, dateWidth),
     inset: 0pt,
-    stroke: 1pt,
+    stroke: 0pt,
     gutter: 6pt,
     align: (x, y) => if x == 1 { right } else { auto },
     table(
         columns: (ifLogo(logo, 4%, 0%), 1fr),
         inset: 0pt,
-        stroke: 1pt,
+        stroke: 0pt,
         align: horizon,
         column-gutter: ifLogo(logo, 4pt, 0pt),
         setLogoContent(logo),
         table(
           columns: auto,
           inset: 0pt,
-          stroke: 1pt,
+          stroke: 0pt,
           row-gutter: 6pt,
           align: auto,
           {
@@ -422,7 +422,7 @@
     table(
       columns: auto,
       inset: 0pt,
-      stroke: 1pt,
+      stroke: 0pt,
       row-gutter: 6pt,
       align: auto,
       entryA2Style(
@@ -548,7 +548,7 @@
   table(
     columns: (ifLogo(logo, 4%, 0%), 1fr, dateWidth),
     inset: 0pt,
-    stroke: 1pt,
+    stroke: 0pt,
     gutter: 6pt,
     align: horizon,
     setLogoContent(logo),
@@ -647,7 +647,7 @@
     table(
       columns: (1fr, dateWidth),
       inset: 0pt,
-      stroke: 1pt,
+      stroke: 0pt,
       gutter: 6pt,
       align: auto,
       {
@@ -661,7 +661,7 @@
     table(
       columns: (1fr, dateWidth),
       inset: 0pt,
-      stroke: 1pt,
+      stroke: 0pt,
       gutter: 6pt,
       align: auto,
       {
@@ -692,7 +692,7 @@
     columns: (17%, 1fr),
     inset: 0pt,
     column-gutter: 10pt,
-    stroke: 1pt,
+    stroke: 0pt,
     skillTypeStyle(type), skillInfoStyle(info),
   )
   v(-6pt)
@@ -729,7 +729,7 @@
     columns: (17%, auto, 1fr),
     inset: 0pt,
     column-gutter: 10pt,
-    stroke: 1pt,
+    stroke: 0pt,
     skillTypeStyle(type), skillLevelStyle(level), skillInfoStyle(info),
   )
   v(-6pt)
@@ -794,7 +794,7 @@
     inset: 0pt,
     column-gutter: 10pt,
     align: horizon,
-    stroke: 1pt,
+    stroke: 0pt,
     honorDateStyle(date),
     if issuer == "" {
       honorTitleStyle(title)
