@@ -144,7 +144,7 @@
   let makeHeaderNameSection() = table(
     columns: 1fr,
     inset: 0pt,
-    stroke: none,
+    stroke: 1pt,
     row-gutter: 6mm,
     if nonLatin {
       headerFirstNameStyle(nonLatinName)
@@ -165,7 +165,7 @@
   let makeHeader(contents, columns, align) = table(
     columns: columns,
     inset: 0pt,
-    stroke: none,
+    stroke: 1pt,
     column-gutter: 15pt,
     align: align + horizon,
     ..contents,
@@ -382,21 +382,20 @@
   table(
     columns: (1fr, dateWidth),
     inset: 0pt,
-    stroke: none,
+    stroke: 1pt,
     gutter: 6pt,
     align: (x, y) => if x == 1 { right } else { auto },
-    {
-      table(
+    table(
         columns: (ifLogo(logo, 4%, 0%), 1fr),
         inset: 0pt,
-        stroke: none,
+        stroke: 1pt,
         align: horizon,
         column-gutter: ifLogo(logo, 4pt, 0pt),
         setLogoContent(logo),
         table(
           columns: auto,
           inset: 0pt,
-          stroke: none,
+          stroke: 1pt,
           row-gutter: 6pt,
           align: auto,
           {
@@ -419,14 +418,11 @@
             )
           },
         ),
-      )
-      entryDescriptionStyle(description)
-      entryTagListStyle(tags)
-    },
+      ),
     table(
       columns: auto,
       inset: 0pt,
-      stroke: none,
+      stroke: 1pt,
       row-gutter: 6pt,
       align: auto,
       entryA2Style(
@@ -445,6 +441,8 @@
       ),
     ),
   )
+  entryDescriptionStyle(description)
+  entryTagListStyle(tags)
 }
 
 /// Add the start of an entry to the CV.
@@ -550,7 +548,7 @@
   table(
     columns: (ifLogo(logo, 4%, 0%), 1fr, dateWidth),
     inset: 0pt,
-    stroke: none,
+    stroke: 1pt,
     gutter: 6pt,
     align: horizon,
     setLogoContent(logo),
@@ -636,20 +634,45 @@
     }
   }
 
+  // If the date contains a linebreak, use legacy side-to-side layout
+  let multipleDates
+  if type(date) == content {
+    multipleDates = if linebreak() in date.fields().children { true } else { false }
+  } else {
+    multipleDates = false
+  }
+
   v(beforeEntrySkip)
-  table(
-    columns: (1fr, dateWidth),
-    inset: 0pt,
-    stroke: none,
-    gutter: 6pt,
-    align: auto,
-    {
-      entryB1Style(title)
-      entryDescriptionStyle(description)
-      entryTagListStyle(tags)
-    },
-    entryB2Style(entryDatesStyle(date)),
-  )
+  if not multipleDates {
+    table(
+      columns: (1fr, dateWidth),
+      inset: 0pt,
+      stroke: 1pt,
+      gutter: 6pt,
+      align: auto,
+      {
+        entryB1Style(title)
+      },
+      entryB2Style(entryDatesStyle(date)),
+      )
+    entryDescriptionStyle(description)
+    entryTagListStyle(tags)
+  } else {
+    table(
+      columns: (1fr, dateWidth),
+      inset: 0pt,
+      stroke: 1pt,
+      gutter: 6pt,
+      align: auto,
+      {
+        entryB1Style(title)
+        entryDescriptionStyle(description)
+      },
+      entryB2Style(entryDatesStyle(date)),
+      )
+    entryTagListStyle(tags)
+  }
+  }
 }
 
 /// Add a skill to the CV.
@@ -669,7 +692,7 @@
     columns: (17%, 1fr),
     inset: 0pt,
     column-gutter: 10pt,
-    stroke: none,
+    stroke: 1pt,
     skillTypeStyle(type), skillInfoStyle(info),
   )
   v(-6pt)
@@ -706,7 +729,7 @@
     columns: (17%, auto, 1fr),
     inset: 0pt,
     column-gutter: 10pt,
-    stroke: none,
+    stroke: 1pt,
     skillTypeStyle(type), skillLevelStyle(level), skillInfoStyle(info),
   )
   v(-6pt)
@@ -771,7 +794,7 @@
     inset: 0pt,
     column-gutter: 10pt,
     align: horizon,
-    stroke: none,
+    stroke: 1pt,
     honorDateStyle(date),
     if issuer == "" {
       honorTitleStyle(title)
