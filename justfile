@@ -57,12 +57,6 @@ watch:
     @mkdir -p temp
     typst watch template/cv.typ temp/cv.pdf
 
-# Bump package version - usage: just bump patch|minor|major
-bump VERSION:
-    @echo "⬆️  Bumping {{VERSION}} version..."
-    @utpm ws bump {{VERSION}}
-    @echo "✅ Version bumped!"
-
 # Sync dependencies to latest versions
 sync:
     @echo "🔄 Syncing dependencies..."
