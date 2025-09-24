@@ -1,5 +1,5 @@
 // Imports
-#import "@preview/brilliant-cv:2.0.6": cv
+#import "@preview/brilliant-cv:3.0.0": cv
 #let metadata = toml("./metadata.toml")
 
 #let import-modules(modules, lang: metadata.language) = {
