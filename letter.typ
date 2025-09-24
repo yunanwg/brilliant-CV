@@ -45,7 +45,7 @@
   v(1pt)
   letter-header-address-style(sender-address)
   v(1pt)
-  align(right, letter-header-name-style(sender-name))
+  align(right, letter-header-name-style(recipient-name))
   v(1pt)
   align(right, letter-header-address-style(recipient-address))
   v(1pt)
