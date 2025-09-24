@@ -179,7 +179,7 @@
     )
   } else {
     makeHeader(
-      (makeHeaderNameSection()),
+      (makeHeaderNameSection(),),
       (auto),
       align,
     )
