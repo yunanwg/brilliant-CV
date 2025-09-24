@@ -1,23 +1,28 @@
 // Imports
-#import "@preview/brilliant-cv:2.0.6": cv-section, cv-entry
+#import "@preview/brilliant-cv:2.0.6": cv-section, cv-entry, cv-entry-start, cv-entry-continued
 #let metadata = toml("../metadata.toml")
 #let cv-section = cv-section.with(metadata: metadata)
 #let cv-entry = cv-entry.with(metadata: metadata)
+#let cv-entry-start = cv-entry-start.with(metadata: metadata)
+#let cv-entry-continued = cv-entry-continued.with(metadata: metadata)
 
 
 #cv-section("职业经历")
 
-#cv-entry(
-  title: [数据科学主管],
+#cv-entry-start(
   society: [XYZ 公司],
   logo: image("../src/logos/xyz_corp.png"),
-  date: [2020 - 现在],
   location: [旧金山, CA],
+)
+
+#cv-entry-continued(
+  title: [数据科学主管],
+  date: [2020 - 现在],
   description: list(
     [领导数据科学家和分析师团队，开发和实施数据驱动的策略，开发预测模型和算法以支持组织内部的决策],
     [与高级管理团队合作，确定商业机会并推动增长，实施数据治理、质量和安全的最佳实践],
   ),
-  tags: ("标签示例", "Dataiku", "Snowflake", "SparkSQL"),
+  tags: ("Dataiku", "Snowflake", "SparkSQL"),
 )
 
 #cv-entry(

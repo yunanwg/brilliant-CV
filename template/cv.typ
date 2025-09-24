@@ -19,7 +19,7 @@
   "education",
   "professional",
   "projects",
-  // "certificates",
+  "certificates",
   "publications",
   "skills",
 ))

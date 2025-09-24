@@ -1,22 +1,45 @@
 // Imports
-#import "@preview/brilliant-cv:2.0.6": cv-section, cv-skill, h-bar
+#import "@preview/brilliant-cv:2.0.6": cv-section, cv-skill, cv-skill-with-level, cv-skill-tag, h-bar
 #let metadata = toml("../metadata.toml")
 #let cv-section = cv-section.with(metadata: metadata)
 
 
 #cv-section("Skills")
 
-#cv-skill(
+#cv-skill-with-level(
   type: [Languages],
-  info: [English #h-bar() French #h-bar() Chinese],
+  level: 4,
+  info: [English (Native) #h-bar() French (Fluent) #h-bar() Chinese (Conversational)],
+)
+
+#cv-skill-with-level(
+  type: [Programming],
+  level: 5,
+  info: [Python #h-bar() SQL #h-bar() R],
 )
 
 #cv-skill(
   type: [Tech Stack],
-  info: [Tableau #h-bar() Python (Pandas/Numpy) #h-bar() PostgreSQL],
+  info: [Tableau #h-bar() Snowflake #h-bar() AWS #h-bar() Docker #h-bar() Git],
+)
+
+#cv-skill(
+  type: [Frameworks & Libraries],
+  info: [Pandas #h-bar() NumPy #h-bar() Scikit-learn #h-bar() TensorFlow #h-bar() FastAPI],
+)
+
+// Skill tags example
+#cv-skill(
+  type: [Certifications],
+  info: [
+    #cv-skill-tag([AWS Certified])
+    #cv-skill-tag([Google Analytics])
+    #cv-skill-tag([Tableau Desktop])
+    #cv-skill-tag([Scrum Master])
+  ],
 )
 
 #cv-skill(
   type: [Personal Interests],
-  info: [Swimming #h-bar() Cooking #h-bar() Reading],
+  info: [Swimming #h-bar() Cooking #h-bar() Reading #h-bar() Photography],
 )
