@@ -312,6 +312,68 @@
   box(width: 1fr, line(stroke: 0.9pt, length: 100%))
 }
 
+/// Prepare common entry parameters
+/// -> dictionary
+#let _prepare-entry-params(metadata, awesome-colors, awesomeColors) = {
+  // Backward compatibility for awesome-colors parameter
+  let awesome-colors = if awesome-colors != none {
+    awesome-colors
+  } else {
+    awesomeColors
+  }
+
+  let accent-color = _set-accent-color(awesome-colors, metadata)
+  let before-entry-skip = eval(metadata.layout.at("before_entry_skip", default: 1pt))
+  let before-entry-description-skip = eval(
+    metadata.layout.at("before_entry_description_skip", default: 1pt),
+  )
+  let date-width = metadata.layout.at("date_width", default: none)
+  let date-width = if date-width == none {
+    _default-date-width(metadata.language)
+  } else {
+    eval(date-width)
+  }
+
+  return (
+    accent-color: accent-color,
+    before-entry-skip: before-entry-skip,
+    before-entry-description-skip: before-entry-description-skip,
+    date-width: date-width,
+    awesome-colors: awesome-colors,
+  )
+}
+
+/// Prepare common entry parameters
+/// -> dictionary
+#let _prepare-entry-params(metadata, awesome-colors, awesomeColors) = {
+  // Backward compatibility logic
+  let awesome-colors = if awesome-colors != none { 
+    awesome-colors 
+  } else { 
+    // TODO: Add deprecation warning in future version
+    awesomeColors 
+  }
+  
+  // Common parameter calculations
+  let accent-color = _set-accent-color(awesome-colors, metadata)
+  let before-entry-skip = eval(metadata.layout.at("before_entry_skip", default: 1pt))
+  let before-entry-description-skip = eval(metadata.layout.at("before_entry_description_skip", default: 1pt))
+  let date-width = metadata.layout.at("date_width", default: none)
+  let date-width = if date-width == none {
+    _default-date-width(metadata.language)
+  } else {
+    eval(date-width)
+  }
+  
+  return (
+    accent-color: accent-color,
+    before-entry-skip: before-entry-skip,
+    before-entry-description-skip: before-entry-description-skip,
+    date-width: date-width,
+    awesome-colors: awesome-colors,
+  )
+}
+
 /// Create entry style functions
 /// -> dictionary
 #let _entry-styles(accent-color, before-entry-description-skip) = (
@@ -348,6 +410,258 @@
   }
 }
 
+/// Core entry rendering function
+/// -> content
+#let _make-cv-entry(
+  entry-type,
+  params,
+  title: none,
+  society: none,
+  date: none,
+  location: none,
+  description: none,
+  logo: "",
+  tags: (),
+  metadata: metadata,
+) = {
+  let accent-color = params.accent-color
+  let before-entry-skip = params.before-entry-skip
+  let before-entry-description-skip = params.before-entry-description-skip
+  let date-width = params.date-width
+
+  let styles = _entry-styles(accent-color, before-entry-description-skip)
+  let display-logo = metadata.layout.entry.display_logo
+  let society-first-setting = metadata.layout.entry.display_entry_society_first
+
+  v(before-entry-skip)
+
+  if entry-type == "full" {
+    table(
+      columns: (1fr, date-width),
+      inset: 0pt,
+      stroke: none,
+      gutter: 6pt,
+      align: (x, y) => if x == 1 { right } else { auto },
+      {
+        table(
+          columns: (if display-logo and logo != "" { 4% } else { 0% }, 1fr),
+          inset: 0pt,
+          stroke: none,
+          align: horizon,
+          column-gutter: if display-logo and logo != "" { 4pt } else { 0pt },
+          _set-logo-content(logo),
+          table(
+            columns: auto,
+            inset: 0pt,
+            stroke: none,
+            row-gutter: 6pt,
+            align: auto,
+            {
+              (styles.a1)(if society-first-setting { society } else { title })
+            },
+            {
+              (styles.b1)(if society-first-setting { title } else { society })
+            },
+          ),
+        )
+        (styles.description)(description)
+        _create-entry-tag-list(tags, styles.tag)
+      },
+      table(
+        columns: auto,
+        inset: 0pt,
+        stroke: none,
+        row-gutter: 6pt,
+        align: auto,
+        (styles.a2)(if society-first-setting { location } else { (styles.dates)(date) }),
+        (styles.b2)(if society-first-setting { (styles.dates)(date) } else { location }),
+      ),
+    )
+  } else if entry-type == "start" {
+    table(
+      columns: (if display-logo and logo != "" { 4% } else { 0% }, 1fr, date-width),
+      inset: 0pt,
+      stroke: none,
+      gutter: 6pt,
+      align: horizon,
+      _set-logo-content(logo),
+      (styles.a1)(society),
+      (styles.a2)(location),
+    )
+    v(-10pt)
+  } else if entry-type == "continued" {
+    let multiple-dates
+    if type(date) == content {
+      multiple-dates = if linebreak() in date.fields().children { true } else { false }
+    } else {
+      multiple-dates = false
+    }
+
+    if not multiple-dates {
+      table(
+        columns: (1fr, date-width),
+        inset: 0pt,
+        stroke: none,
+        gutter: 6pt,
+        align: auto,
+        {
+          (styles.b1)(title)
+        },
+        (styles.b2)((styles.dates)(date)),
+      )
+      (styles.description)(description)
+      _create-entry-tag-list(tags, styles.tag)
+    } else {
+      table(
+        columns: (1fr, date-width),
+        inset: 0pt,
+        stroke: none,
+        gutter: 6pt,
+        align: auto,
+        {
+          (styles.b1)(title)
+          (styles.description)(description)
+        },
+        (styles.b2)((styles.dates)(date)),
+      )
+      _create-entry-tag-list(tags, styles.tag)
+    }
+  }
+}
+
+/// Core entry rendering function
+/// -> content
+#let _make-cv-entry(
+  entry-type,
+  params,
+  title: none,
+  society: none,
+  date: none,
+  location: none,
+  description: none,
+  logo: "",
+  tags: (),
+  metadata: metadata,
+) = {
+  // Extract parameters
+  let accent-color = params.accent-color
+  let before-entry-skip = params.before-entry-skip
+  let before-entry-description-skip = params.before-entry-description-skip
+  let date-width = params.date-width
+  
+  // Create styles
+  let styles = _entry-styles(accent-color, before-entry-description-skip)
+  
+  // Layout settings
+  let display-logo = metadata.layout.entry.display_logo
+  let society-first-setting = metadata.layout.entry.display_entry_society_first
+
+  v(before-entry-skip)
+
+  if entry-type == "full" {
+    // Full entry layout (original cv-entry logic)
+    table(
+      columns: (1fr, date-width),
+      inset: 0pt,
+      stroke: 0pt,
+      gutter: 6pt,
+      align: (x, y) => if x == 1 { right } else { auto },
+      table(
+          columns: (if display-logo and logo != "" { 4% } else { 0% }, 1fr),
+          inset: 0pt,
+          stroke: 0pt,
+          align: horizon,
+          column-gutter: if display-logo and logo != "" { 4pt } else { 0pt },
+          if logo == "" [] else {
+            set image(width: 100%)
+            logo
+          },
+          table(
+            columns: auto,
+            inset: 0pt,
+            stroke: 0pt,
+            row-gutter: 6pt,
+            align: auto,
+            {
+              (styles.a1)(if society-first-setting { society } else { title })
+            },
+            {
+              (styles.b1)(if society-first-setting { title } else { society })
+            },
+          ),
+        ),
+      table(
+        columns: auto,
+        inset: 0pt,
+        stroke: 0pt,
+        row-gutter: 6pt,
+        align: auto,
+        (styles.a2)(if society-first-setting { location } else { (styles.dates)(date) }),
+        (styles.b2)(if society-first-setting { (styles.dates)(date) } else { location }),
+      ),
+    )
+    (styles.description)(description)
+    _create-entry-tag-list(tags, styles.tag)
+    
+  } else if entry-type == "start" {
+    // Entry start layout (original cv-entry-start logic)
+    table(
+      columns: (if display-logo and logo != "" { 4% } else { 0% }, 1fr, date-width),
+      inset: 0pt,
+      stroke: 0pt,
+      gutter: 6pt,
+      align: horizon,
+      if logo == "" [] else {
+        set image(width: 100%)
+        logo
+      },
+      (styles.a1)(society),
+      (styles.a2)(location),
+    )
+    v(-10pt)
+    
+  } else if entry-type == "continued" {
+    // Entry continued layout (original cv-entry-continued logic)
+    // If the date contains a linebreak, use legacy side-to-side layout
+    let multiple-dates
+    if type(date) == content {
+      multiple-dates = if linebreak() in date.fields().children { true } else { false }
+    } else {
+      multiple-dates = false
+    }
+
+    if not multiple-dates {
+      table(
+        columns: (1fr, date-width),
+        inset: 0pt,
+        stroke: 0pt,
+        gutter: 6pt,
+        align: auto,
+        {
+          (styles.b1)(title)
+        },
+        (styles.b2)((styles.dates)(date)),
+        )
+      (styles.description)(description)
+      _create-entry-tag-list(tags, styles.tag)
+    } else {
+      table(
+        columns: (1fr, date-width),
+        inset: 0pt,
+        stroke: 0pt,
+        gutter: 6pt,
+        align: auto,
+        {
+          (styles.b1)(title)
+          (styles.description)(description)
+        },
+        (styles.b2)((styles.dates)(date)),
+        )
+      _create-entry-tag-list(tags, styles.tag)
+    }
+  }
+}
+
 
 
 /// Add an entry to the CV.
@@ -376,78 +690,19 @@
   // Old parameter names (deprecated, for backward compatibility)
   awesomeColors: _awesome-colors,
 ) = {
-  // Backward compatibility logic (remove this block when deprecating)
-  let awesome-colors = if awesome-colors != none { 
-    awesome-colors 
-  } else { 
-    // TODO: Add deprecation warning in future version
-    awesomeColors 
-  }
-  
-  // Parameters
-  let accent-color = _set-accent-color(awesome-colors, metadata)
-  let before-entry-skip = eval(metadata.layout.at("before_entry_skip", default: 1pt))
-  let before-entry-description-skip = eval(
-    metadata.layout.at("before_entry_description_skip", default: 1pt),
-  )
-  let date-width = metadata.layout.at("date_width", default: none)
-  let date-width = if date-width == none {
-    _default-date-width(metadata.language)
-  } else {
-    eval(date-width)
-  }
-  
-  // Create styles
-  let styles = _entry-styles(accent-color, before-entry-description-skip)
-  
-  // Layout settings
-  let display-logo = metadata.layout.entry.display_logo
-  let society-first-setting = metadata.layout.entry.display_entry_society_first
+  let params = _prepare-entry-params(metadata, awesome-colors, awesomeColors)
 
-  v(before-entry-skip)
-  table(
-    columns: (1fr, date-width),
-    inset: 0pt,
-    stroke: none,
-    gutter: 6pt,
-    align: (x, y) => if x == 1 { right } else { auto },
-    {
-      table(
-        columns: (if display-logo and logo != "" { 4% } else { 0% }, 1fr),
-        inset: 0pt,
-        stroke: none,
-        align: horizon,
-        column-gutter: if display-logo and logo != "" { 4pt } else { 0pt },
-        if logo == "" [] else {
-          set image(width: 100%)
-          logo
-        },
-        table(
-          columns: auto,
-          inset: 0pt,
-          stroke: none,
-          row-gutter: 6pt,
-          align: auto,
-          {
-            (styles.a1)(if society-first-setting { society } else { title })
-          },
-          {
-            (styles.b1)(if society-first-setting { title } else { society })
-          },
-        ),
-      )
-      (styles.description)(description)
-      _create-entry-tag-list(tags, styles.tag)
-    },
-    table(
-      columns: auto,
-      inset: 0pt,
-      stroke: none,
-      row-gutter: 6pt,
-      align: auto,
-      (styles.a2)(if society-first-setting { location } else { (styles.dates)(date) }),
-      (styles.b2)(if society-first-setting { (styles.dates)(date) } else { location }),
-    ),
+  _make-cv-entry(
+    "full",
+    params,
+    title: title,
+    society: society,
+    date: date,
+    location: location,
+    description: description,
+    logo: logo,
+    tags: tags,
+    metadata: metadata,
   )
 }
 
@@ -469,46 +724,21 @@
   // Old parameter names (deprecated, for backward compatibility)
   awesomeColors: _awesome-colors,
 ) = {
-  // Backward compatibility logic (remove this block when deprecating)
-  let awesome-colors = if awesome-colors != none { 
-    awesome-colors 
-  } else { 
-    // TODO: Add deprecation warning in future version
-    awesomeColors 
-  }
   // To use cvEntryStart, you need to set display_entry_society_first to true in the metadata.toml file.
   if not metadata.layout.entry.display_entry_society_first {
     panic("display_entry_society_first must be true to use cvEntryStart")
   }
 
-  let accent-color = _set-accent-color(awesome-colors, metadata)
-  let before-entry-skip = eval(metadata.layout.at("before_entry_skip", default: 1pt))
-  let date-width = metadata.layout.at("date_width", default: none)
-  let date-width = if date-width == none {
-    _default-date-width(metadata.language)
-  } else {
-    eval(date-width)
-  }
-  
-  // Create styles
-  let styles = _entry-styles(accent-color, 0pt)
-  let display-logo = metadata.layout.entry.display_logo
+  let params = _prepare-entry-params(metadata, awesome-colors, awesomeColors)
 
-  v(before-entry-skip)
-  table(
-    columns: (if display-logo and logo != "" { 4% } else { 0% }, 1fr, date-width),
-    inset: 0pt,
-    stroke: none,
-    gutter: 6pt,
-    align: horizon,
-    if logo == "" [] else {
-      set image(width: 100%)
-      logo
-    },
-    (styles.a1)(society),
-    (styles.a2)(location),
+  _make-cv-entry(
+    "start",
+    params,
+    society: society,
+    location: location,
+    logo: logo,
+    metadata: metadata,
   )
-  v(-10pt)
 }
 
 #let cv-entry-continued(
@@ -517,66 +747,27 @@
   description: "Description",
   tags: (),
   metadata: metadata,
-  awesome-colors: _awesome-colors,
+  // New parameter names (recommended)
+  awesome-colors: none,
+  // Old parameter names (deprecated, for backward compatibility)
+  awesomeColors: _awesome-colors,
 ) = {
   // To use cv-entry-continued, you need to set display_entry_society_first to true in the metadata.toml file.
   if not metadata.layout.entry.display_entry_society_first {
     panic("display_entry_society_first must be true to use cvEntryContinued")
   }
   
-  let accent-color = _set-accent-color(awesome-colors, metadata)
-  let before-entry-skip = eval(metadata.layout.at("before_entry_skip", default: 1pt))
-  let before-entry-description-skip = eval(
-    metadata.layout.at("before_entry_description_skip", default: 1pt),
+  let params = _prepare-entry-params(metadata, awesome-colors, awesomeColors)
+
+  _make-cv-entry(
+    "continued",
+    params,
+    title: title,
+    date: date,
+    description: description,
+    tags: tags,
+    metadata: metadata,
   )
-  let date-width = metadata.layout.at("date_width", default: none)
-  let date-width = if date-width == none {
-    _default-date-width(metadata.language)
-  } else {
-    eval(date-width)
-  }
-
-  // Create styles
-  let styles = _entry-styles(accent-color, before-entry-description-skip)
-
-  // If the date contains a linebreak, use legacy side-to-side layout
-  let multiple-dates
-  if type(date) == content {
-    multiple-dates = if linebreak() in date.fields().children { true } else { false }
-  } else {
-    multiple-dates = false
-  }
-
-  v(before-entry-skip)
-  if not multiple-dates {
-    table(
-      columns: (1fr, date-width),
-      inset: 0pt,
-      stroke: none,
-      gutter: 6pt,
-      align: auto,
-      {
-        (styles.b1)(title)
-      },
-      (styles.b2)((styles.dates)(date)),
-    )
-    (styles.description)(description)
-    _create-entry-tag-list(tags, styles.tag)
-  } else {
-    table(
-      columns: (1fr, date-width),
-      inset: 0pt,
-      stroke: none,
-      gutter: 6pt,
-      align: auto,
-      {
-        (styles.b1)(title)
-        (styles.description)(description)
-      },
-      (styles.b2)((styles.dates)(date)),
-    )
-    _create-entry-tag-list(tags, styles.tag)
-  }
 }
 
 /// Add a skill to the CV.
