@@ -4,19 +4,19 @@
 #let cvSection = cvSection.with(metadata: metadata)
 
 
-#cvSection("Skills")
+#cvSection("Fähigkeiten")
 
 #cvSkill(
-  type: [Languages],
-  info: [English #hBar() French #hBar() Chinese],
+  type: [Sprachen],
+  info: [Englisch #hBar() Französisch #hBar() Chinesisch],
 )
 
 #cvSkill(
-  type: [Tech Stack],
+  type: [Technologie Stack],
   info: [Tableau #hBar() Python (Pandas/Numpy) #hBar() PostgreSQL],
 )
 
 #cvSkill(
-  type: [Personal Interests],
-  info: [Swimming #hBar() Cooking #hBar() Reading],
+  type: [Persönliche Interessen],
+  info: [Schwimmen #hBar() Kochen #hBar() Lesen],
 )
