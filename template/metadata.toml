@@ -23,6 +23,7 @@ language = "en"
     [layout.fonts]
         regular_fonts = ["Source Sans Pro", "Source Sans 3"]
         header_font = "Roboto"
+        font_size = "12pt"
 
     [layout.header]
         # Optional values: left, center, right
