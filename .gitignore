@@ -1,6 +1,5 @@
 # compiled files
 **/*.pdf
-temp/
 
 # MacOS specific files (Apple sucks)
 .DS_Store

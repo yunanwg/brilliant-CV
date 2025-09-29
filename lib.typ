@@ -41,7 +41,7 @@
         (left: 1.5cm, right: 1.5cm, top: 1.5cm, bottom: 1.5cm)
       }
     },
-    footer: context _cvFooter(metadata),
+    footer: _cvFooter(metadata),
   )
 
   _cvHeader(metadata, profilePhoto, headerFont, regularColors, awesomeColors,
