@@ -12,7 +12,7 @@
   society: [Universität von Kalifornien, Los Angeles],
   date: [2018 - 2020],
   location: [USA],
-  logo: image("../src/logos/ucla.png"),
+  logo: image("../assets/logos/ucla.png"),
   description: list(
     [Dissertation: Vorhersage der Kundenabwanderung in der Telekommunikationsbranche mit Hilfe von Algorithmen des maschinellen Lernens und Netzwerkanalyse],
     [Kurs: Big-Data-Systeme und -Technologien #h-bar() Data Mining und Exploration #h-bar() Natural Language Processing],
@@ -24,7 +24,7 @@
   society: [Universität von Kalifornien, Los Angeles],
   date: [2018 - 2020],
   location: [USA],
-  logo: image("../src/logos/ucla.png"),
+  logo: image("../assets/logos/ucla.png"),
   description: list(
     [Dissertation: Erforschung des Einsatzes von Algorithmen des maschinellen Lernens zur Vorhersage von Aktienkursen: Eine vergleichende Studie von Regressions- und Zeitreihenmodellen],
     [Kurs: Datenbanksysteme #h-bar() Rechnernetze #h-bar() Softwaretechnik #h-bar() Künstliche Intelligenz],

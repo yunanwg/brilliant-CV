@@ -10,7 +10,7 @@
   recipient-address: "Company Address Here",
   date: datetime.today().display(),
   subject: "Subject: Hey!",
-  signature: image("src/signature.png"),
+  signature: image("assets/signature.png"),
 )
 
 Dear Hiring Manager,

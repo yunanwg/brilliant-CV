@@ -11,7 +11,7 @@
 
 #cv-entry-start(
   society: [XYZ Gesellschaft],
-  logo: image("../src/logos/xyz_corp.png"),
+  logo: image("../assets/logos/xyz_corp.png"),
   location: [San Francisco, CA],
 )
 
@@ -28,7 +28,7 @@
 #cv-entry(
   title: [Datenanalyst],
   society: [ABC Unternehmen],
-  logo: image("../src/logos/abc_company.png"),
+  logo: image("../assets/logos/abc_company.png"),
   date: [2017 - 2020],
   location: [New York, NY],
   description: list(
@@ -40,7 +40,7 @@
 #cv-entry(
   title: [Praktikant Datenanalyst],
   society: [PQR Gesellschaft],
-  logo: image("../src/logos/pqr_corp.png"),
+  logo: image("../assets/logos/pqr_corp.png"),
   date: list(
     [Sommer 2017],
     [Sommer 2016],
