@@ -7,7 +7,7 @@
 #cv-section("Publications")
 
 #cv-publication(
-  bib: bibliography("../src/publications.bib"),
+  bib: bibliography("../assets/publications.bib"),
   key-list: (
     "smith2020",
     "jones2021",

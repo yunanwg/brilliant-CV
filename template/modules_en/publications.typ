@@ -8,7 +8,7 @@
 
 // Example 1: Selected publications with custom style
 #cv-publication(
-  bib: bibliography("../src/publications.bib"),
+  bib: bibliography("../assets/publications.bib"),
   key-list: (
     "smith2020",
     "jones2021",
@@ -20,7 +20,7 @@
 
 // Example 2: All publications with APA style (commented out to avoid duplication)
 // #cv-publication(
-//   bib: bibliography("../src/publications.bib"),
+//   bib: bibliography("../assets/publications.bib"),
 //   ref-style: "apa",
 //   ref-full: true,
 // )

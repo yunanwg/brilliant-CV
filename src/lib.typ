@@ -13,12 +13,12 @@
   metadata,
   doc,
   // New parameter names (recommended)
-  profile-photo: image("../template/src/avatar.png"),
+  profile-photo: image("../template/assets/avatar.png"),
   // Old parameter names (deprecated, for backward compatibility)
-  profilePhoto: image("../template/src/avatar.png"),
+  profilePhoto: image("../template/assets/avatar.png"),
 ) = {
   // Backward compatibility logic (remove this block when deprecating)
-  let profile-photo = if profile-photo != image("../template/src/avatar.png") { 
+  let profile-photo = if profile-photo != image("../template/assets/avatar.png") { 
     profile-photo 
   } else { 
     // TODO: Add deprecation warning in future version
