@@ -5,22 +5,22 @@
 #let cvHonor = cvHonor.with(metadata: metadata)
 
 
-#cvSection("Certificazioni")
+#cvSection("Zertifikate")
 
 #cvHonor(
   date: [2022],
-  title: [AWS Certified Security],
+  title: [AWS: Zertifizierte Sicherheit],
   issuer: [Amazon Web Services (AWS)],
 )
 
 #cvHonor(
   date: [2017],
-  title: [Applied Data Science with Python],
+  title: [Angewandte Datenwissenschaft mit Python],
   issuer: [Coursera],
 )
 
 #cvHonor(
   date: [],
-  title: [Fondamenti di SQL],
+  title: [SQL-Grundlagenkurs],
   issuer: [Datacamp],
 )

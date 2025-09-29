@@ -2,7 +2,7 @@
 * Documentation of the functions used in the template, powered by tidy.
 */
 
-#import "@preview/tidy:0.3.0"
+#import "@preview/tidy:0.4.2"
 #import "./docs-template.typ": *
 #let version = toml("/typst.toml").package.version
 
@@ -116,6 +116,8 @@ header_align = "left"
 
  # Decide if you want to display profile photo or not
 display_profile_photo = true
+# Radius in % to clip profile photo at
+display_profile_photo = "50%"
 profile_photo_path = "template/src/avatar.png"
 
 [layout.entry]
