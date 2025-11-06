@@ -104,7 +104,11 @@
         box({
           icon
           h(5pt)
-          link(link_value)[#text]
+          if link_value != "" {
+            link(link_value)[#text]
+          } else {
+            text
+          }
         })
       } else if v != "" {
         box({
