@@ -16,7 +16,7 @@
 
 **1. Separation of style and content**
 
-> Version control your CV entries in the `modules` folder, without touching the styling and typesetting of your CV / Cover Letter _(hey, I am not talking about **Macrohard Word**, you know)_
+> Version control your CV entries in the language-specific `modules_<lang>` folders (for example `modules_en`, `modules_fr`), without touching the styling and typesetting of your CV / Cover Letter _(hey, I am not talking about **Macrohard Word**, you know)_
 
 **2. Quick twitches on the visual**
 
@@ -77,15 +77,24 @@ Replace the `<version>` with the latest or any releases (after 2.0.0).
 
 [utpm](https://github.com/Thumuss/utpm) is a WIP packager manager for Typst. Install it with official instructions.
 
-Git clone then this repository on your local system, and within the workspace, run `utpm workspace link --force`.
+Git clone this repository on your local system and, within the workspace, run `utpm ws link --force --no-copy` (or simply `just link`). Typst will now resolve `@preview/brilliant-cv:<version>` against your local checkout, so the bundled template keeps working without any extra manual steps.
 
-You will have to take care of templating by yourself, though.
+### 4. Configure metadata
 
-### 4. Compile Files
+The template is entirely driven by `template/metadata.toml`. Update it before compiling:
+
+- `language`: controls which `modules_<lang>` directory (such as `modules_en`, `modules_zh`, …) is loaded. Keep your content for each language inside the matching folder.
+- `[lang.<code>]`: defines the per-language footer text and header quote. You can add as many languages as you need, and the optional `[lang.non_latin]` block lets you specify a display name + font for scripts such as Chinese, Japanese, Korean or Russian.
+- `[layout]`: tweaks page spacing, paper size, date column width, and lets you override fonts via `[layout.fonts]`. Use `[layout.header]`, `[layout.entry]` and `[layout.footer]` to control header alignment, profile photo visibility, logo usage, entry order, and whether a page counter shows up.
+- `[inject]`: toggles the AI prompt / keyword injection feature (`inject_ai_prompt`, `inject_keywords`, `injected_keywords_list`).
+
+The remaining sections (`[personal]`, `[[personal.info]]`, etc.) keep working as before—feel free to extend them with the provided custom icon slots.
+
+### 5. Compile Files
 
 Adapt the `metadata.toml` to suit your needs, then `typst c cv.typ` to get your first CV!
 
-### 5. Beyond
+### 6. Beyond
 
 It is recommended to:
 
@@ -96,7 +105,7 @@ It is recommended to:
 
 ## How to upgrade version
 
-For the time being, upgrade can be achieved by manually "find and replace" the import statements in batch in your favorite IDE. For example:
+For the time being, upgrade can be achieved by manually "find and replace" every `#import "@preview/brilliant-cv:<version>"` in your project (e.g. both `template/cv.typ` and `template/letter.typ`). For example:
 
 ```typst
 #import "@preview/brilliant-cv:2.0.0" -> #import "@preview/brilliant-cv:3.0.0"
