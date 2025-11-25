@@ -45,6 +45,9 @@ language = "en"
         # Decide if you want to display page counter or not
         display_page_counter = false
 
+        # Decide if you want to display the footer or not
+        display_footer = true
+
 
 [inject]
     # Decide if you want to inject AI prompt or not
