@@ -212,8 +212,7 @@
                   },
                   "required": [
                     "awesomeIcon",
-                    "text",
-                    "link"
+                    "text"
                   ]
                 }
               },
