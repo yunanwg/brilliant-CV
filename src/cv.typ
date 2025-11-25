@@ -69,7 +69,7 @@
         icon
         h(5pt)
         if link-value != "" {
-          link(link-value)[#text]
+        link(link-value)[#text]
         } else {
           text
         }
