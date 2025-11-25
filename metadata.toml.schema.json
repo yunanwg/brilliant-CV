@@ -107,6 +107,10 @@
         "footer": {
           "type": "object",
           "properties": {
+            "display_footer": {
+              "type": "boolean",
+              "description": "Display footer or not"
+            },
             "display_page_counter": {
               "type": "boolean",
               "description": "Display page counter in footer or not"

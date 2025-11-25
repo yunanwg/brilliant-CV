@@ -56,6 +56,11 @@
   let firstName = metadata.personal.first_name
   let lastName = metadata.personal.last_name
   let footerText = metadata.lang.at(metadata.language).letter_footer
+  let ifDisplayFooter = metadata.layout.at("footer", default: {}).at("display_footer", default: true)
+
+  if not ifDisplayFooter {
+    return none
+  }
 
   // Styles
   let footerStyle(str) = {

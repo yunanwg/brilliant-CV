@@ -200,6 +200,11 @@
   let lastName = metadata.personal.last_name
   let footerText = metadata.lang.at(metadata.language).cv_footer
   let ifDisplayPageCounter = metadata.layout.at("footer", default: {}).at("display_page_counter", default: false)
+  let ifDisplayFooter = metadata.layout.at("footer", default: {}).at("display_footer", default: true)
+
+  if not ifDisplayFooter {
+    return none
+  }
 
   // Styles
   let footerStyle(str) = {
