@@ -68,11 +68,11 @@
       box({
         icon
         h(5pt)
-          if link-value != "" {
-            link(link-value)[#text]
-          } else {
-            text
-          }
+        if link-value != "" {
+          link(link-value)[#text]
+        } else {
+          text
+        }
       })
     } else if v != "" {
       box({
