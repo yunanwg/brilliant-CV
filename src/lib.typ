@@ -29,8 +29,9 @@
   let fonts = _latin-font-list
   let header-font = _latin-header-font
 
-  fonts = overwrite-fonts(metadata, _latin-font-list, _latin-header-font).regular-fonts
-  header-font = overwrite-fonts(metadata, _latin-font-list, _latin-header-font).header-font
+  let font-config = overwrite-fonts(metadata, _latin-font-list, _latin-header-font)
+  fonts = font-config.regular-fonts
+  header-font = font-config.header-font
   
   if _is-non-latin(lang) {
     let nonLatinFont = metadata.lang.non_latin.font
@@ -80,7 +81,8 @@
   // Non Latin Logic
   let lang = metadata.language
   let fonts = _latin-font-list
-  fonts = overwrite-fonts(metadata, _latin-font-list, _latin-header-font).regular-fonts
+  let font-config = overwrite-fonts(metadata, _latin-font-list, _latin-header-font)
+  fonts = font-config.regular-fonts
   if _is-non-latin(lang) {
     let non-latin-font = metadata.lang.non_latin.font
     fonts.insert(2, non-latin-font)
