@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <img src="https://github.com/mintyfrankie/mintyfrankie/assets/77310871/64861d2d-971c-47cd-a5e8-5ad8659f2c2b" width="200">
+  <img src="https://github.com/mintyfrankie/mintyfrankie/assets/77310871/64861d2d-971c-47cd-a5e8-5ad8659f2c2b" width="100%">
   <br>
   Brilliant CV
   <br>
