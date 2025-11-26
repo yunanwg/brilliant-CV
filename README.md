@@ -1,164 +1,103 @@
 <h1 align="center">
-  <img src='https://github.com/mintyfrankie/mintyfrankie/assets/77310871/64861d2d-971c-47cd-a5e8-5ad8659f2c2b'>
-  <br><br>
+  <br>
+  <img src="https://github.com/mintyfrankie/mintyfrankie/assets/77310871/64861d2d-971c-47cd-a5e8-5ad8659f2c2b" width="200">
+  <br>
   Brilliant CV
+  <br>
 </h1>
 
-<br>
+> [!IMPORTANT]
+> **Upgrading from v2?** Please read the [**Migration Guide**](MIGRATION.md) before updating to avoid breaking changes!
 
-> If my work helps you drift through tedious job seeking journey, don't hesitate to think about [buying me a Coke Zero](https://github.com/sponsors/yunanwg)... or a lot of them! 🥤
+<h4 align="center">A modern, modular, and feature-rich CV template for <a href="https://typst.app" target="_blank">Typst</a>.</h4>
 
+<p align="center">
+  <a href="https://typst.app/universe/package/brilliant-cv">
+    <img src="https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fyunanwg%2Fbrilliant-CV%2Fmaster%2Ftypst.toml&query=%24.package.version&prefix=v&logo=typst&label=package&color=239dad" alt="Typst Package">
+  </a>
+  <a href="https://github.com/yunanwg/brilliant-CV/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/yunanwg/brilliant-CV" alt="License">
+  </a>
+  <a href="https://github.com/yunanwg/brilliant-CV/stargazers">
+    <img src="https://img.shields.io/github/stars/yunanwg/brilliant-CV" alt="Stars">
+  </a>
+</p>
 
+<p align="center">
+  <a href="#-key-features">Key Features</a> •
+  <a href="#-how-to-use">How To Use</a> •
+  <a href="#%EF%B8%8F-configuration">Configuration</a> •
+  <a href="#-gallery">Gallery</a> •
+  <a href="MIGRATION.md">Migration Guide</a>
+</p>
 
-**Brilliant CV** is a [**Typst**](https://github.com/typst/typst) template for making **Résume**, **CV** or **Cover Letter** inspired by the famous LaTeX CV template [**Awesome-CV**](https://github.com/posquit0/Awesome-CV).
+<p align="center">
+  <img src="thumbnail.png" alt="Brilliant CV Preview" width="100%">
+</p>
 
-## Features
+## ✨ Key Features
 
-**1. Separation of style and content**
+- **🎨 Separation of Style & Content**: Write your CV entries in simple Typst files, and let the template handle the layout and styling.
+- **🌍 Multilingual Support**: Seamless switch between languages (English, French, Chinese, etc.) with a single config change.
+- **🤖 AI & ATS Friendly**: Unique "keyword injection" feature to help your CV pass automated screening systems.
+- **🛠 Highly Customizable**: Tweak colors, fonts, and layout via a simple `metadata.toml` file.
+- **📦 Zero-Setup**: Get started in seconds with the Typst CLI.
 
-> Version control your CV entries in the language-specific `modules_<lang>` folders (for example `modules_en`, `modules_fr`), without touching the styling and typesetting of your CV / Cover Letter _(hey, I am not talking about **Macrohard Word**, you know)_
+## 🚀 How to Use
 
-**2. Quick twitches on the visual**
-
-> Add company logos, put your shiny company name or your coolest title at the first line globally or per-document needs
-
-**3. Multilingual support**
-
-> Centrally store your multilingual CVs (English + French + German + Chinese + Japanese if you are superb) and change output language in a blink
-
-***(NEW)* 4. AI Prompt and Keywords Injection**
-
-> Fight against the abuse of ATS system or GenAI screening by injecting invisible AI prompt or keyword list automatically.
-
-## Preview
-
-|                                                    CV                                                    |                                                    Cover Letter                                                    |
-| :------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------: |
-| ![CV](https://github.com/mintyfrankie/mintyfrankie/assets/77310871/94f5fb5c-03d0-4912-b6d6-11ee7d27a9a3) | ![Cover Letter](https://github.com/mintyfrankie/brilliant-CV/assets/77310871/b4e74cdd-6b8d-4414-b52f-13cd6ba94315) |
-
-|                                       CV (_French, red, no photo_)                                       |                                            Cover Letter (_French, red_)                                            |
-| :------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------: |
-| ![CV](https://github.com/mintyfrankie/brilliant-CV/assets/77310871/fed7b66c-728e-4213-aa58-aa26db3b1362) | ![Cover Letter](https://github.com/mintyfrankie/brilliant-CV/assets/77310871/65ca65b0-c0e1-4fe8-b797-8a5e0bea4b1c) |
-
-|                                       CV (_Chinese, green_)                                       |                                            Cover Letter (_Chinese, green_)                                            |
-| :------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------: |
-| ![CV](https://github.com/mintyfrankie/brilliant-CV/assets/77310871/cb9c16f5-8ad7-4256-92fe-089c108d07f5) | ![Letter](https://github.com/mintyfrankie/brilliant-CV/assets/77310871/a5a97be2-87e2-43fe-b605-f862a0d600d7)|
-
-
-## Usage
-
-> If you are using Typst online editor, you don't have to follow local development steps.
-
-### 1. Install Fonts
-
-In order to make Typst render correctly, you will have to install the required fonts [**Roboto**](https://fonts.google.com/specimen/Roboto), [**Source Sans Pro**](https://fonts.google.com/specimen/Source+Sans+3) (or **Source Sans 3**) as well as [Fontawesome 6](https://fontawesome.com/download) in your local system.
-
-*NOTE: For online editor, Source Sans Pro are already included; however you will still have to manually upload the `.otf` or `.ttf` files of **Fontawesome** and **Roboto** to your project, by creating a folder `fonts` and put all the `otf` files there. See [Issue](https://github.com/typst/webapp-issues/issues/401)*
-
-### 2. Check Documentation
-
-A [documentation](https://yunanwg.github.io/brilliant-CV/docs.pdf) on CV functions is provided for reference.
-
-### 3. Bootstrap Template
-
-You have two ways to bootstrap the template, according to your need and tech-savvy level.
-
-#### 3.1 With Typst CLI
-
-In your local system, just working like `git clone`, boostrap the template using this command:
+### 1. Initialize the Project
+Run the following command in your terminal to create a new CV project:
 
 ```bash
-typst init @preview/brilliant-cv:<version>
+typst init @preview/brilliant-cv
 ```
 
-Replace the `<version>` with the latest or any releases (after 2.0.0).
+### 2. Configure Your CV
+Edit `template/metadata.toml` to set your personal details, language preference, and layout options.
 
-#### 3.2 With `utpm` pakcage manager
+### 3. Add Your Content
+Fill in your experience and skills in the `modules_<lang>` directories.
 
-[utpm](https://github.com/Thumuss/utpm) is a WIP packager manager for Typst. Install it with official instructions.
+### 4. Compile
+Compile your CV to PDF:
 
-Git clone this repository on your local system and, within the workspace, run `utpm ws link --force --no-copy` (or simply `just link`). Typst will now resolve `@preview/brilliant-cv:<version>` against your local checkout, so the bundled template keeps working without any extra manual steps.
-
-### 4. Configure metadata
-
-The template is entirely driven by `template/metadata.toml`. Update it before compiling:
-
-- `language`: controls which `modules_<lang>` directory (such as `modules_en`, `modules_zh`, …) is loaded. Keep your content for each language inside the matching folder.
-- `[lang.<code>]`: defines the per-language footer text and header quote. You can add as many languages as you need, and the optional `[lang.non_latin]` block lets you specify a display name + font for scripts such as Chinese, Japanese, Korean or Russian.
-- `[layout]`: tweaks page spacing, paper size, date column width, and lets you override fonts via `[layout.fonts]`. Use `[layout.header]`, `[layout.entry]` and `[layout.footer]` to control header alignment, profile photo visibility, logo usage, entry order, and whether a page counter shows up.
-- `[inject]`: toggles the AI prompt / keyword injection feature (`inject_ai_prompt`, `inject_keywords`, `injected_keywords_list`).
-
-The remaining sections (`[personal]`, `[[personal.info]]`, etc.) keep working as before—feel free to extend them with the provided custom icon slots.
-
-### 5. Compile Files
-
-Adapt the `metadata.toml` to suit your needs, then `typst c cv.typ` to get your first CV!
-
-### 6. Beyond
-
-It is recommended to:
-
-1. Use `git` to manage your project, as it helps trace your changes and version control your CV.
-2. Use `typstyle` and `pre-commit` to help you format your CV.
-3. Use `typos` to check typos in your CV if your main locale is English.
-4. (Advanced) Use `LTex` in your favorite code editor to check grammars and get language suggestions.
-
-## How to upgrade version
-
-For the time being, upgrade can be achieved by manually "find and replace" every `#import "@preview/brilliant-cv:<version>"` in your project (e.g. both `template/cv.typ` and `template/letter.typ`). For example:
-
-```typst
-#import "@preview/brilliant-cv:2.0.0" -> #import "@preview/brilliant-cv:3.0.0"
+```bash
+typst compile cv.typ
 ```
 
-**Make sure you read the release notes to notice any breaking changes. We estimate that there would still be some as Typst has not reached to a stable release neither.**
+## ⚙️ Configuration
 
-## Migration from `v2`
-This version introduces a new directory structure and API improvements. While we have implemented backward compatibility, we recommend updating your code to the new standard.
+The `metadata.toml` file is the control center of your CV. Here's a quick overview:
 
-### 1. Update Imports
-The package structure has changed. If you were importing specific files, you might need to update the paths. However, the main entry point remains the same.
+| Section | Description |
+|---------|-------------|
+| `[personal]` | Your name, contact info, and social links. |
+| `[layout]` | Adjust margins, fonts, and section ordering. |
+| `[inject]` | Enable/disable AI prompt and keyword injection. |
+| `[lang]` | Define localized strings (headers, date formats). |
 
-### 2. Parameter Renaming
-We have renamed several parameters to follow the kebab-case convention. The old camelCase parameters are still supported but deprecated.
+## 🖼 Gallery
 
-- `cv`: `profilePhoto` -> `profile-photo`
-- `letter`: `myAddress` -> `sender-address`, `recipientName` -> `recipient-name`, `recipientAddress` -> `recipient-address`
-- `cv-section`, `cv-entry`: `awesomeColors` -> `awesome-colors`
+| Style | Preview |
+|-------|---------|
+| **Standard** | ![CV](https://github.com/mintyfrankie/mintyfrankie/assets/77310871/94f5fb5c-03d0-4912-b6d6-11ee7d27a9a3) |
+| **French (Red)** | ![CV French](https://github.com/mintyfrankie/brilliant-CV/assets/77310871/fed7b66c-728e-4213-aa58-aa26db3b1362) |
+| **Chinese (Green)** | ![CV Chinese](https://github.com/mintyfrankie/brilliant-CV/assets/77310871/cb9c16f5-8ad7-4256-92fe-089c108d07f5) |
 
-### 3. Template Updates
-If you are using the template, we recommend updating your `cv.typ` and `letter.typ` to use the new parameter names.
+## 🤝 Contributing
 
-## Migration from `v1`
+Contributions are welcome! Please check out [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-> The version `v1` is now deprecated, due to the compliance to Typst Packages standard. However, if you want to continue to develop on the older version, please refer to the `v1-legacy` branch.
+## ❤️ Sponsors
 
-With an existing CV project using the `v1` version of the template, a migration is needed, including replacing some files / some content in certain files.
+<p align="center">
+  <!-- sponsors --><!-- sponsors -->
+</p>
 
-1. Delete `brilliant-CV` folder, `.gitmodules`. (Future package management will directly be managed by Typst)
-2. Migrate all the config on `metadata.typ` by creating a new `metadata.toml`. Follow the example toml file in the repo, it is rather straightforward to migrate.
-3. For `cv.typ` and `letter.typ`, copy the new files from the repo, and adapt the modules you have in your project.
-4. For the module files in `/modules_*` folders:
-   1. Delete the old import `#import "../brilliant-CV/template.typ": *`, and replace it by the import statements in the new template files.
-   2. Due to the Typst path handling mecanism, one cannot directly pass the path string to some functions anymore. This concerns, for example, the `logo` argument in `cvEntry`, but also on `cvPublication` as well. Some parameter names were changed, but most importantly, **you should pass a function instead of a string (i.e. `image("logo.png")` instead of `"logo.png"`).** Refer to new template files for reference.
-5. You might need to install `FontAwesome 6`, `Roboto` and `Source Sans Pro` on your local system now, as new Typst package discourages including these large files.
-6. Run `typst c cv.typ` without passing the `font-path` flag. All should be good now, congrats!
+## 📄 License
 
-Feel free to raise an issue for more assistance should you encounter a problem that you cannot solve on your own :)
+This project is licensed under the [Apache 2.0 License](LICENSE).
 
-## Contributing
+---
 
-Want to tweak the template beyond metadata or submit a fix? Check out [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the local linking workflow (`utpm` + `just`) and contribution guidelines tailored to Typst’s package system.
-
-## Alternatives
-
-If you are not a fan of my approach, you will also have to take a look at:
-
-- [**typst-cv**](https://github.com/munzirtaha/typst-cv): A more minimalistic approach to typesetting this template, thanks [munzirtaha](https://github.com/munzirtaha) for your work!
-
-## Credit
-
-- [**Typst**](https://github.com/typst/typst) is a newborn, open source and simple typesetting engine that offers a better scripting experience than [**LaTeX**](https://www.latex-project.org/).
-- [**Awesome-CV**](https://github.com/posquit0/Awesome-CV) is the original LaTeX CV template from which this project is heavily inspired. Thanks [posquit0](https://github.com/posquit0) for your excellent work!
-- [**Font Awesome**](https://fontawesome.com/) is a comprehensive icon library and toolkit used widely in web projects for its vast array of icons and ease of integration.
-- [**tidy**](https://github.com/Mc-Zen/tidy) is a package that generates documentation directly in Typst for your Typst modules. Keep it tidy!
+> If this template helps you land a job, consider [buying me a coffee](https://github.com/sponsors/yunanwg)! ☕️
