@@ -113,6 +113,22 @@ For the time being, upgrade can be achieved by manually "find and replace" every
 
 **Make sure you read the release notes to notice any breaking changes. We estimate that there would still be some as Typst has not reached to a stable release neither.**
 
+## Migration from `v2`
+This version introduces a new directory structure and API improvements. While we have implemented backward compatibility, we recommend updating your code to the new standard.
+
+### 1. Update Imports
+The package structure has changed. If you were importing specific files, you might need to update the paths. However, the main entry point remains the same.
+
+### 2. Parameter Renaming
+We have renamed several parameters to follow the kebab-case convention. The old camelCase parameters are still supported but deprecated.
+
+- `cv`: `profilePhoto` -> `profile-photo`
+- `letter`: `myAddress` -> `sender-address`, `recipientName` -> `recipient-name`, `recipientAddress` -> `recipient-address`
+- `cv-section`, `cv-entry`: `awesomeColors` -> `awesome-colors`
+
+### 3. Template Updates
+If you are using the template, we recommend updating your `cv.typ` and `letter.typ` to use the new parameter names.
+
 ## Migration from `v1`
 
 > The version `v1` is now deprecated, due to the compliance to Typst Packages standard. However, if you want to continue to develop on the older version, please refer to the `v1-legacy` branch.
