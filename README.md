@@ -1,13 +1,10 @@
 <h1 align="center">
   <br>
-  <img src="https://github.com/mintyfrankie/mintyfrankie/assets/77310871/64861d2d-971c-47cd-a5e8-5ad8659f2c2b" width="100%">
+  <img src="thumbnail.png" alt="Brilliant CV Preview" width="100%">
   <br>
   Brilliant CV
   <br>
 </h1>
-
-> [!IMPORTANT]
-> **Upgrading from v2?** Please read the [**Migration Guide**](MIGRATION.md) before updating to avoid breaking changes!
 
 <h4 align="center">A modern, modular, and feature-rich CV template for <a href="https://typst.app" target="_blank">Typst</a>.</h4>
 
@@ -24,6 +21,7 @@
 </p>
 
 <p align="center">
+  <a href="https://yunanwg.github.io/brilliant-CV/docs.pdf">Documentation</a> •
   <a href="#-key-features">Key Features</a> •
   <a href="#-how-to-use">How To Use</a> •
   <a href="#%EF%B8%8F-configuration">Configuration</a> •
@@ -31,9 +29,11 @@
   <a href="MIGRATION.md">Migration Guide</a>
 </p>
 
-<p align="center">
-  <img src="thumbnail.png" alt="Brilliant CV Preview" width="100%">
-</p>
+> [!IMPORTANT]
+> **Upgrading from v2?** Please read the [**Migration Guide**](MIGRATION.md) before updating to avoid breaking changes!
+
+> [!TIP]
+> **Need detailed help?** Check out the full [**Documentation**](https://yunanwg.github.io/brilliant-CV/docs.pdf) for comprehensive guides, API references, and advanced configuration options.
 
 ## ✨ Key Features
 
@@ -67,7 +67,7 @@ typst compile cv.typ
 
 ## ⚙️ Configuration
 
-The `metadata.toml` file is the control center of your CV. Here's a quick overview:
+The `metadata.toml` file is the control center of your CV. Here's a quick overview (see the [**Documentation**](https://yunanwg.github.io/brilliant-CV/docs.pdf) for full details):
 
 | Section | Description |
 |---------|-------------|
@@ -90,6 +90,8 @@ Contributions are welcome! Please check out [CONTRIBUTING.md](CONTRIBUTING.md) f
 
 ## ❤️ Sponsors
 
+> If this template helps you land a job, consider [buying me a coffee](https://github.com/sponsors/yunanwg)! ☕️
+
 <p align="center">
   <!-- sponsors --><!-- sponsors -->
 </p>
@@ -97,7 +99,3 @@ Contributions are welcome! Please check out [CONTRIBUTING.md](CONTRIBUTING.md) f
 ## 📄 License
 
 This project is licensed under the [Apache 2.0 License](LICENSE).
-
----
-
-> If this template helps you land a job, consider [buying me a coffee](https://github.com/sponsors/yunanwg)! ☕️
