@@ -24,3 +24,15 @@ jobs:
           template: '<a href="https://github.com/{{{ login }}}"><img src="https://github.com/{{{ login }}}.png" width="60px" alt="{{{ login }}}" style="border-radius: 50%;" /></a>&nbsp;&nbsp;'
           active-only: false
           include-private: true
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          if git diff-index --quiet HEAD; then
+            echo "No changes to commit"
+          else
+            git commit -m "docs: update sponsors"
+            git push
+          fi
