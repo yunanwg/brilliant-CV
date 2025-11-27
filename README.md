@@ -93,7 +93,7 @@ Contributions are welcome! Please check out [CONTRIBUTING.md](CONTRIBUTING.md) f
 > If this template helps you land a job, consider [buying me a coffee](https://github.com/sponsors/yunanwg)! ☕️
 
 <p align="center">
-  <!-- sponsors --><!-- sponsors -->
+  <!-- sponsors --><a href="https://github.com/GeorgRasumov"><img src="https://github.com/GeorgRasumov.png" width="60px" alt="GeorgRasumov" style="border-radius: 50%;" /></a>&nbsp;&nbsp;<a href="https://github.com/chaoran-chen"><img src="https://github.com/chaoran-chen.png" width="60px" alt="chaoran-chen" style="border-radius: 50%;" /></a>&nbsp;&nbsp;<!-- sponsors -->
 </p>
 
 ## 📄 License
