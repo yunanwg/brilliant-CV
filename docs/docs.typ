@@ -95,6 +95,11 @@ Feel free to raise an issue for more assistance should you encounter a problem t
 The `metadata.toml` file is the main configuration file for your CV. By changing the key-value pairs in the config file, you can
 setup the names, contact information, and other details that will be displayed in your CV.
 
+You can also override the language set in `metadata.toml` via the CLI:
+```bash
+typst compile cv.typ --input language=fr
+```
+
 Here is an example of a `metadata.toml` file:
 
 ```toml
