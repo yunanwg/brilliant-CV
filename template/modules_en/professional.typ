@@ -1,10 +1,5 @@
 // Imports
 #import "@preview/brilliant-cv:3.0.0": cv-section, cv-entry, cv-entry-start, cv-entry-continued
-#let metadata = toml("../metadata.toml")
-#let cv-section = cv-section.with(metadata: metadata)
-#let cv-entry = cv-entry.with(metadata: metadata)
-#let cv-entry-start = cv-entry-start.with(metadata: metadata)
-#let cv-entry-continued = cv-entry-continued.with(metadata: metadata)
 
 
 #cv-section("Professional Experience")

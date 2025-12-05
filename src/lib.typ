@@ -24,6 +24,10 @@
     // TODO: Add deprecation warning in future version
     profilePhoto 
   }
+
+  // Update metadata state
+  cv-metadata.update(metadata)
+
   // Non Latin Logic
   let lang = metadata.language
   let fonts = _latin-font-list
