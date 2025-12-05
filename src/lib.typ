@@ -40,7 +40,7 @@
   }
 
   // Page layout
-  set text(font: fonts, weight: "regular", size: 9pt)
+  set text(font: fonts, weight: "regular", size: 9pt, fill: _regular-colors.lightgray)
   set align(left)
   let paper_size = metadata.layout.at("paper_size", default: "a4")
   set page(
@@ -89,7 +89,7 @@
   }
 
   // Page layout
-  set text(font: fonts, weight: "regular", size: 9pt)
+  set text(font: fonts, weight: "regular", size: 9pt, fill: _regular-colors.lightgray)
   set align(left)
   let paper-size = metadata.layout.at("paper_size", default: "a4")
   set page(
