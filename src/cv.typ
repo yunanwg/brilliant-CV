@@ -7,6 +7,9 @@
 #import "./utils/styles.typ": _latin-font-list, _latin-header-font, _awesome-colors, _regular-colors, _set-accent-color, h-bar
 #import "./utils/lang.typ": _is-non-latin, _default-date-width
 
+/// Metadata state to avoid passing metadata to every function
+#let cv-metadata = state("cv-metadata", none)
+
 /// Create header style functions
 /// -> dictionary
 #let _header-styles(header-font, regular-colors, accent-color, header-info-font-size) = (
@@ -271,12 +274,13 @@
   title,
   highlighted: true,
   letters: 3,
-  metadata: metadata,
+  metadata: none,
   // New parameter names (recommended)
   awesome-colors: none,
   // Old parameter names (deprecated, for backward compatibility)
   awesomeColors: _awesome-colors,
-) = {
+) = context {
+  let metadata = if metadata != none { metadata } else { cv-metadata.get() }
   // Backward compatibility logic (remove this block when deprecating)
   let awesome-colors = if awesome-colors != none { 
     awesome-colors 
@@ -684,12 +688,13 @@
   description: "Description",
   logo: "",
   tags: (),
-  metadata: metadata,
+  metadata: none,
   // New parameter names (recommended)
   awesome-colors: none,
   // Old parameter names (deprecated, for backward compatibility)
   awesomeColors: _awesome-colors,
-) = {
+) = context {
+  let metadata = if metadata != none { metadata } else { cv-metadata.get() }
   let params = _prepare-entry-params(metadata, awesome-colors, awesomeColors)
 
   _make-cv-entry(
@@ -718,12 +723,13 @@
   society: "Society",
   location: "Location",
   logo: "",
-  metadata: metadata,
+  metadata: none,
   // New parameter names (recommended)
   awesome-colors: none,
   // Old parameter names (deprecated, for backward compatibility)
   awesomeColors: _awesome-colors,
-) = {
+) = context {
+  let metadata = if metadata != none { metadata } else { cv-metadata.get() }
   // To use cvEntryStart, you need to set display_entry_society_first to true in the metadata.toml file.
   if not metadata.layout.entry.display_entry_society_first {
     panic("display_entry_society_first must be true to use cvEntryStart")
@@ -746,12 +752,13 @@
   date: "Date",
   description: "Description",
   tags: (),
-  metadata: metadata,
+  metadata: none,
   // New parameter names (recommended)
   awesome-colors: none,
   // Old parameter names (deprecated, for backward compatibility)
   awesomeColors: _awesome-colors,
-) = {
+) = context {
+  let metadata = if metadata != none { metadata } else { cv-metadata.get() }
   // To use cv-entry-continued, you need to set display_entry_society_first to true in the metadata.toml file.
   if not metadata.layout.entry.display_entry_society_first {
     panic("display_entry_society_first must be true to use cvEntryContinued")
@@ -864,8 +871,9 @@
   url: "",
   location: "",
   awesome-colors: _awesome-colors,
-  metadata: metadata,
-) = {
+  metadata: none,
+) = context {
+  let metadata = if metadata != none { metadata } else { cv-metadata.get() }
   let accent-color = _set-accent-color(awesome-colors, metadata)
 
   let honor-date-style(str) = {

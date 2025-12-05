@@ -1,7 +1,5 @@
 // Import
 #import "@preview/brilliant-cv:3.0.0": cv-section, cv-skill, h-bar
-#let metadata = toml("../metadata.toml")
-#let cv-section = cv-section.with(metadata: metadata)
 
 
 #cv-section("技能与兴趣")

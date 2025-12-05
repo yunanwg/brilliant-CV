@@ -1,8 +1,5 @@
 // Imports
 #import "@preview/brilliant-cv:3.0.0": cv-section, cv-entry
-#let metadata = toml("../metadata.toml")
-#let cv-section = cv-section.with(metadata: metadata)
-#let cv-entry = cv-entry.with(metadata: metadata)
 
 
 #cv-section("Projets & Associations")
