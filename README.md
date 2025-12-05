@@ -65,6 +65,12 @@ Compile your CV to PDF:
 typst compile cv.typ
 ```
 
+You can also override the language set in `metadata.toml` via the CLI:
+
+```bash
+typst compile cv.typ --input language=fr
+```
+
 ## ⚙️ Configuration
 
 The `metadata.toml` file is the control center of your CV. Here's a quick overview (see the [**Documentation**](https://yunanwg.github.io/brilliant-CV/docs.pdf) for full details):
