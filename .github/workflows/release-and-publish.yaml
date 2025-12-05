@@ -112,8 +112,8 @@ jobs:
             exit 1
           fi
           
-          if [ ! -f "$PACKAGE_DIR/lib.typ" ]; then
-            echo "❌ Missing lib.typ (entrypoint) in package"
+          if [ ! -f "$PACKAGE_DIR/src/lib.typ" ]; then
+            echo "❌ Missing src/lib.typ (entrypoint) in package"
             exit 1
           fi
           
