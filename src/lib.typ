@@ -43,8 +43,11 @@
     header-font = nonLatinFont
   }
 
+  let font_size = eval(
+    metadata.layout.at("font_size", default: "9pt")
+  )
   // Page layout
-  set text(font: fonts, weight: "regular", size: 9pt, fill: _regular-colors.lightgray)
+  set text(font: fonts, weight: "regular", size: font_size, fill: _regular-colors.lightgray)
   set align(left)
   let paper_size = metadata.layout.at("paper_size", default: "a4")
   set page(
