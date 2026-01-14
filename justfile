@@ -74,3 +74,24 @@ clean:
 reset: unlink clean
     @echo "🔄 Development environment reset"
     @echo "💡 Run 'just dev' to start development again"
+
+# Compare PDFs for visual regression testing
+# Usage: just compare <baseline.pdf> <new.pdf>
+compare baseline new:
+    @echo "🔍 Comparing PDFs..."
+    @mkdir -p temp/compare
+    @if diff-pdf "{{baseline}}" "{{new}}"; then \
+        echo "✅ PDFs are IDENTICAL - no visual changes"; \
+    else \
+        echo "⚠️  PDFs DIFFER - generating visual diff..."; \
+        diff-pdf --output-diff=temp/compare/diff.pdf "{{baseline}}" "{{new}}" || true; \
+        echo "📄 Visual diff saved to temp/compare/diff.pdf"; \
+        echo "👀 Opening files for review..."; \
+        open "{{baseline}}" "{{new}}" temp/compare/diff.pdf; \
+    fi
+
+# Build and compare against a baseline PDF
+compare-build baseline:
+    @echo "🏗️  Building current version..."
+    @just build
+    @just compare "{{baseline}}" temp/cv.pdf
