@@ -459,19 +459,33 @@
     
   } else if entry-type == "start" {
     // Entry start layout (original cv-entry-start logic)
-    table(
-      columns: (if display-logo and logo != "" { 4% } else { 0% }, 1fr, date-width),
-      inset: 0pt,
-      stroke: 0pt,
-      gutter: 6pt,
-      align: horizon,
-      if logo == "" [] else {
-        set image(width: 100%)
-        logo
-      },
-      (styles.a1)(society),
-      (styles.a2)(location),
-    )
+    if display-logo and logo != "" {
+      // With logo: 3-column layout
+      table(
+        columns: (4%, 1fr, date-width),
+        inset: 0pt,
+        stroke: 0pt,
+        gutter: 6pt,
+        align: horizon,
+        {
+          set image(width: 100%)
+          logo
+        },
+        (styles.a1)(society),
+        (styles.a2)(location),
+      )
+    } else {
+      // Without logo: 2-column layout (matches cv-entry alignment)
+      table(
+        columns: (1fr, date-width),
+        inset: 0pt,
+        stroke: 0pt,
+        gutter: 6pt,
+        align: horizon,
+        (styles.a1)(society),
+        (styles.a2)(location),
+      )
+    }
     v(-10pt)
     
   } else if entry-type == "continued" {
