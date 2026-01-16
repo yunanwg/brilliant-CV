@@ -29,11 +29,11 @@
   <a href="MIGRATION.md">Migration Guide</a>
 </p>
 
-> [!IMPORTANT]
-> **Upgrading from v2?** Please read the [**Migration Guide**](MIGRATION.md) before updating to avoid breaking changes!
+## 🚀 New - Brilliant CV Supercharged
 
-> [!TIP]
-> **Need detailed help?** Check out the full [**Documentation**](https://yunanwg.github.io/brilliant-CV/docs.pdf) for comprehensive guides, API references, and advanced configuration options.
+What if you can use Claude Code and Notion to manage your job applications, proudly with brilliant-cv?
+
+Curious? Check out [Brilliant CV Supercharged](https://yunanwang.gumroad.com/l/brilliant-cv-supercharged) to learn more.
 
 ## ✨ Key Features
 
