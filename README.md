@@ -22,7 +22,8 @@
 
 What if you can use Claude Code and Notion to manage your job applications, proudly with brilliant-cv?
 
-Curious? Check out [Brilliant CV Supercharged](https://yunanwang.gumroad.com/l/brilliant-cv-supercharged?utm_source=github&utm_medium=link&utm_campaign=github) to learn more.
+Curious? Check out [Brilliant CV Supercharged](https://gum.co/u/wwpyqbut
+) to learn more.
 
 ## ✨ Key Features
 
