@@ -8,17 +8,6 @@
 
 <h4 align="center">A modern, modular, and feature-rich CV template for <a href="https://typst.app" target="_blank">Typst</a>.</h4>
 
-<p align="center">
-  <a href="https://typst.app/universe/package/brilliant-cv">
-    <img src="https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fyunanwg%2Fbrilliant-CV%2Fmaster%2Ftypst.toml&query=%24.package.version&prefix=v&logo=typst&label=package&color=239dad" alt="Typst Package">
-  </a>
-  <a href="https://github.com/yunanwg/brilliant-CV/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/yunanwg/brilliant-CV" alt="License">
-  </a>
-  <a href="https://github.com/yunanwg/brilliant-CV/stargazers">
-    <img src="https://img.shields.io/github/stars/yunanwg/brilliant-CV" alt="Stars">
-  </a>
-</p>
 
 <p align="center">
   <a href="https://yunanwg.github.io/brilliant-CV/docs.pdf">Documentation</a> •
@@ -33,7 +22,7 @@
 
 What if you can use Claude Code and Notion to manage your job applications, proudly with brilliant-cv?
 
-Curious? Check out [Brilliant CV Supercharged](https://yunanwang.gumroad.com/l/brilliant-cv-supercharged) to learn more.
+Curious? Check out [Brilliant CV Supercharged](https://yunanwang.gumroad.com/l/brilliant-cv-supercharged?utm_source=github&utm_medium=link&utm_campaign=github) to learn more.
 
 ## ✨ Key Features
 
