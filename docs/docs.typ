@@ -115,6 +115,9 @@ before_section_skip = "1pt"
 before_entry_skip = "1pt"
 before_entry_description_skip = "1pt"
 
+# Font size for the content text
+font_size = "9pt"
+
 [layout.header]
 # Optional values: left, center, right
 header_align = "left"
