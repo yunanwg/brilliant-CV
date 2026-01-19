@@ -2,6 +2,7 @@
   <br>
   <img src="thumbnail.png" alt="Brilliant CV Preview" width="100%">
   <br>
+  <br>
   Brilliant CV
   <br>
 </h1>
@@ -9,29 +10,27 @@
 <h4 align="center">A modern, modular, and feature-rich CV template for <a href="https://typst.app" target="_blank">Typst</a>.</h4>
 
 
-<p align="center">
-  <a href="https://yunanwg.github.io/brilliant-CV/docs.pdf">Documentation</a> •
-  <a href="#-key-features">Key Features</a> •
-  <a href="#-how-to-use">How To Use</a> •
-  <a href="#%EF%B8%8F-configuration">Configuration</a> •
-  <a href="#-gallery">Gallery</a> •
-  <a href="MIGRATION.md">Migration Guide</a>
-</p>
+<br>
 
-## 🚀 New - Brilliant CV Supercharged
+## ⭐ New: Brilliant CV Supercharged
 
-What if you can use Claude Code and Notion to manage your job applications, proudly with brilliant-cv?
+**Take your job search to the next level.**
 
-Curious? Check out [Brilliant CV Supercharged](https://gum.co/u/wwpyqbut
-) to learn more.
+Manage your applications with Claude Code and Notion, proudly powered by Brilliant CV.
+
+[**Learn more about Brilliant CV Supercharged**](https://gum.co/u/wwpyqbut).
+
+<br>
 
 ## ✨ Key Features
 
 - **🎨 Separation of Style & Content**: Write your CV entries in simple Typst files, and let the template handle the layout and styling.
-- **🌍 Multilingual Support**: Seamless switch between languages (English, French, Chinese, etc.) with a single config change.
+- **🌍 Multilingual Support**: Seamlessly switch between languages (English, French, Chinese, etc.) with a single config change.
 - **🤖 AI & ATS Friendly**: Unique "keyword injection" feature to help your CV pass automated screening systems.
 - **🛠 Highly Customizable**: Tweak colors, fonts, and layout via a simple `metadata.toml` file.
 - **📦 Zero-Setup**: Get started in seconds with the Typst CLI.
+
+<br>
 
 ## 🚀 How to Use
 
