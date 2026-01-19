@@ -14,6 +14,8 @@
 
 ## ⭐ New: Brilliant CV Supercharged
 
+<img width="1590" height="1184" alt="CleanShot 2026-01-19 at 17 43 56@2x" src="https://github.com/user-attachments/assets/f4694506-07c3-475f-8d6a-cf8f7e366f89" />
+
 **Take your job search to the next level.**
 
 Manage your applications with Claude Code and Notion, proudly powered by Brilliant CV.
