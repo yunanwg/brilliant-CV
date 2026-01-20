@@ -20,6 +20,9 @@ language = "en"
     # Optional: sets the width of the right column of a cvEntry. If not set, values known to work well are used
     #date_width = "3.6cm"
 
+    # Optional: sets the font size for the content text
+    #font_size = "9pt"
+
     [layout.fonts]
         regular_fonts = ["Source Sans 3"]
         header_font = "Roboto"
