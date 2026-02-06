@@ -454,7 +454,8 @@
         (styles.b2)(if society-first-setting { (styles.dates)(date) } else { location }),
       ),
     )
-    (styles.description)(description)
+    if description == "" [] else {
+      (styles.description)(description)}
     _create-entry-tag-list(tags, styles.tag)
     
   } else if entry-type == "start" {
@@ -510,7 +511,8 @@
         },
         (styles.b2)((styles.dates)(date)),
         )
-      (styles.description)(description)
+      if description == "" [] else {
+        (styles.description)(description)}
       _create-entry-tag-list(tags, styles.tag)
     } else {
       table(
@@ -521,7 +523,8 @@
         align: auto,
         {
           (styles.b1)(title)
-          (styles.description)(description)
+          if description == "" [] else {
+            (styles.description)(description)}
         },
         (styles.b2)((styles.dates)(date)),
         )
