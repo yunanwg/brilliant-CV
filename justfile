@@ -75,6 +75,113 @@ reset: unlink clean
     @echo "🔄 Development environment reset"
     @echo "💡 Run 'just dev' to start development again"
 
+# Release a new version (bump, build, commit, tag, push)
+# Usage: just release 3.2.0
+release version:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    VERSION="{{version}}"
+
+    # Validate version format
+    if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        echo "❌ Invalid version format: $VERSION"
+        echo "   Expected format: X.Y.Z (e.g., 3.2.0)"
+        exit 1
+    fi
+
+    # Check if tag already exists
+    if git tag -l "v$VERSION" | grep -q "v$VERSION"; then
+        echo "❌ Tag v$VERSION already exists!"
+        echo "   Use a different version number."
+        exit 1
+    fi
+
+    # Check for uncommitted changes
+    if ! git diff --quiet || ! git diff --cached --quiet; then
+        echo "⚠️  You have uncommitted changes:"
+        git status --short
+        echo ""
+        read -p "Continue anyway? [y/N] " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            echo "Aborted."
+            exit 1
+        fi
+    fi
+
+    # Show what will happen
+    CURRENT=$(grep '^version = ' typst.toml | sed 's/version = "\(.*\)"/\1/')
+    echo "🚀 Release Summary:"
+    echo "   Current version: $CURRENT"
+    echo "   New version:     $VERSION"
+    echo "   Branch:          $(git branch --show-current)"
+    echo ""
+    read -p "Proceed with release? [y/N] " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Aborted."
+        exit 1
+    fi
+
+    # Do the release
+    echo ""
+    just bump "$VERSION"
+    just build
+    git add -A
+    git commit -m "build: bump version to $VERSION"
+    git tag "v$VERSION"
+    git push origin main --tags
+    echo ""
+    echo "🎉 Version $VERSION released!"
+
+# Bump version in all files
+# Usage: just bump 3.2.0
+bump version:
+    @echo "📦 Bumping version to {{version}}..."
+    @# Update typst.toml
+    @sed -i '' 's/^version = ".*"/version = "{{version}}"/' typst.toml
+    @echo "  ✓ typst.toml"
+    @# Update all template imports
+    @find template docs -name "*.typ" -exec sed -i '' 's/@preview\/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*/@preview\/brilliant-cv:{{version}}/g' {} \;
+    @echo "  ✓ template/*.typ and docs/*.typ files"
+    @echo "✅ Version bumped to {{version}}"
+    @echo ""
+    @echo "📋 Next steps:"
+    @echo "   1. git add -A && git commit -m 'build: bump version to {{version}}'"
+    @echo "   2. git tag v{{version}}"
+    @echo "   3. git push origin main --tags"
+
+# Check that all version references are consistent
+check-version:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    TOML_VERSION=$(grep '^version = ' typst.toml | sed 's/version = "\(.*\)"/\1/')
+    echo "📦 Version in typst.toml: $TOML_VERSION"
+    echo ""
+    MISMATCHED=()
+    # Find files with actual version numbers (not <version> placeholders)
+    while IFS= read -r file; do
+        # Skip files that only have placeholder versions like <version>
+        if grep -q "@preview/brilliant-cv:[0-9]" "$file" 2>/dev/null; then
+            if ! grep -q "@preview/brilliant-cv:$TOML_VERSION" "$file" 2>/dev/null; then
+                MISMATCHED+=("$file")
+            fi
+        fi
+    done < <(find template docs -name "*.typ" -exec grep -l "@preview/brilliant-cv:" {} \;)
+    if [ ${#MISMATCHED[@]} -eq 0 ]; then
+        echo "✅ All version references are consistent!"
+        exit 0
+    else
+        echo "❌ Version mismatch in ${#MISMATCHED[@]} files:"
+        for file in "${MISMATCHED[@]}"; do
+            FOUND=$(grep -o "@preview/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*" "$file" | head -1)
+            echo "   $file → $FOUND"
+        done
+        echo ""
+        echo "💡 Run: just bump $TOML_VERSION"
+        exit 1
+    fi
+
 # Compare PDFs for visual regression testing
 # Usage: just compare <baseline.pdf> <new.pdf>
 compare baseline new:

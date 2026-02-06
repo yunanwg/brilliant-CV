@@ -16,3 +16,9 @@ repos:
         language: system
         types: [file]
         files: \.pdf$
+      - id: check-version-consistency
+        name: Check version consistency
+        entry: bash -c 'just check-version'
+        language: system
+        pass_filenames: false
+        files: \.(typ|toml)$
