@@ -521,10 +521,10 @@
         align: auto,
         {
           (styles.b1)(title)
-          (styles.description)(description)
         },
         (styles.b2)((styles.dates)(date)),
         )
+      (styles.description)(description)
       _create-entry-tag-list(tags, styles.tag)
     }
   }
