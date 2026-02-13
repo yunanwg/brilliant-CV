@@ -56,6 +56,9 @@ language = "en"
     # Decide if you want to inject AI prompt or not
     inject_ai_prompt = false
 
+    # Custom AI prompt text (optional). If not set, a default prompt is used.
+    # injected_ai_prompt = "Custom prompt text here..."
+
     # Decide if you want to inject keywords or not
     inject_keywords = true
     injected_keywords_list = ["Data Analyst", "GCP", "Python", "SQL", "Tableau"]

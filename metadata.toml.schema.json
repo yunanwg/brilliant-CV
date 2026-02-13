@@ -138,6 +138,10 @@
           "type": "boolean",
           "description": "Inject AI prompt or not"
         },
+        "injected_ai_prompt": {
+          "type": "string",
+          "description": "Custom AI prompt text. If not set, a default prompt is used."
+        },
         "inject_keywords": {
           "type": "boolean",
           "description": "Inject keywords or not"

@@ -8,14 +8,17 @@ A module containing the injection logic for the AI prompt and keywords.
   inject-ai-prompt: true,
   inject-keywords: true,
   keywords: [],
+  custom-prompt: none,
 ) = {
-  let prompt = ""
+  let parts = ()
+
   if inject-ai-prompt {
-    prompt = prompt + _ai-injection-prompt
-  }
-  if inject-keywords {
-    prompt = prompt + " " + keywords.join(" ")
+    parts.push(if custom-prompt != none { custom-prompt } else { _ai-injection-prompt })
   }
 
-  place(text(prompt, size: 2pt, fill: white), dx: 0%, dy: 0%)
+  if inject-keywords {
+    parts.push(keywords.join(" "))
+  }
+
+  place(text(parts.join(" "), size: 2pt, fill: white), dx: 0%, dy: 0%)
 }
