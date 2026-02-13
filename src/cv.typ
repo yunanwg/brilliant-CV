@@ -171,6 +171,7 @@
   let inject-ai-prompt = metadata.inject.inject_ai_prompt
   let inject-keywords = metadata.inject.inject_keywords
   let keywords = metadata.inject.injected_keywords_list
+  let custom-prompt = metadata.inject.at("injected_ai_prompt", default: none)
   let personal-info = metadata.personal.info
   let first-name = metadata.personal.first_name
   let last-name = metadata.personal.last_name
@@ -190,6 +191,7 @@
     inject-ai-prompt: inject-ai-prompt,
     inject-keywords: inject-keywords,
     keywords: keywords,
+    custom-prompt: custom-prompt,
   )
 
   // Create styles

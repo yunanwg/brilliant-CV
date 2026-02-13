@@ -1,5 +1,5 @@
 // Imports
-#import "@preview/brilliant-cv:3.1.2": cv
+#import "@preview/brilliant-cv:3.2.0": cv
 #let metadata = toml("./metadata.toml")
 #let cv-language = sys.inputs.at("language", default: none)
 #let metadata = if cv-language != none {
