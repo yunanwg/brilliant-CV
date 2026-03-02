@@ -274,6 +274,7 @@
   title,
   highlighted: true,
   letters: 3,
+  color: none,
   metadata: none,
   // New parameter names (recommended)
   awesome-colors: none,
@@ -282,18 +283,18 @@
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
   // Backward compatibility logic (remove this block when deprecating)
-  let awesome-colors = if awesome-colors != none { 
-    awesome-colors 
-  } else { 
+  let awesome-colors = if awesome-colors != none {
+    awesome-colors
+  } else {
     // TODO: Add deprecation warning in future version
     // Currently Typst doesn't have a standard warning mechanism for user functions
-    awesomeColors 
+    awesomeColors
   }
-  
+
   let lang = metadata.language
   let non-latin = _is-non-latin(lang)
   let before-section-skip = _get-layout-value(metadata, "before_section_skip", 1pt)
-  let accent-color = _set-accent-color(awesome-colors, metadata)
+  let accent-color = if color != none { color } else { _set-accent-color(awesome-colors, metadata) }
   let highlighted-text = title.slice(0, letters)
   let normal-text = title.slice(letters)
 
@@ -321,17 +322,17 @@
 
 /// Prepare common entry parameters
 /// -> dictionary
-#let _prepare-entry-params(metadata, awesome-colors, awesomeColors) = {
+#let _prepare-entry-params(metadata, awesome-colors, awesomeColors, color: none) = {
   // Backward compatibility logic
-  let awesome-colors = if awesome-colors != none { 
-    awesome-colors 
-  } else { 
+  let awesome-colors = if awesome-colors != none {
+    awesome-colors
+  } else {
     // TODO: Add deprecation warning in future version
-    awesomeColors 
+    awesomeColors
   }
-  
+
   // Common parameter calculations
-  let accent-color = _set-accent-color(awesome-colors, metadata)
+  let accent-color = if color != none { color } else { _set-accent-color(awesome-colors, metadata) }
   let before-entry-skip = eval(metadata.layout.at("before_entry_skip", default: 1pt))
   let before-entry-description-skip = eval(metadata.layout.at("before_entry_description_skip", default: 1pt))
   let date-width = metadata.layout.at("date_width", default: none)
@@ -555,6 +556,7 @@
   description: "Description",
   logo: "",
   tags: (),
+  color: none,
   metadata: none,
   // New parameter names (recommended)
   awesome-colors: none,
@@ -562,7 +564,7 @@
   awesomeColors: _awesome-colors,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
-  let params = _prepare-entry-params(metadata, awesome-colors, awesomeColors)
+  let params = _prepare-entry-params(metadata, awesome-colors, awesomeColors, color: color)
 
   _make-cv-entry(
     "full",
@@ -590,6 +592,7 @@
   society: "Society",
   location: "Location",
   logo: "",
+  color: none,
   metadata: none,
   // New parameter names (recommended)
   awesome-colors: none,
@@ -602,7 +605,7 @@
     panic("display_entry_society_first must be true to use cvEntryStart")
   }
 
-  let params = _prepare-entry-params(metadata, awesome-colors, awesomeColors)
+  let params = _prepare-entry-params(metadata, awesome-colors, awesomeColors, color: color)
 
   _make-cv-entry(
     "start",
@@ -619,6 +622,7 @@
   date: "Date",
   description: "Description",
   tags: (),
+  color: none,
   metadata: none,
   // New parameter names (recommended)
   awesome-colors: none,
@@ -630,8 +634,8 @@
   if not metadata.layout.entry.display_entry_society_first {
     panic("display_entry_society_first must be true to use cvEntryContinued")
   }
-  
-  let params = _prepare-entry-params(metadata, awesome-colors, awesomeColors)
+
+  let params = _prepare-entry-params(metadata, awesome-colors, awesomeColors, color: color)
 
   _make-cv-entry(
     "continued",
@@ -737,11 +741,12 @@
   issuer: "",
   url: "",
   location: "",
+  color: none,
   awesome-colors: _awesome-colors,
   metadata: none,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
-  let accent-color = _set-accent-color(awesome-colors, metadata)
+  let accent-color = if color != none { color } else { _set-accent-color(awesome-colors, metadata) }
 
   let honor-date-style(str) = {
     align(right, text(str))
