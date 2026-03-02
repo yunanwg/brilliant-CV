@@ -302,18 +302,21 @@
   }
 
   v(before-section-skip)
-  if non-latin {
-    section-title-style(title, color: accent-color)
-  } else {
-    if highlighted {
-      section-title-style(highlighted-text, color: accent-color)
-      section-title-style(normal-text, color: black)
+  block(
+    sticky: true,
+    [#if non-latin {
+      section-title-style(title, color: accent-color)
     } else {
-      section-title-style(title, color: black)
+      if highlighted {
+        section-title-style(highlighted-text, color: accent-color)
+        section-title-style(normal-text, color: black)
+      } else {
+        section-title-style(title, color: black)
+      }
     }
-  }
-  h(2pt)
-  box(width: 1fr, line(stroke: 0.9pt, length: 100%))
+    #h(2pt)
+    #box(width: 1fr, line(stroke: 0.9pt, length: 100%))]
+  )
 }
 
 /// Prepare common entry parameters
