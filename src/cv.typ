@@ -64,7 +64,10 @@
       // Look up pre-loaded image from custom-icons dict (passed via cv.with())
       let icon = custom-icons.at(k, default: none)
       if icon != none {
-        icon = box(width: 10pt, icon)
+        icon = box(width: 10pt, {
+          set image(width: 100%)
+          icon
+        })
       } else if awesome-icon != "" {
         icon = fa-icon(awesome-icon)
       }
@@ -155,9 +158,11 @@
 /// Insert the header section of the CV.
 ///
 /// - metadata (array): the metadata read from the TOML file.
+/// - profile-photo (content): the profile photo image.
 /// - header-font (array): the font of the header.
 /// - regular-colors (array): the regular colors of the CV.
 /// - awesome-colors (array): the awesome colors of the CV.
+/// - custom-icons (dictionary): pre-loaded image objects for custom personal info entries.
 /// -> content
 #let _cv-header(
   metadata,
