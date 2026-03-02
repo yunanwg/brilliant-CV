@@ -48,7 +48,7 @@
 
 /// Generate personal info section
 /// -> content
-#let _make-header-info(personal-info, icons) = {
+#let _make-header-info(personal-info, icons, custom-icons) = {
   let n = 1
   for (k, v) in personal-info {
     // A dirty trick to add linebreaks with "linebreak" as key in personalInfo
@@ -58,14 +58,17 @@
       continue
     }
     if k.contains("custom") {
-      let img = v.at("image", default: "")
       let awesome-icon = v.at("awesomeIcon", default: "")
       let text = v.at("text", default: "")
       let link-value = v.at("link", default: "")
-      let icon = ""
-      if img != "" {
-        icon = img.with(width: 10pt)
-      } else {
+      // Look up pre-loaded image from custom-icons dict (passed via cv.with())
+      let icon = custom-icons.at(k, default: none)
+      if icon != none {
+        icon = box(width: 10pt, {
+          set image(width: 100%)
+          icon
+        })
+      } else if awesome-icon != "" {
         icon = fa-icon(awesome-icon)
       }
       box({
@@ -114,7 +117,7 @@
 
 /// Create header name section
 /// -> content
-#let _make-header-name-section(styles, non-latin, non-latin-name, first-name, last-name, personal-info, header-quote) = {
+#let _make-header-name-section(styles, non-latin, non-latin-name, first-name, last-name, personal-info, header-quote, custom-icons) = {
   table(
     columns: 1fr,
     inset: 0pt,
@@ -123,7 +126,7 @@
     if non-latin {
       (styles.first-name)(non-latin-name)
     } else [#(styles.first-name)(first-name) #h(5pt) #(styles.last-name)(last-name)],
-    [#(styles.info)(_make-header-info(personal-info, _personal-info-icons))],
+    [#(styles.info)(_make-header-info(personal-info, _personal-info-icons, custom-icons))],
     .. if header-quote != none { ([#(styles.quote)(header-quote)],) },
   )
 }
@@ -155,9 +158,11 @@
 /// Insert the header section of the CV.
 ///
 /// - metadata (array): the metadata read from the TOML file.
+/// - profile-photo (content): the profile photo image.
 /// - header-font (array): the font of the header.
 /// - regular-colors (array): the regular colors of the CV.
 /// - awesome-colors (array): the awesome colors of the CV.
+/// - custom-icons (dictionary): pre-loaded image objects for custom personal info entries.
 /// -> content
 #let _cv-header(
   metadata,
@@ -165,6 +170,7 @@
   header-font,
   regular-colors,
   awesome-colors,
+  custom-icons,
 ) = {
   // Parameters
   let header-alignment = eval(metadata.layout.header.header_align)
@@ -197,7 +203,7 @@
   
   // Create components
   let name-section = _make-header-name-section(
-    styles, non-latin, non-latin-name, first-name, last-name, personal-info, header-quote
+    styles, non-latin, non-latin-name, first-name, last-name, personal-info, header-quote, custom-icons
   )
   
   let photo-section = _make-header-photo-section(display-profile-photo, profile-photo, profile-photo-radius)

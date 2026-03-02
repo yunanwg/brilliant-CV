@@ -80,14 +80,14 @@ language = "en"
         
         # Custom info with awesome icon
         [personal.info.custom-1]
-            # image = "" # Example: image("./path/to/image.png")
-            awesomeIcon = "graduation-cap" # Example: "graduation-cap" see https://typst.app/universe/package/fontawesome/
+            awesomeIcon = "graduation-cap" # See https://typst.app/universe/package/fontawesome/
             text = "PhD in Data Science"
             link = "https://www.example.com"
-            
+
         # Custom info with image icon
+        # To use a custom image icon, pass it via custom-icons in cv.typ:
+        #   custom-icons: ("custom-2": image("assets/my-icon.png"))
         [personal.info.custom-2]
-            # image = image("./path/to/custom-icon.png") # Custom image icon
             awesomeIcon = "certificate"
             text = "AWS Certified"
             link = "https://aws.amazon.com/certification/"
