@@ -75,6 +75,7 @@
   // Parameters
   let sender-name = metadata.personal.first_name + " " + metadata.personal.last_name
   let letter-footer-text = metadata.at("letter_footer", default: none)
+  // Backward compat: fall back to legacy [lang.<code>] section (remove when deprecating)
   if letter-footer-text == none {
     letter-footer-text = metadata.at("lang", default: (:)).at(metadata.language, default: (:)).at("letter_footer", default: "")
   }

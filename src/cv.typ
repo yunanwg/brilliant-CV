@@ -187,6 +187,7 @@
   let first-name = metadata.personal.first_name
   let last-name = metadata.personal.last_name
   let header-quote = metadata.at("header_quote", default: none)
+  // Backward compat: fall back to legacy [lang.<code>] section (remove when deprecating)
   if header-quote == none {
     header-quote = metadata.at("lang", default: (:)).at(metadata.language, default: (:)).at("header_quote", default: none)
   }
@@ -198,6 +199,7 @@
   let non-latin = _is-non-latin(metadata.language)
   if non-latin {
     non-latin-name = metadata.at("non_latin_name", default: none)
+    // Backward compat: fall back to legacy [lang.non_latin] section (remove when deprecating)
     if non-latin-name == none {
       non-latin-name = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("name", default: "")
     }
@@ -244,6 +246,7 @@
   let first-name = metadata.personal.first_name
   let last-name = metadata.personal.last_name
   let footer-text = metadata.at("cv_footer", default: none)
+  // Backward compat: fall back to legacy [lang.<code>] section (remove when deprecating)
   if footer-text == none {
     footer-text = metadata.at("lang", default: (:)).at(metadata.language, default: (:)).at("cv_footer", default: "")
   }
