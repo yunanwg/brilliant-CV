@@ -1,12 +1,7 @@
 // Imports
-#import "@preview/brilliant-cv:3.3.0": letter
-#let metadata = toml("./metadata.toml")
-#let letter-language = sys.inputs.at("language", default: none)
-#let metadata = if letter-language != none {
-  metadata + (language: letter-language)
-} else {
-  metadata
-}
+#import "@preview/brilliant-cv:3.1.2": letter
+#let profile = sys.inputs.at("profile", default: "en")
+#let metadata = toml("profile_" + profile + "/metadata.toml")
 
 
 #show: letter.with(

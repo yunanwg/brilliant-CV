@@ -42,9 +42,14 @@
   header-font = font-config.header-font
   
   if _is-non-latin(lang) {
-    let nonLatinFont = metadata.lang.non_latin.font
-    fonts.insert(calc.min(2, fonts.len()), nonLatinFont)
-    header-font = nonLatinFont
+    let nonLatinFont = metadata.at("non_latin_font", default: none)
+    if nonLatinFont == none {
+      nonLatinFont = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("font", default: none)
+    }
+    if nonLatinFont != none {
+      fonts.insert(2, nonLatinFont)
+      header-font = nonLatinFont
+    }
   }
 
   let font_size = eval(
@@ -130,9 +135,13 @@
   fonts = font-config.regular-fonts
   header-font = font-config.header-font
   if _is-non-latin(lang) {
-    let non-latin-font = metadata.lang.non_latin.font
-    fonts.insert(calc.min(2, fonts.len()), non-latin-font)
-    header-font = non-latin-font
+    let non-latin-font = metadata.at("non_latin_font", default: none)
+    if non-latin-font == none {
+      non-latin-font = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("font", default: none)
+    }
+    if non-latin-font != none {
+      fonts.insert(2, non-latin-font)
+    }
   }
 
   // Font size from metadata (consistent with CV)

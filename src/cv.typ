@@ -186,7 +186,10 @@
   let personal-info = metadata.personal.info
   let first-name = metadata.personal.first_name
   let last-name = metadata.personal.last_name
-  let header-quote = metadata.lang.at(metadata.language).at("header_quote", default: none)
+  let header-quote = metadata.at("header_quote", default: none)
+  if header-quote == none {
+    header-quote = metadata.at("lang", default: (:)).at(metadata.language, default: (:)).at("header_quote", default: none)
+  }
   let display-profile-photo = metadata.layout.header.display_profile_photo
   let profile-photo-radius = eval(metadata.layout.header.at("profile_photo_radius", default: "50%"))
   let header-info-font-size = eval(metadata.layout.header.at("info_font_size", default: "10pt"))
@@ -194,7 +197,10 @@
   let non-latin-name = ""
   let non-latin = _is-non-latin(metadata.language)
   if non-latin {
-    non-latin-name = metadata.lang.non_latin.name
+    non-latin-name = metadata.at("non_latin_name", default: none)
+    if non-latin-name == none {
+      non-latin-name = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("name", default: "")
+    }
   }
 
   // Injection
@@ -237,7 +243,10 @@
   // Parameters
   let first-name = metadata.personal.first_name
   let last-name = metadata.personal.last_name
-  let footer-text = metadata.lang.at(metadata.language).cv_footer
+  let footer-text = metadata.at("cv_footer", default: none)
+  if footer-text == none {
+    footer-text = metadata.at("lang", default: (:)).at(metadata.language, default: (:)).at("cv_footer", default: "")
+  }
   let display-page-counter = metadata.layout.at("footer", default: {}).at("display_page_counter", default: false)
   let display-footer = metadata.layout.at("footer", default: {}).at("display_footer", default: true)
 

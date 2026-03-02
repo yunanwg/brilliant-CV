@@ -1,17 +1,12 @@
 // Imports
-#import "@preview/brilliant-cv:3.3.0": cv
-#let metadata = toml("./metadata.toml")
-#let cv-language = sys.inputs.at("language", default: none)
-#let metadata = if cv-language != none {
-  metadata + (language: cv-language)
-} else {
-  metadata
-}
+#import "@preview/brilliant-cv:3.1.2": cv
+#let profile = sys.inputs.at("profile", default: "en")
+#let metadata = toml("profile_" + profile + "/metadata.toml")
 
-#let import-modules(modules, lang: metadata.language) = {
+#let import-modules(modules) = {
   for module in modules {
     include {
-      "modules_" + lang + "/" + module + ".typ"
+      "profile_" + profile + "/" + module + ".typ"
     }
   }
 }

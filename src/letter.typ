@@ -74,7 +74,10 @@
 #let _letter-footer(metadata) = {
   // Parameters
   let sender-name = metadata.personal.first_name + " " + metadata.personal.last_name
-  let letter-footer-text = metadata.lang.at(metadata.language).letter_footer
+  let letter-footer-text = metadata.at("letter_footer", default: none)
+  if letter-footer-text == none {
+    letter-footer-text = metadata.at("lang", default: (:)).at(metadata.language, default: (:)).at("letter_footer", default: "")
+  }
   let display-footer = metadata.layout.at("footer", default: {}).at("display_footer", default: true)
 
   if not display-footer {
