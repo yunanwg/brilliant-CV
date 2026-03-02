@@ -38,9 +38,15 @@
   header-font = font-config.header-font
   
   if _is-non-latin(lang) {
-    let nonLatinFont = metadata.lang.non_latin.font
-    fonts.insert(2, nonLatinFont)
-    header-font = nonLatinFont
+    let non-latin-font = metadata.at("non_latin_font", default: none)
+    // Backward compat: fall back to legacy [lang.non_latin] section (remove when deprecating)
+    if non-latin-font == none {
+      non-latin-font = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("font", default: none)
+    }
+    if non-latin-font != none {
+      fonts.insert(2, non-latin-font)
+      header-font = non-latin-font
+    }
   }
 
   let font_size = eval(
@@ -91,8 +97,14 @@
   let font-config = overwrite-fonts(metadata, _latin-font-list, _latin-header-font)
   fonts = font-config.regular-fonts
   if _is-non-latin(lang) {
-    let non-latin-font = metadata.lang.non_latin.font
-    fonts.insert(2, non-latin-font)
+    let non-latin-font = metadata.at("non_latin_font", default: none)
+    // Backward compat: fall back to legacy [lang.non_latin] section (remove when deprecating)
+    if non-latin-font == none {
+      non-latin-font = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("font", default: none)
+    }
+    if non-latin-font != none {
+      fonts.insert(2, non-latin-font)
+    }
   }
 
   // Page layout

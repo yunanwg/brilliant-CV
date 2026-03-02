@@ -1,12 +1,10 @@
 // Imports
 #import "@preview/brilliant-cv:3.1.2": letter
-#let metadata = toml("./metadata.toml")
-#let letter-language = sys.inputs.at("language", default: none)
-#let metadata = if letter-language != none {
-  metadata + (language: letter-language)
-} else {
-  metadata
-}
+
+// Select which profile to build (must match a profile_<name>/ folder)
+// Override via CLI: typst compile letter.typ --input profile=fr
+#let profile = sys.inputs.at("profile", default: "en")
+#let metadata = toml("profile_" + profile + "/metadata.toml")
 
 
 #show: letter.with(

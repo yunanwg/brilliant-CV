@@ -1,17 +1,18 @@
 // Imports
 #import "@preview/brilliant-cv:3.1.2": cv
-#let metadata = toml("./metadata.toml")
-#let cv-language = sys.inputs.at("language", default: none)
-#let metadata = if cv-language != none {
-  metadata + (language: cv-language)
-} else {
-  metadata
-}
 
-#let import-modules(modules, lang: metadata.language) = {
+// Select which profile to build. Each profile lives in its own folder
+// (e.g. profile_en/, profile_fr/, profile_solution_engineer/) with its
+// own metadata.toml and module files.
+//
+// Override via CLI: typst compile cv.typ --input profile=fr
+#let profile = sys.inputs.at("profile", default: "en")
+#let metadata = toml("profile_" + profile + "/metadata.toml")
+
+#let import-modules(modules) = {
   for module in modules {
     include {
-      "modules_" + lang + "/" + module + ".typ"
+      "profile_" + profile + "/" + module + ".typ"
     }
   }
 }
@@ -21,6 +22,7 @@
   profile-photo: image("assets/avatar.png"),
 )
 
+// Add, remove, or reorder modules to customize your CV content
 #import-modules((
   "education",
   "professional",
