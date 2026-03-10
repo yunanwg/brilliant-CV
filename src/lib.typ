@@ -14,6 +14,7 @@
   doc,
   // New parameter names (recommended)
   profile-photo: image("../template/assets/avatar.png"),
+  custom-icons: (:),
   // Old parameter names (deprecated, for backward compatibility)
   profilePhoto: image("../template/assets/avatar.png"),
 ) = {
@@ -62,7 +63,7 @@
     footer: context _cv-footer(metadata),
   )
 
-  _cv-header(metadata, profile-photo, header-font, _regular-colors, _awesome-colors)
+  _cv-header(metadata, profile-photo, header-font, _regular-colors, _awesome-colors, custom-icons)
   doc
 }
 
