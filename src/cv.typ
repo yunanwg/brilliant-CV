@@ -464,7 +464,9 @@
         (styles.b2)(if society-first-setting { (styles.dates)(date) } else { location }),
       ),
     )
-    (styles.description)(description)
+    if description != "" and description != none {
+      (styles.description)(description)
+    }
     _create-entry-tag-list(tags, styles.tag)
     
   } else if entry-type == "start" {
@@ -520,7 +522,9 @@
         },
         (styles.b2)((styles.dates)(date)),
         )
-      (styles.description)(description)
+      if description != "" and description != none {
+        (styles.description)(description)
+      }
       _create-entry-tag-list(tags, styles.tag)
     } else {
       table(
@@ -531,6 +535,9 @@
         align: auto,
         {
           (styles.b1)(title)
+          if description != "" and description != none {
+            (styles.description)(description)
+          }
         },
         (styles.b2)((styles.dates)(date)),
         )
@@ -559,7 +566,7 @@
   society: "Society",
   date: "Date",
   location: "Location",
-  description: "Description",
+  description: "",
   logo: "",
   tags: (),
   color: none,
@@ -626,7 +633,7 @@
 #let cv-entry-continued(
   title: "Title",
   date: "Date",
-  description: "Description",
+  description: "",
   tags: (),
   color: none,
   metadata: none,
