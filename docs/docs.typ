@@ -136,8 +136,8 @@ display_entry_society_first = true
 display_logo = true
 
 [inject]
-# Decide if you want to inject AI prompt or not
-inject_ai_prompt = false
+# Custom AI prompt text (optional). If defined, it will be injected into the CV.
+# custom_ai_prompt_text = "Custom prompt text here..."
 
 # Decide if you want to inject keywords or not
 inject_keywords = true

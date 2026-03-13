@@ -168,7 +168,7 @@
 ) = {
   // Parameters
   let header-alignment = eval(metadata.layout.header.header_align)
-  let inject-ai-prompt = metadata.inject.inject_ai_prompt
+  let custom-ai-prompt-text = metadata.inject.at("custom_ai_prompt_text", default: none)
   let inject-keywords = metadata.inject.inject_keywords
   let keywords = metadata.inject.injected_keywords_list
   let personal-info = metadata.personal.info
@@ -187,7 +187,7 @@
 
   // Injection
   _inject(
-    inject-ai-prompt: inject-ai-prompt,
+    custom-ai-prompt-text: custom-ai-prompt-text,
     inject-keywords: inject-keywords,
     keywords: keywords,
   )
