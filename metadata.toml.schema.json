@@ -136,7 +136,7 @@
       "properties": {
         "custom_ai_prompt_text": {
           "type": "string",
-          "description": "Custom AI prompt text. Overrides the default prompt if defined."
+          "description": "Custom AI prompt text. If defined, it will be injected into the CV."
         },
         "inject_keywords": {
           "type": "boolean",
