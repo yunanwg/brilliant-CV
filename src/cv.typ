@@ -273,13 +273,22 @@
 
 /// Add the title of a section.
 ///
-/// NOTE: If the language is non-Latin, the title highlight will not be sliced.
+/// The first `letters` characters of the title are highlighted in the accent color,
+/// while the rest is rendered in black. For non-Latin languages (zh, ja, ko, ru),
+/// highlighting is skipped entirely and the full title is shown in the accent color.
 ///
 /// - title (str): The title of the section.
 /// - highlighted (bool): Whether the first n letters will be highlighted in accent color.
-/// - letters (int): The number of first letters of the title to highlight.
+/// - letters (int): The number of first letters of the title to highlight. Defaults to 3.
 /// - metadata (array): (optional) the metadata read from the TOML file.
 /// - awesome-colors (array): (optional) the awesome colors of the CV.
+///
+/// ```example
+/// >>> #set text(font: "Source Sans 3")
+/// #block(width: 300pt)[
+///   #cv-section("Professional Experience", metadata: _metadata)
+/// ]
+/// ```
 /// -> content
 #let cv-section(
   title,
@@ -542,7 +551,11 @@
 
 /// Add an entry to the CV.
 ///
-/// - title (str): The title of the entry.
+/// When `display_entry_society_first = true` is set in `metadata.toml`, the `society`
+/// field appears bold/first and `title` appears as the subtitle. When `false` (the
+/// default), the `title` field is bold/first and `society` is the subtitle.
+///
+/// - title (str): The title of the entry (role or position).
 /// - society (str): The society of the entry (company, university, etc.).
 /// - date (str | content): The date(s) of the entry.
 /// - location (str): The location of the entry.
@@ -551,6 +564,23 @@
 /// - tags (array): The tags of the entry.
 /// - metadata (array): (optional) the metadata read from the TOML file.
 /// - awesome-colors (array): (optional) the awesome colors of the CV.
+///
+/// ```example
+/// >>> #set text(font: "Source Sans 3")
+/// #block(width: 300pt)[
+///   #cv-entry(
+///     title: [Data Analyst],
+///     society: [ABC Company],
+///     date: [2017 - 2020],
+///     location: [New York, NY],
+///     description: list(
+///       [Analyzed datasets with SQL and Python],
+///     ),
+///     tags: ("Python", "SQL"),
+///     metadata: _metadata,
+///   )
+/// ]
+/// ```
 /// -> content
 #let cv-entry(
   title: "Title",
@@ -586,13 +616,37 @@
   )
 }
 
-/// Add the start of an entry to the CV.
+/// Add the start of an entry to the CV. Use this together with one or more
+/// `cv-entry-continued` calls to list multiple roles at the same company.
+/// The start renders the company name and location, while each continued entry
+/// adds a role with its own dates, description, and tags.
+///
+/// *Requires* `display_entry_society_first = true` in `metadata.toml`.
 ///
 /// - society (str): The society of the entry (company, university, etc.).
 /// - location (str): The location of the entry.
 /// - logo (image): The logo of the society. If empty, no logo will be displayed.
 /// - metadata (array): (optional) the metadata read from the TOML file.
 /// - awesome-colors (array): (optional) the awesome colors of the CV.
+///
+/// ```example
+/// >>> #set text(font: "Source Sans 3")
+/// #block(width: 300pt)[
+///   #cv-entry-start(
+///     society: [XYZ Corporation],
+///     location: [San Francisco, CA],
+///     metadata: _metadata,
+///   )
+///   #cv-entry-continued(
+///     title: [Data Scientist],
+///     date: [2017 - 2020],
+///     description: list(
+///       [Analyzed large datasets with SQL and Python],
+///     ),
+///     metadata: _metadata,
+///   )
+/// ]
+/// ```
 /// -> content
 #let cv-entry-start(
   society: "Society",
@@ -625,8 +679,11 @@
   )
 }
 
-/// Add a continued entry to the CV. Must be used together with `cv-entry-start`.
-/// Requires `display_entry_society_first = true` in `metadata.toml`.
+/// Add a continued entry to the CV. Must be used after a `cv-entry-start` call
+/// to add an additional role at the same company. Multiple `cv-entry-continued`
+/// calls can follow a single `cv-entry-start`.
+///
+/// *Requires* `display_entry_society_first = true` in `metadata.toml`.
 ///
 /// - title (str): The title of the entry (role or position).
 /// - date (str | content): The date(s) of the entry.
@@ -672,7 +729,17 @@
 /// Add a skill to the CV.
 ///
 /// - type (str): The type of the skill. It is displayed on the left side.
-/// - info (str | content): The information about the skill. It is displayed on the right side. Items can be separated by `#hbar()`.
+/// - info (str | content): The information about the skill. It is displayed on the right side. Items can be separated by `#h-bar()`.
+///
+/// ```example
+/// >>> #set text(font: "Source Sans 3")
+/// #block(width: 300pt)[
+///   #cv-skill(
+///     type: [Tech Stack],
+///     info: [Python #h-bar() SQL #h-bar() Tableau],
+///   )
+/// ]
+/// ```
 /// -> content
 #let cv-skill(type: "Type", info: "Info") = {
   let skill-type-style(str) = {
@@ -694,9 +761,25 @@
 
 /// Add a skill with a level to the CV.
 ///
+/// The level is rendered as a row of 5 circles: filled circles for the skill
+/// level and empty circles for the remainder (e.g., level 3 shows 3 filled
+/// and 2 empty circles).
+///
 /// - type (str): The type of the skill. It is displayed on the left side.
-/// - level (int): The level of the skill. It is displayed in as circles in the middle. The minimum level is 0 and the maximum level is 5.
+/// - level (int): The level of the skill (0--5). Rendered as filled/empty circles in the middle column.
 /// - info (str | content): The information about the skill. It is displayed on the right side.
+///
+/// ```example
+/// >>> #set text(font: "Source Sans 3")
+/// >>> #import "@preview/fontawesome:0.6.0": *
+/// #block(width: 300pt)[
+///   #cv-skill-with-level(
+///     type: [Languages],
+///     level: 4,
+///     info: [English #h-bar() French #h-bar() Chinese],
+///   )
+/// ]
+/// ```
 /// -> content
 #let cv-skill-with-level(
   type: "Type",
@@ -732,6 +815,14 @@
 /// Add a skill tag to the CV.
 /// 
 /// - skill (str | content): The skill to be displayed.
+///
+/// ```example
+/// >>> #set text(font: "Source Sans 3")
+/// #block(width: 300pt)[
+///   #cv-skill-tag([AWS Certified])
+///   #cv-skill-tag([Python])
+/// ]
+/// ```
 /// -> content
 #let cv-skill-tag(skill) = {
   let entry-tag-style(str) = {
@@ -755,6 +846,19 @@
 /// - location (str): The location of the honor.
 /// - awesome-colors (array): (optional) The awesome colors of the CV.
 /// - metadata (array): (optional) The metadata read from the TOML file.
+///
+/// ```example
+/// >>> #set text(font: "Source Sans 3")
+/// #block(width: 300pt)[
+///   #cv-honor(
+///     date: [2022],
+///     title: [AWS Certified Security],
+///     issuer: [Amazon Web Services],
+///     location: [Online],
+///     metadata: _metadata,
+///   )
+/// ]
+/// ```
 /// -> content
 #let cv-honor(
   date: "1990",
@@ -810,10 +914,14 @@
 
 /// Add the publications to the CV by reading a bib file.
 ///
+/// When `ref-full` is `true`, all entries in the bib file are displayed.
+/// When `ref-full` is `false`, only the entries whose keys appear in
+/// `key-list` are included, allowing selective publication lists.
+///
 /// - bib (bibliography): The `bibliography` object with the path to the bib file.
-/// - keyList (list): The list of keys to include in the publication list.
-/// - refStyle (str): The reference style of the publication list.
-/// - refFull (bool): Whether to show the full reference or not.
+/// - key-list (list): The list of bib keys to include when `ref-full` is `false`.
+/// - ref-style (str): The reference style of the publication list (e.g., `"apa"`).
+/// - ref-full (bool): Whether to show all entries (`true`) or only those in `key-list` (`false`).
 /// -> content
 #let cv-publication(
   bib: "",

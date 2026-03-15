@@ -2,7 +2,7 @@
 * Documentation of the functions used in the template, powered by tidy.
 */
 
-#import "@preview/tidy:0.4.2"
+#import "@preview/tidy:0.4.3"
 #import "./docs-template.typ": *
 #let version = toml("/typst.toml").package.version
 
@@ -24,20 +24,13 @@
 
 Brilliant CV is a Typst template for making Résume, CV or Cover Letter inspired by the famous LaTeX CV template Awesome-CV.
 
-== 2. Setup
+This document covers quick setup, component usage, common recipes, and full API reference.
 
-=== Step 1: Install Fonts
+== 2. Quick Start — Your First CV in 10 Minutes
 
-In order to make Typst render correctly, you will have to install the required fonts #link("https://fonts.google.com/specimen/Roboto")[Roboto]
-and #link("https://fonts.google.com/specimen/Source+Sans+3")[Source Sans Pro] (or Source Sans 3) in your local system.
+=== Step 1: Bootstrap
 
-=== Step 2: Check Documentation
-
-You are reading this documentation now, woah!
-
-=== Step 3: Bootstrap Template
-
-In your local system, just working like `git clone`, boostrap the template using this command:
+In your local system, just working like `git clone`, bootstrap the template using this command:
 
 ```bash
 typst init @preview/brilliant-cv:<version>
@@ -45,11 +38,59 @@ typst init @preview/brilliant-cv:<version>
 
 Replace the `<version>` with the latest or any releases (after 2.0.0).
 
-=== Step 4: Compile Files
+=== Step 2: Install Fonts
 
-Adapt the `metadata.toml` to suit your needs, then `typst c cv.typ` to get your first CV!
+In order to make Typst render correctly, you will have to install the required fonts #link("https://fonts.google.com/specimen/Roboto")[Roboto]
+and #link("https://fonts.google.com/specimen/Source+Sans+3")[Source Sans Pro] (or Source Sans 3) in your local system.
 
-=== Step 5: Go beyond
+=== Step 3: File Structure Map
+
+After bootstrapping, your project will contain these files:
+
+- `metadata.toml` — your configuration (edit this first)
+- `modules_en/*.typ` — your content (edit these)
+- `cv.typ` — entry point (edit to add/remove modules)
+- `letter.typ` — cover letter entry point
+- `assets/` — your profile photo and logos
+- Don't edit: the package source files under `@preview/brilliant-cv`
+
+=== Step 4: Configure metadata.toml
+
+All customization goes through `metadata.toml`. This is where you set your name, colors, contact information, and layout preferences. See Section 6 for the full configuration reference.
+
+The most important keys to set first:
+
+- `language` — the language code matching your `modules_<lang>/` folder (e.g. `"en"`, `"fr"`)
+- `awesome_color` — your accent color (`"skyblue"`, `"red"`, `"nephritis"`, `"concrete"`, `"darknight"`)
+- `first_name` / `last_name` — your name displayed in the header
+- `[personal.info]` — your contact details (email, phone, GitHub, LinkedIn, etc.)
+
+=== Step 5: Add Your First Entry
+
+```typ
+// Replace version with your installed version
+#import "@preview/brilliant-cv:<version>": cv-section, cv-entry
+
+#cv-section("Education")
+
+#cv-entry(
+  title: [Master of Data Science],
+  society: [University of California],
+  date: [2018 - 2020],
+  location: [USA],
+  description: list(
+    [Thesis: Predicting Customer Churn using ML],
+  ),
+)
+```
+
+=== Step 6: Compile
+
+```bash
+typst compile cv.typ
+```
+
+=== Step 7: Go Beyond
 
 It is recommended to:
 
@@ -60,37 +101,181 @@ It is recommended to:
 
 
 #pagebreak()
-== 3. Migration from `v1` to `v2`
+== 3. Component Gallery
 
-With an existing CV project using the `v1` version of the template,
-a migration is needed, including replacing some files / some content in certain files.
+These are the building blocks of your CV.
 
-1. Delete `brilliant-CV` folder, `.gitmodules`. (Future package management will directly be managed by Typst)
+=== cv-section
 
-2. Migrate all the config on `metadata.typ` by creating a new `metadata.toml`. Follow the example toml file in the repo,
-it is rather straightforward to migrate.
+```typ
+#cv-section("Professional Experience")
+#cv-section("Skills", highlighted: false)
+#cv-section("Education", letters: 4)
+```
 
-3. For `cv.typ` and `letter.typ`, copy the new files from the repo, and adapt the modules you have in your project.
+The section title has its first N letters highlighted in the accent color. Non-Latin languages highlight the full title.
 
-4. For the module files in `/modules_*` folders:
+=== cv-entry
 
-  a. Delete the old import `#import "../brilliant-CV/template.typ": *`, and replace it by the import statements in the new template files.
+```typ
+#cv-entry(
+  title: [Data Analyst],
+  society: [ABC Company],
+  logo: image("assets/logos/abc.png"),
+  date: [2017 - 2020],
+  location: [New York, NY],
+  description: list(
+    [Analyzed datasets with SQL and Python],
+    [Created dashboards in Tableau],
+  ),
+  tags: ("Python", "SQL", "Tableau"),
+)
+```
 
-  b. Due to the Typst path handling mecanism, one cannot directly pass the path string to some functions anymore.
-  This concerns, for example, the logo argument in cvEntry, but also on `cvPublication` as well. Some parameter names were changed,
-  but most importantly, you should pass a function instead of a string (i.e. `image("logo.png")` instead of `"logo.png"`).
-  Refer to new template files for reference.
+#tip-box[
+  *Tip:* When `display_entry_society_first = true` in `metadata.toml`, the company name appears bold on top and the role appears below.
+]
 
-  c. You might need to install `Roboto` and `Source Sans Pro` on your local system now,
-  as new Typst package discourages including these large files.
+=== Pattern: Multiple Roles at One Company
 
-  d. Run `typst c cv.typ` without passing the `font-path` flag. All should be good now, congrats!
+#tip-box[
+  *Pattern: Multiple Roles.* Use `cv-entry-start` + `cv-entry-continued` when someone held multiple positions at the same company.
+]
 
+```typ
+#cv-entry-start(
+  society: [XYZ Corporation],
+  logo: image("assets/logos/xyz.png"),
+  location: [San Francisco, CA],
+)
 
-Feel free to raise an issue for more assistance should you encounter a problem that you cannot solve on your own :)
+#cv-entry-continued(
+  title: [Director of Data Science],
+  description: list([Lead a team of data scientists...]),
+  tags: ("Dataiku", "Snowflake"),
+)
+
+#cv-entry-continued(
+  title: [Data Scientist],
+  date: [2017 - 2020],
+  description: list([Analyzed large datasets...]),
+)
+```
+
+#warning-box[
+  *Requires* `display_entry_society_first = true` in `metadata.toml`.
+]
+
+=== cv-skill and cv-skill-with-level
+
+```typ
+#cv-skill(
+  type: [Tech Stack],
+  info: [Tableau #h-bar() Snowflake #h-bar() AWS],
+)
+
+#cv-skill-with-level(
+  type: [Languages],
+  level: 4,
+  info: [English #h-bar() French #h-bar() Chinese],
+)
+```
+
+Use `#h-bar()` to separate items with a vertical bar. Level is 0--5, rendered as filled/empty circles.
+
+=== cv-skill-tag
+
+```typ
+#cv-skill(
+  type: [Certifications],
+  info: [
+    #cv-skill-tag([AWS Certified])
+    #cv-skill-tag([Google Analytics])
+  ],
+)
+```
+
+=== cv-honor
+
+```typ
+#cv-honor(
+  date: [2022],
+  title: [AWS Certified Security],
+  issuer: [Amazon Web Services],
+  url: "https://aws.amazon.com/certification/",
+  location: [Online],
+)
+```
+
+=== cv-publication
+
+```typ
+#cv-publication(
+  bib: bibliography("assets/publications.bib"),
+  key-list: ("smith2020", "jones2021"),
+  ref-style: "ieee",
+  ref-full: false,
+)
+```
+
+Set `ref-full: true` to show all entries from the bib file. Set `ref-full: false` and provide `key-list` to show only selected publications.
+
 
 #pagebreak()
-== 4. Configuration via `metadata.toml`
+== 4. Recipes
+
+=== Adding a New Module
+
+1. Create a new file, e.g. `modules_en/volunteering.typ`
+2. Add your imports and content (sections, entries, etc.)
+3. In `cv.typ`, add `"volunteering"` to the `import-modules` call
+
+=== Language Override at Compile Time
+
+```bash
+typst compile cv.typ --input language=fr
+```
+
+For Chinese, Japanese, Korean, or Russian, also configure `[lang.non_latin]` in `metadata.toml` with `name` and `font`.
+
+=== Skills with Inline Separators
+
+Use `#h-bar()` to separate skill items within `cv-skill`:
+
+```typ
+#cv-skill(
+  type: [Tech Stack],
+  info: [Python #h-bar() SQL #h-bar() Tableau #h-bar() AWS],
+)
+```
+
+
+#pagebreak()
+== 5. Troubleshooting FAQ
+
+=== Logo Not Showing
+
+Paths in module files are relative to the module file itself, not the project root. Use `image("../assets/logos/company.png")`.
+
+=== Font Missing
+
+Install Roboto and Source Sans 3 (or Source Sans Pro) locally. For non-Latin languages, install the font specified in `[lang.non_latin]` (e.g. "Heiti SC" for Chinese).
+
+=== h-bar() Not Working
+
+Make sure you import `h-bar` from the package: `#import "@preview/brilliant-cv:<version>": h-bar`. The old name `hBar` has been removed in v3.
+
+=== Wrong metadata.toml Key Silently Ignored
+
+Typst TOML parsing doesn't warn on unknown keys. Double-check key names against the Configuration Reference (Section 6). Common mistakes: `headerAlign` (wrong) vs `header_align` (correct).
+
+=== New Module Not Appearing
+
+After creating a new module file, you must add its name to the `import-modules((...))` call in `cv.typ`.
+
+
+#pagebreak()
+== 6. Configuration Reference — metadata.toml
 
 The `metadata.toml` file is the main configuration file for your CV. By changing the key-value pairs in the config file, you can
 setup the names, contact information, and other details that will be displayed in your CV.
@@ -125,7 +310,7 @@ header_align = "left"
  # Decide if you want to display profile photo or not
 display_profile_photo = true
 # Radius in % to clip profile photo at
-display_profile_photo = "50%"
+profile_photo_radius = "50%"
 profile_photo_path = "template/src/avatar.png"
 
 [layout.entry]
@@ -186,7 +371,37 @@ font = "Heiti SC"
 ```
 
 #pagebreak()
-== 5. Functions
+== 7. Migration from `v1` to `v2`
+
+With an existing CV project using the `v1` version of the template,
+a migration is needed, including replacing some files / some content in certain files.
+
+1. Delete `brilliant-CV` folder, `.gitmodules`. (Future package management will directly be managed by Typst)
+
+2. Migrate all the config on `metadata.typ` by creating a new `metadata.toml`. Follow the example toml file in the repo,
+it is rather straightforward to migrate.
+
+3. For `cv.typ` and `letter.typ`, copy the new files from the repo, and adapt the modules you have in your project.
+
+4. For the module files in `/modules_*` folders:
+
+  a. Delete the old import `#import "../brilliant-CV/template.typ": *`, and replace it by the import statements in the new template files.
+
+  b. Due to the Typst path handling mecanism, one cannot directly pass the path string to some functions anymore.
+  This concerns, for example, the logo argument in cvEntry, but also on `cvPublication` as well. Some parameter names were changed,
+  but most importantly, you should pass a function instead of a string (i.e. `image("logo.png")` instead of `"logo.png"`).
+  Refer to new template files for reference.
+
+  c. You might need to install `Roboto` and `Source Sans Pro` on your local system now,
+  as new Typst package discourages including these large files.
+
+  d. Run `typst c cv.typ` without passing the `font-path` flag. All should be good now, congrats!
+
+
+Feel free to raise an issue for more assistance should you encounter a problem that you cannot solve on your own :)
+
+#pagebreak()
+== 8. API Reference
 #h(10pt)
 
 === Entry Point Functions
@@ -201,10 +416,39 @@ font = "Heiti SC"
 
 === CV Components
 
-#let docs = tidy.parse-module(read("/src/cv.typ"))
-#tidy.show-module(
-  docs,
-  show-outline: false,
-  omit-private-definitions: true,
-  omit-private-parameters: true,
-)
+#{
+  import "/src/cv.typ": cv-section, cv-entry, cv-entry-start, cv-entry-continued, cv-skill, cv-skill-with-level, cv-skill-tag, cv-honor, cv-publication, cv-metadata
+  import "/src/utils/styles.typ": h-bar
+
+  let metadata = toml("/template/metadata.toml") + (language: "en")
+
+  let example-scope = (
+    cv-section: cv-section,
+    cv-entry: cv-entry,
+    cv-entry-start: cv-entry-start,
+    cv-entry-continued: cv-entry-continued,
+    cv-skill: cv-skill,
+    cv-skill-with-level: cv-skill-with-level,
+    cv-skill-tag: cv-skill-tag,
+    cv-honor: cv-honor,
+    cv-publication: cv-publication,
+    cv-metadata: cv-metadata,
+    h-bar: h-bar,
+    _metadata: metadata,
+  )
+
+  // Preamble: hidden setup code prepended to every example (state doesn't work in eval, so examples use metadata: _metadata directly)
+  let example-preamble = ""
+
+  let docs = tidy.parse-module(
+    read("/src/cv.typ"),
+    scope: example-scope,
+    preamble: example-preamble,
+  )
+  tidy.show-module(
+    docs,
+    show-outline: false,
+    omit-private-definitions: true,
+    omit-private-parameters: true,
+  )
+}

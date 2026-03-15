@@ -9,6 +9,11 @@
 
 <h4 align="center">A modern, modular, and feature-rich CV template for <a href="https://typst.app" target="_blank">Typst</a>.</h4>
 
+## 📖 Documentation
+
+Full documentation (quick start, component gallery, recipes, and API reference) is available as a PDF:
+**[brilliant-CV Documentation](https://yunanwg.github.io/brilliant-CV/docs.pdf)**
+
 ## ✨ Key Features
 
 - **🎨 Separation of Style & Content**: Write your CV entries in simple Typst files, and let the template handle the layout and styling.
