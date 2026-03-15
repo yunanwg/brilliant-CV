@@ -8,6 +8,7 @@ temp/
 # LLM
 .agents
 .claude
+CLAUDE.md
 
 # MkDocs build output
 docs/web/site/
