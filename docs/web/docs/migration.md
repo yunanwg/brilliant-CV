@@ -1,5 +1,123 @@
 # Migration Guide
 
+## Migration from v3
+
+v4 replaces the language-based switching system with a **profile-based** architecture. Each profile is a self-contained folder with its own `metadata.toml` and module files, enabling full customization per variant — not just language-specific quotes, but also different personal info, layout, and keywords per target role or industry.
+
+### Why this change?
+
+In v3, all CV variants share a single `metadata.toml`. The `[lang.<code>]` sections only allow varying `header_quote`, `cv_footer`, and `letter_footer` per language. Fields like `[personal.info]`, `[layout]`, and `[inject]` are global and cannot differ between languages or target roles ([#142](https://github.com/yunanwg/brilliant-CV/issues/142)).
+
+The new profile system makes each variant fully independent: a `profile_en/` folder for your English CV, a `profile_fr/` for French, a `profile_swe/` tailored for software engineering roles — each with its own metadata, personal info, and content modules.
+
+### Upgrade paths
+
+#### Option A: Zero-effort upgrade (keep v3 structure)
+
+The v4 package is **fully backward compatible** with the v3 metadata format. If you don't need per-profile customization, just update the version number:
+
+```typ
+// Before
+#import "@preview/brilliant-cv:3.2.0": cv
+
+// After
+#import "@preview/brilliant-cv:4.0.0": cv
+```
+
+Your existing `metadata.toml` with `[lang.<code>]` sections, `modules_<lang>/` folders, and `--input language=xx` CLI pattern will continue to work as before.
+
+#### Option B: Migrate to profile-based structure
+
+Follow these steps to adopt the new architecture:
+
+**1. Rename module folders**
+
+```
+modules_en/  →  profile_en/
+modules_fr/  →  profile_fr/
+```
+
+**2. Create per-profile `metadata.toml`**
+
+Copy your root `metadata.toml` into each profile folder and make these changes:
+
+```toml
+# Before (v3 root metadata.toml)
+language = "en"
+
+[lang.en]
+    header_quote = "Experienced Data Analyst..."
+    cv_footer = "Curriculum vitae"
+    letter_footer = "Cover letter"
+
+[lang.non_latin]
+    name = "王道尔"
+    font = "Heiti SC"
+
+# After (profile_en/metadata.toml) — flat, no [lang] nesting
+language = "en"
+header_quote = "Experienced Data Analyst..."
+cv_footer = "Curriculum vitae"
+letter_footer = "Cover letter"
+```
+
+For non-Latin profiles (zh, ja, ko, ru), move the non-Latin settings to top-level:
+
+```toml
+# profile_zh/metadata.toml
+language = "zh"
+header_quote = "具有丰富经验的数据分析师，随时可入职"
+cv_footer = "简历"
+letter_footer = "申请信"
+non_latin_name = "王道尔"
+non_latin_font = "Heiti SC"
+```
+
+Remove the `[lang.*]` sections entirely from each profile's `metadata.toml`. You can now customize `[personal]`, `[layout]`, `[inject]`, and all other sections independently per profile.
+
+**3. Update `cv.typ`**
+
+```typ
+// Before (v3)
+#let metadata = toml("./metadata.toml")
+#let cv-language = sys.inputs.at("language", default: none)
+#let metadata = if cv-language != none {
+  metadata + (language: cv-language)
+} else {
+  metadata
+}
+#let import-modules(modules, lang: metadata.language) = {
+  for module in modules {
+    include { "modules_" + lang + "/" + module + ".typ" }
+  }
+}
+
+// After (v4)
+#let profile = sys.inputs.at("profile", default: "en")
+#let metadata = toml("profile_" + profile + "/metadata.toml")
+#let import-modules(modules) = {
+  for module in modules {
+    include { "profile_" + profile + "/" + module + ".typ" }
+  }
+}
+```
+
+**4. Update `letter.typ`** — same pattern as `cv.typ`.
+
+**5. Update CLI commands**
+
+```bash
+# Before
+typst compile cv.typ --input language=fr
+
+# After
+typst compile cv.typ --input profile=fr
+```
+
+**6. Clean up** — delete the root `metadata.toml` (each profile folder now has its own).
+
+---
+
 ## Migration from v2
 
 v3 introduces a new directory structure, kebab-case naming, and removes several deprecated features. If you are upgrading from v2, follow these steps.
