@@ -13,8 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Generate API reference from source doc-comments
+      # Generate auto-generated documentation pages
       - run: python docs/web/generate-api-reference.py
+      - run: python docs/web/generate-configuration.py
 
       # Build MkDocs site
       - uses: astral-sh/setup-uv@v4

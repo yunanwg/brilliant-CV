@@ -1,5 +1,7 @@
 # brilliant-CV
 
+[![Typst Universe](https://img.shields.io/badge/Typst_Universe-brilliant--cv-blue)](https://typst.app/universe/package/brilliant-cv)
+
 A modern, modular, and feature-rich CV template for [Typst](https://typst.app).
 
 ![brilliant-CV Preview](https://github.com/mintyfrankie/mintyfrankie/assets/77310871/94f5fb5c-03d0-4912-b6d6-11ee7d27a9a3){ width="100%" }
@@ -29,3 +31,7 @@ typst init @preview/brilliant-cv
 - [Getting Started](getting-started.md) — Build your first CV in 10 minutes
 - [Components](components.md) — Explore all available building blocks
 - [Configuration](configuration.md) — Full `metadata.toml` reference
+- [API Reference](api-reference.md) — Detailed function signatures and parameters
+- [Recipes](recipes.md) — Common patterns: profile photos, custom icons, colors, CI/CD
+- [Troubleshooting](troubleshooting.md) — Solutions for common issues
+- [Migration Guide](migration.md) — Upgrading from v1 or v2
