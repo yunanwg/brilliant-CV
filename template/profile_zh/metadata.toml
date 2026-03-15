@@ -34,8 +34,6 @@ non_latin_font = "Heiti SC"
         display_footer = true
 
 [inject]
-    inject_ai_prompt = false
-    inject_keywords = true
     injected_keywords_list = ["Data Analyst", "GCP", "Python", "SQL", "Tableau"]
 
 [personal]
