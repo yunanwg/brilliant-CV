@@ -139,8 +139,7 @@ display_logo = true
 # Custom AI prompt text (optional). If defined, it will be injected into the CV.
 # custom_ai_prompt_text = "Custom prompt text here..."
 
-# Decide if you want to inject keywords or not
-inject_keywords = true
+# Keywords to inject (optional). If defined, they will be injected into the CV.
 injected_keywords_list = ["Data Analyst", "GCP", "Python", "SQL", "Tableau"]
 
 [personal]

@@ -138,21 +138,15 @@
           "type": "string",
           "description": "Custom AI prompt text. If defined, it will be injected into the CV."
         },
-        "inject_keywords": {
-          "type": "boolean",
-          "description": "Inject keywords or not"
-        },
         "injected_keywords_list": {
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Keywords to inject into the CV. If defined, they will be injected."
         }
       },
-      "required": [
-        "inject_keywords",
-        "injected_keywords_list"
-      ]
+      "required": []
     },
     "personal": {
       "type": "object",
