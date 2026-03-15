@@ -174,13 +174,15 @@
 ) = {
   // Parameters
   let header-alignment = eval(metadata.layout.header.header_align)
-  // Backward compatibility: panic if old field is detected
+  // Backward compatibility: panic if old fields are detected
   if metadata.inject.at("inject_ai_prompt", default: none) != none {
     panic("'inject_ai_prompt' has been removed and will be fully deprecated in v4.0. Use 'custom_ai_prompt_text' in [inject] instead.")
   }
+  if metadata.inject.at("inject_keywords", default: none) != none {
+    panic("'inject_keywords' has been removed and will be fully deprecated in v4.0. Use 'injected_keywords_list' directly instead — if the list is present, keywords will be injected. To disable injection, remove 'injected_keywords_list'.")
+  }
   let custom-ai-prompt-text = metadata.inject.at("custom_ai_prompt_text", default: none)
-  let inject-keywords = metadata.inject.inject_keywords
-  let keywords = metadata.inject.injected_keywords_list
+  let keywords = metadata.inject.at("injected_keywords_list", default: ())
   let personal-info = metadata.personal.info
   let first-name = metadata.personal.first_name
   let last-name = metadata.personal.last_name
@@ -198,7 +200,6 @@
   // Injection
   _inject(
     custom-ai-prompt-text: custom-ai-prompt-text,
-    inject-keywords: inject-keywords,
     keywords: keywords,
   )
 
