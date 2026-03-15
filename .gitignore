@@ -6,6 +6,7 @@ temp/
 .DS_Store
 
 # LLM
+.agents
 .claude
 
 # MkDocs build output
