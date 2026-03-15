@@ -90,7 +90,7 @@ it is rather straightforward to migrate.
 Feel free to raise an issue for more assistance should you encounter a problem that you cannot solve on your own :)
 
 #pagebreak()
-== 4. Confuguration via `metadata.toml`
+== 4. Configuration via `metadata.toml`
 
 The `metadata.toml` file is the main configuration file for your CV. By changing the key-value pairs in the config file, you can
 setup the names, contact information, and other details that will be displayed in your CV.
@@ -188,6 +188,18 @@ font = "Heiti SC"
 #pagebreak()
 == 5. Functions
 #h(10pt)
+
+=== Entry Point Functions
+
+#let lib-docs = tidy.parse-module(read("/src/lib.typ"))
+#tidy.show-module(
+  lib-docs,
+  show-outline: false,
+  omit-private-definitions: true,
+  omit-private-parameters: true,
+)
+
+=== CV Components
 
 #let docs = tidy.parse-module(read("/src/cv.typ"))
 #tidy.show-module(

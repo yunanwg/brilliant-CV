@@ -9,6 +9,14 @@
 #import "./utils/styles.typ": *
 
 /* Layout */
+
+/// Render a CV document with header, footer, and page layout applied.
+///
+/// - metadata (dictionary): The metadata dictionary read from `metadata.toml`.
+/// - doc (content): The body content of the CV (typically the imported modules).
+/// - profile-photo (image): The profile photo to display in the header. Pass `none` to hide.
+/// - custom-icons (dictionary): Custom icons to override or extend the default icon set.
+/// -> content
 #let cv(
   metadata,
   doc,
@@ -62,6 +70,17 @@
   doc
 }
 
+/// Render a cover letter document with header, footer, and page layout applied.
+///
+/// - metadata (dictionary): The metadata dictionary read from `metadata.toml`.
+/// - doc (content): The body content of the letter.
+/// - sender-address (str): The sender's mailing address displayed in the header.
+/// - recipient-name (str): The recipient's name or company displayed in the header.
+/// - recipient-address (str): The recipient's mailing address displayed in the header.
+/// - date (str): The date displayed in the letter header. Defaults to today's date.
+/// - subject (str): The subject line of the letter.
+/// - signature (str | content): (optional) path to a signature image, or content to display as signature.
+/// -> content
 #let letter(
   metadata,
   doc,

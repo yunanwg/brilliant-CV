@@ -625,6 +625,17 @@
   )
 }
 
+/// Add a continued entry to the CV. Must be used together with `cv-entry-start`.
+/// Requires `display_entry_society_first = true` in `metadata.toml`.
+///
+/// - title (str): The title of the entry (role or position).
+/// - date (str | content): The date(s) of the entry.
+/// - description (str | array): The description of the entry. Can be a string or an array of strings.
+/// - tags (array): The tags of the entry.
+/// - color (color): (optional) override the accent color for this entry.
+/// - metadata (array): (optional) the metadata read from the TOML file.
+/// - awesome-colors (array): (optional) the awesome colors of the CV.
+/// -> content
 #let cv-entry-continued(
   title: "Title",
   date: "Date",
