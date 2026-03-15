@@ -29,4 +29,3 @@ typst init @preview/brilliant-cv
 - [Getting Started](getting-started.md) — Build your first CV in 10 minutes
 - [Components](components.md) — Explore all available building blocks
 - [Configuration](configuration.md) — Full `metadata.toml` reference
-- [Download PDF Documentation](assets/docs.pdf)

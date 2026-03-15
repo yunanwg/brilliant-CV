@@ -14,8 +14,6 @@
 Full documentation (quick start, component gallery, recipes, and API reference) is available online:
 **[brilliant-CV Documentation](https://yunanwg.github.io/brilliant-CV/)**
 
-A [PDF version](https://yunanwg.github.io/brilliant-CV/assets/docs.pdf) is also available for offline reading.
-
 ## ✨ Key Features
 
 - **🎨 Separation of Style & Content**: Write your CV entries in simple Typst files, and let the template handle the layout and styling.

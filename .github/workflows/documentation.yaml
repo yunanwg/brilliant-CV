@@ -5,28 +5,21 @@ on:
     branches:
       - main
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
-      # Build PDF docs
-      - uses: fontist/setup-fontist@v2
-      - run: fontist install "Roboto"
-      - run: fontist install "Source Sans 3"
-      - uses: typst-community/setup-typst@v3
-      - run: typst compile ./docs/docs.typ docs/web/docs/assets/docs.pdf --root ./ --font-path /home/runner/.fontist/fonts
+      # Generate API reference from source doc-comments
+      - run: python docs/web/generate-api-reference.py
 
       # Build MkDocs site
       - uses: astral-sh/setup-uv@v4
       - run: uv tool install mkdocs-material
-      - run: cd docs/web && mkdocs build --site-dir ../../public
+      - run: cd docs/web && mkdocs build --strict --site-dir ../../public
 
       # Deploy to GitHub Pages
       - uses: peaceiris/actions-gh-pages@v4
