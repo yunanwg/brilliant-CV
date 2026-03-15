@@ -1,8 +1,9 @@
 /*
-* Functions for the CV template
+* Functions for the cover letter template
 */
 
 #import "./utils/styles.typ": _set-accent-color, _awesome-colors
+#import "./utils/injection.typ": _inject
 
 #let _letter-header(
   sender-address: "Your Address Here",
@@ -12,6 +13,7 @@
   subject: "Subject: Hey!",
   metadata: metadata,
   awesome-colors: _awesome-colors,
+  address-style: "smallcaps",
   // Deprecated parameter (will be removed in v4.0)
   awesomeColors: none,
 ) = {
@@ -27,7 +29,11 @@
     text(fill: accent-color, weight: "bold", str)
   }
   let letter-header-address-style(str) = {
-    text(fill: gray, size: 0.9em, smallcaps(str))
+    if address-style == "smallcaps" {
+      text(fill: gray, size: 0.9em, smallcaps(str))
+    } else {
+      text(fill: gray, size: 0.9em, str)
+    }
   }
   let letter-date-style(str) = {
     text(size: 0.9em, style: "italic", str)
