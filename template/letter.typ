@@ -11,12 +11,16 @@
 
 #show: letter.with(
   metadata,
-  sender-address: "Your Address Here",
+  // sender-address defaults to metadata.personal.address if set, or override here:
+  sender-address: "123 Main St" + "\n" + "San Francisco, CA 94102",
   recipient-name: "Company Name Here",
-  recipient-address: "Company Address Here",
+  // Supports multiline addresses:
+  recipient-address: "456 Market St" + "\n" + "New York, NY 10001",
+  // date defaults to today; pass a string to override:
   date: datetime.today().display(),
   subject: "Subject: Hey!",
   signature: image("assets/signature.png"),
+  // address-style: "normal",  // use "normal" to disable smallcaps on addresses
 )
 
 Dear Hiring Manager,

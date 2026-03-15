@@ -25,6 +25,14 @@
 
   let accent-color = _set-accent-color(awesome-colors, metadata)
 
+  // Keyword injection (consistent with CV)
+  let custom-ai-prompt-text = metadata.inject.at("custom_ai_prompt_text", default: none)
+  let keywords = metadata.inject.at("injected_keywords_list", default: ())
+  _inject(
+    custom-ai-prompt-text: custom-ai-prompt-text,
+    keywords: keywords,
+  )
+
   let letter-header-name-style(str) = {
     text(fill: accent-color, weight: "bold", str)
   }
