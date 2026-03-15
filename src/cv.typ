@@ -287,19 +287,13 @@
   letters: 3,
   color: none,
   metadata: none,
-  // New parameter names (recommended)
-  awesome-colors: none,
-  // Old parameter names (deprecated, for backward compatibility)
-  awesomeColors: _awesome-colors,
+  awesome-colors: _awesome-colors,
+  // Deprecated parameter (will be removed in v4.0)
+  awesomeColors: none,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
-  // Backward compatibility logic (remove this block when deprecating)
-  let awesome-colors = if awesome-colors != none {
-    awesome-colors
-  } else {
-    // TODO: Add deprecation warning in future version
-    // Currently Typst doesn't have a standard warning mechanism for user functions
-    awesomeColors
+  if awesomeColors != none {
+    panic("'awesomeColors' has been renamed and will be removed in v4.0. Use 'awesome-colors' instead.")
   }
 
   let lang = metadata.language
@@ -333,15 +327,7 @@
 
 /// Prepare common entry parameters
 /// -> dictionary
-#let _prepare-entry-params(metadata, awesome-colors, awesomeColors, color: none) = {
-  // Backward compatibility logic
-  let awesome-colors = if awesome-colors != none {
-    awesome-colors
-  } else {
-    // TODO: Add deprecation warning in future version
-    awesomeColors
-  }
-
+#let _prepare-entry-params(metadata, awesome-colors, color: none) = {
   // Common parameter calculations
   let accent-color = if color != none { color } else { _set-accent-color(awesome-colors, metadata) }
   let before-entry-skip = eval(metadata.layout.at("before_entry_skip", default: 1pt))
@@ -576,13 +562,15 @@
   tags: (),
   color: none,
   metadata: none,
-  // New parameter names (recommended)
-  awesome-colors: none,
-  // Old parameter names (deprecated, for backward compatibility)
-  awesomeColors: _awesome-colors,
+  awesome-colors: _awesome-colors,
+  // Deprecated parameter (will be removed in v4.0)
+  awesomeColors: none,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
-  let params = _prepare-entry-params(metadata, awesome-colors, awesomeColors, color: color)
+  if awesomeColors != none {
+    panic("'awesomeColors' has been renamed and will be removed in v4.0. Use 'awesome-colors' instead.")
+  }
+  let params = _prepare-entry-params(metadata, awesome-colors, color: color)
 
   _make-cv-entry(
     "full",
@@ -612,18 +600,20 @@
   logo: "",
   color: none,
   metadata: none,
-  // New parameter names (recommended)
-  awesome-colors: none,
-  // Old parameter names (deprecated, for backward compatibility)
-  awesomeColors: _awesome-colors,
+  awesome-colors: _awesome-colors,
+  // Deprecated parameter (will be removed in v4.0)
+  awesomeColors: none,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
+  if awesomeColors != none {
+    panic("'awesomeColors' has been renamed and will be removed in v4.0. Use 'awesome-colors' instead.")
+  }
   // To use cvEntryStart, you need to set display_entry_society_first to true in the metadata.toml file.
   if not metadata.layout.entry.display_entry_society_first {
     panic("display_entry_society_first must be true to use cvEntryStart")
   }
 
-  let params = _prepare-entry-params(metadata, awesome-colors, awesomeColors, color: color)
+  let params = _prepare-entry-params(metadata, awesome-colors, color: color)
 
   _make-cv-entry(
     "start",
@@ -642,18 +632,20 @@
   tags: (),
   color: none,
   metadata: none,
-  // New parameter names (recommended)
-  awesome-colors: none,
-  // Old parameter names (deprecated, for backward compatibility)
-  awesomeColors: _awesome-colors,
+  awesome-colors: _awesome-colors,
+  // Deprecated parameter (will be removed in v4.0)
+  awesomeColors: none,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
+  if awesomeColors != none {
+    panic("'awesomeColors' has been renamed and will be removed in v4.0. Use 'awesome-colors' instead.")
+  }
   // To use cv-entry-continued, you need to set display_entry_society_first to true in the metadata.toml file.
   if not metadata.layout.entry.display_entry_society_first {
     panic("display_entry_society_first must be true to use cvEntryContinued")
   }
 
-  let params = _prepare-entry-params(metadata, awesome-colors, awesomeColors, color: color)
+  let params = _prepare-entry-params(metadata, awesome-colors, color: color)
 
   _make-cv-entry(
     "continued",
@@ -813,20 +805,24 @@
 /// - refFull (bool): Whether to show the full reference or not.
 /// -> content
 #let cv-publication(
-  bib: "", 
-  // New parameter names (recommended)
-  ref-style: "apa", 
-  ref-full: true, 
+  bib: "",
+  ref-style: "apa",
+  ref-full: true,
   key-list: list(),
-  // Old parameter names (deprecated, for backward compatibility)
-  refStyle: "apa", 
-  refFull: true, 
-  keyList: list()
+  // Deprecated parameters (will be removed in v4.0)
+  refStyle: none,
+  refFull: none,
+  keyList: none,
 ) = {
-  // Backward compatibility logic (remove this block when deprecating)
-  let ref-style = if ref-style != "apa" { ref-style } else { refStyle }
-  let ref-full = if ref-full != true { ref-full } else { refFull }
-  let key-list = if key-list != list() { key-list } else { keyList }
+  if refStyle != none {
+    panic("'refStyle' has been renamed and will be removed in v4.0. Use 'ref-style' instead.")
+  }
+  if refFull != none {
+    panic("'refFull' has been renamed and will be removed in v4.0. Use 'ref-full' instead.")
+  }
+  if keyList != none {
+    panic("'keyList' has been renamed and will be removed in v4.0. Use 'key-list' instead.")
+  }
   let publication-style(str) = {
     text(str)
   }
@@ -843,13 +839,13 @@
   }
 }
 
-// Backward compatibility
-#let cvPublication = cv-publication
-#let cvEntryStart = cv-entry-start
-#let cvEntryContinued = cv-entry-continued
-#let cvSkill = cv-skill
-#let cvSkillWithLevel = cv-skill-with-level
-#let cvSkillTag = cv-skill-tag
-#let cvHonor = cv-honor
-#let cvSection = cv-section
-#let cvEntry = cv-entry
+// Deprecated function aliases (will be removed in v4.0)
+#let cvPublication(..args) = panic("'cvPublication' has been renamed and will be removed in v4.0. Use 'cv-publication' instead.")
+#let cvEntryStart(..args) = panic("'cvEntryStart' has been renamed and will be removed in v4.0. Use 'cv-entry-start' instead.")
+#let cvEntryContinued(..args) = panic("'cvEntryContinued' has been renamed and will be removed in v4.0. Use 'cv-entry-continued' instead.")
+#let cvSkill(..args) = panic("'cvSkill' has been renamed and will be removed in v4.0. Use 'cv-skill' instead.")
+#let cvSkillWithLevel(..args) = panic("'cvSkillWithLevel' has been renamed and will be removed in v4.0. Use 'cv-skill-with-level' instead.")
+#let cvSkillTag(..args) = panic("'cvSkillTag' has been renamed and will be removed in v4.0. Use 'cv-skill-tag' instead.")
+#let cvHonor(..args) = panic("'cvHonor' has been renamed and will be removed in v4.0. Use 'cv-honor' instead.")
+#let cvSection(..args) = panic("'cvSection' has been renamed and will be removed in v4.0. Use 'cv-section' instead.")
+#let cvEntry(..args) = panic("'cvEntry' has been renamed and will be removed in v4.0. Use 'cv-entry' instead.")

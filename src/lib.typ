@@ -12,18 +12,13 @@
 #let cv(
   metadata,
   doc,
-  // New parameter names (recommended)
   profile-photo: image("../template/assets/avatar.png"),
   custom-icons: (:),
-  // Old parameter names (deprecated, for backward compatibility)
-  profilePhoto: image("../template/assets/avatar.png"),
+  // Deprecated parameter (will be removed in v4.0)
+  profilePhoto: none,
 ) = {
-  // Backward compatibility logic (remove this block when deprecating)
-  let profile-photo = if profile-photo != image("../template/assets/avatar.png") { 
-    profile-photo 
-  } else { 
-    // TODO: Add deprecation warning in future version
-    profilePhoto 
+  if profilePhoto != none {
+    panic("'profilePhoto' has been renamed and will be removed in v4.0. Use 'profile-photo' instead.")
   }
 
   // Update metadata state
@@ -70,22 +65,26 @@
 #let letter(
   metadata,
   doc,
-  // New parameter names (recommended)
   sender-address: "Your Address Here",
-  recipient-name: "Company Name Here", 
+  recipient-name: "Company Name Here",
   recipient-address: "Company Address Here",
-  // Old parameter names (deprecated, for backward compatibility)
-  myAddress: "Your Address Here",
-  recipientName: "Company Name Here",
-  recipientAddress: "Company Address Here",
+  // Deprecated parameters (will be removed in v4.0)
+  myAddress: none,
+  recipientName: none,
+  recipientAddress: none,
   date: datetime.today().display(),
   subject: "Subject: Hey!",
   signature: "",
 ) = {
-  // Backward compatibility logic (remove this block when deprecating)
-  let sender-address = if sender-address != "Your Address Here" { sender-address } else { myAddress }
-  let recipient-name = if recipient-name != "Company Name Here" { recipient-name } else { recipientName }
-  let recipient-address = if recipient-address != "Company Address Here" { recipient-address } else { recipientAddress }
+  if myAddress != none {
+    panic("'myAddress' has been renamed and will be removed in v4.0. Use 'sender-address' instead.")
+  }
+  if recipientName != none {
+    panic("'recipientName' has been renamed and will be removed in v4.0. Use 'recipient-name' instead.")
+  }
+  if recipientAddress != none {
+    panic("'recipientAddress' has been renamed and will be removed in v4.0. Use 'recipient-address' instead.")
+  }
   // Non Latin Logic
   let lang = metadata.language
   let fonts = _latin-font-list
