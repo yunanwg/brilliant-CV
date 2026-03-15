@@ -4,8 +4,7 @@ A module containing the injection logic for the AI prompt and keywords.
 
 #let _inject(
   custom-ai-prompt-text: none,
-  inject-keywords: true,
-  keywords: [],
+  keywords: (),
 ) = {
   let parts = ()
 
@@ -13,7 +12,7 @@ A module containing the injection logic for the AI prompt and keywords.
     parts.push(custom-ai-prompt-text)
   }
 
-  if inject-keywords {
+  if keywords.len() > 0 {
     parts.push(keywords.join(" "))
   }
 
