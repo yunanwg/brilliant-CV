@@ -1,0 +1,48 @@
+site_name: brilliant-CV
+site_url: https://yunanwg.github.io/brilliant-CV/
+site_description: A modern, modular CV template for Typst
+repo_url: https://github.com/yunanwg/brilliant-CV
+repo_name: brilliant-CV
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: custom
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: custom
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - navigation.instant
+    - navigation.sections
+    - toc.integrate
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Components: components.md
+  - Recipes: recipes.md
+  - Configuration: configuration.md
+  - Troubleshooting: troubleshooting.md
+  - API Reference: api-reference.md
+  - Migration Guide: migration.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - toc:
+      permalink: true

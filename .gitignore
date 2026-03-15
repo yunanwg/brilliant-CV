@@ -8,5 +8,8 @@ temp/
 # LLM
 .claude
 
+# MkDocs build output
+docs/web/site/
+
 # Git worktrees
 .worktrees/
