@@ -11,17 +11,12 @@
   date: "Today's Date",
   subject: "Subject: Hey!",
   metadata: metadata,
-  // New parameter names (recommended)
-  awesome-colors: none,
-  // Old parameter names (deprecated, for backward compatibility)
-  awesomeColors: _awesome-colors,
+  awesome-colors: _awesome-colors,
+  // Deprecated parameter (will be removed in v4.0)
+  awesomeColors: none,
 ) = {
-  // Backward compatibility logic (remove this block when deprecating)
-  let awesome-colors = if awesome-colors != none { 
-    awesome-colors 
-  } else { 
-    // TODO: Add deprecation warning in future version
-    awesomeColors 
+  if awesomeColors != none {
+    panic("'awesomeColors' has been renamed and will be removed in v4.0. Use 'awesome-colors' instead.")
   }
 
   let sender-name = metadata.personal.first_name + " " + metadata.personal.last_name
