@@ -48,7 +48,7 @@
 
 /// Generate personal info section
 /// -> content
-#let _make-header-info(personal-info, icons) = {
+#let _make-header-info(personal-info, icons, custom-icons) = {
   let n = 1
   for (k, v) in personal-info {
     // A dirty trick to add linebreaks with "linebreak" as key in personalInfo
@@ -58,14 +58,17 @@
       continue
     }
     if k.contains("custom") {
-      let img = v.at("image", default: "")
       let awesome-icon = v.at("awesomeIcon", default: "")
       let text = v.at("text", default: "")
       let link-value = v.at("link", default: "")
-      let icon = ""
-      if img != "" {
-        icon = img.with(width: 10pt)
-      } else {
+      // Look up pre-loaded image from custom-icons dict (passed via cv.with())
+      let icon = custom-icons.at(k, default: none)
+      if icon != none {
+        icon = box(width: 10pt, {
+          set image(width: 100%)
+          icon
+        })
+      } else if awesome-icon != "" {
         icon = fa-icon(awesome-icon)
       }
       box({
@@ -114,7 +117,7 @@
 
 /// Create header name section
 /// -> content
-#let _make-header-name-section(styles, non-latin, non-latin-name, first-name, last-name, personal-info, header-quote) = {
+#let _make-header-name-section(styles, non-latin, non-latin-name, first-name, last-name, personal-info, header-quote, custom-icons) = {
   table(
     columns: 1fr,
     inset: 0pt,
@@ -123,7 +126,7 @@
     if non-latin {
       (styles.first-name)(non-latin-name)
     } else [#(styles.first-name)(first-name) #h(5pt) #(styles.last-name)(last-name)],
-    [#(styles.info)(_make-header-info(personal-info, _personal-info-icons))],
+    [#(styles.info)(_make-header-info(personal-info, _personal-info-icons, custom-icons))],
     .. if header-quote != none { ([#(styles.quote)(header-quote)],) },
   )
 }
@@ -155,9 +158,11 @@
 /// Insert the header section of the CV.
 ///
 /// - metadata (array): the metadata read from the TOML file.
+/// - profile-photo (content): the profile photo image.
 /// - header-font (array): the font of the header.
 /// - regular-colors (array): the regular colors of the CV.
 /// - awesome-colors (array): the awesome colors of the CV.
+/// - custom-icons (dictionary): pre-loaded image objects for custom personal info entries.
 /// -> content
 #let _cv-header(
   metadata,
@@ -165,12 +170,19 @@
   header-font,
   regular-colors,
   awesome-colors,
+  custom-icons,
 ) = {
   // Parameters
   let header-alignment = eval(metadata.layout.header.header_align)
-  let inject-ai-prompt = metadata.inject.inject_ai_prompt
-  let inject-keywords = metadata.inject.inject_keywords
-  let keywords = metadata.inject.injected_keywords_list
+  // Backward compatibility: panic if old fields are detected
+  if metadata.inject.at("inject_ai_prompt", default: none) != none {
+    panic("'inject_ai_prompt' has been removed and will be fully deprecated in v4.0. Use 'custom_ai_prompt_text' in [inject] instead.")
+  }
+  if metadata.inject.at("inject_keywords", default: none) != none {
+    panic("'inject_keywords' has been removed and will be fully deprecated in v4.0. Use 'injected_keywords_list' directly instead — if the list is present, keywords will be injected. To disable injection, remove 'injected_keywords_list'.")
+  }
+  let custom-ai-prompt-text = metadata.inject.at("custom_ai_prompt_text", default: none)
+  let keywords = metadata.inject.at("injected_keywords_list", default: ())
   let personal-info = metadata.personal.info
   let first-name = metadata.personal.first_name
   let last-name = metadata.personal.last_name
@@ -195,8 +207,7 @@
 
   // Injection
   _inject(
-    inject-ai-prompt: inject-ai-prompt,
-    inject-keywords: inject-keywords,
+    custom-ai-prompt-text: custom-ai-prompt-text,
     keywords: keywords,
   )
 
@@ -205,7 +216,7 @@
   
   // Create components
   let name-section = _make-header-name-section(
-    styles, non-latin, non-latin-name, first-name, last-name, personal-info, header-quote
+    styles, non-latin, non-latin-name, first-name, last-name, personal-info, header-quote, custom-icons
   )
   
   let photo-section = _make-header-photo-section(display-profile-photo, profile-photo, profile-photo-radius)
@@ -274,13 +285,22 @@
 
 /// Add the title of a section.
 ///
-/// NOTE: If the language is non-Latin, the title highlight will not be sliced.
+/// The first `letters` characters of the title are highlighted in the accent color,
+/// while the rest is rendered in black. For non-Latin languages (zh, ja, ko, ru),
+/// highlighting is skipped entirely and the full title is shown in the accent color.
 ///
 /// - title (str): The title of the section.
 /// - highlighted (bool): Whether the first n letters will be highlighted in accent color.
-/// - letters (int): The number of first letters of the title to highlight.
+/// - letters (int): The number of first letters of the title to highlight. Defaults to 3.
 /// - metadata (array): (optional) the metadata read from the TOML file.
 /// - awesome-colors (array): (optional) the awesome colors of the CV.
+///
+/// ```example
+/// >>> #set text(font: "Source Sans 3")
+/// #block(width: 300pt)[
+///   #cv-section("Professional Experience", metadata: _metadata)
+/// ]
+/// ```
 /// -> content
 #let cv-section(
   title,
@@ -288,19 +308,13 @@
   letters: 3,
   color: none,
   metadata: none,
-  // New parameter names (recommended)
-  awesome-colors: none,
-  // Old parameter names (deprecated, for backward compatibility)
-  awesomeColors: _awesome-colors,
+  awesome-colors: _awesome-colors,
+  // Deprecated parameter (will be removed in v4.0)
+  awesomeColors: none,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
-  // Backward compatibility logic (remove this block when deprecating)
-  let awesome-colors = if awesome-colors != none {
-    awesome-colors
-  } else {
-    // TODO: Add deprecation warning in future version
-    // Currently Typst doesn't have a standard warning mechanism for user functions
-    awesomeColors
+  if awesomeColors != none {
+    panic("'awesomeColors' has been renamed and will be removed in v4.0. Use 'awesome-colors' instead.")
   }
 
   let lang = metadata.language
@@ -334,15 +348,7 @@
 
 /// Prepare common entry parameters
 /// -> dictionary
-#let _prepare-entry-params(metadata, awesome-colors, awesomeColors, color: none) = {
-  // Backward compatibility logic
-  let awesome-colors = if awesome-colors != none {
-    awesome-colors
-  } else {
-    // TODO: Add deprecation warning in future version
-    awesomeColors
-  }
-
+#let _prepare-entry-params(metadata, awesome-colors, color: none) = {
   // Common parameter calculations
   let accent-color = if color != none { color } else { _set-accent-color(awesome-colors, metadata) }
   let before-entry-skip = eval(metadata.layout.at("before_entry_skip", default: 1pt))
@@ -470,7 +476,9 @@
         (styles.b2)(if society-first-setting { (styles.dates)(date) } else { location }),
       ),
     )
-    (styles.description)(description)
+    if description != "" and description != none {
+      (styles.description)(description)
+    }
     _create-entry-tag-list(tags, styles.tag)
     
   } else if entry-type == "start" {
@@ -526,7 +534,9 @@
         },
         (styles.b2)((styles.dates)(date)),
         )
-      (styles.description)(description)
+      if description != "" and description != none {
+        (styles.description)(description)
+      }
       _create-entry-tag-list(tags, styles.tag)
     } else {
       table(
@@ -537,6 +547,9 @@
         align: auto,
         {
           (styles.b1)(title)
+          if description != "" and description != none {
+            (styles.description)(description)
+          }
         },
         (styles.b2)((styles.dates)(date)),
         )
@@ -550,7 +563,11 @@
 
 /// Add an entry to the CV.
 ///
-/// - title (str): The title of the entry.
+/// When `display_entry_society_first = true` is set in `metadata.toml`, the `society`
+/// field appears bold/first and `title` appears as the subtitle. When `false` (the
+/// default), the `title` field is bold/first and `society` is the subtitle.
+///
+/// - title (str): The title of the entry (role or position).
 /// - society (str): The society of the entry (company, university, etc.).
 /// - date (str | content): The date(s) of the entry.
 /// - location (str): The location of the entry.
@@ -559,24 +576,43 @@
 /// - tags (array): The tags of the entry.
 /// - metadata (array): (optional) the metadata read from the TOML file.
 /// - awesome-colors (array): (optional) the awesome colors of the CV.
+///
+/// ```example
+/// >>> #set text(font: "Source Sans 3")
+/// #block(width: 300pt)[
+///   #cv-entry(
+///     title: [Data Analyst],
+///     society: [ABC Company],
+///     date: [2017 - 2020],
+///     location: [New York, NY],
+///     description: list(
+///       [Analyzed datasets with SQL and Python],
+///     ),
+///     tags: ("Python", "SQL"),
+///     metadata: _metadata,
+///   )
+/// ]
+/// ```
 /// -> content
 #let cv-entry(
   title: "Title",
   society: "Society",
   date: "Date",
   location: "Location",
-  description: "Description",
+  description: "",
   logo: "",
   tags: (),
   color: none,
   metadata: none,
-  // New parameter names (recommended)
-  awesome-colors: none,
-  // Old parameter names (deprecated, for backward compatibility)
-  awesomeColors: _awesome-colors,
+  awesome-colors: _awesome-colors,
+  // Deprecated parameter (will be removed in v4.0)
+  awesomeColors: none,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
-  let params = _prepare-entry-params(metadata, awesome-colors, awesomeColors, color: color)
+  if awesomeColors != none {
+    panic("'awesomeColors' has been renamed and will be removed in v4.0. Use 'awesome-colors' instead.")
+  }
+  let params = _prepare-entry-params(metadata, awesome-colors, color: color)
 
   _make-cv-entry(
     "full",
@@ -592,13 +628,37 @@
   )
 }
 
-/// Add the start of an entry to the CV.
+/// Add the start of an entry to the CV. Use this together with one or more
+/// `cv-entry-continued` calls to list multiple roles at the same company.
+/// The start renders the company name and location, while each continued entry
+/// adds a role with its own dates, description, and tags.
+///
+/// *Requires* `display_entry_society_first = true` in `metadata.toml`.
 ///
 /// - society (str): The society of the entry (company, university, etc.).
 /// - location (str): The location of the entry.
 /// - logo (image): The logo of the society. If empty, no logo will be displayed.
 /// - metadata (array): (optional) the metadata read from the TOML file.
 /// - awesome-colors (array): (optional) the awesome colors of the CV.
+///
+/// ```example
+/// >>> #set text(font: "Source Sans 3")
+/// #block(width: 300pt)[
+///   #cv-entry-start(
+///     society: [XYZ Corporation],
+///     location: [San Francisco, CA],
+///     metadata: _metadata,
+///   )
+///   #cv-entry-continued(
+///     title: [Data Scientist],
+///     date: [2017 - 2020],
+///     description: list(
+///       [Analyzed large datasets with SQL and Python],
+///     ),
+///     metadata: _metadata,
+///   )
+/// ]
+/// ```
 /// -> content
 #let cv-entry-start(
   society: "Society",
@@ -606,18 +666,20 @@
   logo: "",
   color: none,
   metadata: none,
-  // New parameter names (recommended)
-  awesome-colors: none,
-  // Old parameter names (deprecated, for backward compatibility)
-  awesomeColors: _awesome-colors,
+  awesome-colors: _awesome-colors,
+  // Deprecated parameter (will be removed in v4.0)
+  awesomeColors: none,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
+  if awesomeColors != none {
+    panic("'awesomeColors' has been renamed and will be removed in v4.0. Use 'awesome-colors' instead.")
+  }
   // To use cvEntryStart, you need to set display_entry_society_first to true in the metadata.toml file.
   if not metadata.layout.entry.display_entry_society_first {
     panic("display_entry_society_first must be true to use cvEntryStart")
   }
 
-  let params = _prepare-entry-params(metadata, awesome-colors, awesomeColors, color: color)
+  let params = _prepare-entry-params(metadata, awesome-colors, color: color)
 
   _make-cv-entry(
     "start",
@@ -629,25 +691,41 @@
   )
 }
 
+/// Add a continued entry to the CV. Must be used after a `cv-entry-start` call
+/// to add an additional role at the same company. Multiple `cv-entry-continued`
+/// calls can follow a single `cv-entry-start`.
+///
+/// *Requires* `display_entry_society_first = true` in `metadata.toml`.
+///
+/// - title (str): The title of the entry (role or position).
+/// - date (str | content): The date(s) of the entry.
+/// - description (str | array): The description of the entry. Can be a string or an array of strings.
+/// - tags (array): The tags of the entry.
+/// - color (color): (optional) override the accent color for this entry.
+/// - metadata (array): (optional) the metadata read from the TOML file.
+/// - awesome-colors (array): (optional) the awesome colors of the CV.
+/// -> content
 #let cv-entry-continued(
   title: "Title",
   date: "Date",
-  description: "Description",
+  description: "",
   tags: (),
   color: none,
   metadata: none,
-  // New parameter names (recommended)
-  awesome-colors: none,
-  // Old parameter names (deprecated, for backward compatibility)
-  awesomeColors: _awesome-colors,
+  awesome-colors: _awesome-colors,
+  // Deprecated parameter (will be removed in v4.0)
+  awesomeColors: none,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
+  if awesomeColors != none {
+    panic("'awesomeColors' has been renamed and will be removed in v4.0. Use 'awesome-colors' instead.")
+  }
   // To use cv-entry-continued, you need to set display_entry_society_first to true in the metadata.toml file.
   if not metadata.layout.entry.display_entry_society_first {
     panic("display_entry_society_first must be true to use cvEntryContinued")
   }
 
-  let params = _prepare-entry-params(metadata, awesome-colors, awesomeColors, color: color)
+  let params = _prepare-entry-params(metadata, awesome-colors, color: color)
 
   _make-cv-entry(
     "continued",
@@ -663,7 +741,17 @@
 /// Add a skill to the CV.
 ///
 /// - type (str): The type of the skill. It is displayed on the left side.
-/// - info (str | content): The information about the skill. It is displayed on the right side. Items can be separated by `#hbar()`.
+/// - info (str | content): The information about the skill. It is displayed on the right side. Items can be separated by `#h-bar()`.
+///
+/// ```example
+/// >>> #set text(font: "Source Sans 3")
+/// #block(width: 300pt)[
+///   #cv-skill(
+///     type: [Tech Stack],
+///     info: [Python #h-bar() SQL #h-bar() Tableau],
+///   )
+/// ]
+/// ```
 /// -> content
 #let cv-skill(type: "Type", info: "Info") = {
   let skill-type-style(str) = {
@@ -685,9 +773,25 @@
 
 /// Add a skill with a level to the CV.
 ///
+/// The level is rendered as a row of 5 circles: filled circles for the skill
+/// level and empty circles for the remainder (e.g., level 3 shows 3 filled
+/// and 2 empty circles).
+///
 /// - type (str): The type of the skill. It is displayed on the left side.
-/// - level (int): The level of the skill. It is displayed in as circles in the middle. The minimum level is 0 and the maximum level is 5.
+/// - level (int): The level of the skill (0--5). Rendered as filled/empty circles in the middle column.
 /// - info (str | content): The information about the skill. It is displayed on the right side.
+///
+/// ```example
+/// >>> #set text(font: "Source Sans 3")
+/// >>> #import "@preview/fontawesome:0.6.0": *
+/// #block(width: 300pt)[
+///   #cv-skill-with-level(
+///     type: [Languages],
+///     level: 4,
+///     info: [English #h-bar() French #h-bar() Chinese],
+///   )
+/// ]
+/// ```
 /// -> content
 #let cv-skill-with-level(
   type: "Type",
@@ -723,6 +827,14 @@
 /// Add a skill tag to the CV.
 /// 
 /// - skill (str | content): The skill to be displayed.
+///
+/// ```example
+/// >>> #set text(font: "Source Sans 3")
+/// #block(width: 300pt)[
+///   #cv-skill-tag([AWS Certified])
+///   #cv-skill-tag([Python])
+/// ]
+/// ```
 /// -> content
 #let cv-skill-tag(skill) = {
   let entry-tag-style(str) = {
@@ -746,6 +858,19 @@
 /// - location (str): The location of the honor.
 /// - awesome-colors (array): (optional) The awesome colors of the CV.
 /// - metadata (array): (optional) The metadata read from the TOML file.
+///
+/// ```example
+/// >>> #set text(font: "Source Sans 3")
+/// #block(width: 300pt)[
+///   #cv-honor(
+///     date: [2022],
+///     title: [AWS Certified Security],
+///     issuer: [Amazon Web Services],
+///     location: [Online],
+///     metadata: _metadata,
+///   )
+/// ]
+/// ```
 /// -> content
 #let cv-honor(
   date: "1990",
@@ -801,26 +926,34 @@
 
 /// Add the publications to the CV by reading a bib file.
 ///
+/// When `ref-full` is `true`, all entries in the bib file are displayed.
+/// When `ref-full` is `false`, only the entries whose keys appear in
+/// `key-list` are included, allowing selective publication lists.
+///
 /// - bib (bibliography): The `bibliography` object with the path to the bib file.
-/// - keyList (list): The list of keys to include in the publication list.
-/// - refStyle (str): The reference style of the publication list.
-/// - refFull (bool): Whether to show the full reference or not.
+/// - key-list (list): The list of bib keys to include when `ref-full` is `false`.
+/// - ref-style (str): The reference style of the publication list (e.g., `"apa"`).
+/// - ref-full (bool): Whether to show all entries (`true`) or only those in `key-list` (`false`).
 /// -> content
 #let cv-publication(
-  bib: "", 
-  // New parameter names (recommended)
-  ref-style: "apa", 
-  ref-full: true, 
+  bib: "",
+  ref-style: "apa",
+  ref-full: true,
   key-list: list(),
-  // Old parameter names (deprecated, for backward compatibility)
-  refStyle: "apa", 
-  refFull: true, 
-  keyList: list()
+  // Deprecated parameters (will be removed in v4.0)
+  refStyle: none,
+  refFull: none,
+  keyList: none,
 ) = {
-  // Backward compatibility logic (remove this block when deprecating)
-  let ref-style = if ref-style != "apa" { ref-style } else { refStyle }
-  let ref-full = if ref-full != true { ref-full } else { refFull }
-  let key-list = if key-list != list() { key-list } else { keyList }
+  if refStyle != none {
+    panic("'refStyle' has been renamed and will be removed in v4.0. Use 'ref-style' instead.")
+  }
+  if refFull != none {
+    panic("'refFull' has been renamed and will be removed in v4.0. Use 'ref-full' instead.")
+  }
+  if keyList != none {
+    panic("'keyList' has been renamed and will be removed in v4.0. Use 'key-list' instead.")
+  }
   let publication-style(str) = {
     text(str)
   }
@@ -837,13 +970,13 @@
   }
 }
 
-// Backward compatibility
-#let cvPublication = cv-publication
-#let cvEntryStart = cv-entry-start
-#let cvEntryContinued = cv-entry-continued
-#let cvSkill = cv-skill
-#let cvSkillWithLevel = cv-skill-with-level
-#let cvSkillTag = cv-skill-tag
-#let cvHonor = cv-honor
-#let cvSection = cv-section
-#let cvEntry = cv-entry
+// Deprecated function aliases (will be removed in v4.0)
+#let cvPublication(..args) = panic("'cvPublication' has been renamed and will be removed in v4.0. Use 'cv-publication' instead.")
+#let cvEntryStart(..args) = panic("'cvEntryStart' has been renamed and will be removed in v4.0. Use 'cv-entry-start' instead.")
+#let cvEntryContinued(..args) = panic("'cvEntryContinued' has been renamed and will be removed in v4.0. Use 'cv-entry-continued' instead.")
+#let cvSkill(..args) = panic("'cvSkill' has been renamed and will be removed in v4.0. Use 'cv-skill' instead.")
+#let cvSkillWithLevel(..args) = panic("'cvSkillWithLevel' has been renamed and will be removed in v4.0. Use 'cv-skill-with-level' instead.")
+#let cvSkillTag(..args) = panic("'cvSkillTag' has been renamed and will be removed in v4.0. Use 'cv-skill-tag' instead.")
+#let cvHonor(..args) = panic("'cvHonor' has been renamed and will be removed in v4.0. Use 'cv-honor' instead.")
+#let cvSection(..args) = panic("'cvSection' has been renamed and will be removed in v4.0. Use 'cv-section' instead.")
+#let cvEntry(..args) = panic("'cvEntry' has been renamed and will be removed in v4.0. Use 'cv-entry' instead.")

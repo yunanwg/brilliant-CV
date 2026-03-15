@@ -1,5 +1,5 @@
 // Imports
-#import "@preview/brilliant-cv:3.1.2": cv
+#import "@preview/brilliant-cv:3.2.0": cv
 
 // Select which profile to build. Each profile lives in its own folder
 // (e.g. profile_en/, profile_fr/, profile_solution_engineer/) with its
@@ -20,6 +20,11 @@
 #show: cv.with(
   metadata,
   profile-photo: image("assets/avatar.png"),
+  // To use custom image icons in personal.info.custom-N entries,
+  // pass them here (keys must match the custom-N keys in metadata.toml):
+  // custom-icons: (
+  //   "custom-1": image("assets/my-icon.png"),
+  // ),
 )
 
 // Add, remove, or reorder modules to customize your CV content

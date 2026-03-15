@@ -9,6 +9,11 @@
 
 <h4 align="center">A modern, modular, and feature-rich CV template for <a href="https://typst.app" target="_blank">Typst</a>.</h4>
 
+## 📖 Documentation
+
+Full documentation (quick start, component gallery, recipes, and API reference) is available online:
+**[brilliant-CV Documentation](https://yunanwg.github.io/brilliant-CV/)**
+
 ## ✨ Key Features
 
 - **🎨 Separation of Style & Content**: Write your CV entries in simple Typst files, and let the template handle the layout and styling.
@@ -49,7 +54,7 @@ typst compile cv.typ --input language=fr
 
 ## ⚙️ Configuration
 
-The `metadata.toml` file is the control center of your CV. Here's a quick overview (see the [**Documentation**](https://yunanwg.github.io/brilliant-CV/docs.pdf) for full details):
+The `metadata.toml` file is the control center of your CV. Here's a quick overview (see the [**Documentation**](https://yunanwg.github.io/brilliant-CV/configuration/) for full details):
 
 | Section | Description |
 |---------|-------------|

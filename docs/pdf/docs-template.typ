@@ -43,3 +43,25 @@
 
   doc
 }
+
+#let tip-box(body) = {
+  block(
+    width: 100%,
+    inset: 10pt,
+    radius: 4pt,
+    fill: rgb("#e8f4e8"),
+    stroke: rgb("#27AE60") + 1pt,
+    body,
+  )
+}
+
+#let warning-box(body) = {
+  block(
+    width: 100%,
+    inset: 10pt,
+    radius: 4pt,
+    fill: rgb("#fff3e0"),
+    stroke: rgb("#DC3522") + 1pt,
+    body,
+  )
+}

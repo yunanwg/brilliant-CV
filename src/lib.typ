@@ -9,20 +9,24 @@
 #import "./utils/styles.typ": *
 
 /* Layout */
+
+/// Render a CV document with header, footer, and page layout applied.
+///
+/// - metadata (dictionary): The metadata dictionary read from `metadata.toml`.
+/// - doc (content): The body content of the CV (typically the imported modules).
+/// - profile-photo (image): The profile photo to display in the header. Pass `none` to hide.
+/// - custom-icons (dictionary): Custom icons to override or extend the default icon set.
+/// -> content
 #let cv(
   metadata,
   doc,
-  // New parameter names (recommended)
   profile-photo: image("../template/assets/avatar.png"),
-  // Old parameter names (deprecated, for backward compatibility)
-  profilePhoto: image("../template/assets/avatar.png"),
+  custom-icons: (:),
+  // Deprecated parameter (will be removed in v4.0)
+  profilePhoto: none,
 ) = {
-  // Backward compatibility logic (remove this block when deprecating)
-  let profile-photo = if profile-photo != image("../template/assets/avatar.png") { 
-    profile-photo 
-  } else { 
-    // TODO: Add deprecation warning in future version
-    profilePhoto 
+  if profilePhoto != none {
+    panic("'profilePhoto' has been renamed and will be removed in v4.0. Use 'profile-photo' instead.")
   }
 
   // Update metadata state
@@ -68,29 +72,44 @@
     footer: context _cv-footer(metadata),
   )
 
-  _cv-header(metadata, profile-photo, header-font, _regular-colors, _awesome-colors)
+  _cv-header(metadata, profile-photo, header-font, _regular-colors, _awesome-colors, custom-icons)
   doc
 }
 
+/// Render a cover letter document with header, footer, and page layout applied.
+///
+/// - metadata (dictionary): The metadata dictionary read from `metadata.toml`.
+/// - doc (content): The body content of the letter.
+/// - sender-address (str): The sender's mailing address displayed in the header.
+/// - recipient-name (str): The recipient's name or company displayed in the header.
+/// - recipient-address (str): The recipient's mailing address displayed in the header.
+/// - date (str): The date displayed in the letter header. Defaults to today's date.
+/// - subject (str): The subject line of the letter.
+/// - signature (str | content): (optional) path to a signature image, or content to display as signature.
+/// -> content
 #let letter(
   metadata,
   doc,
-  // New parameter names (recommended)
   sender-address: "Your Address Here",
-  recipient-name: "Company Name Here", 
+  recipient-name: "Company Name Here",
   recipient-address: "Company Address Here",
-  // Old parameter names (deprecated, for backward compatibility)
-  myAddress: "Your Address Here",
-  recipientName: "Company Name Here",
-  recipientAddress: "Company Address Here",
+  // Deprecated parameters (will be removed in v4.0)
+  myAddress: none,
+  recipientName: none,
+  recipientAddress: none,
   date: datetime.today().display(),
   subject: "Subject: Hey!",
   signature: "",
 ) = {
-  // Backward compatibility logic (remove this block when deprecating)
-  let sender-address = if sender-address != "Your Address Here" { sender-address } else { myAddress }
-  let recipient-name = if recipient-name != "Company Name Here" { recipient-name } else { recipientName }
-  let recipient-address = if recipient-address != "Company Address Here" { recipient-address } else { recipientAddress }
+  if myAddress != none {
+    panic("'myAddress' has been renamed and will be removed in v4.0. Use 'sender-address' instead.")
+  }
+  if recipientName != none {
+    panic("'recipientName' has been renamed and will be removed in v4.0. Use 'recipient-name' instead.")
+  }
+  if recipientAddress != none {
+    panic("'recipientAddress' has been renamed and will be removed in v4.0. Use 'recipient-address' instead.")
+  }
   // Non Latin Logic
   let lang = metadata.language
   let fonts = _latin-font-list

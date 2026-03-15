@@ -6,33 +6,24 @@ on:
       - main
 
 jobs:
-  compile:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-      - uses: fontist/setup-fontist@v2
-      - run: fontist install "Roboto"
-      - run: fontist install "Source Sans 3"
-      - uses: typst-community/setup-typst@v3
-      - run: typst compile ./docs/docs.typ --root ./ --font-path /home/runner/.fontist/fonts
-      - uses: actions/upload-artifact@v4
-        with:
-          name: docs
-          path: ./docs/docs.pdf
-
-  deploy:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    needs: compile
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: docs
+      - uses: actions/checkout@v4
+
+      # Generate API reference from source doc-comments
+      - run: python docs/web/generate-api-reference.py
+
+      # Build MkDocs site
+      - uses: astral-sh/setup-uv@v4
+      - run: uv tool install mkdocs --with mkdocs-material
+      - run: cd docs/web && mkdocs build --strict --site-dir ../../public
+
+      # Deploy to GitHub Pages
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: ./public
           force_orphan: true
