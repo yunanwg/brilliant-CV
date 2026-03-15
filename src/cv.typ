@@ -174,6 +174,10 @@
 ) = {
   // Parameters
   let header-alignment = eval(metadata.layout.header.header_align)
+  // Backward compatibility: panic if old field is detected
+  if metadata.inject.at("inject_ai_prompt", default: none) != none {
+    panic("'inject_ai_prompt' has been removed and will be fully deprecated in v4.0. Use 'custom_ai_prompt_text' in [inject] instead.")
+  }
   let custom-ai-prompt-text = metadata.inject.at("custom_ai_prompt_text", default: none)
   let inject-keywords = metadata.inject.inject_keywords
   let keywords = metadata.inject.injected_keywords_list
