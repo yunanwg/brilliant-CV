@@ -182,6 +182,17 @@ check-version:
         exit 1
     fi
 
+# Serve documentation site locally
+docs-serve:
+    @echo "📖 Starting docs server at http://localhost:8000..."
+    cd docs/web && uv run --with mkdocs-material mkdocs serve
+
+# Build documentation site
+docs-build:
+    @echo "📖 Building docs site..."
+    cd docs/web && uv run --with mkdocs-material mkdocs build
+    @echo "✅ Docs built at docs/web/site/"
+
 # Compare PDFs for visual regression testing
 # Usage: just compare <baseline.pdf> <new.pdf>
 compare baseline new:

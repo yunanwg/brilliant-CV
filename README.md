@@ -11,8 +11,10 @@
 
 ## 📖 Documentation
 
-Full documentation (quick start, component gallery, recipes, and API reference) is available as a PDF:
-**[brilliant-CV Documentation](https://yunanwg.github.io/brilliant-CV/docs.pdf)**
+Full documentation (quick start, component gallery, recipes, and API reference) is available online:
+**[brilliant-CV Documentation](https://yunanwg.github.io/brilliant-CV/)**
+
+A [PDF version](https://yunanwg.github.io/brilliant-CV/assets/docs.pdf) is also available for offline reading.
 
 ## ✨ Key Features
 
@@ -54,7 +56,7 @@ typst compile cv.typ --input language=fr
 
 ## ⚙️ Configuration
 
-The `metadata.toml` file is the control center of your CV. Here's a quick overview (see the [**Documentation**](https://yunanwg.github.io/brilliant-CV/docs.pdf) for full details):
+The `metadata.toml` file is the control center of your CV. Here's a quick overview (see the [**Documentation**](https://yunanwg.github.io/brilliant-CV/configuration/) for full details):
 
 | Section | Description |
 |---------|-------------|

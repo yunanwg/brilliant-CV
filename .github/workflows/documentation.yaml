@@ -5,34 +5,32 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
-  compile:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - uses: actions/checkout@v4
+
+      # Build PDF docs
       - uses: fontist/setup-fontist@v2
       - run: fontist install "Roboto"
       - run: fontist install "Source Sans 3"
       - uses: typst-community/setup-typst@v3
-      - run: typst compile ./docs/docs.typ --root ./ --font-path /home/runner/.fontist/fonts
-      - uses: actions/upload-artifact@v4
-        with:
-          name: docs
-          path: ./docs/docs.pdf
+      - run: typst compile ./docs/docs.typ docs/web/docs/assets/docs.pdf --root ./ --font-path /home/runner/.fontist/fonts
 
-  deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    needs: compile
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: docs
+      # Build MkDocs site
+      - uses: astral-sh/setup-uv@v4
+      - run: uv tool install mkdocs-material
+      - run: cd docs/web && mkdocs build --site-dir ../../public
+
+      # Deploy to GitHub Pages
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: ./public
           force_orphan: true
