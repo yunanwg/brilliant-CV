@@ -134,9 +134,9 @@
     "inject": {
       "type": "object",
       "properties": {
-        "inject_ai_prompt": {
-          "type": "boolean",
-          "description": "Inject AI prompt or not"
+        "custom_ai_prompt_text": {
+          "type": "string",
+          "description": "Custom AI prompt text. If defined, it will be injected into the CV."
         },
         "inject_keywords": {
           "type": "boolean",
@@ -150,7 +150,6 @@
         }
       },
       "required": [
-        "inject_ai_prompt",
         "inject_keywords",
         "injected_keywords_list"
       ]
