@@ -6,31 +6,27 @@ v4 adds a **`deep-merge` utility function** to the package, enabling profile-bas
 
 ### What changed?
 
-The package now exports `deep-merge`, a recursive dictionary merge function. Your root `metadata.toml` stays as the single source of truth; optional profile files contain only the fields that differ.
+v4 introduces a **profile-based** architecture. Each profile lives in its own `profile_<name>/` directory with content modules and a sparse `metadata.toml` that is deep-merged on top of a shared root `metadata.toml`. The package now exports `deep-merge`, a recursive dictionary merge function.
 
-### Zero-effort upgrade
+### Upgrade steps
 
-v4 is **fully backward compatible**. If you don't need per-profile customization, just update the version number:
+**1. Rename module folders** to profile folders:
 
-```typ
-// Before
-#import "@preview/brilliant-cv:3.2.0": cv
-
-// After
-#import "@preview/brilliant-cv:4.0.0": cv
+```
+modules_en/  →  profile_en/
+modules_fr/  →  profile_fr/
 ```
 
-Your existing `metadata.toml`, `modules_<lang>/` folders, `[lang.<code>]` sections, and `--input language=xx` all continue to work unchanged.
+**2. Create a root `metadata.toml`** with all shared config (layout, personal info, inject, etc.) — this is your existing `metadata.toml` with the `[lang.*]` sections removed.
 
-### Adopting profile overrides (optional)
-
-To vary fields like `personal.info.location` per language:
-
-**1. Create sparse profile files** in a `profiles/` directory:
+**3. Add a sparse `metadata.toml` in each profile** containing only the fields that differ:
 
 ```toml
-# profiles/fr.toml — only the fields that differ
+# profile_fr/metadata.toml — only the fields that differ
 language = "fr"
+header_quote = "Analyste de données expérimenté..."
+cv_footer = "Résumé"
+letter_footer = "Lettre de motivation"
 
 [personal.info]
   location = "Paris, France"
@@ -40,36 +36,41 @@ language = "fr"
     text = "Permis B"
 ```
 
-**2. Update your `cv.typ` import and preamble:**
+**4. Update your `cv.typ`:**
 
 ```typ
 // Before (v3)
 #import "@preview/brilliant-cv:3.2.0": cv
-
-// After (v4) — add deep-merge to the import
-#import "@preview/brilliant-cv:4.0.0": cv, deep-merge
 #let metadata = toml("./metadata.toml")
-
-// Profile override (new)
-#let cv-profile = sys.inputs.at("profile", default: metadata.at("profile", default: none))
-#let metadata = if cv-profile != none {
-  deep-merge(metadata, toml("./profiles/" + cv-profile + ".toml"))
-} else {
-  metadata
-}
-
-// --input language=xx still works as before
 #let cv-language = sys.inputs.at("language", default: none)
 #let metadata = if cv-language != none {
   metadata + (language: cv-language)
 } else {
   metadata
 }
+#let import-modules(modules, lang: metadata.language) = {
+  for module in modules {
+    include { "modules_" + lang + "/" + module + ".typ" }
+  }
+}
+
+// After (v4) — profile-based with deep-merge
+#import "@preview/brilliant-cv:4.0.0": cv, deep-merge
+#let profile = sys.inputs.at("profile", default: "en")
+#let metadata = deep-merge(
+  toml("./metadata.toml"),
+  toml("profile_" + profile + "/metadata.toml"),
+)
+#let import-modules(modules) = {
+  for module in modules {
+    include { "profile_" + profile + "/" + module + ".typ" }
+  }
+}
 ```
 
-**3. Update `letter.typ`** — same preamble pattern.
+**5. Update `letter.typ`** — same preamble pattern.
 
-**4. Build with a profile:**
+**6. Update CLI commands:**
 
 ```bash
 typst compile cv.typ --input profile=fr

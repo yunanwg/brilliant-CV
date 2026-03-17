@@ -2,38 +2,32 @@
 
 ## Adding a New Module
 
-1. Create a new file, e.g. `modules_en/volunteering.typ`
+1. Create a new file, e.g. `profile_en/volunteering.typ`
 2. Add your imports and content (sections, entries, etc.)
 3. In `cv.typ`, add `"volunteering"` to the `import-modules` call
 
-## Language Override at Compile Time
+## Switching Profiles at Compile Time
 
 ```bash
-typst compile cv.typ --input language=fr
+typst compile cv.typ --input profile=fr
 ```
 
-For Chinese, Japanese, Korean, or Russian, also configure `[lang.non_latin]` in `metadata.toml` with `name` and `font`.
+For Chinese, Japanese, Korean, or Russian, also add `non_latin_name` and `non_latin_font` to the profile's `metadata.toml`.
 
-## Profile-Based Overrides
+## Profile-Based Overrides with Deep Merge
 
-If you need different `personal.info` fields per language or target role — for example, "Permis B" instead of "Driver License", or "Paris" instead of "San Francisco" — you can use **profile overrides**.
+Each profile directory (`profile_en/`, `profile_fr/`, etc.) contains its own `metadata.toml` and content modules. The profile's `metadata.toml` is **deep-merged** on top of the root `metadata.toml`, so it only needs to contain fields that differ from the shared config.
 
-A profile is a sparse TOML file that gets [deep-merged](api-reference.md) on top of your root `metadata.toml`. Only the fields that differ need to be specified.
+### How it works
 
-### Setup
-
-**1. Create a `profiles/` directory** with one TOML file per variant:
-
-```
-profiles/
-  en.toml   ← minimal (language is already "en" in root)
-  fr.toml   ← overrides language + French-specific fields
-```
-
-**2. Write sparse overrides.** For example, `profiles/fr.toml`:
+Your project has a shared root `metadata.toml` with layout, personal info, and other common settings. Each `profile_<name>/metadata.toml` is a sparse override:
 
 ```toml
+# profile_fr/metadata.toml — only the fields that differ
 language = "fr"
+header_quote = "Analyste de données expérimenté..."
+cv_footer = "Résumé"
+letter_footer = "Lettre de motivation"
 
 [personal.info]
   location = "Paris, France"
@@ -45,16 +39,15 @@ language = "fr"
 
 Everything not specified (layout, fonts, email, GitHub, etc.) is inherited from root `metadata.toml`.
 
-**3. Build with a profile:**
+In `cv.typ`, the merge happens automatically:
 
-```bash
-typst compile cv.typ --input profile=fr
-```
-
-Or set a default in `metadata.toml`:
-
-```toml
-profile = "en"
+```typ
+#import "@preview/brilliant-cv:3.2.0": cv, deep-merge
+#let profile = sys.inputs.at("profile", default: "en")
+#let metadata = deep-merge(
+  toml("./metadata.toml"),
+  toml("profile_" + profile + "/metadata.toml"),
+)
 ```
 
 ### How deep-merge works
@@ -65,13 +58,12 @@ The `deep-merge` function recursively combines two dictionaries:
 - **Both have the key, both are dicts** → merge recursively (go deeper)
 - **Both have the key, not both dicts** → profile value wins
 
-This means `profiles/fr.toml` only overrides `personal.info.location` and `personal.info.custom-1` — all other `personal.info` fields (email, phone, github, etc.) are preserved from root.
+This means `profile_fr/metadata.toml` only overrides `personal.info.location` and `personal.info.custom-1` — all other `personal.info` fields (email, phone, github, etc.) are preserved from root.
 
 ### Tips
 
-- **Profile ≠ language.** You can have `profiles/us.toml` and `profiles/uk.toml` both with `language = "en"` but different locations or phone numbers.
-- **`--input language=xx` still works** as a final override on top of a profile, for backward compatibility.
-- **Profiles are optional.** If you don't use them, everything works exactly as before.
+- **Profile ≠ language.** You can have `profile_us/` and `profile_uk/` both with `language = "en"` but different locations or phone numbers.
+- **Full override is also fine.** If you prefer, a profile's `metadata.toml` can contain all fields — deep-merge still works correctly.
 
 ## Skills with Inline Separators
 

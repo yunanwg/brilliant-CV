@@ -1,0 +1,6 @@
+# Profile: German — sparse override, deep-merged on top of root metadata.toml.
+# Only specify fields that differ from root. Everything else is inherited.
+language = "de"
+header_quote = "Erfahrener Datenanalyst sucht ab sofort eine Vollzeitstelle"
+cv_footer = "Lebenslauf"
+letter_footer = "Anschreiben"

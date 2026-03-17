@@ -1,3 +1,0 @@
-# English profile — minimal override (language is already "en" in root metadata.toml).
-# Add any English-specific personal.info overrides here.
-language = "en"
