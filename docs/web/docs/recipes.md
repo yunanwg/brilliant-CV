@@ -32,7 +32,14 @@ letter_footer = "Lettre de motivation"
 [personal.info]
   location = "Paris, France"
 
-  [personal.info.custom-1]
+  # Overrides root's custom-degree with French text
+  [personal.info.custom-degree]
+    awesomeIcon = "graduation-cap"
+    text = "Doctorat en Science des Données"
+    link = "https://www.example.com"
+
+  # New entry unique to French profile — no inheritance issue
+  [personal.info.custom-car]
     awesomeIcon = "car"
     text = "Permis B"
 ```
@@ -58,10 +65,12 @@ The `deep-merge` function recursively combines two dictionaries:
 - **Both have the key, both are dicts** → merge recursively (go deeper)
 - **Both have the key, not both dicts** → profile value wins
 
-This means `profile_fr/metadata.toml` only overrides `personal.info.location` and `personal.info.custom-1` — all other `personal.info` fields (email, phone, github, etc.) are preserved from root.
+This means `profile_fr/metadata.toml` only overrides `personal.info.location`, `personal.info.custom-degree`, and adds `personal.info.custom-car` — all other `personal.info` fields (email, phone, github, etc.) are preserved from root.
 
 ### Tips
 
+- **Use descriptive names for custom entries** — e.g. `custom-degree`, `custom-cert`, `custom-car` instead of `custom-1`, `custom-2`. This makes inheritance behavior predictable: a French profile can define `custom-car` (new, no inheritance) while overriding `custom-degree` (replaces root's values cleanly).
+- **Deep-merge inherits, not deletes** — If root has `custom-cert` and your profile doesn't mention it, it will appear in the merged result. To replace an inherited entry, override all its fields in the profile. To use completely different custom entries per profile, give each profile's entries unique descriptive names.
 - **Profile ≠ language.** You can have `profile_us/` and `profile_uk/` both with `language = "en"` but different locations or phone numbers.
 - **Full override is also fine.** If you prefer, a profile's `metadata.toml` can contain all fields — deep-merge still works correctly.
 

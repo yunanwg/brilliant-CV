@@ -12,7 +12,7 @@ non_latin_font = "Heiti SC"
 [personal.info]
   location = "上海"
 
-  [personal.info.custom-1]
+  [personal.info.custom-degree]
     awesomeIcon = "graduation-cap"
     text = "数据科学博士"
     link = "https://www.example.com"
