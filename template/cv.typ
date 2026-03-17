@@ -1,17 +1,18 @@
 // Imports
-#import "@preview/brilliant-cv:3.2.0": cv
-#let metadata = toml("./metadata.toml")
-#let cv-language = sys.inputs.at("language", default: none)
-#let metadata = if cv-language != none {
-  metadata + (language: cv-language)
-} else {
-  metadata
-}
+#import "@preview/brilliant-cv:3.2.0": cv, deep-merge
 
-#let import-modules(modules, lang: metadata.language) = {
+// Load shared root config, then deep-merge with profile-specific overrides.
+// Override via CLI: typst compile cv.typ --input profile=fr
+#let profile = sys.inputs.at("profile", default: "en")
+#let metadata = deep-merge(
+  toml("./metadata.toml"),
+  toml("profile_" + profile + "/metadata.toml"),
+)
+
+#let import-modules(modules) = {
   for module in modules {
     include {
-      "modules_" + lang + "/" + module + ".typ"
+      "profile_" + profile + "/" + module + ".typ"
     }
   }
 }
@@ -26,6 +27,7 @@
   // ),
 )
 
+// Add, remove, or reorder modules to customize your CV content
 #import-modules((
   "education",
   "professional",

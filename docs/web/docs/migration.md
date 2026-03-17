@@ -1,5 +1,85 @@
 # Migration Guide
 
+## Migration from v3
+
+v4 adds a **`deep-merge` utility function** to the package, enabling profile-based overrides. This lets you vary any metadata field per language or target role — not just `header_quote` and footers, but also `[personal.info]`, `[layout]`, `[inject]`, and anything else ([#142](https://github.com/yunanwg/brilliant-CV/issues/142)).
+
+### What changed?
+
+v4 introduces a **profile-based** architecture. Each profile lives in its own `profile_<name>/` directory with content modules and a sparse `metadata.toml` that is deep-merged on top of a shared root `metadata.toml`. The package now exports `deep-merge`, a recursive dictionary merge function.
+
+### Upgrade steps
+
+**1. Rename module folders** to profile folders:
+
+```
+modules_en/  →  profile_en/
+modules_fr/  →  profile_fr/
+```
+
+**2. Create a root `metadata.toml`** with all shared config (layout, personal info, inject, etc.) — this is your existing `metadata.toml` with the `[lang.*]` sections removed.
+
+**3. Add a sparse `metadata.toml` in each profile** containing only the fields that differ:
+
+```toml
+# profile_fr/metadata.toml — only the fields that differ
+language = "fr"
+header_quote = "Analyste de données expérimenté..."
+cv_footer = "Résumé"
+letter_footer = "Lettre de motivation"
+
+[personal.info]
+  location = "Paris, France"
+
+  [personal.info.custom-1]
+    awesomeIcon = "car"
+    text = "Permis B"
+```
+
+**4. Update your `cv.typ`:**
+
+```typ
+// Before (v3)
+#import "@preview/brilliant-cv:3.2.0": cv
+#let metadata = toml("./metadata.toml")
+#let cv-language = sys.inputs.at("language", default: none)
+#let metadata = if cv-language != none {
+  metadata + (language: cv-language)
+} else {
+  metadata
+}
+#let import-modules(modules, lang: metadata.language) = {
+  for module in modules {
+    include { "modules_" + lang + "/" + module + ".typ" }
+  }
+}
+
+// After (v4) — profile-based with deep-merge
+#import "@preview/brilliant-cv:4.0.0": cv, deep-merge
+#let profile = sys.inputs.at("profile", default: "en")
+#let metadata = deep-merge(
+  toml("./metadata.toml"),
+  toml("profile_" + profile + "/metadata.toml"),
+)
+#let import-modules(modules) = {
+  for module in modules {
+    include { "profile_" + profile + "/" + module + ".typ" }
+  }
+}
+```
+
+**5. Update `letter.typ`** — same preamble pattern.
+
+**6. Update CLI commands:**
+
+```bash
+typst compile cv.typ --input profile=fr
+```
+
+See [Recipes → Profile-Based Overrides](recipes.md#profile-based-overrides) for full details and examples.
+
+---
+
 ## Migration from v2
 
 v3 introduces a new directory structure, kebab-case naming, and removes several deprecated features. If you are upgrading from v2, follow these steps.

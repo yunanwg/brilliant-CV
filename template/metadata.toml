@@ -3,6 +3,11 @@
 # Must match folder suffix: "en" → modules_en/, "fr" → modules_fr/, etc.
 language = "en"
 
+# (Optional) Load a profile override from profiles/<name>.toml
+# Deep-merged on top of this base config, so the profile only needs to contain
+# fields that differ. Override via CLI: typst compile cv.typ --input profile=fr
+# profile = "en"
+
 [layout]
     # Accent color used for section titles, icons, and highlights in the rendered PDF
     # Preset: skyblue, red, nephritis, concrete, darknight — or any hex like "#1E90FF"
@@ -73,7 +78,9 @@ language = "en"
     # address = "123 Main St, San Francisco, CA 94102"
 
     # The order of entries below controls the display order of icons/links in the header
-    # The custom value is for any additional information you want to add, name it as custom-1, custom-2, etc.
+    # The custom value is for any additional information you want to add, name it with a
+    # descriptive custom- prefix (e.g. custom-degree, custom-cert). Descriptive names make
+    # deep-merge inheritance predictable across profiles.
     [personal.info]
         # Shown as clickable icon in header; auto-links to github.com/<value>
         github = "yunanwg"
@@ -97,7 +104,7 @@ language = "en"
         #linebreak = ""
 
         # Custom info with awesome icon
-        [personal.info.custom-1]
+        [personal.info.custom-degree]
             awesomeIcon = "graduation-cap" # See https://typst.app/universe/package/fontawesome/
             # Display text shown next to the icon in the header
             text = "PhD in Data Science"
@@ -106,8 +113,8 @@ language = "en"
 
         # Custom info with image icon
         # To use a custom image icon, pass it via custom-icons in cv.typ:
-        #   custom-icons: ("custom-2": image("assets/my-icon.png"))
-        [personal.info.custom-2]
+        #   custom-icons: ("custom-cert": image("assets/my-icon.png"))
+        [personal.info.custom-cert]
             awesomeIcon = "certificate"
             text = "AWS Certified"
             link = "https://aws.amazon.com/certification/"

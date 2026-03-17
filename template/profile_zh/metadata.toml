@@ -1,0 +1,18 @@
+# Profile: Chinese — sparse override, deep-merged on top of root metadata.toml.
+# Only specify fields that differ from root. Everything else is inherited.
+language = "zh"
+header_quote = "具有丰富经验的数据分析师，随时可入职"
+cv_footer = "简历"
+letter_footer = "申请信"
+
+# Non-Latin script settings
+non_latin_name = "王道尔"
+non_latin_font = "Heiti SC"
+
+[personal.info]
+  location = "上海"
+
+  [personal.info.custom-degree]
+    awesomeIcon = "graduation-cap"
+    text = "数据科学博士"
+    link = "https://www.example.com"
