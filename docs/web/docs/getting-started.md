@@ -27,8 +27,9 @@ After bootstrapping, your project will contain these files:
 
 | File / Directory | Purpose |
 |-----------------|---------|
-| `metadata.toml` | Your configuration (edit this first) |
-| `modules_en/*.typ` | Your content (edit these) |
+| `metadata.toml` | Shared configuration (layout, personal info, etc.) |
+| `profile_en/metadata.toml` | Profile-specific overrides (language, quotes, footers) |
+| `profile_en/*.typ` | Your content modules (edit these) |
 | `cv.typ` | Entry point (edit to add/remove modules) |
 | `letter.typ` | Cover letter entry point |
 | `assets/` | Your profile photo and logos |
@@ -42,7 +43,7 @@ All customization goes through `metadata.toml`. This is where you set your name,
 
 The most important keys to set first:
 
-- `language` — the language code matching your `modules_<lang>/` folder (e.g. `"en"`, `"fr"`)
+- `language` — the language code matching your `profile_<name>/` folder (e.g. `"en"`, `"fr"`)
 - `awesome_color` — your accent color (`"skyblue"`, `"red"`, `"nephritis"`, `"concrete"`, `"darknight"`)
 - `first_name` / `last_name` — your name displayed in the header
 - `[personal.info]` — your contact details (email, phone, GitHub, LinkedIn, etc.)
@@ -71,7 +72,11 @@ The most important keys to set first:
 typst compile cv.typ
 ```
 
-## Step 7: Go Beyond
+## Step 7: (Optional) Set Up Profiles
+
+If you maintain CVs in multiple languages or for different target roles, you can create **profile overrides** — sparse TOML files that only contain the fields that differ from your root `metadata.toml`. See [Recipes → Profile-Based Overrides](recipes.md#profile-based-overrides) for details.
+
+## Step 8: Go Beyond
 
 It is recommended to:
 

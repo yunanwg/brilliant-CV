@@ -1,13 +1,13 @@
 // Imports
-#import "@preview/brilliant-cv:3.1.2": cv
+#import "@preview/brilliant-cv:3.2.0": cv, deep-merge
 
-// Select which profile to build. Each profile lives in its own folder
-// (e.g. profile_en/, profile_fr/, profile_solution_engineer/) with its
-// own metadata.toml and module files.
-//
+// Load shared root config, then deep-merge with profile-specific overrides.
 // Override via CLI: typst compile cv.typ --input profile=fr
 #let profile = sys.inputs.at("profile", default: "en")
-#let metadata = toml("profile_" + profile + "/metadata.toml")
+#let metadata = deep-merge(
+  toml("./metadata.toml"),
+  toml("profile_" + profile + "/metadata.toml"),
+)
 
 #let import-modules(modules) = {
   for module in modules {

@@ -7,6 +7,7 @@
 #import "./letter.typ": *
 #import "./utils/lang.typ": *
 #import "./utils/styles.typ": *
+#import "./utils/merge.typ": deep-merge
 
 /* Layout */
 
