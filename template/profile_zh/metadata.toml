@@ -1,4 +1,5 @@
-# Profile: Chinese
+# Profile: Chinese — sparse override, deep-merged on top of root metadata.toml.
+# Only specify fields that differ from root. Everything else is inherited.
 language = "zh"
 header_quote = "具有丰富经验的数据分析师，随时可入职"
 cv_footer = "简历"
@@ -8,54 +9,10 @@ letter_footer = "申请信"
 non_latin_name = "王道尔"
 non_latin_font = "Heiti SC"
 
-[layout]
-    awesome_color = "skyblue"
-    before_section_skip = "1pt"
-    before_entry_skip = "1pt"
-    before_entry_description_skip = "1pt"
-    paper_size = "a4"
+[personal.info]
+  location = "上海"
 
-    [layout.fonts]
-        regular_fonts = ["Source Sans 3"]
-        header_font = "Roboto"
-
-    [layout.header]
-        header_align = "left"
-        display_profile_photo = true
-        profile_photo_radius = "50%"
-        info_font_size = "10pt"
-
-    [layout.entry]
-        display_entry_society_first = true
-        display_logo = true
-
-    [layout.footer]
-        display_page_counter = false
-        display_footer = true
-
-[inject]
-    injected_keywords_list = ["Data Analyst", "GCP", "Python", "SQL", "Tableau"]
-
-[personal]
-    first_name = "John"
-    last_name = "Doe"
-
-    [personal.info]
-        github = "yunanwg"
-        phone = "+33 6 12 34 56 78"
-        email = "john.doe@me.org"
-        linkedin = "johndoe"
-        gitlab = "yunanwg"
-        homepage = "johndoe.dev"
-        orcid = "0000-0000-0000-0000"
-        location = "San Francisco, CA"
-
-        [personal.info.custom-1]
-            awesomeIcon = "graduation-cap"
-            text = "PhD in Data Science"
-            link = "https://www.example.com"
-
-        [personal.info.custom-2]
-            awesomeIcon = "certificate"
-            text = "AWS Certified"
-            link = "https://aws.amazon.com/certification/"
+  [personal.info.custom-degree]
+    awesomeIcon = "graduation-cap"
+    text = "数据科学博士"
+    link = "https://www.example.com"
