@@ -49,7 +49,7 @@
       non-latin-font = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("font", default: none)
     }
     if non-latin-font != none {
-      fonts.insert(2, non-latin-font)
+      fonts.insert(calc.min(2, fonts.len()), non-latin-font)
       header-font = non-latin-font
     }
   }
@@ -81,17 +81,18 @@
 ///
 /// - metadata (dictionary): The metadata dictionary read from `metadata.toml`.
 /// - doc (content): The body content of the letter.
-/// - sender-address (str): The sender's mailing address displayed in the header.
+/// - sender-address (str | auto): The sender's mailing address. Defaults to `auto`, which reads from `metadata.personal.address`. Pass a string or content to override.
 /// - recipient-name (str): The recipient's name or company displayed in the header.
-/// - recipient-address (str): The recipient's mailing address displayed in the header.
+/// - recipient-address (str): The recipient's mailing address displayed in the header. Supports multiline content.
 /// - date (str): The date displayed in the letter header. Defaults to today's date.
 /// - subject (str): The subject line of the letter.
 /// - signature (str | content): (optional) path to a signature image, or content to display as signature.
+/// - address-style (str): Address rendering style. `"smallcaps"` (default) or `"normal"`.
 /// -> content
 #let letter(
   metadata,
   doc,
-  sender-address: "Your Address Here",
+  sender-address: auto,
   recipient-name: "Company Name Here",
   recipient-address: "Company Address Here",
   // Deprecated parameters (will be removed in v4.0)
@@ -101,6 +102,7 @@
   date: datetime.today().display(),
   subject: "Subject: Hey!",
   signature: "",
+  address-style: "smallcaps",
 ) = {
   if myAddress != none {
     panic("'myAddress' has been renamed and will be removed in v4.0. Use 'sender-address' instead.")
@@ -111,11 +113,29 @@
   if recipientAddress != none {
     panic("'recipientAddress' has been renamed and will be removed in v4.0. Use 'recipient-address' instead.")
   }
+
+  // Resolve sender-address: auto reads from metadata, explicit value overrides
+  let sender-address = if sender-address == auto {
+    metadata.personal.at("address", default: "Your Address Here")
+  } else {
+    sender-address
+  }
+
+  // Backward compatibility: panic if old inject fields are detected
+  if metadata.inject.at("inject_ai_prompt", default: none) != none {
+    panic("'inject_ai_prompt' has been removed and will be fully deprecated in v4.0. Use 'custom_ai_prompt_text' in [inject] instead.")
+  }
+  if metadata.inject.at("inject_keywords", default: none) != none {
+    panic("'inject_keywords' has been removed and will be fully deprecated in v4.0. Use 'injected_keywords_list' directly instead — if the list is present, keywords will be injected. To disable injection, remove 'injected_keywords_list'.")
+  }
+
   // Non Latin Logic
   let lang = metadata.language
   let fonts = _latin-font-list
+  let header-font = _latin-header-font
   let font-config = overwrite-fonts(metadata, _latin-font-list, _latin-header-font)
   fonts = font-config.regular-fonts
+  header-font = font-config.header-font
   if _is-non-latin(lang) {
     let non-latin-font = metadata.at("non_latin_font", default: none)
     // Backward compat: fall back to legacy [lang.non_latin] section (remove when deprecating)
@@ -123,12 +143,17 @@
       non-latin-font = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("font", default: none)
     }
     if non-latin-font != none {
-      fonts.insert(2, non-latin-font)
+      fonts.insert(calc.min(2, fonts.len()), non-latin-font)
     }
   }
 
+  // Font size from metadata (consistent with CV)
+  let font-size = eval(
+    metadata.layout.at("font_size", default: "9pt")
+  )
+
   // Page layout
-  set text(font: fonts, weight: "regular", size: 9pt, fill: _regular-colors.lightgray)
+  set text(font: fonts, weight: "regular", size: font-size, fill: _regular-colors.lightgray)
   set align(left)
   let paper-size = metadata.layout.at("paper_size", default: "a4")
   set page(
@@ -152,6 +177,7 @@
       subject: subject,
       metadata: metadata,
       awesome-colors: _awesome-colors,
+      address-style: address-style,
     )
   doc
 

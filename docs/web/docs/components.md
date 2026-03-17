@@ -1,6 +1,6 @@
 # Component Gallery
 
-These are the building blocks of your CV.
+These are the building blocks of your CV. For full parameter details, see the [API Reference](api-reference.md).
 
 ## cv-section
 

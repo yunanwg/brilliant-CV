@@ -141,9 +141,15 @@ bump version:
     @# Update typst.toml
     @sed -i '' 's/^version = ".*"/version = "{{version}}"/' typst.toml
     @echo "  ✓ typst.toml"
-    @# Update all template imports
+    @# Update all template imports in .typ files
     @find template docs -name "*.typ" -exec sed -i '' 's/@preview\/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*/@preview\/brilliant-cv:{{version}}/g' {} \;
     @echo "  ✓ template/*.typ and docs/*.typ files"
+    @# Update version strings in documentation markdown files
+    @find docs/web/docs -name "*.md" -exec sed -i '' 's/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*/brilliant-cv:{{version}}/g' {} \;
+    @echo "  ✓ docs/web/docs/*.md files"
+    @# Update version in API reference generator script
+    @sed -i '' 's/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*/brilliant-cv:{{version}}/g' docs/web/generate-api-reference.py
+    @echo "  ✓ generate-api-reference.py"
     @echo "✅ Version bumped to {{version}}"
     @echo ""
     @echo "📋 Next steps:"
@@ -188,13 +194,22 @@ docs-generate-api:
     @python docs/web/generate-api-reference.py
     @echo "✅ API reference generated"
 
+# Generate configuration reference from metadata.toml comments
+docs-generate-config:
+    @echo "📖 Generating configuration reference..."
+    @python docs/web/generate-configuration.py
+    @echo "✅ Configuration reference generated"
+
+# Generate all auto-generated documentation
+docs-generate: docs-generate-api docs-generate-config
+
 # Serve documentation site locally
-docs-serve: docs-generate-api
+docs-serve: docs-generate
     @echo "📖 Starting docs server at http://localhost:8000..."
     cd docs/web && uv run --with mkdocs-material mkdocs serve
 
 # Build documentation site
-docs-build: docs-generate-api
+docs-build: docs-generate
     @echo "📖 Building docs site..."
     cd docs/web && uv run --with mkdocs-material mkdocs build
     @echo "✅ Docs built at docs/web/site/"

@@ -82,23 +82,75 @@ See [Recipes → Profile-Based Overrides](recipes.md#profile-based-overrides) fo
 
 ## Migration from v2
 
-This version introduces a new directory structure and API improvements. While we have implemented backward compatibility, we recommend updating your code to the new standard.
+v3 introduces a new directory structure, kebab-case naming, and removes several deprecated features. If you are upgrading from v2, follow these steps.
 
 ### 1. Update Imports
 
-The package structure has changed. If you were importing specific files, you might need to update the paths. However, the main entry point remains the same.
+The package entry point is unchanged, but you should update any version-pinned imports:
 
-### 2. Parameter Renaming
+```typ
+// Before (v2)
+#import "@preview/brilliant-cv:2.0.3": *
 
-We have renamed several parameters to follow the kebab-case convention. The old camelCase parameters are still supported but deprecated.
+// After (v3)
+#import "@preview/brilliant-cv:3.2.0": *
+```
 
-- `cv`: `profilePhoto` → `profile-photo`
-- `letter`: `myAddress` → `sender-address`, `recipientName` → `recipient-name`, `recipientAddress` → `recipient-address`
-- `cv-section`, `cv-entry`: `awesomeColors` → `awesome-colors`
+### 2. Parameter Renaming (now panics)
 
-### 3. Template Updates
+In v3, all camelCase parameter aliases **panic at compile time** instead of silently mapping to the new names. Update all call sites:
 
-If you are using the template, we recommend updating your `cv.typ` and `letter.typ` to use the new parameter names.
+| Old (v2, camelCase) | New (v3, kebab-case) | Function |
+|---------------------|----------------------|----------|
+| `profilePhoto` | `profile-photo` | `cv()` |
+| `myAddress` | `sender-address` | `letter()` |
+| `recipientName` | `recipient-name` | `letter()` |
+| `recipientAddress` | `recipient-address` | `letter()` |
+| `awesomeColors` | `awesome-colors` | `cv-section`, `cv-entry`, `cv-honor`, etc. |
+| `refStyle` | `ref-style` | `cv-publication` |
+| `refFull` | `ref-full` | `cv-publication` |
+| `keyList` | `key-list` | `cv-publication` |
+
+### 3. Removed Function Aliases (now panic)
+
+The old camelCase function names now panic immediately. Rename all usages:
+
+| Old (v2) | New (v3) |
+|----------|----------|
+| `cvEntry` | `cv-entry` |
+| `cvEntryStart` | `cv-entry-start` |
+| `cvEntryContinued` | `cv-entry-continued` |
+| `cvSection` | `cv-section` |
+| `cvSkill` | `cv-skill` |
+| `cvSkillWithLevel` | `cv-skill-with-level` |
+| `cvSkillTag` | `cv-skill-tag` |
+| `cvHonor` | `cv-honor` |
+| `cvPublication` | `cv-publication` |
+| `hBar` | `h-bar` |
+
+### 4. Removed `[inject]` Keys (now panic)
+
+The old injection keys have been removed. If your `metadata.toml` still contains them, the CV will panic:
+
+```toml
+# Before (v2) — these now cause panics
+[inject]
+inject_ai_prompt = true
+inject_keywords = true
+injected_keywords_list = ["Python", "SQL"]
+
+# After (v3) — just use the list directly; remove the boolean flags
+[inject]
+injected_keywords_list = ["Python", "SQL"]
+# custom_ai_prompt_text = "Optional custom prompt"
+```
+
+- `inject_keywords` has been removed — if `injected_keywords_list` is present, keywords are injected automatically
+- `inject_ai_prompt` has been removed — use `custom_ai_prompt_text` instead
+
+### 5. Template Updates
+
+If you are using the template, update your `cv.typ` and `letter.typ` to use the new parameter names. See the [API Reference](api-reference.md) for the current signatures.
 
 ---
 

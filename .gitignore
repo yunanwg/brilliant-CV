@@ -6,7 +6,9 @@ temp/
 .DS_Store
 
 # LLM
+.agents
 .claude
+CLAUDE.md
 
 # MkDocs build output
 docs/web/site/
