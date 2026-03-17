@@ -49,7 +49,7 @@
       non-latin-font = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("font", default: none)
     }
     if non-latin-font != none {
-      fonts.insert(2, non-latin-font)
+      fonts.push(non-latin-font)
       header-font = non-latin-font
     }
   }
@@ -143,7 +143,7 @@
       non-latin-font = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("font", default: none)
     }
     if non-latin-font != none {
-      fonts.insert(2, non-latin-font)
+      fonts.push(non-latin-font)
     }
   }
 
