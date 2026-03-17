@@ -71,7 +71,11 @@ The most important keys to set first:
 typst compile cv.typ
 ```
 
-## Step 7: Go Beyond
+## Step 7: (Optional) Set Up Profiles
+
+If you maintain CVs in multiple languages or for different target roles, you can create **profile overrides** — sparse TOML files that only contain the fields that differ from your root `metadata.toml`. See [Recipes → Profile-Based Overrides](recipes.md#profile-based-overrides) for details.
+
+## Step 8: Go Beyond
 
 It is recommended to:
 

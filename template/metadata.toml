@@ -1,8 +1,12 @@
-# Profile: English
+#:schema https://raw.githubusercontent.com/yunanwg/brilliant-CV/main/metadata.toml.schema.json
+
+# Must match folder suffix: "en" → modules_en/, "fr" → modules_fr/, etc.
 language = "en"
-header_quote = "Experienced Data Analyst looking for a full time job starting from now"
-cv_footer = "Curriculum vitae"
-letter_footer = "Cover letter"
+
+# (Optional) Load a profile override from profiles/<name>.toml
+# Deep-merged on top of this base config, so the profile only needs to contain
+# fields that differ. Override via CLI: typst compile cv.typ --input profile=fr
+# profile = "en"
 
 [layout]
     # Accent color used for section titles, icons, and highlights in the rendered PDF
@@ -11,7 +15,9 @@ letter_footer = "Cover letter"
 
     # Controls vertical spacing; increase to spread out sections/entries, decrease to compact
     before_section_skip = "1pt"
+    # Vertical space before each entry within a section
     before_entry_skip = "1pt"
+    # Vertical space before entry description text
     before_entry_description_skip = "1pt"
 
     # Page dimensions and margins applied to the PDF output. Possible values: a4 (default), us-letter
@@ -64,7 +70,9 @@ letter_footer = "Cover letter"
     injected_keywords_list = ["Data Analyst", "GCP", "Python", "SQL", "Tableau"]
 
 [personal]
+    # Your first name, displayed in the header
     first_name = "John"
+    # Your last name, displayed in the header
     last_name = "Doe"
 
     # The order of entries below controls the display order of icons/links in the header
@@ -84,15 +92,19 @@ letter_footer = "Cover letter"
         homepage = "johndoe.dev"
         # Shown as ORCID icon in header; auto-links to orcid.org/<value>
         orcid = "0000-0000-0000-0000"
-        # researchgate = "John-Doe"  # Uncomment to show a clickable ResearchGate icon in header
+        # researchgate = "John-Doe"  # Shown as a clickable ResearchGate icon in header
         # Shown as map-marker icon in header; displayed as plain text (no link)
         location = "San Francisco, CA"
-        # extraInfo = "Available for remote work"  # Uncomment to show extra text with an info icon in header
+        # extraInfo = "Available for remote work"  # Shown as extra text with an info icon in header
+        # Insert a line break in the header info, splitting icons across two lines
+        #linebreak = ""
 
         # Custom info with awesome icon
         [personal.info.custom-1]
             awesomeIcon = "graduation-cap" # See https://typst.app/universe/package/fontawesome/
+            # Display text shown next to the icon in the header
             text = "PhD in Data Science"
+            # URL the icon/text links to; omit for non-clickable entries
             link = "https://www.example.com"
 
         # Custom info with image icon
@@ -103,5 +115,42 @@ letter_footer = "Cover letter"
             text = "AWS Certified"
             link = "https://aws.amazon.com/certification/"
 
-        # Linebreak example - adds a line break in header info, splitting icons across two lines
-        # linebreak = ""
+
+# Add a [lang.xx] section for each language you support
+# Each section must contain header_quote, cv_footer, and letter_footer
+[lang.de]
+    # Italic tagline displayed below your name and contact info
+    header_quote = "Erfahrener Datenanalyst sucht ab sofort eine Vollzeitstelle"
+    # Text shown in the left side of the footer on CV pages
+    cv_footer = "Lebenslauf"
+    # Text shown in the left side of the footer on cover letter pages
+    letter_footer = "Anschreiben"
+
+[lang.en]
+    # Italic tagline displayed below your name and contact info
+    header_quote = "Experienced Data Analyst looking for a full time job starting from now"
+    cv_footer = "Curriculum vitae"
+    letter_footer = "Cover letter"
+
+[lang.fr]
+    header_quote = "Analyste de données expérimenté à la recherche d'un emploi à temps plein disponible dès maintenant"
+    cv_footer = "Résumé"
+    letter_footer = "Lettre de motivation"
+
+[lang.zh]
+    header_quote = "具有丰富经验的数据分析师，随时可入职"
+    cv_footer = "简历"
+    letter_footer = "申请信"
+
+[lang.it]
+    header_quote = "Senior data analyst attualmente disponibile per una posizione di lavoro full-time"
+    cv_footer = "Curriculum vitae"
+    letter_footer = "Lettera di presentazione"
+
+# For languages that are not written in Latin script
+# Currently supported non-latin language codes: ("zh", "ja", "ko", "ru")
+[lang.non_latin]
+    # Your name in non-Latin script
+    name = "王道尔"
+    # Font to use for non-Latin text (e.g. "Heiti SC", "Noto Sans JP")
+    font = "Heiti SC"

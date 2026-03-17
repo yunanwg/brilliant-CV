@@ -1,10 +1,23 @@
 // Imports
-#import "@preview/brilliant-cv:3.2.0": letter
+#import "@preview/brilliant-cv:3.2.0": letter, deep-merge
+#let metadata = toml("./metadata.toml")
 
-// Select which profile to build (must match a profile_<name>/ folder)
+// Profile override: deep-merge a sparse profile TOML on top of root config.
 // Override via CLI: typst compile letter.typ --input profile=fr
-#let profile = sys.inputs.at("profile", default: "en")
-#let metadata = toml("profile_" + profile + "/metadata.toml")
+#let letter-profile = sys.inputs.at("profile", default: metadata.at("profile", default: none))
+#let metadata = if letter-profile != none {
+  deep-merge(metadata, toml("./profiles/" + letter-profile + ".toml"))
+} else {
+  metadata
+}
+
+// Backward compat: --input language=xx still works as a final override
+#let letter-language = sys.inputs.at("language", default: none)
+#let metadata = if letter-language != none {
+  metadata + (language: letter-language)
+} else {
+  metadata
+}
 
 
 #show: letter.with(

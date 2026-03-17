@@ -1,18 +1,28 @@
 // Imports
-#import "@preview/brilliant-cv:3.2.0": cv
+#import "@preview/brilliant-cv:3.2.0": cv, deep-merge
+#let metadata = toml("./metadata.toml")
 
-// Select which profile to build. Each profile lives in its own folder
-// (e.g. profile_en/, profile_fr/, profile_solution_engineer/) with its
-// own metadata.toml and module files.
-//
+// Profile override: deep-merge a sparse profile TOML on top of root config.
 // Override via CLI: typst compile cv.typ --input profile=fr
-#let profile = sys.inputs.at("profile", default: "en")
-#let metadata = toml("profile_" + profile + "/metadata.toml")
+#let cv-profile = sys.inputs.at("profile", default: metadata.at("profile", default: none))
+#let metadata = if cv-profile != none {
+  deep-merge(metadata, toml("./profiles/" + cv-profile + ".toml"))
+} else {
+  metadata
+}
 
-#let import-modules(modules) = {
+// Backward compat: --input language=xx still works as a final override
+#let cv-language = sys.inputs.at("language", default: none)
+#let metadata = if cv-language != none {
+  metadata + (language: cv-language)
+} else {
+  metadata
+}
+
+#let import-modules(modules, lang: metadata.language) = {
   for module in modules {
     include {
-      "profile_" + profile + "/" + module + ".typ"
+      "modules_" + lang + "/" + module + ".typ"
     }
   }
 }
@@ -27,7 +37,6 @@
   // ),
 )
 
-// Add, remove, or reorder modules to customize your CV content
 #import-modules((
   "education",
   "professional",

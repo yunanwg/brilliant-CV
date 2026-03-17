@@ -2,19 +2,15 @@
 
 ## Migration from v3
 
-v4 replaces the language-based switching system with a **profile-based** architecture. Each profile is a self-contained folder with its own `metadata.toml` and module files, enabling full customization per variant — not just language-specific quotes, but also different personal info, layout, and keywords per target role or industry.
+v4 adds a **`deep-merge` utility function** to the package, enabling profile-based overrides. This lets you vary any metadata field per language or target role — not just `header_quote` and footers, but also `[personal.info]`, `[layout]`, `[inject]`, and anything else ([#142](https://github.com/yunanwg/brilliant-CV/issues/142)).
 
-### Why this change?
+### What changed?
 
-In v3, all CV variants share a single `metadata.toml`. The `[lang.<code>]` sections only allow varying `header_quote`, `cv_footer`, and `letter_footer` per language. Fields like `[personal.info]`, `[layout]`, and `[inject]` are global and cannot differ between languages or target roles ([#142](https://github.com/yunanwg/brilliant-CV/issues/142)).
+The package now exports `deep-merge`, a recursive dictionary merge function. Your root `metadata.toml` stays as the single source of truth; optional profile files contain only the fields that differ.
 
-The new profile system makes each variant fully independent: a `profile_en/` folder for your English CV, a `profile_fr/` for French, a `profile_swe/` tailored for software engineering roles — each with its own metadata, personal info, and content modules.
+### Zero-effort upgrade
 
-### Upgrade paths
-
-#### Option A: Zero-effort upgrade (keep v3 structure)
-
-The v4 package is **fully backward compatible** with the v3 metadata format. If you don't need per-profile customization, just update the version number:
+v4 is **fully backward compatible**. If you don't need per-profile customization, just update the version number:
 
 ```typ
 // Before
@@ -24,97 +20,62 @@ The v4 package is **fully backward compatible** with the v3 metadata format. If 
 #import "@preview/brilliant-cv:4.0.0": cv
 ```
 
-Your existing `metadata.toml` with `[lang.<code>]` sections, `modules_<lang>/` folders, and `--input language=xx` CLI pattern will continue to work as before.
+Your existing `metadata.toml`, `modules_<lang>/` folders, `[lang.<code>]` sections, and `--input language=xx` all continue to work unchanged.
 
-#### Option B: Migrate to profile-based structure
+### Adopting profile overrides (optional)
 
-Follow these steps to adopt the new architecture:
+To vary fields like `personal.info.location` per language:
 
-**1. Rename module folders**
-
-```
-modules_en/  →  profile_en/
-modules_fr/  →  profile_fr/
-```
-
-**2. Create per-profile `metadata.toml`**
-
-Copy your root `metadata.toml` into each profile folder and make these changes:
+**1. Create sparse profile files** in a `profiles/` directory:
 
 ```toml
-# Before (v3 root metadata.toml)
-language = "en"
+# profiles/fr.toml — only the fields that differ
+language = "fr"
 
-[lang.en]
-    header_quote = "Experienced Data Analyst..."
-    cv_footer = "Curriculum vitae"
-    letter_footer = "Cover letter"
+[personal.info]
+  location = "Paris, France"
 
-[lang.non_latin]
-    name = "王道尔"
-    font = "Heiti SC"
-
-# After (profile_en/metadata.toml) — flat, no [lang] nesting
-language = "en"
-header_quote = "Experienced Data Analyst..."
-cv_footer = "Curriculum vitae"
-letter_footer = "Cover letter"
+  [personal.info.custom-1]
+    awesomeIcon = "car"
+    text = "Permis B"
 ```
 
-For non-Latin profiles (zh, ja, ko, ru), move the non-Latin settings to top-level:
-
-```toml
-# profile_zh/metadata.toml
-language = "zh"
-header_quote = "具有丰富经验的数据分析师，随时可入职"
-cv_footer = "简历"
-letter_footer = "申请信"
-non_latin_name = "王道尔"
-non_latin_font = "Heiti SC"
-```
-
-Remove the `[lang.*]` sections entirely from each profile's `metadata.toml`. You can now customize `[personal]`, `[layout]`, `[inject]`, and all other sections independently per profile.
-
-**3. Update `cv.typ`**
+**2. Update your `cv.typ` import and preamble:**
 
 ```typ
 // Before (v3)
+#import "@preview/brilliant-cv:3.2.0": cv
+
+// After (v4) — add deep-merge to the import
+#import "@preview/brilliant-cv:4.0.0": cv, deep-merge
 #let metadata = toml("./metadata.toml")
+
+// Profile override (new)
+#let cv-profile = sys.inputs.at("profile", default: metadata.at("profile", default: none))
+#let metadata = if cv-profile != none {
+  deep-merge(metadata, toml("./profiles/" + cv-profile + ".toml"))
+} else {
+  metadata
+}
+
+// --input language=xx still works as before
 #let cv-language = sys.inputs.at("language", default: none)
 #let metadata = if cv-language != none {
   metadata + (language: cv-language)
 } else {
   metadata
 }
-#let import-modules(modules, lang: metadata.language) = {
-  for module in modules {
-    include { "modules_" + lang + "/" + module + ".typ" }
-  }
-}
-
-// After (v4)
-#let profile = sys.inputs.at("profile", default: "en")
-#let metadata = toml("profile_" + profile + "/metadata.toml")
-#let import-modules(modules) = {
-  for module in modules {
-    include { "profile_" + profile + "/" + module + ".typ" }
-  }
-}
 ```
 
-**4. Update `letter.typ`** — same pattern as `cv.typ`.
+**3. Update `letter.typ`** — same preamble pattern.
 
-**5. Update CLI commands**
+**4. Build with a profile:**
 
 ```bash
-# Before
-typst compile cv.typ --input language=fr
-
-# After
 typst compile cv.typ --input profile=fr
 ```
 
-**6. Clean up** — delete the root `metadata.toml` (each profile folder now has its own).
+See [Recipes → Profile-Based Overrides](recipes.md#profile-based-overrides) for full details and examples.
 
 ---
 

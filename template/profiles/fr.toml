@@ -1,0 +1,15 @@
+# French profile — overrides language and personal info fields that differ.
+# Everything else (layout, fonts, inject, etc.) is inherited from root metadata.toml.
+language = "fr"
+
+[personal.info]
+  location = "Paris, France"
+
+  [personal.info.custom-1]
+    awesomeIcon = "graduation-cap"
+    text = "Doctorat en Science des Données"
+    link = "https://www.example.com"
+
+  [personal.info.custom-2]
+    awesomeIcon = "car"
+    text = "Permis B"
