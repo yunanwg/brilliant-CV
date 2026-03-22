@@ -74,7 +74,7 @@
 ///
 /// - metadata (dictionary): The metadata dictionary read from `metadata.toml`.
 /// - doc (content): The body content of the letter.
-/// - sender-address (str | auto): The sender's mailing address. Defaults to `auto`, which reads from `metadata.personal.address`. Pass a string or content to override.
+/// - sender-address (str | auto): The sender's mailing address. Defaults to `auto`, which reads from `metadata.personal.address` (falls back to `"Your Address Here"` if unset). Pass a string or content to override.
 /// - recipient-name (str): The recipient's name or company displayed in the header.
 /// - recipient-address (str): The recipient's mailing address displayed in the header. Supports multiline content.
 /// - date (str): The date displayed in the letter header. Defaults to today's date.

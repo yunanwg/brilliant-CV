@@ -28,7 +28,7 @@ The `cv()` function is the main entry point that sets up page layout, fonts, hea
 )
 ```
 
-The `letter()` function sets up the cover letter layout. `sender-address` defaults to `auto`, which reads from `metadata.personal.address` in `metadata.toml`. Use `address-style: "normal"` to disable smallcaps on addresses.
+The `letter()` function sets up the cover letter layout. `sender-address` defaults to `auto`, which reads from `metadata.personal.address` in `metadata.toml` (falls back to `"Your Address Here"` if unset). Use `address-style: "normal"` to disable smallcaps on addresses.
 
 ---
 

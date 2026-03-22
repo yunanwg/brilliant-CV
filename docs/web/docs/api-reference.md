@@ -23,7 +23,7 @@ Render a cover letter document with header, footer, and page layout applied.
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `doc` | content | — | The body content of the letter. |
-| `sender-address` | str \| auto | `auto` | The sender's mailing address. Defaults to `auto`, which reads from `metadata.personal.address`. Pass a string or content to override. |
+| `sender-address` | str \| auto | `auto` | The sender's mailing address. Defaults to `auto`, which reads from `metadata.personal.address` (falls back to `"Your Address Here"` if unset). Pass a string or content to override. |
 | `recipient-name` | str | `"Company Name Here"` | The recipient's name or company displayed in the header. |
 | `recipient-address` | str | `"Company Address Here"` | The recipient's mailing address displayed in the header. Supports multiline content. |
 | `date` | str | `datetime.today().display()` | The date displayed in the letter header. Defaults to today's date. |
