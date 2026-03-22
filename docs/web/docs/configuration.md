@@ -84,6 +84,8 @@ language = "en"
     first_name = "John"
     # Your last name, displayed in the header
     last_name = "Doe"
+    # Your mailing address, used as default sender-address in the cover letter
+    # address = "123 Main St, San Francisco, CA 94102"
 
     # The order of entries below controls the display order of icons/links in the header
     # The custom value is for any additional information you want to add, name it as custom-1, custom-2, etc.
@@ -229,6 +231,7 @@ language = "en"
 |-----|------|---------|-------------|
 | `first_name` | string | `"John"` | Your first name, displayed in the header |
 | `last_name` | string | `"Doe"` | Your last name, displayed in the header |
+| `address` | string | — | *(optional)* Your mailing address, used as default sender-address in the cover letter |
 
 ### `[personal.info]`
 

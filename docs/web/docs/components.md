@@ -2,6 +2,38 @@
 
 These are the building blocks of your CV. For full parameter details, see the [API Reference](api-reference.md).
 
+## Entry Point Functions
+
+### cv
+
+```typ
+#show: cv.with(
+  metadata,
+  profile-photo: image("assets/avatar.png"),
+)
+```
+
+The `cv()` function is the main entry point that sets up page layout, fonts, header, and footer. All CV modules are rendered inside its body.
+
+### letter
+
+```typ
+#show: letter.with(
+  metadata,
+  sender-address: "123 Main St, City, State 12345",
+  recipient-name: "ABC Company",
+  recipient-address: "456 Business Ave, City, State 67890",
+  subject: "Application for Data Analyst Position",
+  signature: image("assets/signature.png"),
+)
+```
+
+The `letter()` function sets up the cover letter layout. `sender-address` defaults to `auto`, which reads from `metadata.personal.address` in `metadata.toml`. Use `address-style: "normal"` to disable smallcaps on addresses.
+
+---
+
+## CV Components
+
 ## cv-section
 
 ```typ
