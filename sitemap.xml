@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://yunanwg.github.io/brilliant-CV/</loc>
+         <lastmod>2026-03-22</lastmod>
+    </url>
+    <url>
+         <loc>https://yunanwg.github.io/brilliant-CV/api-reference/</loc>
+         <lastmod>2026-03-22</lastmod>
+    </url>
+    <url>
+         <loc>https://yunanwg.github.io/brilliant-CV/components/</loc>
+         <lastmod>2026-03-22</lastmod>
+    </url>
+    <url>
+         <loc>https://yunanwg.github.io/brilliant-CV/configuration/</loc>
+         <lastmod>2026-03-22</lastmod>
+    </url>
+    <url>
+         <loc>https://yunanwg.github.io/brilliant-CV/getting-started/</loc>
+         <lastmod>2026-03-22</lastmod>
+    </url>
+    <url>
+         <loc>https://yunanwg.github.io/brilliant-CV/migration/</loc>
+         <lastmod>2026-03-22</lastmod>
+    </url>
+    <url>
+         <loc>https://yunanwg.github.io/brilliant-CV/recipes/</loc>
+         <lastmod>2026-03-22</lastmod>
+    </url>
+    <url>
+         <loc>https://yunanwg.github.io/brilliant-CV/troubleshooting/</loc>
+         <lastmod>2026-03-22</lastmod>
+    </url>
+</urlset>
