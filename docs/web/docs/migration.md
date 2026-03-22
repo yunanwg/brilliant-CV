@@ -10,10 +10,10 @@ The package entry point is unchanged, but you should update any version-pinned i
 
 ```typ
 // Before (v2)
-#import "@preview/brilliant-cv:2.0.3": *
+#import "@preview/brilliant-cv:3.3.0": *
 
 // After (v3)
-#import "@preview/brilliant-cv:3.2.0": *
+#import "@preview/brilliant-cv:3.3.0": *
 ```
 
 ### 2. Parameter Renaming (now panics)
