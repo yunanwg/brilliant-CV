@@ -1,11 +1,12 @@
 #:schema https://raw.githubusercontent.com/yunanwg/brilliant-CV/main/metadata.toml.schema.json
 
-# Must match folder suffix: "en" → modules_en/, "fr" → modules_fr/, etc.
+# Default language code; controls font selection and date-column width.
+# In v4 profile-based templates, profile_<lang>/metadata.toml may override this.
 language = "en"
 
-# (Optional) Load a profile override from profiles/<name>.toml
-# Deep-merged on top of this base config, so the profile only needs to contain
-# fields that differ. Override via CLI: typst compile cv.typ --input profile=fr
+# (Optional) Default profile to use when --input profile=... is not passed.
+# Each profile lives in profile_<name>/, with its own metadata.toml deep-merged
+# on top of this root config. Override via CLI: typst compile cv.typ --input profile=fr
 # profile = "en"
 
 [layout]
@@ -118,41 +119,7 @@ language = "en"
             link = "https://aws.amazon.com/certification/"
 
 
-# Add a [lang.xx] section for each language you support
-# Each section must contain header_quote, cv_footer, and letter_footer
-[lang.de]
-    # Italic tagline displayed below your name and contact info
-    header_quote = "Erfahrener Datenanalyst sucht ab sofort eine Vollzeitstelle"
-    # Text shown in the left side of the footer on CV pages
-    cv_footer = "Lebenslauf"
-    # Text shown in the left side of the footer on cover letter pages
-    letter_footer = "Anschreiben"
-
-[lang.en]
-    # Italic tagline displayed below your name and contact info
-    header_quote = "Experienced Data Analyst looking for a full time job starting from now"
-    cv_footer = "Curriculum vitae"
-    letter_footer = "Cover letter"
-
-[lang.fr]
-    header_quote = "Analyste de données expérimenté à la recherche d'un emploi à temps plein disponible dès maintenant"
-    cv_footer = "Résumé"
-    letter_footer = "Lettre de motivation"
-
-[lang.zh]
-    header_quote = "具有丰富经验的数据分析师，随时可入职"
-    cv_footer = "简历"
-    letter_footer = "申请信"
-
-[lang.it]
-    header_quote = "Senior data analyst attualmente disponibile per una posizione di lavoro full-time"
-    cv_footer = "Curriculum vitae"
-    letter_footer = "Lettera di presentazione"
-
-# For languages that are not written in Latin script
-# Currently supported non-latin language codes: ("zh", "ja", "ko", "ru")
-[lang.non_latin]
-    # Your name in non-Latin script
-    name = "王道尔"
-    # Font to use for non-Latin text (e.g. "Heiti SC", "Noto Sans JP")
-    font = "Heiti SC"
+# Per-language localized strings live in profile_<lang>/metadata.toml as
+# top-level fields (header_quote, cv_footer, letter_footer). For non-Latin
+# scripts (zh, ja, ko, ru), profiles can also set non_latin_name and
+# non_latin_font at the top level. See profile_*/metadata.toml for examples.
