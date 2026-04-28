@@ -35,10 +35,10 @@ The `metadata.toml` file is the main configuration file for your CV. By changing
 the key-value pairs in the config file, you can set up the names, contact information, \
 and other details displayed in your CV.
 
-You can also override the language set in `metadata.toml` via the CLI:
+You can switch profiles at compile time via the CLI:
 
 ```bash
-typst compile cv.typ --input language=fr
+typst compile cv.typ --input profile=fr
 ```
 """
 
@@ -46,7 +46,7 @@ typst compile cv.typ --input language=fr
 LANG_SECTION_RE = re.compile(r"^lang\.[a-z]{2}$")
 
 # Pattern for custom-N personal.info sub-tables
-CUSTOM_INFO_RE = re.compile(r"^personal\.info\.custom-\d+$")
+CUSTOM_INFO_RE = re.compile(r"^personal\.info\.custom-[a-z0-9-]+$")
 
 
 @dataclass

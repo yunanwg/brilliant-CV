@@ -4,10 +4,10 @@
 
 The `metadata.toml` file is the main configuration file for your CV. By changing the key-value pairs in the config file, you can set up the names, contact information, and other details displayed in your CV.
 
-You can also override the language set in `metadata.toml` via the CLI:
+You can switch profiles at compile time via the CLI:
 
 ```bash
-typst compile cv.typ --input language=fr
+typst compile cv.typ --input profile=fr
 ```
 
 ## Full Example
@@ -15,8 +15,14 @@ typst compile cv.typ --input language=fr
 ```toml
 #:schema https://raw.githubusercontent.com/yunanwg/brilliant-CV/main/metadata.toml.schema.json
 
-# Must match folder suffix: "en" → modules_en/, "fr" → modules_fr/, etc.
+# Default language code; controls font selection and date-column width.
+# In v4 profile-based templates, profile_<lang>/metadata.toml may override this.
 language = "en"
+
+# (Optional) Default profile to use when --input profile=... is not passed.
+# Each profile lives in profile_<name>/, with its own metadata.toml deep-merged
+# on top of this root config. Override via CLI: typst compile cv.typ --input profile=fr
+# profile = "en"
 
 [layout]
     # Accent color used for section titles, icons, and highlights in the rendered PDF
@@ -88,7 +94,9 @@ language = "en"
     # address = "123 Main St, San Francisco, CA 94102"
 
     # The order of entries below controls the display order of icons/links in the header
-    # The custom value is for any additional information you want to add, name it as custom-1, custom-2, etc.
+    # The custom value is for any additional information you want to add, name it with a
+    # descriptive custom- prefix (e.g. custom-degree, custom-cert). Descriptive names make
+    # deep-merge inheritance predictable across profiles.
     [personal.info]
         # Shown as clickable icon in header; auto-links to github.com/<value>
         github = "yunanwg"
@@ -112,7 +120,7 @@ language = "en"
         #linebreak = ""
 
         # Custom info with awesome icon
-        [personal.info.custom-1]
+        [personal.info.custom-degree]
             awesomeIcon = "graduation-cap" # See https://typst.app/universe/package/fontawesome/
             # Display text shown next to the icon in the header
             text = "PhD in Data Science"
@@ -121,51 +129,17 @@ language = "en"
 
         # Custom info with image icon
         # To use a custom image icon, pass it via custom-icons in cv.typ:
-        #   custom-icons: ("custom-2": image("assets/my-icon.png"))
-        [personal.info.custom-2]
+        #   custom-icons: ("custom-cert": image("assets/my-icon.png"))
+        [personal.info.custom-cert]
             awesomeIcon = "certificate"
             text = "AWS Certified"
             link = "https://aws.amazon.com/certification/"
 
 
-# Add a [lang.xx] section for each language you support
-# Each section must contain header_quote, cv_footer, and letter_footer
-[lang.de]
-    # Italic tagline displayed below your name and contact info
-    header_quote = "Erfahrener Datenanalyst sucht ab sofort eine Vollzeitstelle"
-    # Text shown in the left side of the footer on CV pages
-    cv_footer = "Lebenslauf"
-    # Text shown in the left side of the footer on cover letter pages
-    letter_footer = "Anschreiben"
-
-[lang.en]
-    # Italic tagline displayed below your name and contact info
-    header_quote = "Experienced Data Analyst looking for a full time job starting from now"
-    cv_footer = "Curriculum vitae"
-    letter_footer = "Cover letter"
-
-[lang.fr]
-    header_quote = "Analyste de données expérimenté à la recherche d'un emploi à temps plein disponible dès maintenant"
-    cv_footer = "Résumé"
-    letter_footer = "Lettre de motivation"
-
-[lang.zh]
-    header_quote = "具有丰富经验的数据分析师，随时可入职"
-    cv_footer = "简历"
-    letter_footer = "申请信"
-
-[lang.it]
-    header_quote = "Senior data analyst attualmente disponibile per una posizione di lavoro full-time"
-    cv_footer = "Curriculum vitae"
-    letter_footer = "Lettera di presentazione"
-
-# For languages that are not written in Latin script
-# Currently supported non-latin language codes: ("zh", "ja", "ko", "ru")
-[lang.non_latin]
-    # Your name in non-Latin script
-    name = "王道尔"
-    # Font to use for non-Latin text (e.g. "Heiti SC", "Noto Sans JP")
-    font = "Heiti SC"
+# Per-language localized strings live in profile_<lang>/metadata.toml as
+# top-level fields (header_quote, cv_footer, letter_footer). For non-Latin
+# scripts (zh, ja, ko, ru), profiles can also set non_latin_name and
+# non_latin_font at the top level. See profile_*/metadata.toml for examples.
 ```
 
 ## Key Reference
@@ -174,7 +148,8 @@ language = "en"
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| `language` | string | `"en"` | Must match folder suffix: "en" → modules_en/, "fr" → modules_fr/, etc. |
+| `language` | string | `"en"` | Default language code; controls font selection and date-column width. In v4 profile-based templates, profile_<lang>/metadata.toml may override this. |
+| `profile` | string | — | *(optional)* (Optional) Default profile to use when --input profile=... is not passed. Each profile lives in profile_<name>/, with its own metadata.toml deep-merged. on top of this root config. Override via CLI: typst compile cv.typ --input profile=fr |
 
 ### `[layout]`
 
@@ -236,7 +211,9 @@ language = "en"
 ### `[personal.info]`
 
 The order of entries below controls the display order of icons/links in the header
-The custom value is for any additional information you want to add, name it as custom-1, custom-2, etc.
+The custom value is for any additional information you want to add, name it with a
+descriptive custom- prefix (e.g. custom-degree, custom-cert). Descriptive names make
+deep-merge inheritance predictable across profiles.
 
 See the full example above for all supported keys.
 
@@ -263,25 +240,4 @@ Custom info with awesome icon
 | `awesomeIcon` | string | — | See https://typst.app/universe/package/fontawesome/ |
 | `text` | string | — | Display text shown next to the icon in the header |
 | `link` | string | — | URL the icon/text links to; omit for non-clickable entries |
-
-### `[lang.<code>]`
-
-Add a [lang.xx] section for each language you support
-Each section must contain header_quote, cv_footer, and letter_footer
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `header_quote` | string | — | Italic tagline displayed below your name and contact info |
-| `cv_footer` | string | — | Text shown in the left side of the footer on CV pages |
-| `letter_footer` | string | — | Text shown in the left side of the footer on cover letter pages |
-
-### `[lang.non_latin]`
-
-For languages that are not written in Latin script
-Currently supported non-latin language codes: ("zh", "ja", "ko", "ru")
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `name` | string | — | Your name in non-Latin script |
-| `font` | string | — | Font to use for non-Latin text (e.g. "Heiti SC", "Noto Sans JP") |
 

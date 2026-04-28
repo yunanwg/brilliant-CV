@@ -47,8 +47,9 @@ and #link("https://fonts.google.com/specimen/Source+Sans+3")[Source Sans Pro] (o
 
 After bootstrapping, your project will contain these files:
 
-- `metadata.toml` — your configuration (edit this first)
-- `modules_en/*.typ` — your content (edit these)
+- `metadata.toml` — shared root configuration (layout, personal info, inject)
+- `profile_en/metadata.toml` — sparse per-profile overrides (language, header_quote, footers)
+- `profile_en/*.typ` — your content (edit these)
 - `cv.typ` — entry point (edit to add/remove modules)
 - `letter.typ` — cover letter entry point
 - `assets/` — your profile photo and logos
@@ -56,11 +57,11 @@ After bootstrapping, your project will contain these files:
 
 === Step 4: Configure metadata.toml
 
-All customization goes through `metadata.toml`. This is where you set your name, colors, contact information, and layout preferences. See Section 6 for the full configuration reference.
+All customization goes through `metadata.toml` and `profile_<name>/metadata.toml`. See Section 6 for the full configuration reference.
 
 The most important keys to set first:
 
-- `language` — the language code matching your `modules_<lang>/` folder (e.g. `"en"`, `"fr"`)
+- `language` — the language code matching your `profile_<name>/` folder (e.g. `"en"`, `"fr"`)
 - `awesome_color` — your accent color (`"skyblue"`, `"red"`, `"nephritis"`, `"concrete"`, `"darknight"`)
 - `first_name` / `last_name` — your name displayed in the header
 - `[personal.info]` — your contact details (email, phone, GitHub, LinkedIn, etc.)
@@ -226,17 +227,17 @@ Set `ref-full: true` to show all entries from the bib file. Set `ref-full: false
 
 === Adding a New Module
 
-1. Create a new file, e.g. `modules_en/volunteering.typ`
+1. Create a new file, e.g. `profile_en/volunteering.typ`
 2. Add your imports and content (sections, entries, etc.)
 3. In `cv.typ`, add `"volunteering"` to the `import-modules` call
 
-=== Language Override at Compile Time
+=== Switching Profiles at Compile Time
 
 ```bash
-typst compile cv.typ --input language=fr
+typst compile cv.typ --input profile=fr
 ```
 
-For Chinese, Japanese, Korean, or Russian, also configure `[lang.non_latin]` in `metadata.toml` with `name` and `font`.
+For Chinese, Japanese, Korean, or Russian profiles, set `non_latin_name` and `non_latin_font` at the top level of `profile_<name>/metadata.toml`.
 
 === Skills with Inline Separators
 
@@ -259,7 +260,7 @@ Paths in module files are relative to the module file itself, not the project ro
 
 === Font Missing
 
-Install Roboto and Source Sans 3 (or Source Sans Pro) locally. For non-Latin languages, install the font specified in `[lang.non_latin]` (e.g. "Heiti SC" for Chinese).
+Install Roboto and Source Sans 3 (or Source Sans Pro) locally. For non-Latin profiles, install the font specified by `non_latin_font` in your profile's `metadata.toml` (e.g. "Heiti SC" for Chinese).
 
 === h-bar() Not Working
 
@@ -280,15 +281,15 @@ After creating a new module file, you must add its name to the `import-modules((
 The `metadata.toml` file is the main configuration file for your CV. By changing the key-value pairs in the config file, you can
 setup the names, contact information, and other details that will be displayed in your CV.
 
-You can also override the language set in `metadata.toml` via the CLI:
+You can switch profiles at compile time via the CLI:
 ```bash
-typst compile cv.typ --input language=fr
+typst compile cv.typ --input profile=fr
 ```
 
-Here is an example of a `metadata.toml` file:
+Here is an example of a root `metadata.toml` file:
 
 ```toml
- # INFO: value must matches folder suffix; i.e "zh" -> "./modules_zh"
+ # INFO: value must match folder suffix; i.e "zh" -> "./profile_zh"
 language = "en"
 
 [layout]
