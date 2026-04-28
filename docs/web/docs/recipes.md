@@ -49,7 +49,7 @@ Everything not specified (layout, fonts, email, GitHub, etc.) is inherited from 
 In `cv.typ`, the merge happens automatically:
 
 ```typ
-#import "@preview/brilliant-cv:3.2.0": cv, deep-merge
+#import "@preview/brilliant-cv:4.0.0": cv, deep-merge
 #let profile = sys.inputs.at("profile", default: "en")
 #let metadata = deep-merge(
   toml("./metadata.toml"),
@@ -164,7 +164,7 @@ awesome_color = "#1E90FF"
 Create a cover letter with a signature image at the bottom:
 
 ```typ
-#import "@preview/brilliant-cv:3.3.0": letter
+#import "@preview/brilliant-cv:4.0.0": letter
 
 #let metadata = toml("metadata.toml")
 

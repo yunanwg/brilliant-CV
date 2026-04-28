@@ -250,7 +250,7 @@ to be specified in the profile.
 | `override` | dictionary | The override dictionary whose values win on conflict. |
 
 ```typ
-#import "@preview/brilliant-cv:3.0.0": deep-merge
+#import "@preview/brilliant-cv:4.0.0": deep-merge
 
 #let base = toml("./metadata.toml")
 #let profile = toml("./profiles/fr.toml")
@@ -262,7 +262,7 @@ to be specified in the profile.
 Renders a vertical bar separator (`|`) for use inside skill entries.
 
 ```typ
-#import "@preview/brilliant-cv:3.3.0": h-bar
+#import "@preview/brilliant-cv:4.0.0": h-bar
 
 [Python #h-bar() SQL #h-bar() Tableau]
 ```

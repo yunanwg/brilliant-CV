@@ -1,5 +1,5 @@
 // Import
-#import "@preview/brilliant-cv:3.3.0": cv-section, cv-skill, h-bar
+#import "@preview/brilliant-cv:4.0.0": cv-section, cv-skill, h-bar
 
 
 #cv-section("技能与兴趣")

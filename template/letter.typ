@@ -1,5 +1,5 @@
 // Imports
-#import "@preview/brilliant-cv:3.2.0": letter, deep-merge
+#import "@preview/brilliant-cv:4.0.0": letter, deep-merge
 
 // Load shared root config, then deep-merge with profile-specific overrides.
 // Override via CLI: typst compile letter.typ --input profile=fr

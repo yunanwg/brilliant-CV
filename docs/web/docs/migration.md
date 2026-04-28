@@ -40,7 +40,7 @@ letter_footer = "Lettre de motivation"
 
 ```typ
 // Before (v3)
-#import "@preview/brilliant-cv:3.2.0": cv
+#import "@preview/brilliant-cv:3.3.0": cv
 #let metadata = toml("./metadata.toml")
 #let cv-language = sys.inputs.at("language", default: none)
 #let metadata = if cv-language != none {
@@ -90,7 +90,7 @@ The package entry point is unchanged, but you should update any version-pinned i
 
 ```typ
 // Before (v2)
-#import "@preview/brilliant-cv:3.3.0": *
+#import "@preview/brilliant-cv:2.0.3": *
 
 // After (v3)
 #import "@preview/brilliant-cv:3.3.0": *

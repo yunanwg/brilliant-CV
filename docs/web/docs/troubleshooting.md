@@ -13,7 +13,7 @@ Install Roboto and Source Sans 3 (or Source Sans Pro) locally. For non-Latin lan
 Make sure you import `h-bar` from the package:
 
 ```typ
-#import "@preview/brilliant-cv:3.3.0": h-bar
+#import "@preview/brilliant-cv:4.0.0": h-bar
 ```
 
 The old name `hBar` has been removed in v3. See the [Migration Guide](migration.md) for all renamed functions.
