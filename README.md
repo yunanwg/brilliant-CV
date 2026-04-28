@@ -34,10 +34,10 @@ typst init @preview/brilliant-cv
 ```
 
 ### 2. Configure Your CV
-Edit `template/metadata.toml` to set your personal details, language preference, and layout options.
+Edit the root `metadata.toml` to set shared layout, personal info, and inject options.
 
 ### 3. Add Your Content
-Fill in your experience and skills in the `modules_<lang>` directories.
+Each profile lives in its own folder (`profile_en/`, `profile_fr/`, …). Fill in your experience and skills in the `profile_<name>/*.typ` files. The profile's own `metadata.toml` is deep-merged on top of the root, so it only needs the fields that differ (e.g. `header_quote`, `cv_footer`, `[personal.info].location`).
 
 ### 4. Compile
 Compile your CV to PDF:
@@ -46,22 +46,22 @@ Compile your CV to PDF:
 typst compile cv.typ
 ```
 
-You can also override the language set in `metadata.toml` via the CLI:
+Switch profile at compile time via the CLI:
 
 ```bash
-typst compile cv.typ --input language=fr
+typst compile cv.typ --input profile=fr
 ```
 
 ## ⚙️ Configuration
 
-The `metadata.toml` file is the control center of your CV. Here's a quick overview (see the [**Documentation**](https://yunanwg.github.io/brilliant-CV/configuration/) for full details):
+The root `metadata.toml` and each `profile_<name>/metadata.toml` together drive your CV. The profile is sparse and only overrides fields that differ. See the [**Documentation**](https://yunanwg.github.io/brilliant-CV/configuration/) for full details.
 
 | Section | Description |
 |---------|-------------|
 | `[personal]` | Your name, contact info, and social links. |
-| `[layout]` | Adjust margins, fonts, and section ordering. |
-| `[inject]` | Enable/disable AI prompt and keyword injection. |
-| `[lang]` | Define localized strings (headers, date formats). |
+| `[layout]` | Margins, fonts, colors, header/footer/entry display. |
+| `[inject]` | ATS keyword + custom AI-prompt injection. |
+| `header_quote`, `cv_footer`, `letter_footer` | Per-profile localized strings (top-level in profile metadata.toml). |
 
 ## 🖼 Gallery
 

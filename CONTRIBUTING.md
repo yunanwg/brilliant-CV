@@ -10,7 +10,7 @@ Thanks for helping keep Brilliant CV polished! This document explains how to run
 
 ## 1. Prerequisites
 
-- [Typst](https://github.com/typst/typst) CLI `>= 0.11.0` (matches `typst.toml`)
+- [Typst](https://github.com/typst/typst) CLI `>= 0.14.0` (matches `typst.toml`)
 - [utpm](https://github.com/Thumuss/utpm) (Workspace/package manager used by the automation)
 - Fonts listed in `README.md` (Roboto, Source Sans 3, Font Awesome 6)
 - macOS/Linux shell with `just` (or run the equivalent commands manually)
@@ -56,9 +56,9 @@ Optional but helpful:
 ## 3. Repository layout
 
 - `src/` – core reusable components (`cv`, `letter`, utilities). Keep backward compatibility: prefer adding new parameters instead of breaking existing ones, and mirror the “new + deprecated alias” pattern already in `src/lib.typ`.
-- `template/` – the bootstrapped project users receive (`cv.typ`, `letter.typ`, modules, assets, `metadata.toml`). Any user-facing customization should be expressed here or via metadata defaults.
-- `template/modules_<lang>/` – content examples per language. Add new samples here when you introduce language-specific features.
-- `template/metadata.toml` – canonical list of configurable knobs. Update it (and the README) if you add new keys.
+- `template/` – the bootstrapped project users receive (`cv.typ`, `letter.typ`, profiles, assets, `metadata.toml`). Any user-facing customization should be expressed here or via metadata defaults.
+- `template/profile_<lang>/` – content + sparse metadata override per profile. Add new samples here when you introduce profile-specific features.
+- `template/metadata.toml` – shared root config (layout, personal info, inject). Profile overrides live in `profile_<lang>/metadata.toml`. Update both (and the README) if you add new keys.
 - `docs/` – Typst documentation for the API (regenerate if you alter the public surface).
 - `justfile` – task runner (see Section 2).
 
@@ -70,8 +70,9 @@ Optional but helpful:
 
 If you simply want to adapt the template to your own profile:
 
-- Change `template/metadata.toml` (language selection, layout, injection settings, personal info).
-- Update the relevant `modules_<lang>/*.typ` files with your content.
+- Change `template/metadata.toml` (shared layout, injection settings, personal info).
+- Tweak `template/profile_<name>/metadata.toml` for fields that vary by profile (header quote, footers, location, etc.).
+- Update the relevant `profile_<name>/*.typ` files with your content.
 - Keep `src/` untouched unless you plan to submit the enhancement back.
 
 ### 4.2 Feature / bug-fix contributions
