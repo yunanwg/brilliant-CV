@@ -1,13 +1,11 @@
 // Imports
-#import "@preview/brilliant-cv:4.0.0": letter, deep-merge
+#import "@preview/brilliant-cv:4.0.0": letter
 
-// Load shared root config, then deep-merge with profile-specific overrides.
-// Override via CLI: typst compile letter.typ --input profile=fr
+// Each profile lives in its own folder with a self-contained metadata.toml.
+// Switch profile at compile time:
+//   typst compile letter.typ --input profile=fr
 #let profile = sys.inputs.at("profile", default: "en")
-#let metadata = deep-merge(
-  toml("./metadata.toml"),
-  toml("profile_" + profile + "/metadata.toml"),
-)
+#let metadata = toml("profile_" + profile + "/metadata.toml")
 
 
 #show: letter.with(

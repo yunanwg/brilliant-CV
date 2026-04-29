@@ -1,20 +1,67 @@
-# Profile: French — sparse override, deep-merged on top of root metadata.toml.
-# Only specify fields that differ from root. Everything else is inherited.
+#:schema https://raw.githubusercontent.com/yunanwg/brilliant-CV/main/metadata.toml.schema.json
+
+# Profile: French. See profile_en/metadata.toml for inline documentation
+# of every field.
 language = "fr"
 header_quote = "Analyste de données expérimenté à la recherche d'un emploi à temps plein disponible dès maintenant"
 cv_footer = "Résumé"
 letter_footer = "Lettre de motivation"
 
-[personal.info]
-  location = "Paris, France"
+[layout]
+    awesome_color = "skyblue"
+    before_section_skip = "1pt"
+    before_entry_skip = "1pt"
+    before_entry_description_skip = "1pt"
+    paper_size = "a4"
 
-  # French-specific: overrides root's custom-degree with French text
-  [personal.info.custom-degree]
-    awesomeIcon = "graduation-cap"
-    text = "Doctorat en Science des Données"
-    link = "https://www.example.com"
+    [layout.fonts]
+        regular_fonts = ["Source Sans 3"]
+        header_font = "Roboto"
 
-  # French-specific: new entry, not in root → no inheritance issue
-  [personal.info.custom-car]
-    awesomeIcon = "car"
-    text = "Permis B"
+    [layout.header]
+        header_align = "left"
+        display_profile_photo = true
+        profile_photo_radius = "50%"
+        info_font_size = "10pt"
+
+    [layout.entry]
+        display_entry_society_first = true
+        display_logo = true
+
+    [layout.footer]
+        display_page_counter = false
+        display_footer = true
+
+
+[inject]
+    injected_keywords_list = ["Analyste de Données", "GCP", "Python", "SQL", "Tableau"]
+
+[personal]
+    first_name = "John"
+    last_name = "Doe"
+
+    [personal.info]
+        github = "yunanwg"
+        phone = "+33 6 12 34 56 78"
+        email = "john.doe@me.org"
+        linkedin = "johndoe"
+        gitlab = "yunanwg"
+        homepage = "johndoe.dev"
+        orcid = "0000-0000-0000-0000"
+        location = "Paris, France"
+
+        # French-specific overrides
+        [personal.info.custom-degree]
+            awesomeIcon = "graduation-cap"
+            text = "Doctorat en Science des Données"
+            link = "https://www.example.com"
+
+        [personal.info.custom-cert]
+            awesomeIcon = "certificate"
+            text = "AWS Certified"
+            link = "https://aws.amazon.com/certification/"
+
+        # Profile-unique entry: French CV convention often lists driver's licence
+        [personal.info.custom-car]
+            awesomeIcon = "car"
+            text = "Permis B"
