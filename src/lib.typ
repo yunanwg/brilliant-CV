@@ -54,6 +54,26 @@
   }
 }
 
+/// Schema migration guard: panic on v2 inject keys removed in v3.
+///
+/// Mirrors `_check-v3-legacy`: an obsolete field triggers a panic with
+/// the v3+ replacement, rather than a silent no-op. Both `cv()` and
+/// `letter()` invoke this at the entry point so the check fires once
+/// per render regardless of code path.
+#let _check-v2-inject-legacy(metadata) = {
+  let inject = metadata.at("inject", default: (:))
+  if inject.at("inject_ai_prompt", default: none) != none {
+    panic(
+      "'inject_ai_prompt' has been removed since v3. Use 'custom_ai_prompt_text' in [inject] instead.",
+    )
+  }
+  if inject.at("inject_keywords", default: none) != none {
+    panic(
+      "'inject_keywords' has been removed since v3. Use 'injected_keywords_list' directly — if the list is present, keywords are injected. To disable injection, remove 'injected_keywords_list'.",
+    )
+  }
+}
+
 /* Layout */
 
 /// Resolve typography (font list, header font, font size) from metadata.
@@ -105,6 +125,7 @@
   custom-icons: (:),
 ) = {
   _check-v3-legacy(metadata)
+  _check-v2-inject-legacy(metadata)
 
   // Update metadata state so component functions can read it without
   // having metadata threaded through every call site.
@@ -160,26 +181,13 @@
   address-style: "smallcaps",
 ) = {
   _check-v3-legacy(metadata)
+  _check-v2-inject-legacy(metadata)
 
   // Resolve sender-address: auto reads from metadata, explicit value overrides
   let sender-address = if sender-address == auto {
     metadata.personal.at("address", default: "Your Address Here")
   } else {
     sender-address
-  }
-
-  // Schema migration guard: panic on v2 inject keys so users get a clear
-  // upgrade message rather than silent no-op.
-  let inject = metadata.at("inject", default: (:))
-  if inject.at("inject_ai_prompt", default: none) != none {
-    panic(
-      "'inject_ai_prompt' has been removed since v3. Use 'custom_ai_prompt_text' in [inject] instead.",
-    )
-  }
-  if inject.at("inject_keywords", default: none) != none {
-    panic(
-      "'inject_keywords' has been removed since v3. Use 'injected_keywords_list' directly — if the list is present, keywords are injected. To disable injection, remove 'injected_keywords_list'.",
-    )
   }
 
   let typography = _resolve-typography(metadata)

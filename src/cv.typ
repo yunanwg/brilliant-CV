@@ -211,19 +211,10 @@
 ) = {
   // Parameters
   let header-alignment = eval(metadata.layout.header.header_align)
+  // Schema validation (incl. v2 inject migration guard) happens at the
+  // cv() / letter() entry point, so by the time we read inject here it's
+  // already been verified to not contain v2 keys.
   let inject = metadata.at("inject", default: (:))
-  // Schema migration guard: panic on v2 inject keys so users get a clear
-  // upgrade message rather than silent no-op.
-  if inject.at("inject_ai_prompt", default: none) != none {
-    panic(
-      "'inject_ai_prompt' has been removed since v3. Use 'custom_ai_prompt_text' in [inject] instead.",
-    )
-  }
-  if inject.at("inject_keywords", default: none) != none {
-    panic(
-      "'inject_keywords' has been removed since v3. Use 'injected_keywords_list' directly — if the list is present, keywords are injected. To disable injection, remove 'injected_keywords_list'.",
-    )
-  }
   let custom-ai-prompt-text = inject.at("custom_ai_prompt_text", default: none)
   let keywords = inject.at("injected_keywords_list", default: ())
   let personal-info = metadata.personal.info
