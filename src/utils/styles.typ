@@ -38,20 +38,20 @@
   }
 }
 
-/// Overwrite the default fonts if the metadata has custom font values
+/// Overwrite the default fonts when the metadata supplies custom font values.
 ///
-/// - metadata (array): the metadata object
+/// Each field in `[layout.fonts]` is independently optional: a profile that
+/// only sets `regular_fonts` keeps the default `header_font`, and vice
+/// versa. A profile with no `[layout.fonts]` block at all gets pure defaults.
+///
+/// - metadata (dictionary): the metadata object
 /// - latin-fonts (array): the default list of latin fonts
 /// - latin-header-font (string): the default header font
-/// -> array
+/// -> dictionary
 #let overwrite-fonts(metadata, latin-fonts, latin-header-font) = {
-  let user-defined-fonts = metadata.layout.at("fonts", default: [])
-  let regular-fonts = latin-fonts
-  let header-font = latin-header-font
-  if user-defined-fonts.len() > 0 {
-    regular-fonts = user-defined-fonts.at("regular_fonts")
-    header-font = user-defined-fonts.at("header_font")
-  }
+  let user-defined-fonts = metadata.layout.at("fonts", default: (:))
+  let regular-fonts = user-defined-fonts.at("regular_fonts", default: latin-fonts)
+  let header-font = user-defined-fonts.at("header_font", default: latin-header-font)
   return (regular-fonts: regular-fonts, header-font: header-font)
 }
 
