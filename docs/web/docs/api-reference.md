@@ -13,7 +13,7 @@ Render a CV document with header, footer, and page layout applied.
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `doc` | content | — | The body content of the CV (typically the imported modules). |
-| `profile-photo` | image | `image("../template/assets/avatar.png")` | The profile photo to display in the header. Pass `none` to hide. |
+| `profile-photo` | image \| none | — | The profile photo to display in the header. Defaults to `none`; pass an `image(...)` to render. When `none`, the photo column is hidden regardless of `display_profile_photo`. |
 | `custom-icons` | dictionary | `(:)` | Custom icons to override or extend the default icon set. |
 
 ### `letter()`
