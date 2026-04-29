@@ -26,3 +26,12 @@ thumbnail = "thumbnail.png"
 
 [tool.utpm]
 namespace = "preview"
+
+[tool.tytanic]
+# Per-channel pixel delta budget (0-255). Loose enough to absorb subpixel
+# rendering jitter between maintainer macOS and CI Linux freetype/harfbuzz
+# versions; tighten if regressions slip through.
+default.max-delta = 10
+# Total pixels per ref image allowed to deviate beyond max-delta. A4 page
+# at 144 dpi is ~1.4 megapixels, so 2000 ≈ 0.14% tolerance.
+default.max-deviations = 2000
