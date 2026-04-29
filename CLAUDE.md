@@ -10,32 +10,32 @@ Run `just link` before any local development. This registers the local package w
 
 **`src/` is the published package. `template/` is the user-facing starter project.** They are separate concerns:
 - `src/lib.typ` — Package entry point, exports `cv()` and `letter()`
-- `template/metadata.toml` — Central configuration file, drives all customization
-- `template/modules_<lang>/` — Content files per language
+- `template/profile_<name>/metadata.toml` — Each profile is a complete, self-contained CV configuration. v4 has no root `metadata.toml`.
+- `template/profile_<name>/*.typ` — Content modules per profile (education, professional, projects, certificates, publications, skills)
 
 Changes to `src/` affect all downstream users. Never break backward compatibility without a deprecation path.
 
 ## Things You Will Get Wrong Without Reading This
 
-### Deprecated parameters use panic(), not silent aliasing
-In `src/lib.typ`, deprecated parameters trigger `panic()` with migration instructions. This is **intentional** — do not "fix" these panics. Example: `profilePhoto` → `profile-photo`.
+### Schema migration guards panic, they don't silently fall back
+`src/lib.typ:_check-v3-legacy` panics on v3-only fields (`language`, `non_latin_font`, `non_latin_name`, `[lang.*]`). The same applies to v2 inject keys (`inject_ai_prompt`, `inject_keywords`). These are **intentional** — do not "fix" them. The v4 design picks panic-with-migration-message over silent fallback to avoid hiding behavior changes.
 
 ### Some files are auto-generated — do not edit manually
 - `docs/web/docs/api-reference.md` ← generated from `src/` doc-comments
-- `docs/web/docs/configuration.md` ← generated from `template/metadata.toml` comments
+- `docs/web/docs/configuration.md` ← generated from `template/profile_en/metadata.toml` comments (profile_en is the canonical reference)
 
 Regenerate with `just docs-generate`. Edit the **source comments**, not the output files.
 
-### metadata.toml is the single source of truth
-All user configuration flows through `template/metadata.toml`. Its comments drive docs generation. When adding config options, update the comments in metadata.toml — the rest is derived.
+### Each profile's metadata.toml is the single source of truth for that profile
+All user configuration flows through `template/profile_<name>/metadata.toml`. v4 has no merging or inheritance — one profile = one complete CV configuration. When adding new config options, update the comments in `template/profile_en/metadata.toml` first (it drives docs generation), then mirror to other profiles as needed.
 
-### Language handling has a non-Latin branch
-Languages zh, ja, ko, ru trigger different font handling via `_is-non-latin()` in src/. Test with at least one non-Latin language when touching font or layout code.
+### Tests live in `tests/` and use tytanic + a panic shell runner
+Run `just test` for the full suite. `just test-fast` for sub-second feedback (panics + units only). `just fmt-check` for the format gate. CJK regression tests are `[skip]`-annotated by default; run them locally on macOS via `just test-zh`. See `tests/README.md` for the full layout. Tytanic >= 0.3 is required (bundles typst 0.14).
 
 ## Conventions
 
 - Conventional commits (`feat:`, `fix:`, `docs:`, etc.)
-- Run `just build` before committing to verify compilation
+- Run `just build && just test` before committing
 - Don't commit PDFs (handled by .gitignore and pre-commit hooks)
-- Use `just compare` for visual regression testing before public-facing changes
+- Tytanic ref PNGs live next to each `test.typ`; commit intentional regenerations alongside the layout change that caused them
 - Read `CONTRIBUTING.md` for the full contribution workflow

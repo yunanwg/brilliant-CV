@@ -15,9 +15,15 @@ Thanks for helping keep Brilliant CV polished! This document explains how to run
 - Fonts listed in `README.md` (Roboto, Source Sans 3, Font Awesome 6)
 - macOS/Linux shell with `just` (or run the equivalent commands manually)
 
+For running the test suite locally:
+
+- [tytanic](https://github.com/typst-community/tytanic) `>= 0.3` — `cargo install tytanic` or `brew install tytanic`. Bundles typst 0.14, matching this package's `compiler` requirement; 0.2.x bundles typst 0.13 and won't load the package.
+- [typstyle](https://github.com/typstyle-rs/typstyle) `0.14.4` — `brew install typstyle` or `uv tool install typstyle==0.14.4`. Pinned in `.pre-commit-config.yaml` and CI; running a different minor will produce diffs.
+- A C-locale `bash` is enough for the panic-fixture smoke tests (`tests/panics/run.sh`).
+
 Optional but helpful:
 
-- `typstyle`, `pre-commit`, `typos` (recommended tools already mentioned in the README)
+- `pre-commit`, `typos` (recommended tools already mentioned in the README)
 
 ---
 
@@ -58,6 +64,7 @@ Optional but helpful:
 - `src/` – core reusable components (`cv`, `letter`, utilities). Keep backward compatibility: prefer adding new parameters instead of breaking existing ones, and mirror the “new + deprecated alias” pattern already in `src/lib.typ`.
 - `template/` – the bootstrapped project users receive (`cv.typ`, `letter.typ`, profiles, assets, `metadata.toml`). Any user-facing customization should be expressed here or via metadata defaults.
 - `template/profile_<lang>/` – self-contained CV variant: complete `metadata.toml` plus content modules. Add new samples here when you introduce profile-specific features. There is no shared root `metadata.toml` in v4.
+- `tests/` – tytanic-driven test suite plus shell-script panic smoke tests. See `tests/README.md` for the full layout. Excluded from the published package via `typst.toml` `exclude`.
 - `docs/` – Typst documentation for the API (regenerate if you alter the public surface).
 - `justfile` – task runner (see Section 2).
 
@@ -84,11 +91,16 @@ If you simply want to adapt the template to your own profile:
    - Don’t remove template options without deprecation notes.
 4. **Run the checks**:
    ```bash
-   just build
-   # optionally
-   just dev    # for manual PDF inspection
-   just reset  # to clean up before committing
+   just build       # compile the template once
+   just test        # full suite — tytanic + panic shell smoke tests
+   just fmt-check   # typstyle gate (CI mirrors this)
    ```
+   Tighter inner loops:
+   - `just test-fast` — only compile-only tests (panics + units), sub-second
+   - `just test-filter 'components/*'` — limit to a tytanic glob
+   - `just test-update` — regenerate ref PNGs after intentional layout changes; review the diffs in `tests/**/diff/*.png` before committing the new refs
+   - `just test-zh` / `just test-update-zh` — CJK regression tests (skipped by default in CI; macOS-only because of Heiti SC)
+
 5. **Commit using conventional commits** (the repo follows conventional commit messages for history clarity).
 6. **Open a PR** describing the change, how to test it, and screenshots/PDF snippets if the visual output changed.
 
