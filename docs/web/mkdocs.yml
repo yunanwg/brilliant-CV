@@ -49,6 +49,13 @@ markdown_extensions:
       anchor_linenums: true
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.snippets:
+      # Resolve snippet includes against the repo root, so the docs can
+      # live-include canonical source files (template/profile_en/metadata.toml,
+      # etc.) without copying / risking drift.
+      base_path:
+        - ../..
+      check_paths: true
   - attr_list
   - toc:
       permalink: true

@@ -188,20 +188,13 @@ check-version:
         exit 1
     fi
 
-# Generate API reference from source doc-comments
-docs-generate-api:
+# Generate API reference from src/ doc-comments (the only auto-generated
+# docs file; configuration.md live-includes template/profile_en/metadata.toml
+# directly via pymdownx.snippets — no generator needed).
+docs-generate:
     @echo "📖 Generating API reference..."
-    @python docs/web/generate-api-reference.py
+    @uv run --quiet --no-project docs/web/generate-api-reference.py
     @echo "✅ API reference generated"
-
-# Generate configuration reference from metadata.toml comments
-docs-generate-config:
-    @echo "📖 Generating configuration reference..."
-    @python docs/web/generate-configuration.py
-    @echo "✅ Configuration reference generated"
-
-# Generate all auto-generated documentation
-docs-generate: docs-generate-api docs-generate-config
 
 # Serve documentation site locally
 docs-serve: docs-generate
