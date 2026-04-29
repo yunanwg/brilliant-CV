@@ -27,13 +27,16 @@ theme:
 
 nav:
   - Home: index.md
-  - Getting Started: getting-started.md
-  - Components: components.md
-  - Recipes: recipes.md
-  - Configuration: configuration.md
-  - Troubleshooting: troubleshooting.md
-  - API Reference: api-reference.md
-  - Migration Guide: migration.md
+  - User Guide:
+      - Getting Started: getting-started.md
+      - Components: components.md
+      - Recipes: recipes.md
+  - Reference:
+      - Configuration: configuration.md
+      - API Reference: api-reference.md
+  - Migration & FAQ:
+      - Migration Guide: migration.md
+      - Troubleshooting: troubleshooting.md
 
 extra_css:
   - stylesheets/extra.css
