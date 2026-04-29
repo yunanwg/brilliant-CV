@@ -56,6 +56,41 @@
 
 /* Layout */
 
+/// Resolve typography (font list, header font, font size) from metadata.
+/// Pure helper — the actual `set text` rule is applied by the caller because
+/// `set` rules don't propagate out of nested function bodies in typst.
+///
+/// -> dictionary  (regular-fonts, header-font, font-size)
+#let _resolve-typography(metadata) = {
+  let font-config = overwrite-fonts(
+    metadata,
+    _latin-font-list,
+    _latin-header-font,
+  )
+  let font-size = eval(metadata.layout.at("font_size", default: "9pt"))
+  (
+    regular-fonts: font-config.regular-fonts,
+    header-font: font-config.header-font,
+    font-size: font-size,
+  )
+}
+
+/// Page margin defaults — cv (snug right) vs letter (symmetric for formality).
+/// On a4 both share the same compact defaults.
+///
+/// -> dictionary  (typst margin spec)
+#let _page-margin(paper-size, letter-style: false) = {
+  if paper-size == "us-letter" {
+    if letter-style {
+      (left: 2cm, right: 2cm, top: 1.2cm, bottom: 1.2cm)
+    } else {
+      (left: 2cm, right: 1.4cm, top: 1.2cm, bottom: 1.2cm)
+    }
+  } else {
+    (left: 1.4cm, right: 1.4cm, top: 1cm, bottom: 1cm)
+  }
+}
+
 /// Render a CV document with header, footer, and page layout applied.
 ///
 /// - metadata (dictionary): The metadata dictionary read from `metadata.toml`.
@@ -71,48 +106,29 @@
 ) = {
   _check-v3-legacy(metadata)
 
-  // Update metadata state
+  // Update metadata state so component functions can read it without
+  // having metadata threaded through every call site.
   cv-metadata.update(metadata)
 
-  // Resolve fonts. Profiles configure typography fully via [layout.fonts];
-  // mixed-script profiles list both Latin and CJK fonts in regular_fonts and
-  // typst's codepoint-level fallback chooses per character.
-  let font-config = overwrite-fonts(
-    metadata,
-    _latin-font-list,
-    _latin-header-font,
-  )
-  let fonts = font-config.regular-fonts
-  let header-font = font-config.header-font
-
-  let font_size = eval(
-    metadata.layout.at("font_size", default: "9pt"),
-  )
-  // Page layout
+  let typography = _resolve-typography(metadata)
   set text(
-    font: fonts,
+    font: typography.regular-fonts,
     weight: "regular",
-    size: font_size,
+    size: typography.font-size,
     fill: _regular-colors.lightgray,
   )
   set align(left)
-  let paper_size = metadata.layout.at("paper_size", default: "a4")
+  let paper-size = metadata.layout.at("paper_size", default: "a4")
   set page(
-    paper: { paper_size },
-    margin: {
-      if paper_size == "us-letter" {
-        (left: 2cm, right: 1.4cm, top: 1.2cm, bottom: 1.2cm)
-      } else {
-        (left: 1.4cm, right: 1.4cm, top: 1cm, bottom: 1cm)
-      }
-    },
+    paper: paper-size,
+    margin: _page-margin(paper-size),
     footer: context _cv-footer(metadata),
   )
 
   _cv-header(
     metadata,
     profile-photo,
-    header-font,
+    typography.header-font,
     _regular-colors,
     _awesome-colors,
     custom-icons,
@@ -166,38 +182,18 @@
     )
   }
 
-  // Resolve fonts (same logic as cv()).
-  let font-config = overwrite-fonts(
-    metadata,
-    _latin-font-list,
-    _latin-header-font,
-  )
-  let fonts = font-config.regular-fonts
-  let header-font = font-config.header-font
-
-  // Font size from metadata (consistent with CV)
-  let font-size = eval(
-    metadata.layout.at("font_size", default: "9pt"),
-  )
-
-  // Page layout
+  let typography = _resolve-typography(metadata)
   set text(
-    font: fonts,
+    font: typography.regular-fonts,
     weight: "regular",
-    size: font-size,
+    size: typography.font-size,
     fill: _regular-colors.lightgray,
   )
   set align(left)
   let paper-size = metadata.layout.at("paper_size", default: "a4")
   set page(
-    paper: { paper-size },
-    margin: {
-      if paper-size == "us-letter" {
-        (left: 2cm, right: 2cm, top: 1.2cm, bottom: 1.2cm)
-      } else {
-        (left: 1.4cm, right: 1.4cm, top: 1cm, bottom: 1cm)
-      }
-    },
+    paper: paper-size,
+    margin: _page-margin(paper-size, letter-style: true),
     footer: _letter-footer(metadata),
   )
   set text(size: 12pt)
