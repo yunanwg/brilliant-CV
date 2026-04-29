@@ -6,4 +6,6 @@
 
 #import "/src/lib.typ": cv
 
-#show: cv.with((lang: (en: (header_quote: "x", cv_footer: "y", letter_footer: "z"))))
+#show: cv.with((
+  lang: (en: (header_quote: "x", cv_footer: "y", letter_footer: "z")),
+))
