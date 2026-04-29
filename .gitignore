@@ -10,3 +10,7 @@ docs/web/site/
 
 # Git worktrees
 .worktrees/
+
+# Tytanic ephemeral test output (per-run rendered PDFs/PNGs)
+tests/**/out/
+tests/**/diff/
