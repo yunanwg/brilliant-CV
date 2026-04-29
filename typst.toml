@@ -24,6 +24,8 @@ exclude = [
     ".github",
     ".pre-commit-config.yaml",
     ".gitignore",
+    "CLAUDE.md",
+    "CONTRIBUTING.md",
 ]
 
 [template]
