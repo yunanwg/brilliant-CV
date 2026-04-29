@@ -6,7 +6,7 @@
 #import "./utils/injection.typ": _inject
 #import "./utils/styles.typ": (
   _awesome-colors, _latin-font-list, _latin-header-font, _regular-colors,
-  _set-accent-color, h-bar,
+  _resolve-accent-color, _set-accent-color, h-bar,
 )
 
 /// Metadata state to avoid passing metadata to every function
@@ -381,9 +381,7 @@
     "before_section_skip",
     default: "1pt",
   ))
-  let accent-color = if color != none { color } else {
-    _set-accent-color(awesome-colors, metadata)
-  }
+  let accent-color = _resolve-accent-color(color, awesome-colors, metadata)
 
   let section-title-style(str, color: black) = {
     text(size: 16pt, weight: "bold", fill: color, str)
@@ -412,9 +410,7 @@
 /// -> dictionary
 #let _prepare-entry-params(metadata, awesome-colors, color: none) = {
   // Common parameter calculations
-  let accent-color = if color != none { color } else {
-    _set-accent-color(awesome-colors, metadata)
-  }
+  let accent-color = _resolve-accent-color(color, awesome-colors, metadata)
   let before-entry-skip = eval(metadata.layout.at(
     "before_entry_skip",
     default: 1pt,
@@ -952,9 +948,7 @@
   metadata: none,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
-  let accent-color = if color != none { color } else {
-    _set-accent-color(awesome-colors, metadata)
-  }
+  let accent-color = _resolve-accent-color(color, awesome-colors, metadata)
 
   let honor-date-style(str) = {
     align(right, text(str))

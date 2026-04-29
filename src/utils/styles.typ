@@ -38,6 +38,19 @@
   }
 }
 
+/// Resolve the accent color used by a component, honoring an explicit
+/// per-call `color:` override before falling back to the metadata-driven
+/// default. Used at every cv-* component entry point that accepts a
+/// `color: none` parameter.
+///
+/// - color (color | none): per-call override; takes precedence when non-none.
+/// - awesome-colors (dictionary): the package's awesome-colors palette.
+/// - metadata (dictionary): the metadata object (read for [layout] awesome_color).
+/// -> color
+#let _resolve-accent-color(color, awesome-colors, metadata) = {
+  if color != none { color } else { _set-accent-color(awesome-colors, metadata) }
+}
+
 /// Overwrite the default fonts when the metadata supplies custom font values.
 ///
 /// Each field in `[layout.fonts]` is independently optional: a profile that
