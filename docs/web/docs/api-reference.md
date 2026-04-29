@@ -13,7 +13,7 @@ Render a CV document with header, footer, and page layout applied.
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `doc` | content | — | The body content of the CV (typically the imported modules). |
-| `profile-photo` | image \| none | — | The profile photo to display in the header. Defaults to `none`; pass an `image(...)` to render. When `none`, the photo column is hidden regardless of `display_profile_photo`. |
+| `profile-photo` | image \| none | `none` | The profile photo to display in the header. Defaults to `none`; pass an `image(...)` to render. When `none`, the photo column is hidden regardless of `display_profile_photo`. |
 | `custom-icons` | dictionary | `(:)` | Custom icons to override or extend the default icon set. |
 
 ### `letter()`
@@ -133,7 +133,7 @@ calls can follow a single `cv-entry-start`.
 | `date` | str \| content | `"Date"` | The date(s) of the entry. |
 | `description` | str \| array | `""` | The description of the entry. Can be a string or an array of strings. |
 | `tags` | array | `()` | The tags of the entry. |
-| `color` | color | — | (optional) override the accent color for this entry. |
+| `color` | color | `none` | (optional) override the accent color for this entry. |
 
 ### `cv-skill()`
 

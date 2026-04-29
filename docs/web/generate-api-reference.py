@@ -280,12 +280,14 @@ def parse_source_file(filepath: Path) -> list[Function]:
 
                 desc, doc_params, return_type, example = parse_doc_comment(doc_text)
 
-                # Merge defaults from signature into doc params
+                # Merge defaults from signature into doc params.
+                # `none` is a valid Typst default and must be preserved in the
+                # generated table — filtering it out incorrectly renders the
+                # cell as `—`, which conventionally means "no default, required".
                 for p in doc_params:
                     if p.name in sig_params:
                         default = sig_params[p.name]
-                        # Clean up default value
-                        if default and default != "none":
+                        if default:
                             p.default = default
 
                 functions.append(
