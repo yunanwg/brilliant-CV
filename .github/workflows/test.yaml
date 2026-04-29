@@ -110,10 +110,12 @@ jobs:
             tests/**/out/*.png
 
       # Format gate. Pinned to the same minor as .pre-commit-config.yaml so
-      # local pre-commit and CI agree.
-      - name: Set up uv (for typstyle install)
-        uses: astral-sh/setup-uv@v6
+      # local pre-commit and CI agree. typstyle is a Rust binary, not a
+      # Python tool — install via cargo-binstall for speed (binary cache,
+      # no compilation).
       - name: Install typstyle
-        run: uv tool install typstyle==0.14.4
+        uses: taiki-e/install-action@v2
+        with:
+          tool: typstyle@0.14.4
       - name: Check formatting
         run: typstyle --check src template tests
