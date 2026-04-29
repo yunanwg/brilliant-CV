@@ -7,6 +7,53 @@
 #import "./letter.typ": *
 #import "./utils/styles.typ": *
 
+/// Schema migration guard: panic on v3 metadata fields that v4 removed.
+///
+/// Mirrors the pattern used for `inject_ai_prompt` / `inject_keywords`
+/// (the v2 -> v3 inject schema migration): when an obsolete field is
+/// detected we panic with a message pointing to the v4 replacement,
+/// rather than silently ignoring or guessing the user's intent.
+///
+/// Fires for any of:
+/// - `language`            (v3 typography shortcut, removed in v4)
+/// - `non_latin_font`      (replaced by [layout.fonts] regular_fonts + header_font)
+/// - `non_latin_name`      (replaced by [personal] display_name)
+/// - `[lang.<code>]` table (replaced by top-level header_quote / cv_footer / letter_footer)
+#let _check-v3-legacy(metadata) = {
+  if metadata.at("language", default: none) != none {
+    panic(
+      "'language' is removed in v4. v3 used it as a typography shortcut " +
+      "(non-Latin font fallback, section title style, date column width, " +
+      "non_latin_name selection). v4 makes those decisions explicit: set " +
+      "[layout.fonts] regular_fonts (font fallback chain), [layout.fonts] " +
+      "header_font, [layout.section] title_highlight, [personal] display_name, " +
+      "and [layout] date_width. See migration.md for the full mapping."
+    )
+  }
+  if metadata.at("non_latin_font", default: none) != none {
+    panic(
+      "'non_latin_font' is removed in v4. List your fonts in " +
+      "[layout.fonts] regular_fonts (e.g. [\"Source Sans 3\", \"Heiti SC\"]) " +
+      "and set [layout.fonts] header_font for the heading. typst's " +
+      "codepoint-level fallback handles mixed scripts automatically."
+    )
+  }
+  if metadata.at("non_latin_name", default: none) != none {
+    panic(
+      "'non_latin_name' is removed in v4. Use [personal] display_name " +
+      "instead — it overrides the Latin first/last split with a single " +
+      "styled string."
+    )
+  }
+  if metadata.at("lang", default: none) != none {
+    panic(
+      "'[lang.<code>]' tables are removed in v4. Set 'header_quote', " +
+      "'cv_footer', 'letter_footer' as top-level fields in " +
+      "profile_<name>/metadata.toml (one profile = one complete config)."
+    )
+  }
+}
+
 /* Layout */
 
 /// Render a CV document with header, footer, and page layout applied.
@@ -22,6 +69,8 @@
   profile-photo: none,
   custom-icons: (:),
 ) = {
+  _check-v3-legacy(metadata)
+
   // Update metadata state
   cv-metadata.update(metadata)
 
@@ -31,21 +80,6 @@
   let font-config = overwrite-fonts(metadata, _latin-font-list, _latin-header-font)
   let fonts = font-config.regular-fonts
   let header-font = font-config.header-font
-
-  // Backward compat: v3 metadata.toml with `language` + `non_latin_font` (or
-  // `[lang.non_latin].font`) keeps working — we still push the CJK font into
-  // the fallback chain so existing CVs render unchanged.
-  let legacy-lang = metadata.at("language", default: none)
-  if legacy-lang in ("zh", "ja", "ko", "ru") {
-    let non-latin-font = metadata.at("non_latin_font", default: none)
-    if non-latin-font == none {
-      non-latin-font = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("font", default: none)
-    }
-    if non-latin-font != none {
-      fonts.push(non-latin-font)
-      header-font = non-latin-font
-    }
-  }
 
   let font_size = eval(
     metadata.layout.at("font_size", default: "9pt")
@@ -93,6 +127,8 @@
   signature: "",
   address-style: "smallcaps",
 ) = {
+  _check-v3-legacy(metadata)
+
   // Resolve sender-address: auto reads from metadata, explicit value overrides
   let sender-address = if sender-address == auto {
     metadata.personal.at("address", default: "Your Address Here")
@@ -114,18 +150,6 @@
   let font-config = overwrite-fonts(metadata, _latin-font-list, _latin-header-font)
   let fonts = font-config.regular-fonts
   let header-font = font-config.header-font
-
-  // Backward compat for v3 metadata.toml.
-  let legacy-lang = metadata.at("language", default: none)
-  if legacy-lang in ("zh", "ja", "ko", "ru") {
-    let non-latin-font = metadata.at("non_latin_font", default: none)
-    if non-latin-font == none {
-      non-latin-font = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("font", default: none)
-    }
-    if non-latin-font != none {
-      fonts.push(non-latin-font)
-    }
-  }
 
   // Font size from metadata (consistent with CV)
   let font-size = eval(

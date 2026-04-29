@@ -69,17 +69,7 @@
 #let _letter-footer(metadata) = {
   // Parameters
   let sender-name = metadata.personal.first_name + " " + metadata.personal.last_name
-  let letter-footer-text = metadata.at("letter_footer", default: none)
-  // Backward compat: fall back to legacy [lang.<code>] section so v3
-  // metadata.toml continues to work.
-  if letter-footer-text == none {
-    let legacy-lang = metadata.at("language", default: none)
-    if legacy-lang != none {
-      letter-footer-text = metadata.at("lang", default: (:)).at(legacy-lang, default: (:)).at("letter_footer", default: "")
-    } else {
-      letter-footer-text = ""
-    }
-  }
+  let letter-footer-text = metadata.at("letter_footer", default: "")
   let display-footer = metadata.layout.at("footer", default: {}).at("display_footer", default: true)
 
   if not display-footer {

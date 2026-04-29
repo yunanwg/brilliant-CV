@@ -3,11 +3,6 @@
   "title": "brilliant-cv Metadata Schema",
   "type": "object",
   "properties": {
-    "language": {
-      "type": "string",
-      "pattern": "^[a-z]{2}$",
-      "description": "DEPRECATED in v4. Kept for v3 backward compatibility. Set [layout.fonts] / [layout.section] / [personal].display_name explicitly instead."
-    },
     "header_quote": {
       "type": "string",
       "description": "Italic tagline displayed below your name and contact info."
@@ -19,14 +14,6 @@
     "letter_footer": {
       "type": "string",
       "description": "Text shown in the left side of the footer on cover letter pages."
-    },
-    "non_latin_name": {
-      "type": "string",
-      "description": "DEPRECATED in v4. Use [personal].display_name instead. Kept for v3 backward compatibility."
-    },
-    "non_latin_font": {
-      "type": "string",
-      "description": "DEPRECATED in v4. Append the font to [layout.fonts].regular_fonts and set [layout.fonts].header_font instead. Kept for v3 backward compatibility."
     },
     "layout": {
       "type": "object",
@@ -264,44 +251,6 @@
         "info"
       ]
     },
-    "lang": {
-      "type": "object",
-      "patternProperties": {
-        "^[a-z]{2}$": {
-          "type": "object",
-          "properties": {
-            "header_quote": {
-              "type": "string"
-            },
-            "cv_footer": {
-              "type": "string"
-            },
-            "letter_footer": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "cv_footer",
-            "letter_footer"
-          ]
-        },
-        "^non_latin$": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "font": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "name",
-            "font"
-          ]
-        }
-      }
-    }
   },
   "required": []
 }

@@ -18,13 +18,13 @@ v4 introduces a **profile-based** architecture: each CV variant lives in its own
 modules_en/  →  profile_en/
 ```
 
-**2. Move your `metadata.toml` into the profile folder:**
+**2. Move your `metadata.toml` into the profile folder and flatten the schema:**
 
 ```
 metadata.toml  →  profile_en/metadata.toml
 ```
 
-The v3 `[lang.<code>]` structure inside `metadata.toml` continues to work — `src/` reads `metadata.lang.<lang>.header_quote` as a fallback. So you don't need to flatten the schema as part of the upgrade. (You can flatten later — set `header_quote`, `cv_footer`, `letter_footer` at the top level of each profile's `metadata.toml` and remove the `[lang.<code>]` sections.)
+You also need to flatten the v3 `[lang.<code>]` structure to top-level fields. v4 panics on detection of any v3-only schema field (consistent with the existing v2→v3 `inject_*` migration guards) — see "Schema migration guards" below for the exact field mapping.
 
 **3. Update your `cv.typ`:**
 
@@ -67,20 +67,67 @@ typst compile cv.typ --input profile=fr
 
 See [Recipes → Switching Profiles](recipes.md#switching-profiles-at-compile-time) for compile-time examples.
 
-### Typography is now explicit
+### Schema migration guards (panic on v3 fields)
 
-v3 used a `language` field as a shortcut that secretly drove four typography decisions: which font got pushed onto the fallback chain, whether the section title was split into `first-N + rest`, whether `non_latin_name` replaced `first_name + last_name`, and the default date column width. v4 replaces that hidden bundle with explicit fields:
+v4 follows the same pattern the package already used for the v2→v3 `inject_ai_prompt` / `inject_keywords` migration: when a removed v3 schema field is detected at compile time, the package **panics with a migration message** rather than silently falling back. This avoids the "silent fallback" anti-pattern that hides behavior changes.
 
-| v3 (implicit via `language=zh`) | v4 (explicit) |
-|---|---|
-| `non_latin_font = "Heiti SC"` | List the font in `[layout.fonts] regular_fonts` (typst's codepoint-level fallback picks per character) and set `[layout.fonts] header_font` if you want the heading in CJK type |
-| section title rendered in solid accent color (not split) | `[layout.section] title_highlight = "full"` |
-| `non_latin_name = "王道尔"` | `[personal] display_name = "王道尔"` |
-| `_default-date-width(zh) = 4.7cm` | `[layout] date_width = "4.7cm"` |
+The guarded fields and their replacements:
 
-Backward compat: v3 metadata.toml with `language = "zh"` + `non_latin_font` + `non_latin_name` continues to render. `src/` still reads those fields when `language` is one of `("zh", "ja", "ko", "ru")`. The schema marks them deprecated.
+| v3 field | Panic? | v4 replacement |
+|---|---|---|
+| `language` | ✅ | Set typography explicitly: `[layout.fonts] regular_fonts`, `[layout.fonts] header_font`, `[layout.section] title_highlight`, `[personal] display_name`, `[layout] date_width` |
+| `non_latin_font` | ✅ | List both fonts in `[layout.fonts] regular_fonts = ["Source Sans 3", "Heiti SC"]` and set `[layout.fonts] header_font`. typst's codepoint-level fallback handles mixed scripts — verified empirically (`pdffonts` shows identical embedded subsets to the v3 trigger). |
+| `non_latin_name` | ✅ | `[personal] display_name` — overrides the Latin first/last split with a single styled string |
+| `[lang.<code>]` table | ✅ | Set `header_quote`, `cv_footer`, `letter_footer` as top-level fields in `profile_<name>/metadata.toml` |
+| `[lang.non_latin]` table | ✅ (covered by `[lang.*]` panic above) | Use `[personal] display_name` and `[layout.fonts]` |
 
-The `_is-non-latin()` whitelist and `_default-date-width()` lookup table in `src/utils/lang.typ` are removed. New non-Latin scripts (Arabic, Hebrew, Thai, Devanagari, …) work without any framework change — users just configure typography directly.
+#### v3 (`language=zh`) → v4 example
+
+**Before:**
+
+```toml
+language = "zh"
+non_latin_font = "Heiti SC"
+non_latin_name = "王道尔"
+
+[lang.zh]
+header_quote = "具有丰富经验的数据分析师，随时可入职"
+cv_footer = "简历"
+letter_footer = "申请信"
+```
+
+**After:**
+
+```toml
+header_quote = "具有丰富经验的数据分析师，随时可入职"
+cv_footer = "简历"
+letter_footer = "申请信"
+
+[layout]
+date_width = "4.7cm"
+
+[layout.fonts]
+regular_fonts = ["Source Sans 3", "Heiti SC"]
+header_font = "Heiti SC"
+
+[layout.section]
+title_highlight = "full"
+
+[personal]
+display_name = "王道尔"
+```
+
+The `_is-non-latin()` whitelist and `_default-date-width()` lookup table are gone from `src/utils/lang.typ` (file deleted). Adding a new non-Latin script (Arabic, Hebrew, Thai, Devanagari, …) no longer requires a framework change — users configure typography directly.
+
+### Why panic instead of silent fallback?
+
+The package supports three backward-compat patterns. v4 deliberately picks **panic-with-migration-message** for schema changes:
+
+| Pattern | When used | Example |
+|---|---|---|
+| **Panic with migration message** | Removed metadata schema fields | `inject_ai_prompt`, v3 `language` / `non_latin_*` / `[lang.*]` |
+| **Fully removed** | Renamed function/parameter aliases | `cvEntry`, `profilePhoto`, `awesomeColors` (typst gives a generic "unknown parameter" error) |
+| **Silent fallback** | ❌ Avoided in v4 — was used briefly for v3 metadata fields and removed because hidden behavior changes broke the "explicit > implicit" design |
 
 ### Removed in v4 (no longer panic — fully removed)
 

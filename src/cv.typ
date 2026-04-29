@@ -194,14 +194,6 @@
   let first-name = metadata.personal.first_name
   let last-name = metadata.personal.last_name
   let header-quote = metadata.at("header_quote", default: none)
-  // Backward compat: fall back to legacy [lang.<code>] section so v3
-  // metadata.toml files continue to render after a bare version bump.
-  if header-quote == none {
-    let legacy-lang = metadata.at("language", default: none)
-    if legacy-lang != none {
-      header-quote = metadata.at("lang", default: (:)).at(legacy-lang, default: (:)).at("header_quote", default: none)
-    }
-  }
   let display-profile-photo = metadata.layout.header.display_profile_photo
   let profile-photo-radius = eval(metadata.layout.header.at("profile_photo_radius", default: "50%"))
   let header-info-font-size = eval(metadata.layout.header.at("info_font_size", default: "10pt"))
@@ -209,14 +201,8 @@
 
   // display_name overrides the Latin split (first light + last bold) with a
   // single styled string. Use this for CJK profiles or any profile where the
-  // split feels wrong. Backward compat: fall back to v3's [lang.non_latin].name.
+  // split feels wrong.
   let display-name = metadata.personal.at("display_name", default: none)
-  if display-name == none {
-    display-name = metadata.at("non_latin_name", default: none)
-  }
-  if display-name == none {
-    display-name = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("name", default: none)
-  }
 
   // Injection
   _inject(
@@ -258,17 +244,7 @@
   // Parameters
   let first-name = metadata.personal.first_name
   let last-name = metadata.personal.last_name
-  let footer-text = metadata.at("cv_footer", default: none)
-  // Backward compat: fall back to legacy [lang.<code>] section so v3
-  // metadata.toml files continue to render after a bare version bump.
-  if footer-text == none {
-    let legacy-lang = metadata.at("language", default: none)
-    if legacy-lang != none {
-      footer-text = metadata.at("lang", default: (:)).at(legacy-lang, default: (:)).at("cv_footer", default: "")
-    } else {
-      footer-text = ""
-    }
-  }
+  let footer-text = metadata.at("cv_footer", default: "")
   let display-page-counter = metadata.layout.at("footer", default: {}).at("display_page_counter", default: false)
   let display-footer = metadata.layout.at("footer", default: {}).at("display_footer", default: true)
 
