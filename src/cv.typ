@@ -38,12 +38,6 @@
   ),
 )
 
-/// Extract layout values with defaults
-/// -> any
-#let _get-layout-value(metadata, key, default) = {
-  eval(metadata.layout.at(key, default: default))
-}
-
 /// Personal info icons mapping
 /// -> dictionary
 #let _personal-info-icons = (
@@ -383,11 +377,10 @@
     section-cfg.at("title_highlight_letters", default: 3)
   }
 
-  let before-section-skip = _get-layout-value(
-    metadata,
+  let before-section-skip = eval(metadata.layout.at(
     "before_section_skip",
-    1pt,
-  )
+    default: "1pt",
+  ))
   let accent-color = if color != none { color } else {
     _set-accent-color(awesome-colors, metadata)
   }
