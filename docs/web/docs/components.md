@@ -165,7 +165,7 @@ The simplest skills row — type label on the left, free-form content on the rig
 
 ![cv-skill-with-level at 5/5](assets/components/cv-skill-with-level-5.png)
 
-Five filled/empty circles render the level. `level` is 0–5; out-of-range values render as 0.
+Five filled/empty circles render the level. Pass an integer in the range 0–5; the function does not clamp, so a value outside that range will render the wrong number of circles.
 
 ---
 
