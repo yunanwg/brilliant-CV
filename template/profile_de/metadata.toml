@@ -2,7 +2,6 @@
 
 # Profile: German. See profile_en/metadata.toml for inline documentation
 # of every field.
-language = "de"
 header_quote = "Erfahrener Datenanalyst sucht ab sofort eine Vollzeitstelle"
 cv_footer = "Lebenslauf"
 letter_footer = "Anschreiben"
@@ -13,6 +12,7 @@ letter_footer = "Anschreiben"
     before_entry_skip = "1pt"
     before_entry_description_skip = "1pt"
     paper_size = "a4"
+    date_width = "3.6cm"
 
     [layout.fonts]
         regular_fonts = ["Source Sans 3"]
@@ -27,6 +27,10 @@ letter_footer = "Anschreiben"
     [layout.entry]
         display_entry_society_first = true
         display_logo = true
+
+    [layout.section]
+        title_highlight = "first-letters"
+        title_highlight_letters = 3
 
     [layout.footer]
         display_page_counter = false

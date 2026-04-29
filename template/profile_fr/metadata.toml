@@ -2,7 +2,6 @@
 
 # Profile: French. See profile_en/metadata.toml for inline documentation
 # of every field.
-language = "fr"
 header_quote = "Analyste de données expérimenté à la recherche d'un emploi à temps plein disponible dès maintenant"
 cv_footer = "Résumé"
 letter_footer = "Lettre de motivation"
@@ -13,6 +12,7 @@ letter_footer = "Lettre de motivation"
     before_entry_skip = "1pt"
     before_entry_description_skip = "1pt"
     paper_size = "a4"
+    date_width = "3.4cm"
 
     [layout.fonts]
         regular_fonts = ["Source Sans 3"]
@@ -27,6 +27,10 @@ letter_footer = "Lettre de motivation"
     [layout.entry]
         display_entry_society_first = true
         display_logo = true
+
+    [layout.section]
+        title_highlight = "first-letters"
+        title_highlight_letters = 3
 
     [layout.footer]
         display_page_counter = false
@@ -50,7 +54,6 @@ letter_footer = "Lettre de motivation"
         orcid = "0000-0000-0000-0000"
         location = "Paris, France"
 
-        # French-specific overrides
         [personal.info.custom-degree]
             awesomeIcon = "graduation-cap"
             text = "Doctorat en Science des Données"

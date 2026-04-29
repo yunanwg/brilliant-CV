@@ -2,7 +2,6 @@
 
 # Profile: Italian. See profile_en/metadata.toml for inline documentation
 # of every field.
-language = "it"
 header_quote = "Senior data analyst attualmente disponibile per una posizione di lavoro full-time"
 cv_footer = "Curriculum vitae"
 letter_footer = "Lettera di presentazione"
@@ -13,6 +12,7 @@ letter_footer = "Lettera di presentazione"
     before_entry_skip = "1pt"
     before_entry_description_skip = "1pt"
     paper_size = "a4"
+    date_width = "3.9cm"
 
     [layout.fonts]
         regular_fonts = ["Source Sans 3"]
@@ -27,6 +27,10 @@ letter_footer = "Lettera di presentazione"
     [layout.entry]
         display_entry_society_first = true
         display_logo = true
+
+    [layout.section]
+        title_highlight = "first-letters"
+        title_highlight_letters = 3
 
     [layout.footer]
         display_page_counter = false

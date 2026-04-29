@@ -6,7 +6,7 @@
     "language": {
       "type": "string",
       "pattern": "^[a-z]{2}$",
-      "description": "Language code used for non-Latin font selection and date-column width. Should match the profile folder suffix: 'zh' -> 'profile_zh/'."
+      "description": "DEPRECATED in v4. Kept for v3 backward compatibility. Set [layout.fonts] / [layout.section] / [personal].display_name explicitly instead."
     },
     "header_quote": {
       "type": "string",
@@ -22,11 +22,11 @@
     },
     "non_latin_name": {
       "type": "string",
-      "description": "Your name in non-Latin script (e.g. CJK). Used when `language` is one of zh/ja/ko/ru."
+      "description": "DEPRECATED in v4. Use [personal].display_name instead. Kept for v3 backward compatibility."
     },
     "non_latin_font": {
       "type": "string",
-      "description": "Font to use for non-Latin text (e.g. 'Heiti SC', 'Noto Sans JP'). Used when `language` is one of zh/ja/ko/ru."
+      "description": "DEPRECATED in v4. Append the font to [layout.fonts].regular_fonts and set [layout.fonts].header_font instead. Kept for v3 backward compatibility."
     },
     "layout": {
       "type": "object",
@@ -139,6 +139,22 @@
           "required": [
             "display_page_counter"
           ]
+        },
+        "section": {
+          "type": "object",
+          "description": "Controls the visual treatment of section titles.",
+          "properties": {
+            "title_highlight": {
+              "type": "string",
+              "enum": ["first-letters", "full", "none"],
+              "description": "How section titles are highlighted: 'first-letters' (default, Latin convention) renders the first N characters in accent color; 'full' renders the entire title in accent color (CJK convention); 'none' renders the entire title in black."
+            },
+            "title_highlight_letters": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of leading characters rendered in accent color when title_highlight = 'first-letters'. Ignored for the other modes. Defaults to 3."
+            }
+          }
         }
       },
       "required": [
@@ -176,6 +192,14 @@
         },
         "last_name": {
           "type": "string"
+        },
+        "display_name": {
+          "type": "string",
+          "description": "Optional. Overrides the Latin 'first (light) + last (bold)' header treatment with a single styled string. Use for CJK profiles or any profile where the split feels wrong."
+        },
+        "address": {
+          "type": "string",
+          "description": "Optional. Mailing address used as the default sender-address in the cover letter."
         },
         "info": {
           "type": "object",
