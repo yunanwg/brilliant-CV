@@ -276,7 +276,7 @@ After creating a new module file, you must add its name to the `import-modules((
 
 
 #pagebreak()
-== 6. Configuration Reference — profile_<name>/metadata.toml
+== 6. Configuration Reference — `profile_<name>/metadata.toml`
 
 Each `profile_<name>/metadata.toml` is the main configuration file for that CV variant. By changing the key-value pairs in the config file, you can set up the names, contact information, layout, and other details that will be displayed in your CV. Each profile is fully self-contained — there is no shared root configuration.
 
