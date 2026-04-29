@@ -48,7 +48,9 @@
 /// - metadata (dictionary): the metadata object (read for [layout] awesome_color).
 /// -> color
 #let _resolve-accent-color(color, awesome-colors, metadata) = {
-  if color != none { color } else { _set-accent-color(awesome-colors, metadata) }
+  if color != none { color } else {
+    _set-accent-color(awesome-colors, metadata)
+  }
 }
 
 /// Overwrite the default fonts when the metadata supplies custom font values.
