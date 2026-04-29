@@ -50,8 +50,14 @@
 /// -> dictionary
 #let overwrite-fonts(metadata, latin-fonts, latin-header-font) = {
   let user-defined-fonts = metadata.layout.at("fonts", default: (:))
-  let regular-fonts = user-defined-fonts.at("regular_fonts", default: latin-fonts)
-  let header-font = user-defined-fonts.at("header_font", default: latin-header-font)
+  let regular-fonts = user-defined-fonts.at(
+    "regular_fonts",
+    default: latin-fonts,
+  )
+  let header-font = user-defined-fonts.at(
+    "header_font",
+    default: latin-header-font,
+  )
   return (regular-fonts: regular-fonts, header-font: header-font)
 }
 
