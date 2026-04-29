@@ -12,7 +12,7 @@
 typst compile cv.typ --input profile=fr
 ```
 
-The `profile` input picks which `profile_<name>/` directory to load. For Chinese, Japanese, Korean, or Russian profiles, also set `non_latin_name` and `non_latin_font` at the top of the profile's `metadata.toml`.
+The `profile` input picks which `profile_<name>/` directory to load. For non-Latin scripts (Chinese, Japanese, Korean, Russian, Arabic, …), configure typography explicitly in `[layout.fonts]` (font fallback chain), `[layout.section]` (title highlighting), and `[personal] display_name`. See `template/profile_zh/metadata.toml` for a complete example.
 
 ## Adding a New Profile
 

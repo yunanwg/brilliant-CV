@@ -31,8 +31,8 @@ All user configuration flows through each profile's `metadata.toml`. The English
 
 Other profiles (`profile_fr`, `profile_zh`, etc.) are standalone copies — when you add a config field that needs a value in every profile, update each profile file.
 
-### Language handling has a non-Latin branch
-Languages zh, ja, ko, ru trigger different font handling via `_is-non-latin()` in src/. Test with at least one non-Latin language when touching font or layout code.
+### Typography is fully explicit in v4 — no language branch
+v4 removed the `_is-non-latin()` whitelist (zh/ja/ko/ru). All typography decisions are now driven by explicit fields the user sets in their profile metadata: `[layout.fonts]` for the font fallback chain, `[layout.section] title_highlight` for section title style, `[personal] display_name` for non-split header rendering, and `[layout] date_width` for the entry date column. When touching font or layout code, test with `profile_zh` (the canonical mixed-script profile in `template/`).
 
 ## Conventions
 

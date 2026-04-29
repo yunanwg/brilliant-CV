@@ -39,15 +39,28 @@ Render a cover letter document with header, footer, and page layout applied.
 
 Add the title of a section.
 
-The first `letters` characters of the title are highlighted in the accent color,
-while the rest is rendered in black. For non-Latin languages (zh, ja, ko, ru),
-highlighting is skipped entirely and the full title is shown in the accent color.
+The visual treatment of the title is driven by `[layout.section]` in the
+profile metadata. Three modes are supported:
+
+- `"first-letters"` (default): the first `title_highlight_letters` characters
+  of the title are rendered in the accent color, the rest in black. This is
+  the conventional Latin-script appearance.
+- `"full"`: the entire title is rendered in the accent color. Use this for
+  CJK / non-Latin scripts where splitting the first N codepoints feels
+  unnatural.
+- `"none"`: the entire title is rendered in black, no accent highlighting.
+
+Per-section overrides: pass `highlight` and/or `highlight_letters` to
+override the metadata defaults for a single section.
+
+  Accepts `"first-letters"`, `"full"`, or `"none"`.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `title` | str | — | The title of the section. |
-| `highlighted` | bool | `true` | Whether the first n letters will be highlighted in accent color. |
-| `letters` | int | `3` | The number of first letters of the title to highlight. Defaults to 3. |
+| `highlight` | str | `none` | (optional) override `[layout.section].title_highlight`. |
+| `highlight_letters` | int | `none` | (optional) override `[layout.section].title_highlight_letters`. |
+| `color` | color | `none` | (optional) override the accent color for this section. |
 
 ```typ
 #block(width: 300pt)[

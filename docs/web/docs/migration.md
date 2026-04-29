@@ -67,6 +67,21 @@ typst compile cv.typ --input profile=fr
 
 See [Recipes → Switching Profiles](recipes.md#switching-profiles-at-compile-time) for compile-time examples.
 
+### Typography is now explicit
+
+v3 used a `language` field as a shortcut that secretly drove four typography decisions: which font got pushed onto the fallback chain, whether the section title was split into `first-N + rest`, whether `non_latin_name` replaced `first_name + last_name`, and the default date column width. v4 replaces that hidden bundle with explicit fields:
+
+| v3 (implicit via `language=zh`) | v4 (explicit) |
+|---|---|
+| `non_latin_font = "Heiti SC"` | List the font in `[layout.fonts] regular_fonts` (typst's codepoint-level fallback picks per character) and set `[layout.fonts] header_font` if you want the heading in CJK type |
+| section title rendered in solid accent color (not split) | `[layout.section] title_highlight = "full"` |
+| `non_latin_name = "王道尔"` | `[personal] display_name = "王道尔"` |
+| `_default-date-width(zh) = 4.7cm` | `[layout] date_width = "4.7cm"` |
+
+Backward compat: v3 metadata.toml with `language = "zh"` + `non_latin_font` + `non_latin_name` continues to render. `src/` still reads those fields when `language` is one of `("zh", "ja", "ko", "ru")`. The schema marks them deprecated.
+
+The `_is-non-latin()` whitelist and `_default-date-width()` lookup table in `src/utils/lang.typ` are removed. New non-Latin scripts (Arabic, Hebrew, Thai, Devanagari, …) work without any framework change — users just configure typography directly.
+
 ### Removed in v4 (no longer panic — fully removed)
 
 The following parameter aliases and function aliases have **panicked since v3** and are now **removed entirely** in v4. Code still using them will fail with a generic "unknown parameter" / "unknown function" error rather than the v3 deprecation panic.

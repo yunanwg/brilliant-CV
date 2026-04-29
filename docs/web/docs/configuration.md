@@ -19,12 +19,8 @@ typst compile cv.typ --input profile=fr
 # Profile: English. Each profile_<name>/metadata.toml is a complete, self-
 # contained CV configuration. Switch profiles at compile time:
 #     typst compile cv.typ --input profile=fr
-# To add a new profile, create profile_<name>/ with its own metadata.toml
-# and module .typ files.
-
-# Language code; controls font selection for non-Latin scripts and the
-# default date-column width (en, fr, zh, it have tuned defaults).
-language = "en"
+# To add a new profile, copy this directory to profile_<name>/ and edit
+# the fields that differ.
 
 # Italic tagline displayed below your name and contact info
 header_quote = "Experienced Data Analyst looking for a full time job starting from now"
@@ -50,16 +46,19 @@ letter_footer = "Cover letter"
     # Page dimensions and margins applied to the PDF output. Possible values: a4 (default), us-letter
     paper_size = "a4"
 
-    # Overrides the width of the right-side date column in entries; omit to use sensible defaults
-    #date_width = "3.6cm"
+    # Width of the right-side date column in entries. Tune per locale (zh
+    # benefits from ~4.7cm, fr from ~3.4cm, it from ~3.9cm).
+    date_width = "3.6cm"
 
     # Overrides base font size for body text; affects overall density of content
     #font_size = "9pt"
 
     [layout.fonts]
-        # Typeface used for body text, entry descriptions, and general content
+        # Body and entry text. List multiple fonts to mix scripts — typst's
+        # codepoint-level fallback picks per character (e.g. add "Heiti SC"
+        # after "Source Sans 3" for a Latin+CJK profile).
         regular_fonts = ["Source Sans 3"]
-        # Typeface used for the name and section headings in the header
+        # Font used for the name and section headings in the header
         header_font = "Roboto"
 
     [layout.header]
@@ -81,6 +80,17 @@ letter_footer = "Cover letter"
         # false hides all company/organisation logos in entries
         display_logo = true
 
+    [layout.section]
+        # How the section title is highlighted:
+        #   "first-letters" (default) - first N letters in accent color, rest in black (Latin convention)
+        #   "full"                    - the whole title in accent color (CJK / non-Latin convention)
+        #   "none"                    - the whole title in black, no accent
+        title_highlight = "first-letters"
+
+        # Number of leading characters to render in accent color when
+        # title_highlight = "first-letters". Ignored for the other modes.
+        title_highlight_letters = 3
+
     [layout.footer]
         # true shows "1/2" style page numbers in the footer
         display_page_counter = false
@@ -101,6 +111,10 @@ letter_footer = "Cover letter"
     first_name = "John"
     # Your last name, displayed in the header
     last_name = "Doe"
+    # (Optional) display_name overrides the Latin "first (light) + last (bold)"
+    # split with a single styled string. Use this for CJK profiles or any
+    # profile where the split treatment feels wrong:
+    # display_name = "王道尔"
     # Your mailing address, used as default sender-address in the cover letter
     # address = "123 Main St, San Francisco, CA 94102"
 
@@ -152,8 +166,7 @@ letter_footer = "Cover letter"
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| `language` | string | `"en"` | Profile: English. Each profile_<name>/metadata.toml is a complete, self-. contained CV configuration. Switch profiles at compile time:. typst compile cv.typ --input profile=fr. To add a new profile, create profile_<name>/ with its own metadata.toml. and module .typ files. Language code; controls font selection for non-Latin scripts and the. default date-column width (en, fr, zh, it have tuned defaults). |
-| `header_quote` | string | `"Experienced Data Analyst looking for a full time job starting from now"` | Italic tagline displayed below your name and contact info |
+| `header_quote` | string | `"Experienced Data Analyst looking for a full time job starting from now"` | Profile: English. Each profile_<name>/metadata.toml is a complete, self-. contained CV configuration. Switch profiles at compile time:. typst compile cv.typ --input profile=fr. To add a new profile, copy this directory to profile_<name>/ and edit. the fields that differ. Italic tagline displayed below your name and contact info |
 | `cv_footer` | string | `"Curriculum vitae"` | Text shown in the left side of the footer on CV pages |
 | `letter_footer` | string | `"Cover letter"` | Text shown in the left side of the footer on cover letter pages |
 
@@ -166,15 +179,15 @@ letter_footer = "Cover letter"
 | `before_entry_skip` | string | `"1pt"` | Vertical space before each entry within a section |
 | `before_entry_description_skip` | string | `"1pt"` | Vertical space before entry description text |
 | `paper_size` | string | `"a4"` | Page dimensions and margins applied to the PDF output. Possible values: a4 (default), us-letter |
-| `date_width` | string | — | *(optional)* Overrides the width of the right-side date column in entries; omit to use sensible defaults |
+| `date_width` | string | `"3.6cm"` | Width of the right-side date column in entries. Tune per locale (zh. benefits from ~4.7cm, fr from ~3.4cm, it from ~3.9cm). |
 | `font_size` | string | — | *(optional)* Overrides base font size for body text; affects overall density of content |
 
 ### `[layout.fonts]`
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| `regular_fonts` | array | `["Source Sans 3"]` | Typeface used for body text, entry descriptions, and general content |
-| `header_font` | string | `"Roboto"` | Typeface used for the name and section headings in the header |
+| `regular_fonts` | array | `["Source Sans 3"]` | Body and entry text. List multiple fonts to mix scripts — typst's. codepoint-level fallback picks per character (e.g. add "Heiti SC". after "Source Sans 3" for a Latin+CJK profile). |
+| `header_font` | string | `"Roboto"` | Font used for the name and section headings in the header |
 
 ### `[layout.header]`
 
@@ -191,6 +204,14 @@ letter_footer = "Cover letter"
 |-----|------|---------|-------------|
 | `display_entry_society_first` | bool | `true` | true = company name bold on top, role below; false = role bold on top. Must be true to use cv-entry-start / cv-entry-continued pattern |
 | `display_logo` | bool | `true` | false hides all company/organisation logos in entries |
+
+### `[layout.section]`
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `title_highlight` | string | `"first-letters"` | How the section title is highlighted:. "first-letters" (default) - first N letters in accent color, rest in black (Latin convention). "full"                    - the whole title in accent color (CJK / non-Latin convention). "none"                    - the whole title in black, no accent |
+| `title_highlight` | string | — | *(optional)* Number of leading characters to render in accent color when |
+| `title_highlight_letters` | int | `3` |  |
 
 ### `[layout.footer]`
 
@@ -212,6 +233,7 @@ letter_footer = "Cover letter"
 |-----|------|---------|-------------|
 | `first_name` | string | `"John"` | Your first name, displayed in the header |
 | `last_name` | string | `"Doe"` | Your last name, displayed in the header |
+| `display_name` | string | — | *(optional)* (Optional) display_name overrides the Latin "first (light) + last (bold)". split with a single styled string. Use this for CJK profiles or any. profile where the split treatment feels wrong: |
 | `address` | string | — | *(optional)* Your mailing address, used as default sender-address in the cover letter |
 
 ### `[personal.info]`
