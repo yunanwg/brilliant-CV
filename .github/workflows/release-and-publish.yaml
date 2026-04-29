@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version number (e.g., 2.0.7 or 2.0.7-test)'
+        description: 'Version number (e.g., 4.0.0 or 4.0.0-test)'
         required: true
-        default: '2.0.6'
+        default: '4.0.0'
         type: string
         
 permissions:
@@ -40,7 +40,7 @@ jobs:
             VERSION="${{ github.event.inputs.version }}"
             if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
               echo "⚠️ version input is empty, using default"
-              VERSION="2.0.7"
+              VERSION="4.0.0"
             fi
             echo "Version from manual input: $VERSION"
           fi
