@@ -51,6 +51,8 @@ The most important keys to set first:
 
 ## Step 5: Add Your First Entry
 
+Open `profile_en/education.typ` and replace its contents with:
+
 ```typ
 #import "@preview/brilliant-cv:4.0.0": cv-section, cv-entry
 
@@ -67,6 +69,8 @@ The most important keys to set first:
 )
 ```
 
+Each profile module file (`education.typ`, `professional.typ`, `projects.typ`, `certificates.typ`, `publications.typ`, `skills.typ`) imports from `@preview/brilliant-cv` and emits `cv-*` calls — `cv.typ` includes them in order. Add new sections by creating a new module file under `profile_en/` and adding its name to the `import-modules((...))` call in `cv.typ`.
+
 ## Step 6: Compile
 
 ```bash
@@ -81,7 +85,7 @@ If you maintain CVs in multiple languages or for different target roles, copy `p
 
 It is recommended to:
 
-1. Use `git` to manage your project, as it helps trace your changes and version control your CV.
-2. Use `typstyle` and `pre-commit` to help you format your CV.
-3. Use `typos` to check typos in your CV if your main locale is English.
-4. (Advanced) Use `LTex` in your favorite code editor to check grammars and get language suggestions.
+1. Use `git` to manage your project — track changes and tag releases of your CV (`git tag cv-v1`, `git tag cv-v2`).
+2. Use [`typstyle`](https://github.com/typstyle-rs/typstyle) and `pre-commit` to keep your `.typ` files consistently formatted.
+3. Use [`typos`](https://github.com/crate-ci/typos) to catch spelling mistakes if your CV is in English.
+4. Wire up CI to compile your CV on every push — see [Recipes → CI/CD with GitHub Actions](recipes.md#cicd-with-github-actions).
