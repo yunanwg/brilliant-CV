@@ -82,41 +82,80 @@ jobs:
           # Create package directory structure
           PACKAGE_DIR="packages/preview/brilliant-cv/${{ steps.version.outputs.version }}"
           mkdir -p "$PACKAGE_DIR"
-          
+
           echo "=== Preparing package files ==="
           echo "Target directory: $PACKAGE_DIR"
-          
-          # Copy all files except excluded ones (from typst.toml exclude list)
-          rsync -av \
-            --exclude='.git' \
-            --exclude='docs' \
-            --exclude='.pre-commit-config.yaml' \
-            --exclude='.gitignore' \
-            --exclude='.github' \
-            --exclude='packages' \
-            --exclude='typst.toml.backup' \
-            . "$PACKAGE_DIR/"
-          
+
+          # Drive rsync's exclude list from typst.toml's [package].exclude
+          # so the manifest is the single source of truth for what ships
+          # to Universe. Adding a new exclude in typst.toml automatically
+          # takes effect here — no second hard-coded list to keep in sync.
+          MANIFEST_EXCLUDES=$(python3 -c '
+          import tomllib
+          with open("typst.toml", "rb") as f:
+              cfg = tomllib.load(f)
+          for item in cfg["package"].get("exclude", []):
+              print(f"--exclude={item}")
+          ')
+
+          # Always-exclude set for workflow-runtime artifacts that
+          # shouldn't ship and aren't appropriate to list in typst.toml.
+          RUNTIME_EXCLUDES=(
+            --exclude=.git
+            --exclude=packages
+            --exclude=typst.toml.backup
+          )
+
+          echo "=== Manifest excludes (from typst.toml) ==="
+          echo "$MANIFEST_EXCLUDES"
+
+          # shellcheck disable=SC2086
+          rsync -av $MANIFEST_EXCLUDES "${RUNTIME_EXCLUDES[@]}" . "$PACKAGE_DIR/"
+
           echo "=== Package structure ==="
           find "$PACKAGE_DIR" -type f | sort
-          
+
           echo "=== Package typst.toml content ==="
           cat "$PACKAGE_DIR/typst.toml"
-          
+
           echo "=== Package size ==="
           du -sh "$PACKAGE_DIR"
-          
+
+          # Assert: no manifest-excluded path leaked into the prepared
+          # package. If any did, typst.toml claims something the release
+          # path didn't honor — exactly the drift this rewrite eliminates.
+          LEAKED=()
+          while IFS= read -r excluded; do
+              if [ -e "$PACKAGE_DIR/$excluded" ]; then
+                  LEAKED+=("$excluded")
+              fi
+          done < <(python3 -c '
+          import tomllib
+          with open("typst.toml", "rb") as f:
+              cfg = tomllib.load(f)
+          for item in cfg["package"].get("exclude", []):
+              print(item)
+          ')
+
+          if [ "${#LEAKED[@]}" -gt 0 ]; then
+              echo "❌ Manifest-excluded paths leaked into package:"
+              printf '   %s\n' "${LEAKED[@]}"
+              echo "Fix the rsync invocation above or remove the entries from typst.toml exclude."
+              exit 1
+          fi
+          echo "✅ All manifest-excluded paths verified absent from package"
+
           # Validate required files exist
           if [ ! -f "$PACKAGE_DIR/typst.toml" ]; then
             echo "❌ Missing typst.toml in package"
             exit 1
           fi
-          
+
           if [ ! -f "$PACKAGE_DIR/src/lib.typ" ]; then
             echo "❌ Missing src/lib.typ (entrypoint) in package"
             exit 1
           fi
-          
+
           echo "✅ Package validation passed"
 
       - name: Create PR in upstream repository
