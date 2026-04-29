@@ -6,31 +6,27 @@
     "language": {
       "type": "string",
       "pattern": "^[a-z]{2}$",
-      "description": "Language code used for non-Latin font selection and date-column width. In v4 profile-based templates, must match the folder suffix: 'zh' -> 'profile_zh/'."
-    },
-    "profile": {
-      "type": "string",
-      "description": "(v4) Optional default profile name. Overridden at compile time with `--input profile=<name>`."
+      "description": "Language code used for non-Latin font selection and date-column width. Should match the profile folder suffix: 'zh' -> 'profile_zh/'."
     },
     "header_quote": {
       "type": "string",
-      "description": "(v4) Italic tagline displayed below your name and contact info. Top-level field; replaces v3's [lang.<code>].header_quote."
+      "description": "Italic tagline displayed below your name and contact info."
     },
     "cv_footer": {
       "type": "string",
-      "description": "(v4) Text shown in the left side of the footer on CV pages."
+      "description": "Text shown in the left side of the footer on CV pages."
     },
     "letter_footer": {
       "type": "string",
-      "description": "(v4) Text shown in the left side of the footer on cover letter pages."
+      "description": "Text shown in the left side of the footer on cover letter pages."
     },
     "non_latin_name": {
       "type": "string",
-      "description": "(v4) Your name in non-Latin script. Top-level field; replaces v3's [lang.non_latin].name."
+      "description": "Your name in non-Latin script (e.g. CJK). Used when `language` is one of zh/ja/ko/ru."
     },
     "non_latin_font": {
       "type": "string",
-      "description": "(v4) Font to use for non-Latin text (e.g. 'Heiti SC', 'Noto Sans JP'). Top-level field; replaces v3's [lang.non_latin].font."
+      "description": "Font to use for non-Latin text (e.g. 'Heiti SC', 'Noto Sans JP'). Used when `language` is one of zh/ja/ko/ru."
     },
     "layout": {
       "type": "object",

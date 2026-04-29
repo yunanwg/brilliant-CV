@@ -27,26 +27,27 @@ After bootstrapping, your project will contain these files:
 
 | File / Directory | Purpose |
 |-----------------|---------|
-| `metadata.toml` | Shared configuration (layout, personal info, etc.) |
-| `profile_en/metadata.toml` | Profile-specific overrides (language, quotes, footers) |
-| `profile_en/*.typ` | Your content modules (edit these) |
 | `cv.typ` | Entry point (edit to add/remove modules) |
 | `letter.typ` | Cover letter entry point |
+| `profile_en/metadata.toml` | Complete configuration for the English profile |
+| `profile_en/*.typ` | Your English content modules (edit these) |
+| `profile_<name>/...` | Other profile variants (fr, de, it, zh provided as examples) |
 | `assets/` | Your profile photo and logos |
 
 !!! tip
     Don't edit the package source files under `@preview/brilliant-cv` — they are managed by the Typst package manager.
 
-## Step 4: Configure metadata.toml
+## Step 4: Configure profile_en/metadata.toml
 
-All customization goes through `metadata.toml`. This is where you set your name, colors, contact information, and layout preferences. See the [Configuration Reference](configuration.md) for the full details.
+All customization for the English profile goes through `profile_en/metadata.toml` — it is a **complete, self-contained CV configuration**. See the [Configuration Reference](configuration.md) for the full set of fields.
 
 The most important keys to set first:
 
-- `language` — the language code matching your `profile_<name>/` folder (e.g. `"en"`, `"fr"`)
 - `awesome_color` — your accent color (`"skyblue"`, `"red"`, `"nephritis"`, `"concrete"`, `"darknight"`)
 - `first_name` / `last_name` — your name displayed in the header
 - `[personal.info]` — your contact details (email, phone, GitHub, LinkedIn, etc.)
+- `header_quote` — italic tagline below your name
+- `cv_footer` / `letter_footer` — text shown in the footer
 
 ## Step 5: Add Your First Entry
 
@@ -72,9 +73,9 @@ The most important keys to set first:
 typst compile cv.typ
 ```
 
-## Step 7: (Optional) Set Up Profiles
+## Step 7: (Optional) Add More Profiles
 
-If you maintain CVs in multiple languages or for different target roles, you can create **profile overrides** — sparse TOML files that only contain the fields that differ from your root `metadata.toml`. See [Recipes → Profile-Based Overrides](recipes.md#profile-based-overrides) for details.
+If you maintain CVs in multiple languages or for different target roles, copy `profile_en/` to `profile_<name>/` and edit the fields that differ. Each profile is independent — there is no shared root config to coordinate. See [Recipes → Adding a New Profile](recipes.md#adding-a-new-profile) for details.
 
 ## Step 8: Go Beyond
 

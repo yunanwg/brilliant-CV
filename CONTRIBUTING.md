@@ -57,8 +57,7 @@ Optional but helpful:
 
 - `src/` – core reusable components (`cv`, `letter`, utilities). Keep backward compatibility: prefer adding new parameters instead of breaking existing ones, and mirror the “new + deprecated alias” pattern already in `src/lib.typ`.
 - `template/` – the bootstrapped project users receive (`cv.typ`, `letter.typ`, profiles, assets, `metadata.toml`). Any user-facing customization should be expressed here or via metadata defaults.
-- `template/profile_<lang>/` – content + sparse metadata override per profile. Add new samples here when you introduce profile-specific features.
-- `template/metadata.toml` – shared root config (layout, personal info, inject). Profile overrides live in `profile_<lang>/metadata.toml`. Update both (and the README) if you add new keys.
+- `template/profile_<lang>/` – self-contained CV variant: complete `metadata.toml` plus content modules. Add new samples here when you introduce profile-specific features. There is no shared root `metadata.toml` in v4.
 - `docs/` – Typst documentation for the API (regenerate if you alter the public surface).
 - `justfile` – task runner (see Section 2).
 
@@ -70,8 +69,7 @@ Optional but helpful:
 
 If you simply want to adapt the template to your own profile:
 
-- Change `template/metadata.toml` (shared layout, injection settings, personal info).
-- Tweak `template/profile_<name>/metadata.toml` for fields that vary by profile (header quote, footers, location, etc.).
+- Edit `template/profile_<name>/metadata.toml` (each profile holds its complete configuration: layout, injection, personal info, localized strings).
 - Update the relevant `profile_<name>/*.typ` files with your content.
 - Keep `src/` untouched unless you plan to submit the enhancement back.
 

@@ -12,67 +12,35 @@
 typst compile cv.typ --input profile=fr
 ```
 
-For Chinese, Japanese, Korean, or Russian, also add `non_latin_name` and `non_latin_font` to the profile's `metadata.toml`.
+The `profile` input picks which `profile_<name>/` directory to load. For Chinese, Japanese, Korean, or Russian profiles, also set `non_latin_name` and `non_latin_font` at the top of the profile's `metadata.toml`.
 
-## Profile-Based Overrides with Deep Merge
+## Adding a New Profile
 
-Each profile directory (`profile_en/`, `profile_fr/`, etc.) contains its own `metadata.toml` and content modules. The profile's `metadata.toml` is **deep-merged** on top of the root `metadata.toml`, so it only needs to contain fields that differ from the shared config.
+Each profile is **self-contained** — one `profile_<name>/metadata.toml` holds the complete CV configuration for that variant. To add a new profile (e.g. a Swedish CV):
 
-### How it works
+1. Copy an existing profile directory:
+    ```bash
+    cp -r template/profile_en template/profile_swe
+    ```
+2. Edit `profile_swe/metadata.toml` — change `language`, `header_quote`, footers, and any other fields that differ from English.
+3. Edit the `.typ` modules under `profile_swe/` for Swedish content.
+4. Compile with `typst compile cv.typ --input profile=swe`.
 
-Your project has a shared root `metadata.toml` with layout, personal info, and other common settings. Each `profile_<name>/metadata.toml` is a sparse override:
+There is no shared root metadata or merge mechanism in v4. **Profile = a complete CV config**; copy-paste is the way to start a new one.
 
-```toml
-# profile_fr/metadata.toml — only the fields that differ
-language = "fr"
-header_quote = "Analyste de données expérimenté..."
-cv_footer = "Résumé"
-letter_footer = "Lettre de motivation"
+### Profile ≠ language
 
-[personal.info]
-  location = "Paris, France"
+You can have `profile_us/` and `profile_uk/` both with `language = "en"` but different locations, phone numbers, or layouts. Profile is just a directory name; pick whatever makes sense for your variants.
 
-  # Overrides root's custom-degree with French text
-  [personal.info.custom-degree]
-    awesomeIcon = "graduation-cap"
-    text = "Doctorat en Science des Données"
-    link = "https://www.example.com"
+### Sharing config across profiles
 
-  # New entry unique to French profile — no inheritance issue
-  [personal.info.custom-car]
-    awesomeIcon = "car"
-    text = "Permis B"
-```
+If you maintain many profiles and want to share fields (GitHub username, layout colors, etc.), the package itself does not provide a merge mechanism. Common user-side options:
 
-Everything not specified (layout, fonts, email, GitHub, etc.) is inherited from root `metadata.toml`.
+- **A small Python/shell preprocessor** that reads a canonical base + per-profile overrides and writes the profile `metadata.toml` files at build time.
+- **`typstyle`-friendly hand-edits** — for 2-3 profiles, manual sync is usually fine.
+- **Symlinks or `git rerere`** to keep selected fields in sync.
 
-In `cv.typ`, the merge happens automatically:
-
-```typ
-#import "@preview/brilliant-cv:4.0.0": cv, deep-merge
-#let profile = sys.inputs.at("profile", default: "en")
-#let metadata = deep-merge(
-  toml("./metadata.toml"),
-  toml("profile_" + profile + "/metadata.toml"),
-)
-```
-
-### How deep-merge works
-
-The `deep-merge` function recursively combines two dictionaries:
-
-- **No conflict** (key only in one dict) → value is kept as-is
-- **Both have the key, both are dicts** → merge recursively (go deeper)
-- **Both have the key, not both dicts** → profile value wins
-
-This means `profile_fr/metadata.toml` only overrides `personal.info.location`, `personal.info.custom-degree`, and adds `personal.info.custom-car` — all other `personal.info` fields (email, phone, github, etc.) are preserved from root.
-
-### Tips
-
-- **Use descriptive names for custom entries** — e.g. `custom-degree`, `custom-cert`, `custom-car` instead of `custom-1`, `custom-2`. This makes inheritance behavior predictable: a French profile can define `custom-car` (new, no inheritance) while overriding `custom-degree` (replaces root's values cleanly).
-- **Deep-merge inherits, not deletes** — If root has `custom-cert` and your profile doesn't mention it, it will appear in the merged result. To replace an inherited entry, override all its fields in the profile. To use completely different custom entries per profile, give each profile's entries unique descriptive names.
-- **Profile ≠ language.** You can have `profile_us/` and `profile_uk/` both with `language = "en"` but different locations or phone numbers.
-- **Full override is also fine.** If you prefer, a profile's `metadata.toml` can contain all fields — deep-merge still works correctly.
+The framework keeps "one profile = one file" so your tooling stays free.
 
 ## Skills with Inline Separators
 

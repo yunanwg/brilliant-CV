@@ -33,11 +33,11 @@ Run the following command in your terminal to create a new CV project:
 typst init @preview/brilliant-cv
 ```
 
-### 2. Configure Your CV
-Edit the root `metadata.toml` to set shared layout, personal info, and inject options.
+### 2. Pick Your Profile
+Each CV variant lives in its own folder (`profile_en/`, `profile_fr/`, …). The folder holds a complete `metadata.toml` and your content `.typ` modules. Edit `profile_en/metadata.toml` first — it's the most heavily annotated.
 
 ### 3. Add Your Content
-Each profile lives in its own folder (`profile_en/`, `profile_fr/`, …). Fill in your experience and skills in the `profile_<name>/*.typ` files. The profile's own `metadata.toml` is deep-merged on top of the root, so it only needs the fields that differ (e.g. `header_quote`, `cv_footer`, `[personal.info].location`).
+Fill in your experience, education, and skills in the `profile_<name>/*.typ` files. Each profile is **self-contained** — there is no shared root config to coordinate with.
 
 ### 4. Compile
 Compile your CV to PDF:
@@ -52,16 +52,18 @@ Switch profile at compile time via the CLI:
 typst compile cv.typ --input profile=fr
 ```
 
+To add a new profile, copy an existing `profile_<name>/` directory and edit the fields that differ.
+
 ## ⚙️ Configuration
 
-The root `metadata.toml` and each `profile_<name>/metadata.toml` together drive your CV. The profile is sparse and only overrides fields that differ. See the [**Documentation**](https://yunanwg.github.io/brilliant-CV/configuration/) for full details.
+Each `profile_<name>/metadata.toml` is a complete configuration for that CV variant. See the [**Documentation**](https://yunanwg.github.io/brilliant-CV/configuration/) for the full reference.
 
 | Section | Description |
 |---------|-------------|
 | `[personal]` | Your name, contact info, and social links. |
 | `[layout]` | Margins, fonts, colors, header/footer/entry display. |
 | `[inject]` | ATS keyword + custom AI-prompt injection. |
-| `header_quote`, `cv_footer`, `letter_footer` | Per-profile localized strings (top-level in profile metadata.toml). |
+| `header_quote`, `cv_footer`, `letter_footer` | Per-profile localized strings (top-level). |
 
 ## 🖼 Gallery
 

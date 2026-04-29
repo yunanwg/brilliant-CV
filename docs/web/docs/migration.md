@@ -2,41 +2,31 @@
 
 ## Migration from v3
 
-v4 adds a **`deep-merge` utility function** to the package, enabling profile-based overrides. This lets you vary any metadata field per language or target role — not just `header_quote` and footers, but also `[personal.info]`, `[layout]`, `[inject]`, and anything else ([#142](https://github.com/yunanwg/brilliant-CV/issues/142)).
+v4 introduces a **profile-based** architecture: each CV variant lives in its own `profile_<name>/` directory with a self-contained `metadata.toml` and content modules. This solves [#142](https://github.com/yunanwg/brilliant-CV/issues/142) — you can now vary *any* field per profile (`[personal.info]`, `[layout]`, `[inject]`, the lot), not just the three localized strings v3 supported via `[lang.<code>]`.
 
-### What changed?
+### Design principles
 
-v4 introduces a **profile-based** architecture. Each profile lives in its own `profile_<name>/` directory with content modules and a sparse `metadata.toml` that is deep-merged on top of a shared root `metadata.toml`. The package now exports `deep-merge`, a recursive dictionary merge function.
+- **One profile = one complete CV configuration.** Look at a single `profile_<name>/metadata.toml` and you see the full effective config for that profile — no merging, no inheritance.
+- **No root `metadata.toml`.** The v4 template ships only profile directories; there is no shared/base config layer.
+- **DRY is the user's job, not the framework's.** If you maintain many profiles and want to share config, you can add your own preprocessor or symlinks; the package stays simple.
 
 ### Upgrade steps
 
-**1. Rename module folders** to profile folders:
+**1. Rename your module folder to a profile folder:**
 
 ```
 modules_en/  →  profile_en/
-modules_fr/  →  profile_fr/
 ```
 
-**2. Create a root `metadata.toml`** with all shared config (layout, personal info, inject, etc.) — this is your existing `metadata.toml` with the `[lang.*]` sections removed.
+**2. Move your `metadata.toml` into the profile folder:**
 
-**3. Add a sparse `metadata.toml` in each profile** containing only the fields that differ:
-
-```toml
-# profile_fr/metadata.toml — only the fields that differ
-language = "fr"
-header_quote = "Analyste de données expérimenté..."
-cv_footer = "Résumé"
-letter_footer = "Lettre de motivation"
-
-[personal.info]
-  location = "Paris, France"
-
-  [personal.info.custom-1]
-    awesomeIcon = "car"
-    text = "Permis B"
+```
+metadata.toml  →  profile_en/metadata.toml
 ```
 
-**4. Update your `cv.typ`:**
+The v3 `[lang.<code>]` structure inside `metadata.toml` continues to work — `src/` reads `metadata.lang.<lang>.header_quote` as a fallback. So you don't need to flatten the schema as part of the upgrade. (You can flatten later — set `header_quote`, `cv_footer`, `letter_footer` at the top level of each profile's `metadata.toml` and remove the `[lang.<code>]` sections.)
+
+**3. Update your `cv.typ`:**
 
 ```typ
 // Before (v3)
@@ -54,13 +44,10 @@ letter_footer = "Lettre de motivation"
   }
 }
 
-// After (v4) — profile-based with deep-merge
-#import "@preview/brilliant-cv:4.0.0": cv, deep-merge
+// After (v4) — profile-based, no merge
+#import "@preview/brilliant-cv:4.0.0": cv
 #let profile = sys.inputs.at("profile", default: "en")
-#let metadata = deep-merge(
-  toml("./metadata.toml"),
-  toml("profile_" + profile + "/metadata.toml"),
-)
+#let metadata = toml("profile_" + profile + "/metadata.toml")
 #let import-modules(modules) = {
   for module in modules {
     include { "profile_" + profile + "/" + module + ".typ" }
@@ -68,15 +55,17 @@ letter_footer = "Lettre de motivation"
 }
 ```
 
-**5. Update `letter.typ`** — same preamble pattern.
+**4. Update `letter.typ`** — same preamble pattern.
 
-**6. Update CLI commands:**
+**5. Update CLI commands:**
 
 ```bash
 typst compile cv.typ --input profile=fr
 ```
 
-See [Recipes → Profile-Based Overrides](recipes.md#profile-based-overrides) for full details and examples.
+**6. Adding more profiles.** Copy `profile_en/` to `profile_<new>/` and edit the fields that differ. Each profile is independent — there's no DRY mechanism inside the package, by design.
+
+See [Recipes → Switching Profiles](recipes.md#switching-profiles-at-compile-time) for compile-time examples.
 
 ### Removed in v4 (no longer panic — fully removed)
 

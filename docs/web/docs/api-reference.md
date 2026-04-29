@@ -234,29 +234,6 @@ When `ref-full` is `false`, only the entries whose keys appear in
 
 ## Utility Functions
 
-### `deep-merge()`
-
-Recursively merge two dictionaries. Values in `override` take precedence.
-For nested dictionaries, merging is recursive (deep merge). For all other
-value types, the override value replaces the base value entirely.
-
-This is useful for layering a sparse profile configuration on top of a
-complete base `metadata.toml`, so that only the fields that differ need
-to be specified in the profile.
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `base` | dictionary | The base dictionary (e.g. root metadata). |
-| `override` | dictionary | The override dictionary whose values win on conflict. |
-
-```typ
-#import "@preview/brilliant-cv:4.0.0": deep-merge
-
-#let base = toml("./metadata.toml")
-#let profile = toml("./profiles/fr.toml")
-#let metadata = deep-merge(base, profile)
-```
-
 ### `h-bar()`
 
 Renders a vertical bar separator (`|`) for use inside skill entries.

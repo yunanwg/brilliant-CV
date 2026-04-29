@@ -421,7 +421,7 @@ Feel free to raise an issue for more assistance should you encounter a problem t
   import "/src/cv.typ": cv-section, cv-entry, cv-entry-start, cv-entry-continued, cv-skill, cv-skill-with-level, cv-skill-tag, cv-honor, cv-publication, cv-metadata
   import "/src/utils/styles.typ": h-bar
 
-  let metadata = toml("/template/metadata.toml") + (language: "en")
+  let metadata = toml("/template/profile_en/metadata.toml")
 
   let example-scope = (
     cv-section: cv-section,
