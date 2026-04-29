@@ -55,7 +55,7 @@ After bootstrapping, your project will contain these files:
 - `assets/` — your profile photo and logos
 - Don't edit: the package source files under `@preview/brilliant-cv`
 
-=== Step 4: Configure metadata.toml
+=== Step 4: Configure your profile
 
 All customization goes through each `profile_<name>/metadata.toml` — every profile is a complete, self-contained CV configuration. See Section 6 for the full configuration reference.
 
@@ -276,17 +276,16 @@ After creating a new module file, you must add its name to the `import-modules((
 
 
 #pagebreak()
-== 6. Configuration Reference — metadata.toml
+== 6. Configuration Reference — profile_<name>/metadata.toml
 
-The `metadata.toml` file is the main configuration file for your CV. By changing the key-value pairs in the config file, you can
-setup the names, contact information, and other details that will be displayed in your CV.
+Each `profile_<name>/metadata.toml` is the main configuration file for that CV variant. By changing the key-value pairs in the config file, you can set up the names, contact information, layout, and other details that will be displayed in your CV. Each profile is fully self-contained — there is no shared root configuration.
 
 You can switch profiles at compile time via the CLI:
 ```bash
 typst compile cv.typ --input profile=fr
 ```
 
-Here is an example of a root `metadata.toml` file:
+Here is an example of a complete `profile_en/metadata.toml` file:
 
 ```toml
  # INFO: value must match folder suffix; i.e "zh" -> "./profile_zh"
