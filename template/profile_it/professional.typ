@@ -1,5 +1,7 @@
 // Imports
-#import "@preview/brilliant-cv:4.0.0": cv-section, cv-entry, cv-entry-start, cv-entry-continued
+#import "@preview/brilliant-cv:4.0.0": (
+  cv-entry, cv-entry-continued, cv-entry-start, cv-section,
+)
 
 
 #cv-section("Esperienze di lavoro")
@@ -38,5 +40,7 @@
   logo: image("../assets/logos/pqr_corp.png"),
   date: [Summer 2017],
   location: [Chicago, IL],
-  description: list([Ho collaborato alla pulizia, all'elaborazione e all'analisi dei dati utilizzando Python ed Excel, ho partecipato alle riunioni del team e ho contribuito alla pianificazione e all'esecuzione del progetto]),
+  description: list(
+    [Ho collaborato alla pulizia, all'elaborazione e all'analisi dei dati utilizzando Python ed Excel, ho partecipato alle riunioni del team e ho contribuito alla pianificazione e all'esecuzione del progetto],
+  ),
 )

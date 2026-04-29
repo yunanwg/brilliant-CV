@@ -1,5 +1,7 @@
 // Imports
-#import "@preview/brilliant-cv:4.0.0": cv-section, cv-entry, cv-entry-start, cv-entry-continued
+#import "@preview/brilliant-cv:4.0.0": (
+  cv-entry, cv-entry-continued, cv-entry-start, cv-section,
+)
 
 
 #cv-section("Expérience Professionnelle")
@@ -41,5 +43,7 @@
   ),
   location: [Chicago, IL],
   logo: image("../assets/logos/pqr_corp.png"),
-  description: list([Aider à la préparation, au traitement et à l'analyse de données à l'aide de Python et Excel, participer aux réunions d'équipe et contribuer à la planification et à l'exécution de projets]),
+  description: list(
+    [Aider à la préparation, au traitement et à l'analyse de données à l'aide de Python et Excel, participer aux réunions d'équipe et contribuer à la planification et à l'exécution de projets],
+  ),
 )

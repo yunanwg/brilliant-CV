@@ -1,5 +1,5 @@
 // Imports
-#import "@preview/brilliant-cv:4.0.0": cv-section, cv-entry
+#import "@preview/brilliant-cv:4.0.0": cv-entry, cv-section
 
 
 #cv-section("Projets & Associations")

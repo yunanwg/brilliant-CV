@@ -1,6 +1,6 @@
 /*
-* Entry point for the package
-*/
+ * Entry point for the package
+ */
 
 /* Packages */
 #import "./cv.typ": *
@@ -22,34 +22,34 @@
 #let _check-v3-legacy(metadata) = {
   if metadata.at("language", default: none) != none {
     panic(
-      "'language' is removed in v4. v3 used it as a typography shortcut " +
-      "(non-Latin font fallback, section title style, date column width, " +
-      "non_latin_name selection). v4 makes those decisions explicit: set " +
-      "[layout.fonts] regular_fonts (font fallback chain), [layout.fonts] " +
-      "header_font, [layout.section] title_highlight, [personal] display_name, " +
-      "and [layout] date_width. See migration.md for the full mapping."
+      "'language' is removed in v4. v3 used it as a typography shortcut "
+        + "(non-Latin font fallback, section title style, date column width, "
+        + "non_latin_name selection). v4 makes those decisions explicit: set "
+        + "[layout.fonts] regular_fonts (font fallback chain), [layout.fonts] "
+        + "header_font, [layout.section] title_highlight, [personal] display_name, "
+        + "and [layout] date_width. See migration.md for the full mapping.",
     )
   }
   if metadata.at("non_latin_font", default: none) != none {
     panic(
-      "'non_latin_font' is removed in v4. List your fonts in " +
-      "[layout.fonts] regular_fonts (e.g. [\"Source Sans 3\", \"Heiti SC\"]) " +
-      "and set [layout.fonts] header_font for the heading. typst's " +
-      "codepoint-level fallback handles mixed scripts automatically."
+      "'non_latin_font' is removed in v4. List your fonts in "
+        + "[layout.fonts] regular_fonts (e.g. [\"Source Sans 3\", \"Heiti SC\"]) "
+        + "and set [layout.fonts] header_font for the heading. typst's "
+        + "codepoint-level fallback handles mixed scripts automatically.",
     )
   }
   if metadata.at("non_latin_name", default: none) != none {
     panic(
-      "'non_latin_name' is removed in v4. Use [personal] display_name " +
-      "instead — it overrides the Latin first/last split with a single " +
-      "styled string."
+      "'non_latin_name' is removed in v4. Use [personal] display_name "
+        + "instead — it overrides the Latin first/last split with a single "
+        + "styled string.",
     )
   }
   if metadata.at("lang", default: none) != none {
     panic(
-      "'[lang.<code>]' tables are removed in v4. Set 'header_quote', " +
-      "'cv_footer', 'letter_footer' as top-level fields in " +
-      "profile_<name>/metadata.toml (one profile = one complete config)."
+      "'[lang.<code>]' tables are removed in v4. Set 'header_quote', "
+        + "'cv_footer', 'letter_footer' as top-level fields in "
+        + "profile_<name>/metadata.toml (one profile = one complete config).",
     )
   }
 }
@@ -77,30 +77,46 @@
   // Resolve fonts. Profiles configure typography fully via [layout.fonts];
   // mixed-script profiles list both Latin and CJK fonts in regular_fonts and
   // typst's codepoint-level fallback chooses per character.
-  let font-config = overwrite-fonts(metadata, _latin-font-list, _latin-header-font)
+  let font-config = overwrite-fonts(
+    metadata,
+    _latin-font-list,
+    _latin-header-font,
+  )
   let fonts = font-config.regular-fonts
   let header-font = font-config.header-font
 
   let font_size = eval(
-    metadata.layout.at("font_size", default: "9pt")
+    metadata.layout.at("font_size", default: "9pt"),
   )
   // Page layout
-  set text(font: fonts, weight: "regular", size: font_size, fill: _regular-colors.lightgray)
+  set text(
+    font: fonts,
+    weight: "regular",
+    size: font_size,
+    fill: _regular-colors.lightgray,
+  )
   set align(left)
   let paper_size = metadata.layout.at("paper_size", default: "a4")
   set page(
-    paper: {paper_size},
+    paper: { paper_size },
     margin: {
       if paper_size == "us-letter" {
         (left: 2cm, right: 1.4cm, top: 1.2cm, bottom: 1.2cm)
-        } else {
+      } else {
         (left: 1.4cm, right: 1.4cm, top: 1cm, bottom: 1cm)
       }
     },
     footer: context _cv-footer(metadata),
   )
 
-  _cv-header(metadata, profile-photo, header-font, _regular-colors, _awesome-colors, custom-icons)
+  _cv-header(
+    metadata,
+    profile-photo,
+    header-font,
+    _regular-colors,
+    _awesome-colors,
+    custom-icons,
+  )
   doc
 }
 
@@ -140,32 +156,45 @@
   // upgrade message rather than silent no-op.
   let inject = metadata.at("inject", default: (:))
   if inject.at("inject_ai_prompt", default: none) != none {
-    panic("'inject_ai_prompt' has been removed since v3. Use 'custom_ai_prompt_text' in [inject] instead.")
+    panic(
+      "'inject_ai_prompt' has been removed since v3. Use 'custom_ai_prompt_text' in [inject] instead.",
+    )
   }
   if inject.at("inject_keywords", default: none) != none {
-    panic("'inject_keywords' has been removed since v3. Use 'injected_keywords_list' directly — if the list is present, keywords are injected. To disable injection, remove 'injected_keywords_list'.")
+    panic(
+      "'inject_keywords' has been removed since v3. Use 'injected_keywords_list' directly — if the list is present, keywords are injected. To disable injection, remove 'injected_keywords_list'.",
+    )
   }
 
   // Resolve fonts (same logic as cv()).
-  let font-config = overwrite-fonts(metadata, _latin-font-list, _latin-header-font)
+  let font-config = overwrite-fonts(
+    metadata,
+    _latin-font-list,
+    _latin-header-font,
+  )
   let fonts = font-config.regular-fonts
   let header-font = font-config.header-font
 
   // Font size from metadata (consistent with CV)
   let font-size = eval(
-    metadata.layout.at("font_size", default: "9pt")
+    metadata.layout.at("font_size", default: "9pt"),
   )
 
   // Page layout
-  set text(font: fonts, weight: "regular", size: font-size, fill: _regular-colors.lightgray)
+  set text(
+    font: fonts,
+    weight: "regular",
+    size: font-size,
+    fill: _regular-colors.lightgray,
+  )
   set align(left)
   let paper-size = metadata.layout.at("paper_size", default: "a4")
   set page(
-    paper: {paper-size},
+    paper: { paper-size },
     margin: {
       if paper-size == "us-letter" {
         (left: 2cm, right: 2cm, top: 1.2cm, bottom: 1.2cm)
-        } else {
+      } else {
         (left: 1.4cm, right: 1.4cm, top: 1cm, bottom: 1cm)
       }
     },
@@ -174,15 +203,15 @@
   set text(size: 12pt)
 
   _letter-header(
-      sender-address: sender-address,
-      recipient-name: recipient-name,
-      recipient-address: recipient-address,
-      date: date,
-      subject: subject,
-      metadata: metadata,
-      awesome-colors: _awesome-colors,
-      address-style: address-style,
-    )
+    sender-address: sender-address,
+    recipient-name: recipient-name,
+    recipient-address: recipient-address,
+    date: date,
+    subject: subject,
+    metadata: metadata,
+    awesome-colors: _awesome-colors,
+    address-style: address-style,
+  )
   doc
 
   if signature != "" {

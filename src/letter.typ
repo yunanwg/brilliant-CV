@@ -1,8 +1,8 @@
 /*
-* Functions for the cover letter template
-*/
+ * Functions for the cover letter template
+ */
 
-#import "./utils/styles.typ": _set-accent-color, _awesome-colors
+#import "./utils/styles.typ": _awesome-colors, _set-accent-color
 #import "./utils/injection.typ": _inject
 
 #let _letter-header(
@@ -15,7 +15,9 @@
   awesome-colors: _awesome-colors,
   address-style: "smallcaps",
 ) = {
-  let sender-name = metadata.personal.first_name + " " + metadata.personal.last_name
+  let sender-name = (
+    metadata.personal.first_name + " " + metadata.personal.last_name
+  )
 
   let accent-color = _set-accent-color(awesome-colors, metadata)
 
@@ -68,9 +70,14 @@
 
 #let _letter-footer(metadata) = {
   // Parameters
-  let sender-name = metadata.personal.first_name + " " + metadata.personal.last_name
+  let sender-name = (
+    metadata.personal.first_name + " " + metadata.personal.last_name
+  )
   let letter-footer-text = metadata.at("letter_footer", default: "")
-  let display-footer = metadata.layout.at("footer", default: {}).at("display_footer", default: true)
+  let display-footer = metadata
+    .layout
+    .at("footer", default: {})
+    .at("display_footer", default: true)
 
   if not display-footer {
     return none
@@ -85,7 +92,6 @@
     columns: (1fr, auto),
     inset: 0pt,
     stroke: none,
-    footer-style([#sender-name]),
-    footer-style(letter-footer-text),
+    footer-style([#sender-name]), footer-style(letter-footer-text),
   )
 }

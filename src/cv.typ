@@ -1,27 +1,41 @@
 /*
-* Functions for the CV template
-*/
+ * Functions for the CV template
+ */
 
 #import "@preview/fontawesome:0.6.0": *
 #import "./utils/injection.typ": _inject
-#import "./utils/styles.typ": _latin-font-list, _latin-header-font, _awesome-colors, _regular-colors, _set-accent-color, h-bar
+#import "./utils/styles.typ": (
+  _awesome-colors, _latin-font-list, _latin-header-font, _regular-colors,
+  _set-accent-color, h-bar,
+)
 
 /// Metadata state to avoid passing metadata to every function
 #let cv-metadata = state("cv-metadata", none)
 
 /// Create header style functions
 /// -> dictionary
-#let _header-styles(header-font, regular-colors, accent-color, header-info-font-size) = (
-  first-name: (str) => text(
+#let _header-styles(
+  header-font,
+  regular-colors,
+  accent-color,
+  header-info-font-size,
+) = (
+  first-name: str => text(
     font: header-font,
     size: 32pt,
     weight: "light",
     fill: regular-colors.darkgray,
     str,
   ),
-  last-name: (str) => text(font: header-font, size: 32pt, weight: "bold", str),
-  info: (str) => text(size: header-info-font-size, fill: accent-color, str),
-  quote: (str) => text(size: 10pt, weight: "medium", style: "italic", fill: accent-color, str),
+  last-name: str => text(font: header-font, size: 32pt, weight: "bold", str),
+  info: str => text(size: header-info-font-size, fill: accent-color, str),
+  quote: str => text(
+    size: 10pt,
+    weight: "medium",
+    style: "italic",
+    fill: accent-color,
+    str,
+  ),
 )
 
 /// Extract layout values with defaults
@@ -74,7 +88,7 @@
         icon
         h(5pt)
         if link-value != "" {
-        link(link-value)[#text]
+          link(link-value)[#text]
         } else {
           text
         }
@@ -100,7 +114,7 @@
         } else if k == "researchgate" {
           link("https://www.researchgate.net/profile/" + v)[#v]
         } else if k == "phone" {
-          link("tel:" + v.replace(" ",""))[#v]
+          link("tel:" + v.replace(" ", ""))[#v]
         } else {
           v
         }
@@ -121,7 +135,15 @@
 /// presentation. When `display-name` is none, the conventional Latin
 /// "first (light) + last (bold)" split is used.
 /// -> content
-#let _make-header-name-section(styles, display-name, first-name, last-name, personal-info, header-quote, custom-icons) = {
+#let _make-header-name-section(
+  styles,
+  display-name,
+  first-name,
+  last-name,
+  personal-info,
+  header-quote,
+  custom-icons,
+) = {
   table(
     columns: 1fr,
     inset: 0pt,
@@ -129,16 +151,26 @@
     row-gutter: 6mm,
     if display-name != none {
       (styles.first-name)(display-name)
-    } else [#(styles.first-name)(first-name) #h(5pt) #(styles.last-name)(last-name)],
-    [#(styles.info)(_make-header-info(personal-info, _personal-info-icons, custom-icons))],
-    .. if header-quote != none { ([#(styles.quote)(header-quote)],) },
+    } else [#(styles.first-name)(first-name) #h(5pt) #(styles.last-name)(
+        last-name,
+      )],
+    [#(styles.info)(_make-header-info(
+      personal-info,
+      _personal-info-icons,
+      custom-icons,
+    ))],
+    ..if header-quote != none { ([#(styles.quote)(header-quote)],) },
   )
 }
 
 /// Create header photo section. When `profile-photo` is `none` the column
 /// collapses to a fixed-height spacer regardless of `display-profile-photo`.
 /// -> content
-#let _make-header-photo-section(display-profile-photo, profile-photo, profile-photo-radius) = {
+#let _make-header-photo-section(
+  display-profile-photo,
+  profile-photo,
+  profile-photo-radius,
+) = {
   set image(height: 3.6cm)
   if display-profile-photo and profile-photo != none {
     box(profile-photo, radius: profile-photo-radius, clip: true)
@@ -183,10 +215,14 @@
   // Schema migration guard: panic on v2 inject keys so users get a clear
   // upgrade message rather than silent no-op.
   if inject.at("inject_ai_prompt", default: none) != none {
-    panic("'inject_ai_prompt' has been removed since v3. Use 'custom_ai_prompt_text' in [inject] instead.")
+    panic(
+      "'inject_ai_prompt' has been removed since v3. Use 'custom_ai_prompt_text' in [inject] instead.",
+    )
   }
   if inject.at("inject_keywords", default: none) != none {
-    panic("'inject_keywords' has been removed since v3. Use 'injected_keywords_list' directly — if the list is present, keywords are injected. To disable injection, remove 'injected_keywords_list'.")
+    panic(
+      "'inject_keywords' has been removed since v3. Use 'injected_keywords_list' directly — if the list is present, keywords are injected. To disable injection, remove 'injected_keywords_list'.",
+    )
   }
   let custom-ai-prompt-text = inject.at("custom_ai_prompt_text", default: none)
   let keywords = inject.at("injected_keywords_list", default: ())
@@ -195,8 +231,14 @@
   let last-name = metadata.personal.last_name
   let header-quote = metadata.at("header_quote", default: none)
   let display-profile-photo = metadata.layout.header.display_profile_photo
-  let profile-photo-radius = eval(metadata.layout.header.at("profile_photo_radius", default: "50%"))
-  let header-info-font-size = eval(metadata.layout.header.at("info_font_size", default: "10pt"))
+  let profile-photo-radius = eval(metadata.layout.header.at(
+    "profile_photo_radius",
+    default: "50%",
+  ))
+  let header-info-font-size = eval(metadata.layout.header.at(
+    "info_font_size",
+    default: "10pt",
+  ))
   let accent-color = _set-accent-color(_awesome-colors, metadata)
 
   // display_name overrides the Latin split (first light + last bold) with a
@@ -211,14 +253,29 @@
   )
 
   // Create styles
-  let styles = _header-styles(header-font, regular-colors, accent-color, header-info-font-size)
+  let styles = _header-styles(
+    header-font,
+    regular-colors,
+    accent-color,
+    header-info-font-size,
+  )
 
   // Create components
   let name-section = _make-header-name-section(
-    styles, display-name, first-name, last-name, personal-info, header-quote, custom-icons
+    styles,
+    display-name,
+    first-name,
+    last-name,
+    personal-info,
+    header-quote,
+    custom-icons,
   )
-  
-  let photo-section = _make-header-photo-section(display-profile-photo, profile-photo, profile-photo-radius)
+
+  let photo-section = _make-header-photo-section(
+    display-profile-photo,
+    profile-photo,
+    profile-photo-radius,
+  )
 
   // Render header
   if display-profile-photo and profile-photo != none {
@@ -245,8 +302,14 @@
   let first-name = metadata.personal.first_name
   let last-name = metadata.personal.last_name
   let footer-text = metadata.at("cv_footer", default: "")
-  let display-page-counter = metadata.layout.at("footer", default: {}).at("display_page_counter", default: false)
-  let display-footer = metadata.layout.at("footer", default: {}).at("display_footer", default: true)
+  let display-page-counter = metadata
+    .layout
+    .at("footer", default: {})
+    .at("display_page_counter", default: false)
+  let display-footer = metadata
+    .layout
+    .at("footer", default: {})
+    .at("display_footer", default: true)
 
   if not display-footer {
     return none
@@ -271,11 +334,9 @@
       columns: (1fr, auto),
       inset: -5pt,
       stroke: none,
-      footer-style([#first-name #last-name]),
-      footer-style(footer-text),
+      footer-style([#first-name #last-name]), footer-style(footer-text),
     )
   }
-
 }
 
 /// Add the title of a section.
@@ -331,8 +392,14 @@
     section-cfg.at("title_highlight_letters", default: 3)
   }
 
-  let before-section-skip = _get-layout-value(metadata, "before_section_skip", 1pt)
-  let accent-color = if color != none { color } else { _set-accent-color(awesome-colors, metadata) }
+  let before-section-skip = _get-layout-value(
+    metadata,
+    "before_section_skip",
+    1pt,
+  )
+  let accent-color = if color != none { color } else {
+    _set-accent-color(awesome-colors, metadata)
+  }
 
   let section-title-style(str, color: black) = {
     text(size: 16pt, weight: "bold", fill: color, str)
@@ -342,18 +409,18 @@
   block(
     sticky: true,
     [#if mode == "full" {
-      section-title-style(title, color: accent-color)
-    } else if mode == "none" {
-      section-title-style(title, color: black)
-    } else {
-      // "first-letters" (default)
-      let highlighted-text = title.slice(0, calc.min(letters, title.len()))
-      let normal-text = title.slice(calc.min(letters, title.len()))
-      section-title-style(highlighted-text, color: accent-color)
-      section-title-style(normal-text, color: black)
-    }
-    #h(2pt)
-    #box(width: 1fr, line(stroke: 0.9pt, length: 100%))]
+        section-title-style(title, color: accent-color)
+      } else if mode == "none" {
+        section-title-style(title, color: black)
+      } else {
+        // "first-letters" (default)
+        let highlighted-text = title.slice(0, calc.min(letters, title.len()))
+        let normal-text = title.slice(calc.min(letters, title.len()))
+        section-title-style(highlighted-text, color: accent-color)
+        section-title-style(normal-text, color: black)
+      }
+      #h(2pt)
+      #box(width: 1fr, line(stroke: 0.9pt, length: 100%))],
   )
 }
 
@@ -361,13 +428,21 @@
 /// -> dictionary
 #let _prepare-entry-params(metadata, awesome-colors, color: none) = {
   // Common parameter calculations
-  let accent-color = if color != none { color } else { _set-accent-color(awesome-colors, metadata) }
-  let before-entry-skip = eval(metadata.layout.at("before_entry_skip", default: 1pt))
-  let before-entry-description-skip = eval(metadata.layout.at("before_entry_description_skip", default: 1pt))
+  let accent-color = if color != none { color } else {
+    _set-accent-color(awesome-colors, metadata)
+  }
+  let before-entry-skip = eval(metadata.layout.at(
+    "before_entry_skip",
+    default: 1pt,
+  ))
+  let before-entry-description-skip = eval(metadata.layout.at(
+    "before_entry_description_skip",
+    default: 1pt,
+  ))
   // Default date column width. Profiles whose locale needs more room
   // (zh, fr, it, ...) should set [layout] date_width explicitly.
   let date-width = eval(metadata.layout.at("date_width", default: "3.6cm"))
-  
+
   return (
     accent-color: accent-color,
     before-entry-skip: before-entry-skip,
@@ -380,22 +455,38 @@
 /// Create entry style functions
 /// -> dictionary
 #let _entry-styles(accent-color, before-entry-description-skip) = (
-  a1: (str) => text(size: 10pt, weight: "bold", str),
-  a2: (str) => align(right, text(weight: "medium", fill: accent-color, style: "oblique", str)),
-  b1: (str) => text(size: 8pt, fill: accent-color, weight: "medium", smallcaps(str)),
-  b2: (str) => align(right, text(size: 8pt, weight: "medium", fill: gray, style: "oblique", str)),
-  dates: (dates) => [
+  a1: str => text(size: 10pt, weight: "bold", str),
+  a2: str => align(right, text(
+    weight: "medium",
+    fill: accent-color,
+    style: "oblique",
+    str,
+  )),
+  b1: str => text(
+    size: 8pt,
+    fill: accent-color,
+    weight: "medium",
+    smallcaps(str),
+  ),
+  b2: str => align(right, text(
+    size: 8pt,
+    weight: "medium",
+    fill: gray,
+    style: "oblique",
+    str,
+  )),
+  dates: dates => [
     #set list(marker: [])
     #dates
   ],
-  description: (str) => text(
+  description: str => text(
     fill: _regular-colors.lightgray,
     {
       v(before-entry-description-skip)
       str
     },
   ),
-  tag: (str) => align(center, text(size: 8pt, weight: "regular", str)),
+  tag: str => align(center, text(size: 8pt, weight: "regular", str)),
 )
 
 /// Create entry tag list
@@ -432,10 +523,10 @@
   let before-entry-skip = params.before-entry-skip
   let before-entry-description-skip = params.before-entry-description-skip
   let date-width = params.date-width
-  
+
   // Create styles
   let styles = _entry-styles(accent-color, before-entry-description-skip)
-  
+
   // Layout settings
   let display-logo = metadata.layout.entry.display_logo
   let society-first-setting = metadata.layout.entry.display_entry_society_first
@@ -451,44 +542,47 @@
       gutter: 6pt,
       align: (x, y) => if x == 1 { right } else { auto },
       table(
-          columns: (if display-logo and logo != "" { 4% } else { 0% }, 1fr),
+        columns: (if display-logo and logo != "" { 4% } else { 0% }, 1fr),
+        inset: 0pt,
+        stroke: 0pt,
+        align: horizon,
+        column-gutter: if display-logo and logo != "" { 4pt } else { 0pt },
+        if logo == "" [] else {
+          set image(width: 100%)
+          logo
+        },
+        table(
+          columns: auto,
           inset: 0pt,
           stroke: 0pt,
-          align: horizon,
-          column-gutter: if display-logo and logo != "" { 4pt } else { 0pt },
-          if logo == "" [] else {
-            set image(width: 100%)
-            logo
+          row-gutter: 6pt,
+          align: auto,
+          {
+            (styles.a1)(if society-first-setting { society } else { title })
           },
-          table(
-            columns: auto,
-            inset: 0pt,
-            stroke: 0pt,
-            row-gutter: 6pt,
-            align: auto,
-            {
-              (styles.a1)(if society-first-setting { society } else { title })
-            },
-            {
-              (styles.b1)(if society-first-setting { title } else { society })
-            },
-          ),
+          {
+            (styles.b1)(if society-first-setting { title } else { society })
+          },
         ),
+      ),
       table(
         columns: auto,
         inset: 0pt,
         stroke: 0pt,
         row-gutter: 6pt,
         align: auto,
-        (styles.a2)(if society-first-setting { location } else { (styles.dates)(date) }),
-        (styles.b2)(if society-first-setting { (styles.dates)(date) } else { location }),
+        (styles.a2)(if society-first-setting { location } else {
+          (styles.dates)(date)
+        }),
+        (styles.b2)(if society-first-setting { (styles.dates)(date) } else {
+          location
+        }),
       ),
     )
     if description != "" and description != none {
       (styles.description)(description)
     }
     _create-entry-tag-list(tags, styles.tag)
-    
   } else if entry-type == "start" {
     // Entry start layout (original cv-entry-start logic)
     if display-logo and logo != "" {
@@ -514,18 +608,18 @@
         stroke: 0pt,
         gutter: 6pt,
         align: horizon,
-        (styles.a1)(society),
-        (styles.a2)(location),
+        (styles.a1)(society), (styles.a2)(location),
       )
     }
     v(-10pt)
-    
   } else if entry-type == "continued" {
     // Entry continued layout (original cv-entry-continued logic)
     // If the date contains a linebreak, use legacy side-to-side layout
     let multiple-dates
     if type(date) == content {
-      multiple-dates = if linebreak() in date.fields().children { true } else { false }
+      multiple-dates = if linebreak() in date.fields().children { true } else {
+        false
+      }
     } else {
       multiple-dates = false
     }
@@ -541,7 +635,7 @@
           (styles.b1)(title)
         },
         (styles.b2)((styles.dates)(date)),
-        )
+      )
       if description != "" and description != none {
         (styles.description)(description)
       }
@@ -560,7 +654,7 @@
           }
         },
         (styles.b2)((styles.dates)(date)),
-        )
+      )
       (styles.description)(description)
       _create-entry-tag-list(tags, styles.tag)
     }
@@ -787,7 +881,7 @@
 #let cv-skill-with-level(
   type: "Type",
   level: 3,
-  info: "Info"
+  info: "Info",
 ) = {
   let skill-type-style(str) = {
     align(right, text(size: 10pt, weight: "bold", str))
@@ -816,7 +910,7 @@
 }
 
 /// Add a skill tag to the CV.
-/// 
+///
 /// - skill (str | content): The skill to be displayed.
 ///
 /// ```example
@@ -874,7 +968,9 @@
   metadata: none,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
-  let accent-color = if color != none { color } else { _set-accent-color(awesome-colors, metadata) }
+  let accent-color = if color != none { color } else {
+    _set-accent-color(awesome-colors, metadata)
+  }
 
   let honor-date-style(str) = {
     align(right, text(str))

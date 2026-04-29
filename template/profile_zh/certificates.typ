@@ -1,5 +1,5 @@
 // Imports
-#import "@preview/brilliant-cv:4.0.0": cv-section, cv-honor
+#import "@preview/brilliant-cv:4.0.0": cv-honor, cv-section
 
 
 #cv-section("证书")

@@ -8,7 +8,7 @@
   "Font Awesome 6 Free",
 )
 
-#let _latin-header-font = ("Roboto")
+#let _latin-header-font = "Roboto"
 
 #let _awesome-colors = (
   skyblue: rgb("#0395DE"),
@@ -25,7 +25,7 @@
 )
 
 /// Set the accent color for the document
-/// 
+///
 /// - awesome-colors (array): the awesome colors
 /// - metadata (array): the metadata object
 /// -> color
@@ -39,7 +39,7 @@
 }
 
 /// Overwrite the default fonts if the metadata has custom font values
-/// 
+///
 /// - metadata (array): the metadata object
 /// - latin-fonts (array): the default list of latin fonts
 /// - latin-header-font (string): the default header font

@@ -1,5 +1,7 @@
 // Imports
-#import "@preview/brilliant-cv:4.0.0": cv-section, cv-entry, cv-entry-start, cv-entry-continued
+#import "@preview/brilliant-cv:4.0.0": (
+  cv-entry, cv-entry-continued, cv-entry-start, cv-section,
+)
 
 
 #cv-section("Berufliche Erfahrung")
@@ -41,5 +43,7 @@
     [Sommer 2016],
   ),
   location: [Chicago, IL],
-  description: list([Unterstützung bei der Datenbereinigung, -verarbeitung und -analyse mit Python und Excel, Teilnahme an Teambesprechungen und Mitwirkung bei der Projektplanung und -durchführung]),
+  description: list(
+    [Unterstützung bei der Datenbereinigung, -verarbeitung und -analyse mit Python und Excel, Teilnahme an Teambesprechungen und Mitwirkung bei der Projektplanung und -durchführung],
+  ),
 )

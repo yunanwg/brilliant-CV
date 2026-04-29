@@ -1,5 +1,7 @@
 // Imports
-#import "@preview/brilliant-cv:4.0.0": cv-section, cv-skill, cv-skill-with-level, cv-skill-tag, h-bar
+#import "@preview/brilliant-cv:4.0.0": (
+  cv-section, cv-skill, cv-skill-tag, cv-skill-with-level, h-bar,
+)
 
 
 #cv-section("Fähigkeiten")
