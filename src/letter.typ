@@ -70,9 +70,15 @@
   // Parameters
   let sender-name = metadata.personal.first_name + " " + metadata.personal.last_name
   let letter-footer-text = metadata.at("letter_footer", default: none)
-  // Backward compat: fall back to legacy [lang.<code>] section (remove when deprecating)
+  // Backward compat: fall back to legacy [lang.<code>] section so v3
+  // metadata.toml continues to work.
   if letter-footer-text == none {
-    letter-footer-text = metadata.at("lang", default: (:)).at(metadata.language, default: (:)).at("letter_footer", default: "")
+    let legacy-lang = metadata.at("language", default: none)
+    if legacy-lang != none {
+      letter-footer-text = metadata.at("lang", default: (:)).at(legacy-lang, default: (:)).at("letter_footer", default: "")
+    } else {
+      letter-footer-text = ""
+    }
   }
   let display-footer = metadata.layout.at("footer", default: {}).at("display_footer", default: true)
 

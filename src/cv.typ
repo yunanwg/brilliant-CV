@@ -5,7 +5,6 @@
 #import "@preview/fontawesome:0.6.0": *
 #import "./utils/injection.typ": _inject
 #import "./utils/styles.typ": _latin-font-list, _latin-header-font, _awesome-colors, _regular-colors, _set-accent-color, h-bar
-#import "./utils/lang.typ": _is-non-latin, _default-date-width
 
 /// Metadata state to avoid passing metadata to every function
 #let cv-metadata = state("cv-metadata", none)
@@ -115,16 +114,21 @@
   }
 }
 
-/// Create header name section
+/// Create header name section.
+///
+/// When `display-name` is non-none it is rendered as a single styled string
+/// (in the `first-name` light style) and replaces the split first/last
+/// presentation. When `display-name` is none, the conventional Latin
+/// "first (light) + last (bold)" split is used.
 /// -> content
-#let _make-header-name-section(styles, non-latin, non-latin-name, first-name, last-name, personal-info, header-quote, custom-icons) = {
+#let _make-header-name-section(styles, display-name, first-name, last-name, personal-info, header-quote, custom-icons) = {
   table(
     columns: 1fr,
     inset: 0pt,
     stroke: none,
     row-gutter: 6mm,
-    if non-latin {
-      (styles.first-name)(non-latin-name)
+    if display-name != none {
+      (styles.first-name)(display-name)
     } else [#(styles.first-name)(first-name) #h(5pt) #(styles.last-name)(last-name)],
     [#(styles.info)(_make-header-info(personal-info, _personal-info-icons, custom-icons))],
     .. if header-quote != none { ([#(styles.quote)(header-quote)],) },
@@ -190,22 +194,28 @@
   let first-name = metadata.personal.first_name
   let last-name = metadata.personal.last_name
   let header-quote = metadata.at("header_quote", default: none)
-  // Backward compat: fall back to legacy [lang.<code>] section (remove when deprecating)
+  // Backward compat: fall back to legacy [lang.<code>] section so v3
+  // metadata.toml files continue to render after a bare version bump.
   if header-quote == none {
-    header-quote = metadata.at("lang", default: (:)).at(metadata.language, default: (:)).at("header_quote", default: none)
+    let legacy-lang = metadata.at("language", default: none)
+    if legacy-lang != none {
+      header-quote = metadata.at("lang", default: (:)).at(legacy-lang, default: (:)).at("header_quote", default: none)
+    }
   }
   let display-profile-photo = metadata.layout.header.display_profile_photo
   let profile-photo-radius = eval(metadata.layout.header.at("profile_photo_radius", default: "50%"))
   let header-info-font-size = eval(metadata.layout.header.at("info_font_size", default: "10pt"))
   let accent-color = _set-accent-color(_awesome-colors, metadata)
-  let non-latin-name = ""
-  let non-latin = _is-non-latin(metadata.language)
-  if non-latin {
-    non-latin-name = metadata.at("non_latin_name", default: none)
-    // Backward compat: fall back to legacy [lang.non_latin] section (remove when deprecating)
-    if non-latin-name == none {
-      non-latin-name = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("name", default: "")
-    }
+
+  // display_name overrides the Latin split (first light + last bold) with a
+  // single styled string. Use this for CJK profiles or any profile where the
+  // split feels wrong. Backward compat: fall back to v3's [lang.non_latin].name.
+  let display-name = metadata.personal.at("display_name", default: none)
+  if display-name == none {
+    display-name = metadata.at("non_latin_name", default: none)
+  }
+  if display-name == none {
+    display-name = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("name", default: none)
   }
 
   // Injection
@@ -216,10 +226,10 @@
 
   // Create styles
   let styles = _header-styles(header-font, regular-colors, accent-color, header-info-font-size)
-  
+
   // Create components
   let name-section = _make-header-name-section(
-    styles, non-latin, non-latin-name, first-name, last-name, personal-info, header-quote, custom-icons
+    styles, display-name, first-name, last-name, personal-info, header-quote, custom-icons
   )
   
   let photo-section = _make-header-photo-section(display-profile-photo, profile-photo, profile-photo-radius)
@@ -249,9 +259,15 @@
   let first-name = metadata.personal.first_name
   let last-name = metadata.personal.last_name
   let footer-text = metadata.at("cv_footer", default: none)
-  // Backward compat: fall back to legacy [lang.<code>] section (remove when deprecating)
+  // Backward compat: fall back to legacy [lang.<code>] section so v3
+  // metadata.toml files continue to render after a bare version bump.
   if footer-text == none {
-    footer-text = metadata.at("lang", default: (:)).at(metadata.language, default: (:)).at("cv_footer", default: "")
+    let legacy-lang = metadata.at("language", default: none)
+    if legacy-lang != none {
+      footer-text = metadata.at("lang", default: (:)).at(legacy-lang, default: (:)).at("cv_footer", default: "")
+    } else {
+      footer-text = ""
+    }
   }
   let display-page-counter = metadata.layout.at("footer", default: {}).at("display_page_counter", default: false)
   let display-footer = metadata.layout.at("footer", default: {}).at("display_footer", default: true)
@@ -288,14 +304,26 @@
 
 /// Add the title of a section.
 ///
-/// The first `letters` characters of the title are highlighted in the accent color,
-/// while the rest is rendered in black. For non-Latin languages (zh, ja, ko, ru),
-/// highlighting is skipped entirely and the full title is shown in the accent color.
+/// The visual treatment of the title is driven by `[layout.section]` in the
+/// profile metadata. Three modes are supported:
+///
+/// - `"first-letters"` (default): the first `title_highlight_letters` characters
+///   of the title are rendered in the accent color, the rest in black. This is
+///   the conventional Latin-script appearance.
+/// - `"full"`: the entire title is rendered in the accent color. Use this for
+///   CJK / non-Latin scripts where splitting the first N codepoints feels
+///   unnatural.
+/// - `"none"`: the entire title is rendered in black, no accent highlighting.
+///
+/// Per-section overrides: pass `highlight` and/or `highlight_letters` to
+/// override the metadata defaults for a single section.
 ///
 /// - title (str): The title of the section.
-/// - highlighted (bool): Whether the first n letters will be highlighted in accent color.
-/// - letters (int): The number of first letters of the title to highlight. Defaults to 3.
-/// - metadata (array): (optional) the metadata read from the TOML file.
+/// - highlight (str): (optional) override `[layout.section].title_highlight`.
+///   Accepts `"first-letters"`, `"full"`, or `"none"`.
+/// - highlight_letters (int): (optional) override `[layout.section].title_highlight_letters`.
+/// - color (color): (optional) override the accent color for this section.
+/// - metadata (dictionary): (optional) the metadata read from the TOML file.
 /// - awesome-colors (array): (optional) the awesome colors of the CV.
 ///
 /// ```example
@@ -307,20 +335,28 @@
 /// -> content
 #let cv-section(
   title,
-  highlighted: true,
-  letters: 3,
+  highlight: none,
+  highlight_letters: none,
   color: none,
   metadata: none,
   awesome-colors: _awesome-colors,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
 
-  let lang = metadata.language
-  let non-latin = _is-non-latin(lang)
+  let section-cfg = metadata.layout.at("section", default: (:))
+  let mode = if highlight != none {
+    highlight
+  } else {
+    section-cfg.at("title_highlight", default: "first-letters")
+  }
+  let letters = if highlight_letters != none {
+    highlight_letters
+  } else {
+    section-cfg.at("title_highlight_letters", default: 3)
+  }
+
   let before-section-skip = _get-layout-value(metadata, "before_section_skip", 1pt)
   let accent-color = if color != none { color } else { _set-accent-color(awesome-colors, metadata) }
-  let highlighted-text = title.slice(0, letters)
-  let normal-text = title.slice(letters)
 
   let section-title-style(str, color: black) = {
     text(size: 16pt, weight: "bold", fill: color, str)
@@ -329,15 +365,16 @@
   v(before-section-skip)
   block(
     sticky: true,
-    [#if non-latin {
+    [#if mode == "full" {
       section-title-style(title, color: accent-color)
+    } else if mode == "none" {
+      section-title-style(title, color: black)
     } else {
-      if highlighted {
-        section-title-style(highlighted-text, color: accent-color)
-        section-title-style(normal-text, color: black)
-      } else {
-        section-title-style(title, color: black)
-      }
+      // "first-letters" (default)
+      let highlighted-text = title.slice(0, calc.min(letters, title.len()))
+      let normal-text = title.slice(calc.min(letters, title.len()))
+      section-title-style(highlighted-text, color: accent-color)
+      section-title-style(normal-text, color: black)
     }
     #h(2pt)
     #box(width: 1fr, line(stroke: 0.9pt, length: 100%))]
@@ -351,12 +388,9 @@
   let accent-color = if color != none { color } else { _set-accent-color(awesome-colors, metadata) }
   let before-entry-skip = eval(metadata.layout.at("before_entry_skip", default: 1pt))
   let before-entry-description-skip = eval(metadata.layout.at("before_entry_description_skip", default: 1pt))
-  let date-width = metadata.layout.at("date_width", default: none)
-  let date-width = if date-width == none {
-    _default-date-width(metadata.language)
-  } else {
-    eval(date-width)
-  }
+  // Default date column width. Profiles whose locale needs more room
+  // (zh, fr, it, ...) should set [layout] date_width explicitly.
+  let date-width = eval(metadata.layout.at("date_width", default: "3.6cm"))
   
   return (
     accent-color: accent-color,

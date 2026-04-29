@@ -5,7 +5,6 @@
 /* Packages */
 #import "./cv.typ": *
 #import "./letter.typ": *
-#import "./utils/lang.typ": *
 #import "./utils/styles.typ": *
 
 /* Layout */
@@ -26,18 +25,19 @@
   // Update metadata state
   cv-metadata.update(metadata)
 
-  // Non Latin Logic
-  let lang = metadata.language
-  let fonts = _latin-font-list
-  let header-font = _latin-header-font
-
+  // Resolve fonts. Profiles configure typography fully via [layout.fonts];
+  // mixed-script profiles list both Latin and CJK fonts in regular_fonts and
+  // typst's codepoint-level fallback chooses per character.
   let font-config = overwrite-fonts(metadata, _latin-font-list, _latin-header-font)
-  fonts = font-config.regular-fonts
-  header-font = font-config.header-font
-  
-  if _is-non-latin(lang) {
+  let fonts = font-config.regular-fonts
+  let header-font = font-config.header-font
+
+  // Backward compat: v3 metadata.toml with `language` + `non_latin_font` (or
+  // `[lang.non_latin].font`) keeps working — we still push the CJK font into
+  // the fallback chain so existing CVs render unchanged.
+  let legacy-lang = metadata.at("language", default: none)
+  if legacy-lang in ("zh", "ja", "ko", "ru") {
     let non-latin-font = metadata.at("non_latin_font", default: none)
-    // Backward compat: fall back to legacy [lang.non_latin] section (remove when deprecating)
     if non-latin-font == none {
       non-latin-font = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("font", default: none)
     }
@@ -110,16 +110,15 @@
     panic("'inject_keywords' has been removed since v3. Use 'injected_keywords_list' directly — if the list is present, keywords are injected. To disable injection, remove 'injected_keywords_list'.")
   }
 
-  // Non Latin Logic
-  let lang = metadata.language
-  let fonts = _latin-font-list
-  let header-font = _latin-header-font
+  // Resolve fonts (same logic as cv()).
   let font-config = overwrite-fonts(metadata, _latin-font-list, _latin-header-font)
-  fonts = font-config.regular-fonts
-  header-font = font-config.header-font
-  if _is-non-latin(lang) {
+  let fonts = font-config.regular-fonts
+  let header-font = font-config.header-font
+
+  // Backward compat for v3 metadata.toml.
+  let legacy-lang = metadata.at("language", default: none)
+  if legacy-lang in ("zh", "ja", "ko", "ru") {
     let non-latin-font = metadata.at("non_latin_font", default: none)
-    // Backward compat: fall back to legacy [lang.non_latin] section (remove when deprecating)
     if non-latin-font == none {
       non-latin-font = metadata.at("lang", default: (:)).at("non_latin", default: (:)).at("font", default: none)
     }
