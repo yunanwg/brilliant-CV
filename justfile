@@ -214,9 +214,66 @@ docs-build: docs-generate
     cd docs/web && uv run --with mkdocs-material mkdocs build
     @echo "✅ Docs built at docs/web/site/"
 
-# Compare PDFs for visual regression testing
+# --- Test suite (tytanic + panic shell-script smoke tests) -----------------
+#
+# Tytanic powers units/, components/, regression/. The package requires
+# tytanic 0.3+ (which bundles typst 0.14, matching typst.toml). Install:
+#   cargo install tytanic --version "^0.3"   # or: brew install tytanic
+#
+# `just test` runs everything; `just test-fast` skips visual regressions for
+# tight inner-loop feedback. CJK regression tests (cv-zh, letter-zh) are
+# [skip]-annotated by default; run them explicitly via `just test-zh`.
+
+# Run the full test suite — tytanic + panic smoke tests
+test: link
+    @tt run --use-system-fonts --no-fail-fast
+    @bash tests/panics/run.sh
+
+# Run only compile-only tests (panics + units), sub-second feedback loop
+test-fast: link
+    @tt run --use-system-fonts --no-fail-fast -e 'glob:"units/*"'
+    @bash tests/panics/run.sh
+
+# Run only the panic-fixture shell-script smoke tests
+test-panics:
+    @bash tests/panics/run.sh
+
+# Filter tests by tytanic test-set glob (e.g. just test-filter 'components/*')
+test-filter PAT: link
+    @tt run --use-system-fonts --no-fail-fast -e 'glob:"{{PAT}}"'
+
+# Regenerate reference PNGs after intentional layout changes
+test-update: link
+    @tt update --use-system-fonts --no-fail-fast
+
+# Run CJK regression tests (cv-zh, letter-zh) explicitly — bypasses [skip]
+# annotation. Requires Heiti SC font (macOS-default; install Noto Sans CJK
+# on Linux as a fallback if needed).
+test-zh: link
+    @tt run --use-system-fonts regression/cv-zh regression/letter-zh
+
+# Update CJK regression refs locally (maintainer workflow)
+test-update-zh: link
+    @tt update --use-system-fonts regression/cv-zh regression/letter-zh
+
+# --- Code quality (typstyle) ----------------------------------------------
+
+# Format all Typst sources in place
+fmt:
+    @typstyle -i src template tests
+    @echo "✅ Formatted src/, template/, tests/"
+
+# Check formatting (CI gate, exits non-zero on diff)
+fmt-check:
+    @typstyle --check src template tests
+
+# --- Deprecated -----------------------------------------------------------
+
+# Compare PDFs for visual regression testing (deprecated — use `just test`).
+# Kept for one release as a fallback for spot-checking at PDF level.
 # Usage: just compare <baseline.pdf> <new.pdf>
 compare baseline new:
+    @echo "⚠️  just compare is deprecated. Prefer `just test` (PNG-level via tytanic)."
     @echo "🔍 Comparing PDFs..."
     @mkdir -p temp/compare
     @if diff-pdf "{{baseline}}" "{{new}}"; then \
@@ -229,8 +286,9 @@ compare baseline new:
         open "{{baseline}}" "{{new}}" temp/compare/diff.pdf; \
     fi
 
-# Build and compare against a baseline PDF
+# Build and compare against a baseline PDF (deprecated — use `just test`)
 compare-build baseline:
+    @echo "⚠️  just compare-build is deprecated. Prefer `just test`."
     @echo "🏗️  Building current version..."
     @just build
     @just compare "{{baseline}}" temp/cv.pdf
