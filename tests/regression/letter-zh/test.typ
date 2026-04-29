@@ -1,12 +1,20 @@
-/// [skip]
-//
-// Regression: cover letter for the Chinese profile. CI-skipped for the
-// same Heiti SC reason as regression/cv-zh — see tests/README.md.
-// Maintainer runs locally via `tt run regression/letter-zh`.
+// Regression: cover letter for the Chinese profile. See
+// regression/cv-zh/test.typ for the Heiti SC → Noto Sans CJK SC font
+// override rationale (Linux baseline, Heiti SC not redistributable).
 
 #import "/src/lib.typ": letter
 
 #let metadata = toml("/template/profile_zh/metadata.toml")
+#let metadata = (
+  ..metadata,
+  layout: (
+    ..metadata.layout,
+    fonts: (
+      regular_fonts: ("Source Sans 3", "Noto Sans CJK SC"),
+      header_font: "Noto Sans CJK SC",
+    ),
+  ),
+)
 
 #show: letter.with(
   metadata,

@@ -1,10 +1,12 @@
-/// [skip]
+// Regression: full Chinese profile rendered end-to-end.
 //
-// Regression: full Chinese profile rendered end-to-end. Uses Heiti SC
-// (macOS-default) which CI Linux runners don't have, so this test is
-// [skip]-annotated by default. Maintainer regenerates the ref locally
-// on macOS via `tt run regression/cv-zh` (explicit name bypasses skip)
-// or `just test-zh`. See tests/README.md for the full rationale.
+// profile_zh ships with Heiti SC (macOS-default) for the CJK fonts. The
+// Linux Docker baseline doesn't have Heiti SC (not freely redistributable),
+// so the test fixture overrides [layout.fonts] to Noto Sans CJK SC — the
+// canonical free CJK font, installed in tests/Dockerfile. The point of the
+// regression test is "mixed-script profile renders without errors and the
+// layout is stable", not "Heiti SC visually matches" — the latter is a
+// font-choice concern verified manually by the maintainer on macOS.
 
 #import "/src/lib.typ": cv
 
@@ -14,6 +16,10 @@
   layout: (
     ..metadata.layout,
     header: (..metadata.layout.header, display_profile_photo: false),
+    fonts: (
+      regular_fonts: ("Source Sans 3", "Noto Sans CJK SC"),
+      header_font: "Noto Sans CJK SC",
+    ),
   ),
 )
 

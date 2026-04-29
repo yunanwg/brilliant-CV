@@ -214,56 +214,64 @@ docs-build: docs-generate
     cd docs/web && uv run --with mkdocs-material mkdocs build
     @echo "✅ Docs built at docs/web/site/"
 
-# --- Test suite (tytanic + panic shell-script smoke tests) -----------------
+# --- Test suite (Docker-based, Linux baseline) -----------------------------
 #
-# Tytanic powers units/, components/, regression/. The package requires
-# tytanic 0.3+ (which bundles typst 0.14, matching typst.toml). Install:
-#   cargo install tytanic --version "^0.3"   # or: brew install tytanic
+# Visual tests run inside the same Linux Docker image (tests/Dockerfile) on
+# both maintainer machines and CI. Refs are pixel-deterministic — no
+# cross-OS antialiasing. The image bundles typst 0.14, tytanic 0.3.3,
+# typstyle 0.14.4, Source Sans 3, Roboto, Font Awesome 7, Noto CJK SC.
 #
-# `just test` runs everything; `just test-fast` skips visual regressions for
-# tight inner-loop feedback. CJK regression tests (cv-zh, letter-zh) are
-# [skip]-annotated by default; run them explicitly via `just test-zh`.
+# Compile-only tests (panics + units) don't need Docker — they run native
+# via `just test-fast` for sub-second inner loops. Visual tests are
+# `just test`. After intentional layout changes run `just test-update`
+# to regenerate refs (in Docker, so CI sees the same pixels).
 
-# Run the full test suite — tytanic + panic smoke tests
-test: link
-    @tt run --use-system-fonts --no-fail-fast
-    @bash tests/panics/run.sh
+DOCKER_IMAGE := "brilliant-cv-test"
+DOCKER_PLATFORM := "linux/amd64"
 
-# Run only compile-only tests (panics + units), sub-second feedback loop
+# Build the test image (cached after first run; rebuild on Dockerfile change)
+test-image:
+    @docker build --platform={{DOCKER_PLATFORM}} -t {{DOCKER_IMAGE}} -f tests/Dockerfile .
+
+# Run a command inside the test image with the workspace mounted
+_test-docker CMD: test-image
+    @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} bash -c "{{CMD}}"
+
+# Run the full test suite — tytanic visual + panic smoke tests in Docker
+test: test-image
+    @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} bash -c "tt run --no-fail-fast && bash tests/panics/run.sh"
+
+# Compile-only tests (panics + units) — runs native, no Docker, sub-second
 test-fast: link
-    @tt run --use-system-fonts --no-fail-fast -e 'glob:"units/*"'
+    @tt run --no-fail-fast -e 'glob:"units/*"'
     @bash tests/panics/run.sh
 
-# Run only the panic-fixture shell-script smoke tests
+# Run only the panic-fixture shell-script smoke tests (native)
 test-panics:
     @bash tests/panics/run.sh
 
-# Filter tests by tytanic test-set glob (e.g. just test-filter 'components/*')
-test-filter PAT: link
-    @tt run --use-system-fonts --no-fail-fast -e 'glob:"{{PAT}}"'
+# Filter tests by tytanic test-set glob (in Docker — visual diff aware)
+test-filter PAT: test-image
+    @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} tt run --no-fail-fast -e 'glob:"{{PAT}}"'
 
-# Regenerate reference PNGs after intentional layout changes
-test-update: link
-    @tt update --use-system-fonts --no-fail-fast
+# Regenerate ref PNGs (in Docker, so CI sees identical pixels)
+test-update: test-image
+    @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} tt update --no-fail-fast
 
-# Run CJK regression tests explicitly (bypasses [skip]; needs Heiti SC)
-test-zh: link
-    @tt run --use-system-fonts regression/cv-zh regression/letter-zh
-
-# Update CJK regression refs locally (macOS maintainer workflow)
-test-update-zh: link
-    @tt update --use-system-fonts regression/cv-zh regression/letter-zh
+# Drop into an interactive shell inside the test image (debugging aid)
+test-shell: test-image
+    @docker run --rm -it --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}}
 
 # --- Code quality (typstyle) ----------------------------------------------
 
-# Format all Typst sources in place
+# Format all Typst sources in place (native — typstyle is pure-Rust, no fonts)
 fmt:
     @typstyle -i src template tests
     @echo "✅ Formatted src/, template/, tests/"
 
-# Check formatting (CI gate, exits non-zero on diff)
-fmt-check:
-    @typstyle --check src template tests
+# Check formatting (CI gate; runs in Docker for version pin consistency)
+fmt-check: test-image
+    @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} typstyle --check src template tests
 
 # --- Deprecated -----------------------------------------------------------
 
