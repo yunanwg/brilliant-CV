@@ -246,13 +246,11 @@ test-filter PAT: link
 test-update: link
     @tt update --use-system-fonts --no-fail-fast
 
-# Run CJK regression tests (cv-zh, letter-zh) explicitly — bypasses [skip]
-# annotation. Requires Heiti SC font (macOS-default; install Noto Sans CJK
-# on Linux as a fallback if needed).
+# Run CJK regression tests explicitly (bypasses [skip]; needs Heiti SC)
 test-zh: link
     @tt run --use-system-fonts regression/cv-zh regression/letter-zh
 
-# Update CJK regression refs locally (maintainer workflow)
+# Update CJK regression refs locally (macOS maintainer workflow)
 test-update-zh: link
     @tt update --use-system-fonts regression/cv-zh regression/letter-zh
 

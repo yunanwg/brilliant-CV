@@ -1,0 +1,101 @@
+name: Test
+permissions:
+  contents: read
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: SebRollen/toml-action@v1.2.0
+        id: get-package-name
+        with:
+          file: ./typst.toml
+          field: package.name
+
+      - uses: SebRollen/toml-action@v1.2.0
+        id: get-package-version
+        with:
+          file: ./typst.toml
+          field: package.version
+
+      - uses: SebRollen/toml-action@v1.2.0
+        id: get-typst-version
+        with:
+          file: ./typst.toml
+          field: package.compiler
+
+      - uses: typst-community/setup-typst@v3
+        with:
+          typst-version: ${{ steps.get-typst-version.outputs.value }}
+
+      # Install fonts that profiles depend on. Heiti SC (used by profile_zh)
+      # is intentionally NOT installed — cv-zh / letter-zh regression tests
+      # are [skip]-annotated and run only on the maintainer's macOS.
+      - name: Install fonts
+        run: |
+          set -eux
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+              fonts-font-awesome \
+              fonts-roboto \
+              fonts-linuxlibertine
+          mkdir -p ~/.local/share/fonts
+          # Source Sans 3 — not packaged in apt; fetch from the Adobe repo.
+          curl -sL --fail \
+              -o ~/.local/share/fonts/SourceSans3.zip \
+              https://github.com/adobe-fonts/source-sans/releases/download/3.052R/source-sans-3VFs.zip
+          unzip -o ~/.local/share/fonts/SourceSans3.zip \
+              -d ~/.local/share/fonts/SourceSans3/
+          rm ~/.local/share/fonts/SourceSans3.zip
+          fc-cache -f
+
+      # Register the local checkout as @preview/brilliant-cv:<version> so
+      # tests that import the published package via /template/profile_*/
+      # modules resolve to the local source. Mirrors `just link` (utpm) but
+      # without needing utpm in CI — a plain copy into typst's package cache.
+      - name: Register local package
+        run: |
+          PKG_DIR="$HOME/.local/share/typst/packages/preview/${{ steps.get-package-name.outputs.value }}/${{ steps.get-package-version.outputs.value }}"
+          mkdir -p "$PKG_DIR"
+          cp -r -a . "$PKG_DIR"
+
+      - name: Install tytanic
+        uses: taiki-e/install-action@v2
+        with:
+          tool: tytanic@0.3.3
+
+      # tytanic suite — units + components + regression. CJK regression
+      # tests are [skip]-annotated and excluded from the default `tt run`.
+      - name: Run tytanic tests
+        run: tt run --use-system-fonts --no-fail-fast
+
+      - name: Run panic-fixture smoke tests
+        run: bash tests/panics/run.sh
+
+      # Upload visual diffs when a test fails, so reviewers can see what
+      # changed at a glance without having to reproduce the run locally.
+      - name: Upload diff PNGs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tytanic-diffs
+          path: |
+            tests/**/diff/*.png
+            tests/**/out/*.png
+
+      # Format gate. Pinned to the same minor as .pre-commit-config.yaml so
+      # local pre-commit and CI agree.
+      - name: Set up uv (for typstyle install)
+        uses: astral-sh/setup-uv@v6
+      - name: Install typstyle
+        run: uv tool install typstyle==0.14.4
+      - name: Check formatting
+        run: typstyle --check src template tests
