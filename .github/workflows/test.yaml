@@ -51,7 +51,7 @@ jobs:
           # Source Sans 3 — not packaged in apt; fetch from the Adobe repo.
           curl -sL --fail \
               -o ~/.local/share/fonts/SourceSans3.zip \
-              https://github.com/adobe-fonts/source-sans/releases/download/3.052R/source-sans-3VFs.zip
+              https://github.com/adobe-fonts/source-sans/releases/download/3.052R/OTF-source-sans-3.052R.zip
           unzip -o ~/.local/share/fonts/SourceSans3.zip \
               -d ~/.local/share/fonts/SourceSans3/
           rm ~/.local/share/fonts/SourceSans3.zip
