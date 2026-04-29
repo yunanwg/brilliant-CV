@@ -39,23 +39,41 @@ jobs:
       # Install fonts that profiles depend on. Heiti SC (used by profile_zh)
       # is intentionally NOT installed — cv-zh / letter-zh regression tests
       # are [skip]-annotated and run only on the maintainer's macOS.
+      #
+      # Font Awesome: apt's `fonts-font-awesome` is FA 6 with apt-suffixed
+      # family names that typst can't match; we install upstream FA 7.2.0
+      # desktop because @preview/fontawesome:0.6.0 expects "Font Awesome 7
+      # Free Solid" / "Brands" identifiers verbatim.
+      #
+      # Linux Libertine is in `fonts-linuxlibertine` (apt) but the family
+      # name there doesn't match what src/utils/styles.typ asks for.
+      # We intentionally let typst fall through to Source Sans 3; the
+      # font is just a fallback, not load-bearing.
       - name: Install fonts
         run: |
           set -eux
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-              fonts-font-awesome \
-              fonts-roboto \
-              fonts-linuxlibertine
+          sudo apt-get install -y --no-install-recommends fonts-roboto
           mkdir -p ~/.local/share/fonts
-          # Source Sans 3 — not packaged in apt; fetch from the Adobe repo.
+
+          # Source Sans 3 (Adobe upstream)
           curl -sL --fail \
-              -o ~/.local/share/fonts/SourceSans3.zip \
+              -o /tmp/SourceSans3.zip \
               https://github.com/adobe-fonts/source-sans/releases/download/3.052R/OTF-source-sans-3.052R.zip
-          unzip -o ~/.local/share/fonts/SourceSans3.zip \
-              -d ~/.local/share/fonts/SourceSans3/
-          rm ~/.local/share/fonts/SourceSans3.zip
+          unzip -q -o /tmp/SourceSans3.zip -d ~/.local/share/fonts/SourceSans3/
+
+          # Font Awesome 7.2.0 free desktop (matches typst pkg fontawesome:0.6.0)
+          curl -sL --fail \
+              -o /tmp/fontawesome.zip \
+              https://github.com/FortAwesome/Font-Awesome/releases/download/7.2.0/fontawesome-free-7.2.0-desktop.zip
+          unzip -q -o /tmp/fontawesome.zip -d /tmp/fontawesome/
+          # The desktop zip puts otfs under a versioned directory; copy them flat.
+          find /tmp/fontawesome -name '*.otf' -exec cp {} ~/.local/share/fonts/ \;
+
+          rm -rf /tmp/SourceSans3.zip /tmp/fontawesome.zip /tmp/fontawesome
           fc-cache -f
+          # Sanity: confirm the families typst needs are visible to fontconfig.
+          fc-list | grep -iE "source sans 3|font awesome 7|roboto" | head -5 || true
 
       # Register the local checkout as @preview/brilliant-cv:<version> so
       # tests that import the published package via /template/profile_*/
