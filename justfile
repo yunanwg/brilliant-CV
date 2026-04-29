@@ -199,12 +199,12 @@ docs-generate:
 # Serve documentation site locally
 docs-serve: docs-generate
     @echo "📖 Starting docs server at http://localhost:8000..."
-    cd docs/web && uv run --with mkdocs-material mkdocs serve
+    cd docs/web && uv run --with mkdocs-material --with mkdocs-glightbox mkdocs serve
 
 # Build documentation site
 docs-build: docs-generate
     @echo "📖 Building docs site..."
-    cd docs/web && uv run --with mkdocs-material mkdocs build
+    cd docs/web && uv run --with mkdocs-material --with mkdocs-glightbox mkdocs build
     @echo "✅ Docs built at docs/web/site/"
 
 # --- Test suite (Docker-based, Linux baseline) -----------------------------

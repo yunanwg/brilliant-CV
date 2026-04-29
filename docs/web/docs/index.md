@@ -28,16 +28,54 @@ typst init @preview/brilliant-cv
 
 ## Gallery
 
-| Standard | French (Red) | Chinese (Green) |
-|----------|-------------|-----------------|
-| ![CV](https://github.com/mintyfrankie/mintyfrankie/assets/77310871/94f5fb5c-03d0-4912-b6d6-11ee7d27a9a3) | ![CV French](https://github.com/mintyfrankie/brilliant-CV/assets/77310871/fed7b66c-728e-4213-aa58-aa26db3b1362) | ![CV Chinese](https://github.com/mintyfrankie/brilliant-CV/assets/77310871/cb9c16f5-8ad7-4256-92fe-089c108d07f5) |
+<div class="grid" markdown>
 
-## Next Steps
+![CV](https://github.com/mintyfrankie/mintyfrankie/assets/77310871/94f5fb5c-03d0-4912-b6d6-11ee7d27a9a3){ data-title="Standard (Skyblue)" }
 
-- [Getting Started](getting-started.md) — Build your first CV in 10 minutes
-- [Components](components.md) — Explore all available building blocks
-- [Configuration](configuration.md) — Full `metadata.toml` reference
-- [API Reference](api-reference.md) — Detailed function signatures and parameters
-- [Recipes](recipes.md) — Common patterns: profile photos, custom icons, colors, CI/CD
-- [Troubleshooting](troubleshooting.md) — Solutions for common issues
-- [Migration Guide](migration.md) — Upgrading from v1 or v2
+![CV French](https://github.com/mintyfrankie/brilliant-CV/assets/77310871/fed7b66c-728e-4213-aa58-aa26db3b1362){ data-title="French (Red)" }
+
+![CV Chinese](https://github.com/mintyfrankie/brilliant-CV/assets/77310871/cb9c16f5-8ad7-4256-92fe-089c108d07f5){ data-title="Chinese (Green)" }
+
+</div>
+
+## Where to next?
+
+<div class="grid cards" markdown>
+
+-   :material-rocket-launch: __Build your first CV in 10 minutes__
+
+    Bootstrap a project, edit a profile, compile to PDF.
+
+    [:octicons-arrow-right-24: Getting Started](getting-started.md)
+
+-   :material-puzzle: __Explore the components__
+
+    Every `cv-*` building block with copy-pasteable examples.
+
+    [:octicons-arrow-right-24: Components](components.md)
+
+-   :material-book-open-variant: __Common recipes__
+
+    Profile photos, custom icons, color presets, CI/CD, multi-profile setups.
+
+    [:octicons-arrow-right-24: Recipes](recipes.md)
+
+-   :material-cog: __Configuration reference__
+
+    Every `metadata.toml` field, live-included from `profile_en/`.
+
+    [:octicons-arrow-right-24: Configuration](configuration.md)
+
+-   :material-api: __API reference__
+
+    Function signatures, parameters, and return types.
+
+    [:octicons-arrow-right-24: API Reference](api-reference.md)
+
+-   :material-package-up: __Migrating from v1 / v2 / v3?__
+
+    The v3 → v4 panic-with-migration guards and their replacements.
+
+    [:octicons-arrow-right-24: Migration Guide](migration.md)
+
+</div>

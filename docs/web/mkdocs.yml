@@ -21,9 +21,21 @@ theme:
     - search.suggest
     - search.highlight
     - content.code.copy
-    - navigation.instant
-    - navigation.sections
+    - content.code.annotate     # inline (1) annotations on code blocks
+    - content.tabs.link         # synced tab selection across pages
+    - navigation.instant        # no full reload between pages
+    - navigation.tabs           # top-level grouping rendered as tabs
+    - navigation.tabs.sticky    # tab bar stays visible while scrolling
+    - navigation.sections       # group heads render as section headings
+    - navigation.top            # back-to-top button on long pages
+    - navigation.tracking       # URL updates with the current section
     - toc.integrate
+
+plugins:
+  - search
+  - glightbox:                 # click-to-zoom on screenshots / gallery
+      width: 90%
+      height: auto
 
 nav:
   - Home: index.md
@@ -56,6 +68,12 @@ markdown_extensions:
       base_path:
         - ../..
       check_paths: true
+  - pymdownx.emoji:
+      # Enables Material's icon shortcodes (`:material-rocket:`, etc.)
+      # used by the cards grid on the landing page.
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - attr_list
+  - md_in_html        # required by `<div class="grid cards" markdown>`
   - toc:
       permalink: true
