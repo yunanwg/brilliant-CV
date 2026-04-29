@@ -47,9 +47,9 @@ and #link("https://fonts.google.com/specimen/Source+Sans+3")[Source Sans Pro] (o
 
 After bootstrapping, your project will contain these files:
 
-- `metadata.toml` — shared root configuration (layout, personal info, inject)
-- `profile_en/metadata.toml` — sparse per-profile overrides (language, header_quote, footers)
+- `profile_en/metadata.toml` — complete configuration for the English profile (language, layout, personal info, inject, localized strings)
 - `profile_en/*.typ` — your content (edit these)
+- `profile_<name>/...` — other profile variants (each one is fully self-contained)
 - `cv.typ` — entry point (edit to add/remove modules)
 - `letter.typ` — cover letter entry point
 - `assets/` — your profile photo and logos
@@ -57,7 +57,7 @@ After bootstrapping, your project will contain these files:
 
 === Step 4: Configure metadata.toml
 
-All customization goes through `metadata.toml` and `profile_<name>/metadata.toml`. See Section 6 for the full configuration reference.
+All customization goes through each `profile_<name>/metadata.toml` — every profile is a complete, self-contained CV configuration. See Section 6 for the full configuration reference.
 
 The most important keys to set first:
 
