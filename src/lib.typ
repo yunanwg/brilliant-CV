@@ -15,21 +15,15 @@
 ///
 /// - metadata (dictionary): The metadata dictionary read from `metadata.toml`.
 /// - doc (content): The body content of the CV (typically the imported modules).
-/// - profile-photo (image): The profile photo to display in the header. Pass `none` to hide.
+/// - profile-photo (image | none): The profile photo to display in the header. Defaults to `none`; pass an `image(...)` to render. When `none`, the photo column is hidden regardless of `display_profile_photo`.
 /// - custom-icons (dictionary): Custom icons to override or extend the default icon set.
 /// -> content
 #let cv(
   metadata,
   doc,
-  profile-photo: image("../template/assets/avatar.png"),
+  profile-photo: none,
   custom-icons: (:),
-  // Deprecated parameter (will be removed in v4.0)
-  profilePhoto: none,
 ) = {
-  if profilePhoto != none {
-    panic("'profilePhoto' has been renamed and will be removed in v4.0. Use 'profile-photo' instead.")
-  }
-
   // Update metadata state
   cv-metadata.update(metadata)
 
@@ -95,25 +89,11 @@
   sender-address: auto,
   recipient-name: "Company Name Here",
   recipient-address: "Company Address Here",
-  // Deprecated parameters (will be removed in v4.0)
-  myAddress: none,
-  recipientName: none,
-  recipientAddress: none,
   date: datetime.today().display(),
   subject: "Subject: Hey!",
   signature: "",
   address-style: "smallcaps",
 ) = {
-  if myAddress != none {
-    panic("'myAddress' has been renamed and will be removed in v4.0. Use 'sender-address' instead.")
-  }
-  if recipientName != none {
-    panic("'recipientName' has been renamed and will be removed in v4.0. Use 'recipient-name' instead.")
-  }
-  if recipientAddress != none {
-    panic("'recipientAddress' has been renamed and will be removed in v4.0. Use 'recipient-address' instead.")
-  }
-
   // Resolve sender-address: auto reads from metadata, explicit value overrides
   let sender-address = if sender-address == auto {
     metadata.personal.at("address", default: "Your Address Here")
@@ -121,12 +101,14 @@
     sender-address
   }
 
-  // Backward compatibility: panic if old inject fields are detected
-  if metadata.inject.at("inject_ai_prompt", default: none) != none {
-    panic("'inject_ai_prompt' has been removed and will be fully deprecated in v4.0. Use 'custom_ai_prompt_text' in [inject] instead.")
+  // Schema migration guard: panic on v2 inject keys so users get a clear
+  // upgrade message rather than silent no-op.
+  let inject = metadata.at("inject", default: (:))
+  if inject.at("inject_ai_prompt", default: none) != none {
+    panic("'inject_ai_prompt' has been removed since v3. Use 'custom_ai_prompt_text' in [inject] instead.")
   }
-  if metadata.inject.at("inject_keywords", default: none) != none {
-    panic("'inject_keywords' has been removed and will be fully deprecated in v4.0. Use 'injected_keywords_list' directly instead — if the list is present, keywords will be injected. To disable injection, remove 'injected_keywords_list'.")
+  if inject.at("inject_keywords", default: none) != none {
+    panic("'inject_keywords' has been removed since v3. Use 'injected_keywords_list' directly — if the list is present, keywords are injected. To disable injection, remove 'injected_keywords_list'.")
   }
 
   // Non Latin Logic

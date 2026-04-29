@@ -55,5 +55,3 @@
   return (regular-fonts: regular-fonts, header-font: header-font)
 }
 
-// Deprecated alias (will be removed in v4.0)
-#let hBar(..args) = panic("'hBar' has been renamed and will be removed in v4.0. Use 'h-bar' instead.")

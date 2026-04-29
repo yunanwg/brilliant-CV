@@ -131,11 +131,12 @@
   )
 }
 
-/// Create header photo section
+/// Create header photo section. When `profile-photo` is `none` the column
+/// collapses to a fixed-height spacer regardless of `display-profile-photo`.
 /// -> content
 #let _make-header-photo-section(display-profile-photo, profile-photo, profile-photo-radius) = {
   set image(height: 3.6cm)
-  if display-profile-photo {
+  if display-profile-photo and profile-photo != none {
     box(profile-photo, radius: profile-photo-radius, clip: true)
   } else {
     v(3.6cm)
@@ -174,15 +175,17 @@
 ) = {
   // Parameters
   let header-alignment = eval(metadata.layout.header.header_align)
-  // Backward compatibility: panic if old fields are detected
-  if metadata.inject.at("inject_ai_prompt", default: none) != none {
-    panic("'inject_ai_prompt' has been removed and will be fully deprecated in v4.0. Use 'custom_ai_prompt_text' in [inject] instead.")
+  let inject = metadata.at("inject", default: (:))
+  // Schema migration guard: panic on v2 inject keys so users get a clear
+  // upgrade message rather than silent no-op.
+  if inject.at("inject_ai_prompt", default: none) != none {
+    panic("'inject_ai_prompt' has been removed since v3. Use 'custom_ai_prompt_text' in [inject] instead.")
   }
-  if metadata.inject.at("inject_keywords", default: none) != none {
-    panic("'inject_keywords' has been removed and will be fully deprecated in v4.0. Use 'injected_keywords_list' directly instead — if the list is present, keywords will be injected. To disable injection, remove 'injected_keywords_list'.")
+  if inject.at("inject_keywords", default: none) != none {
+    panic("'inject_keywords' has been removed since v3. Use 'injected_keywords_list' directly — if the list is present, keywords are injected. To disable injection, remove 'injected_keywords_list'.")
   }
-  let custom-ai-prompt-text = metadata.inject.at("custom_ai_prompt_text", default: none)
-  let keywords = metadata.inject.at("injected_keywords_list", default: ())
+  let custom-ai-prompt-text = inject.at("custom_ai_prompt_text", default: none)
+  let keywords = inject.at("injected_keywords_list", default: ())
   let personal-info = metadata.personal.info
   let first-name = metadata.personal.first_name
   let last-name = metadata.personal.last_name
@@ -222,7 +225,7 @@
   let photo-section = _make-header-photo-section(display-profile-photo, profile-photo, profile-photo-radius)
 
   // Render header
-  if display-profile-photo {
+  if display-profile-photo and profile-photo != none {
     _make-header(
       (name-section, photo-section),
       (auto, 20%),
@@ -309,13 +312,8 @@
   color: none,
   metadata: none,
   awesome-colors: _awesome-colors,
-  // Deprecated parameter (will be removed in v4.0)
-  awesomeColors: none,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
-  if awesomeColors != none {
-    panic("'awesomeColors' has been renamed and will be removed in v4.0. Use 'awesome-colors' instead.")
-  }
 
   let lang = metadata.language
   let non-latin = _is-non-latin(lang)
@@ -605,13 +603,8 @@
   color: none,
   metadata: none,
   awesome-colors: _awesome-colors,
-  // Deprecated parameter (will be removed in v4.0)
-  awesomeColors: none,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
-  if awesomeColors != none {
-    panic("'awesomeColors' has been renamed and will be removed in v4.0. Use 'awesome-colors' instead.")
-  }
   let params = _prepare-entry-params(metadata, awesome-colors, color: color)
 
   _make-cv-entry(
@@ -667,16 +660,10 @@
   color: none,
   metadata: none,
   awesome-colors: _awesome-colors,
-  // Deprecated parameter (will be removed in v4.0)
-  awesomeColors: none,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
-  if awesomeColors != none {
-    panic("'awesomeColors' has been renamed and will be removed in v4.0. Use 'awesome-colors' instead.")
-  }
-  // To use cvEntryStart, you need to set display_entry_society_first to true in the metadata.toml file.
   if not metadata.layout.entry.display_entry_society_first {
-    panic("display_entry_society_first must be true to use cvEntryStart")
+    panic("display_entry_society_first must be true to use cv-entry-start")
   }
 
   let params = _prepare-entry-params(metadata, awesome-colors, color: color)
@@ -713,16 +700,10 @@
   color: none,
   metadata: none,
   awesome-colors: _awesome-colors,
-  // Deprecated parameter (will be removed in v4.0)
-  awesomeColors: none,
 ) = context {
   let metadata = if metadata != none { metadata } else { cv-metadata.get() }
-  if awesomeColors != none {
-    panic("'awesomeColors' has been renamed and will be removed in v4.0. Use 'awesome-colors' instead.")
-  }
-  // To use cv-entry-continued, you need to set display_entry_society_first to true in the metadata.toml file.
   if not metadata.layout.entry.display_entry_society_first {
-    panic("display_entry_society_first must be true to use cvEntryContinued")
+    panic("display_entry_society_first must be true to use cv-entry-continued")
   }
 
   let params = _prepare-entry-params(metadata, awesome-colors, color: color)
@@ -940,20 +921,7 @@
   ref-style: "apa",
   ref-full: true,
   key-list: list(),
-  // Deprecated parameters (will be removed in v4.0)
-  refStyle: none,
-  refFull: none,
-  keyList: none,
 ) = {
-  if refStyle != none {
-    panic("'refStyle' has been renamed and will be removed in v4.0. Use 'ref-style' instead.")
-  }
-  if refFull != none {
-    panic("'refFull' has been renamed and will be removed in v4.0. Use 'ref-full' instead.")
-  }
-  if keyList != none {
-    panic("'keyList' has been renamed and will be removed in v4.0. Use 'key-list' instead.")
-  }
   let publication-style(str) = {
     text(str)
   }
@@ -970,13 +938,3 @@
   }
 }
 
-// Deprecated function aliases (will be removed in v4.0)
-#let cvPublication(..args) = panic("'cvPublication' has been renamed and will be removed in v4.0. Use 'cv-publication' instead.")
-#let cvEntryStart(..args) = panic("'cvEntryStart' has been renamed and will be removed in v4.0. Use 'cv-entry-start' instead.")
-#let cvEntryContinued(..args) = panic("'cvEntryContinued' has been renamed and will be removed in v4.0. Use 'cv-entry-continued' instead.")
-#let cvSkill(..args) = panic("'cvSkill' has been renamed and will be removed in v4.0. Use 'cv-skill' instead.")
-#let cvSkillWithLevel(..args) = panic("'cvSkillWithLevel' has been renamed and will be removed in v4.0. Use 'cv-skill-with-level' instead.")
-#let cvSkillTag(..args) = panic("'cvSkillTag' has been renamed and will be removed in v4.0. Use 'cv-skill-tag' instead.")
-#let cvHonor(..args) = panic("'cvHonor' has been renamed and will be removed in v4.0. Use 'cv-honor' instead.")
-#let cvSection(..args) = panic("'cvSection' has been renamed and will be removed in v4.0. Use 'cv-section' instead.")
-#let cvEntry(..args) = panic("'cvEntry' has been renamed and will be removed in v4.0. Use 'cv-entry' instead.")

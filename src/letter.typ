@@ -14,20 +14,15 @@
   metadata: metadata,
   awesome-colors: _awesome-colors,
   address-style: "smallcaps",
-  // Deprecated parameter (will be removed in v4.0)
-  awesomeColors: none,
 ) = {
-  if awesomeColors != none {
-    panic("'awesomeColors' has been renamed and will be removed in v4.0. Use 'awesome-colors' instead.")
-  }
-
   let sender-name = metadata.personal.first_name + " " + metadata.personal.last_name
 
   let accent-color = _set-accent-color(awesome-colors, metadata)
 
   // Keyword injection (consistent with CV)
-  let custom-ai-prompt-text = metadata.inject.at("custom_ai_prompt_text", default: none)
-  let keywords = metadata.inject.at("injected_keywords_list", default: ())
+  let inject = metadata.at("inject", default: (:))
+  let custom-ai-prompt-text = inject.at("custom_ai_prompt_text", default: none)
+  let keywords = inject.at("injected_keywords_list", default: ())
   _inject(
     custom-ai-prompt-text: custom-ai-prompt-text,
     keywords: keywords,

@@ -78,6 +78,29 @@ typst compile cv.typ --input profile=fr
 
 See [Recipes → Profile-Based Overrides](recipes.md#profile-based-overrides) for full details and examples.
 
+### Removed in v4 (no longer panic — fully removed)
+
+The following parameter aliases and function aliases have **panicked since v3** and are now **removed entirely** in v4. Code still using them will fail with a generic "unknown parameter" / "unknown function" error rather than the v3 deprecation panic.
+
+**Parameter aliases (now removed):**
+
+| Removed name | Use instead |
+|---|---|
+| `profilePhoto` (in `cv()`) | `profile-photo` |
+| `myAddress` (in `letter()`) | `sender-address` |
+| `recipientName` (in `letter()`) | `recipient-name` |
+| `recipientAddress` (in `letter()`) | `recipient-address` |
+| `awesomeColors` (in entry/section/honor) | `awesome-colors` |
+| `refStyle` (in `cv-publication`) | `ref-style` |
+| `refFull` (in `cv-publication`) | `ref-full` |
+| `keyList` (in `cv-publication`) | `key-list` |
+
+**Function aliases (now removed):**
+
+`cvEntry`, `cvEntryStart`, `cvEntryContinued`, `cvSection`, `cvSkill`, `cvSkillWithLevel`, `cvSkillTag`, `cvHonor`, `cvPublication`, `hBar` — use the kebab-case equivalents.
+
+**Schema migration guards retained:** `inject_ai_prompt` and `inject_keywords` still panic with a clear upgrade message if found in `metadata.toml`. These are kept because silently ignoring an unknown metadata key would be confusing — a user who sees their ATS keywords disappear should know why.
+
 ---
 
 ## Migration from v2
