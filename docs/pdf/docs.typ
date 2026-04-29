@@ -47,7 +47,7 @@ and #link("https://fonts.google.com/specimen/Source+Sans+3")[Source Sans Pro] (o
 
 After bootstrapping, your project will contain these files:
 
-- `profile_en/metadata.toml` — complete configuration for the English profile (language, layout, personal info, inject, localized strings)
+- `profile_en/metadata.toml` — complete configuration for the English profile (layout, fonts, personal info, inject, localized strings)
 - `profile_en/*.typ` — your content (edit these)
 - `profile_<name>/...` — other profile variants (each one is fully self-contained)
 - `cv.typ` — entry point (edit to add/remove modules)
@@ -61,9 +61,9 @@ All customization goes through each `profile_<name>/metadata.toml` — every pro
 
 The most important keys to set first:
 
-- `language` — the language code matching your `profile_<name>/` folder (e.g. `"en"`, `"fr"`)
-- `awesome_color` — your accent color (`"skyblue"`, `"red"`, `"nephritis"`, `"concrete"`, `"darknight"`)
-- `first_name` / `last_name` — your name displayed in the header
+- `header_quote` / `cv_footer` / `letter_footer` — top-level localized strings shown in the header and footer of CV / cover letter pages
+- `awesome_color` (under `[layout]`) — your accent color (`"skyblue"`, `"red"`, `"nephritis"`, `"concrete"`, `"darknight"`, or any hex like `"#1E90FF"`)
+- `first_name` / `last_name` (under `[personal]`) — your name displayed in the header
 - `[personal.info]` — your contact details (email, phone, GitHub, LinkedIn, etc.)
 
 === Step 5: Add Your First Entry
@@ -109,12 +109,13 @@ These are the building blocks of your CV.
 === cv-section
 
 ```typ
-#cv-section("Professional Experience")
-#cv-section("Skills", highlighted: false)
-#cv-section("Education", letters: 4)
+#cv-section("Professional Experience")              // uses [layout.section] defaults
+#cv-section("Skills", highlight: "none")            // no highlight
+#cv-section("Education", highlight_letters: 5)      // first 5 chars in accent
+#cv-section("教育背景", highlight: "full")          // entire title in accent (CJK convention)
 ```
 
-The section title has its first N letters highlighted in the accent color. Non-Latin languages highlight the full title.
+Highlight modes are controlled globally by `[layout.section] title_highlight` (`"first-letters"` default, `"full"`, or `"none"`) and the per-call `highlight:` / `highlight_letters:` parameters override on a single section.
 
 === cv-entry
 
@@ -237,7 +238,7 @@ Set `ref-full: true` to show all entries from the bib file. Set `ref-full: false
 typst compile cv.typ --input profile=fr
 ```
 
-For Chinese, Japanese, Korean, or Russian profiles, set `non_latin_name` and `non_latin_font` at the top level of `profile_<name>/metadata.toml`.
+For Chinese, Japanese, Korean, Russian, or any non-Latin profile, configure typography explicitly: list both Latin and CJK fonts in `[layout.fonts] regular_fonts` (typst's codepoint-level fallback handles mixed scripts), set `[layout.fonts] header_font` for the heading, and use `[personal] display_name` to override the Latin "first (light) + last (bold)" header treatment with a single styled string. See `template/profile_zh/metadata.toml` for a complete example.
 
 === Skills with Inline Separators
 
@@ -260,7 +261,7 @@ Paths in module files are relative to the module file itself, not the project ro
 
 === Font Missing
 
-Install Roboto and Source Sans 3 (or Source Sans Pro) locally. For non-Latin profiles, install the font specified by `non_latin_font` in your profile's `metadata.toml` (e.g. "Heiti SC" for Chinese).
+Install Roboto and Source Sans 3 (or Source Sans Pro) locally. For non-Latin profiles, install the font(s) listed in your profile's `[layout.fonts]` block (e.g. "Heiti SC" for Chinese, or "Noto Sans CJK SC" as a freely-redistributable alternative).
 
 === h-bar() Not Working
 
@@ -285,120 +286,16 @@ You can switch profiles at compile time via the CLI:
 typst compile cv.typ --input profile=fr
 ```
 
-Here is an example of a complete `profile_en/metadata.toml` file:
+The canonical `template/profile_en/metadata.toml` (the v4 reference profile) is reproduced below verbatim so this section never drifts from the shipped template. Each comment is also a docstring — together they describe every supported field.
 
-```toml
- # INFO: value must match folder suffix; i.e "zh" -> "./profile_zh"
-language = "en"
-
-[layout]
-# Optional values: skyblue, red, nephritis, concrete, darknight
-awesome_color = "skyblue"
-
-# Skips are for controlling the spacing between sections and entries
-before_section_skip = "1pt"
-before_entry_skip = "1pt"
-before_entry_description_skip = "1pt"
-
-# Font size for the content text
-font_size = "9pt"
-
-[layout.header]
-# Optional values: left, center, right
-header_align = "left"
-
- # Decide if you want to display profile photo or not
-display_profile_photo = true
-# Radius in % to clip profile photo at
-profile_photo_radius = "50%"
-profile_photo_path = "template/src/avatar.png"
-
-[layout.entry]
-# Decide if you want to put your company in bold or your position in bold
-display_entry_society_first = true
-
-# Decide if you want to display organisation logo or not
-display_logo = true
-
-[inject]
-# Custom AI prompt text (optional). If defined, it will be injected into the CV.
-# custom_ai_prompt_text = "Custom prompt text here..."
-
-# Keywords to inject (optional). If defined, they will be injected into the CV.
-injected_keywords_list = ["Data Analyst", "GCP", "Python", "SQL", "Tableau"]
-
-[personal]
-first_name = "John"
-last_name = "Doe"
-
-# The order of this section will affect how the entries are displayed
-# The custom value is for any additional information you want to add
-[personal.info]
-github = "yunanwg"
-phone = "+33 6 12 34 56 78"
-email = "john.doe@me.org"
-linkedin = "johndoe"
-# gitlab = "yunanwg"
-# homepage: "jd.me.org"
-# orcid = "0000-0000-0000-0000"
-# researchgate = "John-Doe"
-# extraInfo = "I am a cool kid"
-# custom-1 = (icon: "", text: "example", link: "https://example.com")
-
-# add a new section if you want to include the language of your choice
-# i.e. [[lang.ru]]
-# each section must contains the following fields
-[lang.en]
-header_quote = "Experienced Data Analyst looking for a full time job starting from now"
-cv_footer = "Curriculum vitae"
-letter_footer = "Cover letter"
-
-[lang.fr]
-header_quote = "Analyste de données expérimenté à la recherche d'un emploi à temps plein disponible dès maintenant"
-cv_footer = "Résumé"
-letter_footer = "Lettre de motivation"
-
-[lang.zh]
-header_quote = "具有丰富经验的数据分析师，随时可入职"
-cv_footer = "简历"
-letter_footer = "申请信"
-
- # For languages that are not written in Latin script
- # Currently supported non-latin language codes: ("zh", "ja", "ko", "ru")
-[lang.non_latin]
-name = "王道尔"
-font = "Heiti SC"
-```
+#raw(read("/template/profile_en/metadata.toml"), lang: "toml", block: true)
 
 #pagebreak()
-== 7. Migration from `v1` to `v2`
+== 7. Migrating from previous versions
 
-With an existing CV project using the `v1` version of the template,
-a migration is needed, including replacing some files / some content in certain files.
+This PDF reference focuses on v4. For the full v1→v2, v2→v3, and v3→v4 migration steps — including the v3→v4 panic-with-migration-message guards (`language`, `non_latin_font`, `non_latin_name`, `[lang.<code>]`, `inject_ai_prompt`, `inject_keywords`) and their v4 replacements — see the online migration guide at #link("https://github.com/yunanwg/brilliant-CV/blob/main/docs/web/docs/migration.md")[`docs/web/docs/migration.md`] in the repo.
 
-1. Delete `brilliant-CV` folder, `.gitmodules`. (Future package management will directly be managed by Typst)
-
-2. Migrate all the config on `metadata.typ` by creating a new `metadata.toml`. Follow the example toml file in the repo,
-it is rather straightforward to migrate.
-
-3. For `cv.typ` and `letter.typ`, copy the new files from the repo, and adapt the modules you have in your project.
-
-4. For the module files in `/modules_*` folders:
-
-  a. Delete the old import `#import "../brilliant-CV/template.typ": *`, and replace it by the import statements in the new template files.
-
-  b. Due to the Typst path handling mecanism, one cannot directly pass the path string to some functions anymore.
-  This concerns, for example, the logo argument in cvEntry, but also on `cvPublication` as well. Some parameter names were changed,
-  but most importantly, you should pass a function instead of a string (i.e. `image("logo.png")` instead of `"logo.png"`).
-  Refer to new template files for reference.
-
-  c. You might need to install `Roboto` and `Source Sans Pro` on your local system now,
-  as new Typst package discourages including these large files.
-
-  d. Run `typst c cv.typ` without passing the `font-path` flag. All should be good now, congrats!
-
-
-Feel free to raise an issue for more assistance should you encounter a problem that you cannot solve on your own :)
+Feel free to raise an issue for more assistance should you encounter a problem that you cannot solve on your own.
 
 #pagebreak()
 == 8. API Reference
