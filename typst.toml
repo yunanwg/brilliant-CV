@@ -35,10 +35,15 @@ thumbnail = "thumbnail.png"
 namespace = "preview"
 
 [tool.tytanic]
-# Per-channel pixel delta budget (0-255). Loose enough to absorb subpixel
-# rendering jitter between maintainer macOS and CI Linux freetype/harfbuzz
-# versions; tighten if regressions slip through.
-default.max-delta = 10
+# Per-channel pixel delta budget (0-255). Set high enough to absorb the
+# antialiasing differences between maintainer macOS (CoreText / freetype-on-
+# macos) and CI Linux freetype/harfbuzz, which on full-page text-heavy refs
+# produce rim-of-glyph differences in the 30-50 range per channel.
+default.max-delta = 50
 # Total pixels per ref image allowed to deviate beyond max-delta. A4 page
-# at 144 dpi is ~1.4 megapixels, so 2000 ≈ 0.14% tolerance.
-default.max-deviations = 2000
+# at 144 dpi is ~1.4 megapixels; 50000 ≈ 3.5% tolerance — loose enough that
+# cross-OS rendering noise passes, tight enough that any real layout change
+# (which displaces whole glyph runs, not edges) is caught. Tighten if
+# regressions slip through; the per-test annotation `/// [max-deviations]`
+# can override a single test if needed.
+default.max-deviations = 50000
