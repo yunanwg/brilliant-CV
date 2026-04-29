@@ -9,18 +9,28 @@
 
 <h4 align="center">A modern, modular, and feature-rich CV template for <a href="https://typst.app" target="_blank">Typst</a>.</h4>
 
+<p align="center">
+  <a href="https://typst.app/universe/package/brilliant-cv"><img alt="Typst Universe" src="https://img.shields.io/badge/Typst_Universe-brilliant--cv-blue?logo=typst&logoColor=white"></a>
+  <a href="https://github.com/yunanwg/brilliant-CV/actions/workflows/test.yaml"><img alt="Test status" src="https://github.com/yunanwg/brilliant-CV/actions/workflows/test.yaml/badge.svg"></a>
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-Apache_2.0-green.svg"></a>
+  <a href="https://github.com/yunanwg/brilliant-CV/releases"><img alt="Latest release" src="https://img.shields.io/github/v/release/yunanwg/brilliant-CV?color=orange"></a>
+</p>
+
 ## 📖 Documentation
 
 Full documentation (quick start, component gallery, recipes, and API reference) is available online:
 **[brilliant-CV Documentation](https://yunanwg.github.io/brilliant-CV/)**
 
+> **🆕 v4 is a breaking change.** v3 users — see the [Migration Guide](https://yunanwg.github.io/brilliant-CV/migration/) for the v3 → v4 panic-with-migration-message guards (`language`, `non_latin_font`, `[lang.<code>]`, `inject_ai_prompt`, …) and their v4 replacements.
+
 ## ✨ Key Features
 
-- **🎨 Separation of Style & Content**: Write your CV entries in simple Typst files, and let the template handle the layout and styling.
-- **🌍 Multilingual Support**: Seamlessly switch between languages (English, French, Chinese, etc.) with a single config change.
-- **🤖 AI & ATS Friendly**: Unique "keyword injection" feature to help your CV pass automated screening systems.
-- **🛠 Highly Customizable**: Tweak colors, fonts, and layout via a simple `metadata.toml` file.
-- **📦 Zero-Setup**: Get started in seconds with the Typst CLI.
+- **🎨 Separation of Style & Content** — Write your CV entries in simple Typst files; the template handles the layout and styling.
+- **🌍 Profile-based Variants** — Each `profile_<name>/` is a complete, self-contained CV. Switch with `--input profile=fr` at compile time. No language whitelist; any script (CJK, Arabic, Hebrew, …) configurable explicitly via `[layout.fonts]`.
+- **🤖 AI & ATS Friendly** — Unique "keyword injection" feature to help your CV pass automated screening systems.
+- **🛠 Highly Customizable** — Tweak colors, fonts, layout, and section highlights via per-profile `metadata.toml` files.
+- **🧪 Pixel-perfect Tested** — 40+ tests (panic, unit, component, regression) run inside a Linux Docker baseline so refs are deterministic. Layout regressions can't slip past CI.
+- **📦 Zero-Setup** — Get started in seconds with the Typst CLI.
 
 <br>
 
@@ -56,12 +66,16 @@ To add a new profile, copy an existing `profile_<name>/` directory and edit the 
 
 ## ⚙️ Configuration
 
-Each `profile_<name>/metadata.toml` is a complete configuration for that CV variant. See the [**Documentation**](https://yunanwg.github.io/brilliant-CV/configuration/) for the full reference.
+Each `profile_<name>/metadata.toml` is a **complete, self-contained** configuration for that CV variant — no shared root, no merging. See the [Configuration Reference](https://yunanwg.github.io/brilliant-CV/configuration/) for every field.
 
-| Section | Description |
-|---------|-------------|
-| `[personal]` | Your name, contact info, and social links. |
-| `[layout]` | Margins, fonts, colors, header/footer/entry display. |
+| Top-level table | Description |
+|---|---|
+| `[personal]` | Name, contact info, social links, optional `display_name` (CJK / single-string header). |
+| `[personal.info]` | Per-icon contact entries — order in the file controls header order. |
+| `[layout]` | Accent color, paper size, spacing skips, date column width. |
+| `[layout.fonts]` | `regular_fonts` (mixed-script font chain) + `header_font`. |
+| `[layout.header]` / `[layout.entry]` / `[layout.footer]` | Display toggles for photo, society-first vs role-first, page counter. |
+| `[layout.section]` | `title_highlight` enum (`"first-letters"` / `"full"` / `"none"`). |
 | `[inject]` | ATS keyword + custom AI-prompt injection. |
 | `header_quote`, `cv_footer`, `letter_footer` | Per-profile localized strings (top-level). |
 

@@ -1,17 +1,23 @@
 # brilliant-CV
 
-[![Typst Universe](https://img.shields.io/badge/Typst_Universe-brilliant--cv-blue)](https://typst.app/universe/package/brilliant-cv)
+[![Typst Universe](https://img.shields.io/badge/Typst_Universe-brilliant--cv-blue?logo=typst&logoColor=white)](https://typst.app/universe/package/brilliant-cv)
+[![License](https://img.shields.io/badge/license-Apache_2.0-green.svg)](https://github.com/yunanwg/brilliant-CV/blob/main/LICENSE)
+[![Latest release](https://img.shields.io/github/v/release/yunanwg/brilliant-CV?color=orange)](https://github.com/yunanwg/brilliant-CV/releases)
 
 A modern, modular, and feature-rich CV template for [Typst](https://typst.app).
 
 ![brilliant-CV Preview](https://github.com/mintyfrankie/mintyfrankie/assets/77310871/94f5fb5c-03d0-4912-b6d6-11ee7d27a9a3){ width="100%" }
 
+!!! info "🆕 v4 is a breaking change"
+    Coming from v3? See the [Migration Guide](migration.md) for the v3 → v4 panic-with-migration-message guards (`language`, `non_latin_font`, `[lang.<code>]`, `inject_ai_prompt`, …) and their v4 replacements.
+
 ## Features
 
 - **Separation of Style & Content** — Write your CV entries in simple Typst files; the template handles layout and styling.
-- **Multilingual Support** — Seamlessly switch between languages (English, French, Chinese, etc.) with a single config change.
+- **Profile-based Variants** — Each `profile_<name>/` is a complete, self-contained CV. Switch with `--input profile=fr` at compile time. No language whitelist; any script (CJK, Arabic, Hebrew, …) is configurable explicitly via `[layout.fonts]`.
 - **AI & ATS Friendly** — Unique "keyword injection" feature to help your CV pass automated screening systems.
-- **Highly Customizable** — Tweak colors, fonts, and layout via a simple `metadata.toml` file.
+- **Highly Customizable** — Tweak colors, fonts, layout, and section highlights via per-profile `metadata.toml` files.
+- **Pixel-perfect Tested** — 40+ tests (panic, unit, component, regression) run inside a Linux Docker baseline so refs are deterministic. Layout regressions can't slip past CI.
 - **Zero-Setup** — Get started in seconds with the Typst CLI.
 
 ## Quick Install
