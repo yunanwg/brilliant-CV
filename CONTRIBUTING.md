@@ -17,9 +17,9 @@ Thanks for helping keep Brilliant CV polished! This document explains how to run
 
 For running the test suite locally:
 
-- [tytanic](https://github.com/typst-community/tytanic) `>= 0.3` — `cargo install tytanic` or `brew install tytanic`. Bundles typst 0.14, matching this package's `compiler` requirement; 0.2.x bundles typst 0.13 and won't load the package.
-- [typstyle](https://github.com/typstyle-rs/typstyle) `0.14.4` — `brew install typstyle` or `uv tool install typstyle==0.14.4`. Pinned in `.pre-commit-config.yaml` and CI; running a different minor will produce diffs.
-- A C-locale `bash` is enough for the panic-fixture smoke tests (`tests/panics/run.sh`).
+- **Docker** (or OrbStack / Colima / Podman) — `just test` builds and runs `tests/Dockerfile`, the same Linux image CI uses. One source of truth for typst / tytanic / typstyle versions and font installation, so visual-regression refs are pixel-deterministic across all machines. First build is ~3 min; later runs are cached.
+- [tytanic](https://github.com/typst-community/tytanic) `>= 0.3` and [typstyle](https://github.com/typstyle-rs/typstyle) `0.14.4` are **optional** for the native fast-path (`just test-fast` — panic + unit tests, sub-second). Install via `cargo install tytanic --version "^0.3"` and `brew install typstyle`. Visual tests always run in Docker.
+- A C-locale `bash` is enough for the panic-fixture smoke tests (`tests/panics/run.sh`, used by `just test-fast`).
 
 Optional but helpful:
 
@@ -92,14 +92,14 @@ If you simply want to adapt the template to your own profile:
 4. **Run the checks**:
    ```bash
    just build       # compile the template once
-   just test        # full suite — tytanic + panic shell smoke tests
-   just fmt-check   # typstyle gate (CI mirrors this)
+   just test        # full suite — tytanic visual + panic shell smoke tests (Docker)
+   just fmt-check   # typstyle gate (Docker; same image as CI)
    ```
    Tighter inner loops:
-   - `just test-fast` — only compile-only tests (panics + units), sub-second
-   - `just test-filter 'components/*'` — limit to a tytanic glob
-   - `just test-update` — regenerate ref PNGs after intentional layout changes; review the diffs in `tests/**/diff/*.png` before committing the new refs
-   - `just test-zh` / `just test-update-zh` — CJK regression tests (skipped by default in CI; macOS-only because of Heiti SC)
+   - `just test-fast` — compile-only tests (panics + units), runs natively, sub-second; needs `tt` + `typst` on PATH
+   - `just test-filter 'components/*'` — visual subset, runs in Docker
+   - `just test-update` — regenerate ref PNGs in Docker after intentional layout changes; review the new PNGs visually before committing
+   - `just test-shell` — drop into a shell inside the test image for debugging
 
 5. **Commit using conventional commits** (the repo follows conventional commit messages for history clarity).
 6. **Open a PR** describing the change, how to test it, and screenshots/PDF snippets if the visual output changed.

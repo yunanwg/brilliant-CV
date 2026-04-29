@@ -30,7 +30,7 @@ Regenerate with `just docs-generate`. Edit the **source comments**, not the outp
 All user configuration flows through `template/profile_<name>/metadata.toml`. v4 has no merging or inheritance — one profile = one complete CV configuration. When adding new config options, update the comments in `template/profile_en/metadata.toml` first (it drives docs generation), then mirror to other profiles as needed.
 
 ### Tests live in `tests/` and use tytanic + a panic shell runner
-Run `just test` for the full suite. `just test-fast` for sub-second feedback (panics + units only). `just fmt-check` for the format gate. CJK regression tests are `[skip]`-annotated by default; run them locally on macOS via `just test-zh`. See `tests/README.md` for the full layout. Tytanic >= 0.3 is required (bundles typst 0.14).
+Visual tests run in Docker (`tests/Dockerfile`) on both maintainer machines and CI — refs are pixel-deterministic, no cross-OS noise to absorb. `just test` for the full suite (Docker). `just test-fast` for native sub-second feedback (panics + units only). `just fmt-check` runs typstyle in the same image. CJK regression tests use Noto Sans CJK SC (Linux baseline) instead of macOS Heiti SC — Heiti SC visual fidelity is verified manually by the maintainer with `just dev`. See `tests/README.md` for the full layout.
 
 ## Conventions
 
