@@ -20,6 +20,17 @@ jobs:
       # template/profile_en/metadata.toml via pymdownx.snippets.
       - run: uv run --no-project docs/web/generate-api-reference.py
 
+      # Copy component render refs from tests/components/ so components.md
+      # can show "what does this look like" panels beside each example.
+      # Mirrors the `just docs-generate` recipe used locally.
+      - name: Copy component render refs
+        run: |
+          mkdir -p docs/web/docs/assets/components
+          for dir in tests/components/*/; do
+            name=$(basename "$dir")
+            cp "$dir/ref/1.png" "docs/web/docs/assets/components/$name.png"
+          done
+
       # Build MkDocs site
       - run: uv tool install mkdocs --with mkdocs-material --with mkdocs-glightbox
       - run: cd docs/web && mkdocs build --strict --site-dir ../../public

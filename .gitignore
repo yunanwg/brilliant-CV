@@ -8,6 +8,10 @@ temp/
 # MkDocs build output
 docs/web/site/
 
+# Component render PNGs copied in by `just docs-generate` from
+# tests/components/*/ref/. Source of truth lives under tests/.
+docs/web/docs/assets/components/
+
 # Git worktrees
 .worktrees/
 

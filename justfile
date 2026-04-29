@@ -188,13 +188,23 @@ check-version:
         exit 1
     fi
 
-# Generate API reference from src/ doc-comments (the only auto-generated
-# docs file; configuration.md live-includes template/profile_en/metadata.toml
-# directly via pymdownx.snippets — no generator needed).
+# Refresh the auto-derived parts of the docs site:
+#   - api-reference.md (from src/ typst doc-comments)
+#   - assets/components/*.png (from tytanic component test refs — gives
+#     components.md a "what does this look like" panel beside each example
+#     code block, with zero re-rendering cost since the refs already exist).
 docs-generate:
-    @echo "📖 Generating API reference..."
-    @uv run --quiet --no-project docs/web/generate-api-reference.py
-    @echo "✅ API reference generated"
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "📖 Generating API reference..."
+    uv run --quiet --no-project docs/web/generate-api-reference.py
+    echo "🖼  Copying component render refs..."
+    mkdir -p docs/web/docs/assets/components
+    for dir in tests/components/*/; do
+        name=$(basename "$dir")
+        cp "$dir/ref/1.png" "docs/web/docs/assets/components/$name.png"
+    done
+    echo "✅ docs sources generated"
 
 # Serve documentation site locally
 docs-serve: docs-generate
