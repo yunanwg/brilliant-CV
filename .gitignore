@@ -5,11 +5,6 @@ temp/
 # MacOS specific files (Apple sucks)
 .DS_Store
 
-# LLM
-.agents
-.claude
-CLAUDE.md
-
 # MkDocs build output
 docs/web/site/
 
