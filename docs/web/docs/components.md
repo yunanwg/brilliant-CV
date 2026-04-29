@@ -37,12 +37,13 @@ The `letter()` function sets up the cover letter layout. `sender-address` defaul
 ## cv-section
 
 ```typ
-#cv-section("Professional Experience")
-#cv-section("Skills", highlighted: false)
-#cv-section("Education", letters: 4)
+#cv-section("Professional Experience")              // uses [layout.section] defaults
+#cv-section("Skills", highlight: "none")            // entire title in black
+#cv-section("Education", highlight_letters: 5)      // first 5 chars in accent
+#cv-section("教育背景", highlight: "full")          // entire title in accent (CJK convention)
 ```
 
-The section title has its first N letters highlighted in the accent color. Non-Latin languages highlight the full title.
+Highlight modes are controlled globally by `[layout.section] title_highlight` (`"first-letters"` default, `"full"`, or `"none"`). Pass `highlight:` and/or `highlight_letters:` to override on a single section.
 
 ## cv-entry
 

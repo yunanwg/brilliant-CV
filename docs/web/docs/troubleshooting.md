@@ -6,7 +6,7 @@ Paths in module files are relative to the module file itself, not the project ro
 
 ## Font Missing
 
-Install Roboto and Source Sans 3 (or Source Sans Pro) locally. For non-Latin languages, install the font specified in `[lang.non_latin]` (e.g. "Heiti SC" for Chinese).
+Install Roboto and Source Sans 3 (or Source Sans Pro) locally. For non-Latin profiles, install the font(s) listed in `[layout.fonts] regular_fonts` and `[layout.fonts] header_font` for that profile (e.g. "Heiti SC" for Chinese on macOS, or "Noto Sans CJK SC" as a freely-redistributable alternative).
 
 ## h-bar() Not Working
 
@@ -44,18 +44,25 @@ The image path is relative to the `cv.typ` file. If your photo is in a different
 
 ## Non-Latin Characters Showing as Boxes
 
-If Chinese, Japanese, Korean, or Russian characters render as empty boxes or tofu:
+If Chinese, Japanese, Korean, Russian, Arabic, etc. characters render as empty boxes or tofu:
 
-1. Install the appropriate font on your system (e.g. "Heiti SC" for Chinese)
-2. Configure the font in `metadata.toml`:
+1. **Install the appropriate font on your system** (e.g. "Heiti SC" for Chinese on macOS; "Noto Sans CJK SC" on Linux is a freely-redistributable alternative).
+2. **List both Latin and non-Latin fonts in `[layout.fonts] regular_fonts`** — typst's codepoint-level fallback picks per character, so a single font chain handles mixed scripts:
 
-```toml
-[lang.non_latin]
-name = "你的名字"
-font = "Heiti SC"
-```
+    ```toml
+    [layout.fonts]
+    regular_fonts = ["Source Sans 3", "Heiti SC"]   # Latin + CJK
+    header_font = "Heiti SC"                        # heading uses CJK glyphs
+    ```
 
-You can also override fonts globally using the `[layout.fonts]` section — see the [Configuration Reference](configuration.md#layoutfonts).
+3. **Optionally override the header name** with `[personal] display_name` to replace the Latin "first (light) + last (bold)" split with a single styled string:
+
+    ```toml
+    [personal]
+    display_name = "你的名字"
+    ```
+
+See the [Configuration Reference](configuration.md) for the complete `[layout.fonts]` and `[personal]` field list.
 
 ## Typst Version Compatibility
 

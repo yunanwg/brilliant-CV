@@ -22,7 +22,7 @@ Each profile is **self-contained** — one `profile_<name>/metadata.toml` holds 
     ```bash
     cp -r template/profile_en template/profile_swe
     ```
-2. Edit `profile_swe/metadata.toml` — change `language`, `header_quote`, footers, and any other fields that differ from English.
+2. Edit `profile_swe/metadata.toml` — change `header_quote`, `cv_footer`, `letter_footer`, and any other fields that differ from English.
 3. Edit the `.typ` modules under `profile_swe/` for Swedish content.
 4. Compile with `typst compile cv.typ --input profile=swe`.
 
@@ -30,7 +30,7 @@ There is no shared root metadata or merge mechanism in v4. **Profile = a complet
 
 ### Profile ≠ language
 
-You can have `profile_us/` and `profile_uk/` both with `language = "en"` but different locations, phone numbers, or layouts. Profile is just a directory name; pick whatever makes sense for your variants.
+The profile name is just a directory suffix — it doesn't carry semantic meaning to the package. You can have `profile_us/` and `profile_uk/` (both English text, different locations / phone numbers / layouts) sitting next to `profile_zh/` (Chinese with Heiti SC); each profile's `metadata.toml` is independently complete. Pick whatever directory names make sense for your variants.
 
 ### Sharing config across profiles
 
