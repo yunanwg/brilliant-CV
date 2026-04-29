@@ -17,7 +17,14 @@ keywords = [
 ]
 categories = ["cv", "languages", "layout"]
 compiler = "0.14.0"
-exclude = ["docs", ".pre-commit-config.yaml", ".gitignore"]
+exclude = [
+    "docs",
+    "tests",
+    "justfile",
+    ".github",
+    ".pre-commit-config.yaml",
+    ".gitignore",
+]
 
 [template]
 path = "template"
