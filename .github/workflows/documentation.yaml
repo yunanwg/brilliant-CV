@@ -13,13 +13,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Generate auto-generated documentation pages
-      - run: python docs/web/generate-api-reference.py
-      - run: python docs/web/generate-configuration.py
+      - uses: astral-sh/setup-uv@v6
+
+      # Generate the API reference from typst doc-comments.
+      # configuration.md is no longer generated — it live-includes
+      # template/profile_en/metadata.toml via pymdownx.snippets.
+      - run: uv run --no-project docs/web/generate-api-reference.py
 
       # Build MkDocs site
-      - uses: astral-sh/setup-uv@v4
-      - run: uv tool install mkdocs --with mkdocs-material
+      - run: uv tool install mkdocs --with mkdocs-material --with mkdocs-glightbox
       - run: cd docs/web && mkdocs build --strict --site-dir ../../public
 
       # Deploy to GitHub Pages
