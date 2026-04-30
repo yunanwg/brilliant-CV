@@ -11,11 +11,15 @@ on:
 # CI runs the test suite inside the same Docker image used locally
 # (tests/Dockerfile). One source of truth for typst / tytanic / typstyle
 # versions and font installation, so refs are pixel-deterministic across
-# maintainer macOS and CI Linux.
+# the maintainer's Apple Silicon Mac and CI Linux.
+#
+# Architecture: arm64 native on both sides. Cross-arch (x86 image via
+# Rosetta on Apple Silicon, or vice versa) drifts FreeType pixels;
+# see tests/Dockerfile header for the rationale.
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@v4
 

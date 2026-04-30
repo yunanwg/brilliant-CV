@@ -1,7 +1,14 @@
 # Test environment for brilliant-cv. The CI workflow and the
 # `just test` / `just test-update` recipes both run inside this image so
-# the maintainer's macOS and CI Linux see identical pixel output —
-# tytanic ref PNGs are a Linux baseline, not platform-dependent.
+# the maintainer's Apple Silicon Mac and CI Linux see identical pixel
+# output — tytanic ref PNGs are an arm64 Linux baseline.
+#
+# Architecture: arm64 only. Running x86_64 binaries via Rosetta/QEMU
+# translation produces FreeType-rasterized pixels that drift from
+# native x86_64 (empirically: ~5912 deviating pixels in Roboto-rendered
+# headers, see commit history for the migration). Sticking to a single
+# native arch (arm64) gives byte-identical refs between maintainer's
+# Mac and the GitHub-hosted ubuntu-24.04-arm runner.
 #
 # Build:  docker build -t brilliant-cv-test -f tests/Dockerfile .
 # Run:    docker run --rm -v "$(pwd)":/workspace brilliant-cv-test <cmd>
@@ -33,24 +40,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # typst 0.14.2 (>= the 0.14.0 manifest min). Download then extract in
-# separate steps — piping curl -> tar -xJ flakes under QEMU x86_64
-# emulation (SIGPIPE on tar's child).
+# separate steps — keeping the two-step form for robustness against
+# transient network/io flakes during the build.
 RUN curl -fsSL -o /tmp/typst.tar.xz \
-        https://github.com/typst/typst/releases/download/v0.14.2/typst-x86_64-unknown-linux-musl.tar.xz \
+        https://github.com/typst/typst/releases/download/v0.14.2/typst-aarch64-unknown-linux-musl.tar.xz \
     && tar -xJf /tmp/typst.tar.xz -C /tmp \
-    && mv /tmp/typst-x86_64-unknown-linux-musl/typst /usr/local/bin/typst \
-    && rm -rf /tmp/typst.tar.xz /tmp/typst-x86_64-unknown-linux-musl
+    && mv /tmp/typst-aarch64-unknown-linux-musl/typst /usr/local/bin/typst \
+    && rm -rf /tmp/typst.tar.xz /tmp/typst-aarch64-unknown-linux-musl
 
 # tytanic 0.3.3 (matches what the test harness expects)
 RUN curl -fsSL -o /tmp/tytanic.tar.xz \
-        https://github.com/typst-community/tytanic/releases/download/v0.3.3/tytanic-x86_64-unknown-linux-musl.tar.xz \
+        https://github.com/typst-community/tytanic/releases/download/v0.3.3/tytanic-aarch64-unknown-linux-musl.tar.xz \
     && tar -xJf /tmp/tytanic.tar.xz -C /tmp \
-    && mv /tmp/tytanic-x86_64-unknown-linux-musl/tt /usr/local/bin/tt \
-    && rm -rf /tmp/tytanic.tar.xz /tmp/tytanic-x86_64-unknown-linux-musl
+    && mv /tmp/tytanic-aarch64-unknown-linux-musl/tt /usr/local/bin/tt \
+    && rm -rf /tmp/tytanic.tar.xz /tmp/tytanic-aarch64-unknown-linux-musl
 
 # typstyle 0.14.4 (single binary, no archive)
 RUN curl -fsSL -o /usr/local/bin/typstyle \
-        https://github.com/typstyle-rs/typstyle/releases/download/v0.14.4/typstyle-x86_64-unknown-linux-gnu \
+        https://github.com/typstyle-rs/typstyle/releases/download/v0.14.4/typstyle-aarch64-unknown-linux-gnu \
     && chmod +x /usr/local/bin/typstyle
 
 # Source Sans 3 (Adobe upstream — not in apt)

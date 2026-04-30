@@ -230,7 +230,10 @@ docs-build: docs-generate
 # to regenerate refs (in Docker, so CI sees the same pixels).
 
 DOCKER_IMAGE := "brilliant-cv-test"
-DOCKER_PLATFORM := "linux/amd64"
+# arm64 only — see tests/Dockerfile header. Cross-arch via Rosetta/QEMU
+# drifts FreeType pixels, so the maintainer's Mac and the CI runner
+# (ubuntu-24.04-arm) both run native arm64.
+DOCKER_PLATFORM := "linux/arm64"
 
 # Build the test image (cached after first run; rebuild on Dockerfile change)
 test-image:
