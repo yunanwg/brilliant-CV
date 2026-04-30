@@ -591,7 +591,10 @@
         (styles.a1)(society), (styles.a2)(location),
       )
     }
-    v(-10pt)
+    // With a logo, the image's natural row height pads the gap, so a more
+    // aggressive collapse is fine. Without a logo the row is just text height
+    // and -10pt overlaps the next title (issue #172).
+    v(if display-logo and logo != "" { -10pt } else { -6pt })
   } else if entry-type == "continued" {
     // Entry continued layout (original cv-entry-continued logic)
     // If the date contains a linebreak, use legacy side-to-side layout
