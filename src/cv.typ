@@ -306,8 +306,11 @@
   }
 
   if display-page-counter {
+    // Name and page counter take their natural widths; the center
+    // footer text gets all the remaining space so long captions don't
+    // get squeezed into a third of the page (issue #173).
     table(
-      columns: (1fr, 1fr, 1fr),
+      columns: (auto, 1fr, auto),
       inset: -5pt,
       stroke: none,
       align(left, footer-style([#first-name #last-name])),
