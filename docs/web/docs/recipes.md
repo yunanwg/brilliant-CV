@@ -53,6 +53,26 @@ Use `#h-bar()` to separate skill items within `cv-skill`:
 )
 ```
 
+## Adding Verification Links to `cv-honor`
+
+Certificates often need a verification URL or extra metadata (verification ID, expiry, etc.). `cv-honor` already accepts content in its `description` field and exposes a `url` parameter on the title — combining the two covers most cases without extra schema:
+
+```typ
+#cv-honor(
+  date: [2025],
+  title: [AWS Certified Solutions Architect],
+  issuer: [Amazon Web Services],
+  url: "https://www.credly.com/badges/<your-badge-id>",
+  description: [
+    Credential ID: ABC-123-XYZ #h-bar()
+    Expires: 2028 #h-bar()
+    #link("https://verify.example.com")[Verify online]
+  ],
+)
+```
+
+`url` makes the title clickable; `description` accepts arbitrary content, so any combination of plain text, `#link(...)`, and `#h-bar()` separators works. Use this rather than waiting for dedicated `verification_url` / `expires` fields — content-flexible defaults stay out of your way when your formatting needs evolve.
+
 ## Adding a Profile Photo
 
 The profile photo is passed as an argument to `cv()` in your `cv.typ`, not set in `metadata.toml`:
