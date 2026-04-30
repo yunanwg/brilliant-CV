@@ -53,9 +53,11 @@ Use `#h-bar()` to separate skill items within `cv-skill`:
 )
 ```
 
-## Adding Verification Links to `cv-honor`
+## Verification Links and Richer Certificate Metadata
 
-Certificates often need a verification URL or extra metadata (verification ID, expiry, etc.). `cv-honor` already accepts content in its `description` field and exposes a `url` parameter on the title — combining the two covers most cases without extra schema:
+`cv-honor` is intentionally compact: it ships with `date`, `title`, `issuer`, `url`, and `location` — no free-form description slot. Pick the right component based on what you need to surface.
+
+**Just a clickable verification link** — pass the verification URL as `url`. The title becomes a link; `location` is a good place for short status text:
 
 ```typ
 #cv-honor(
@@ -63,15 +65,26 @@ Certificates often need a verification URL or extra metadata (verification ID, e
   title: [AWS Certified Solutions Architect],
   issuer: [Amazon Web Services],
   url: "https://www.credly.com/badges/<your-badge-id>",
-  description: [
-    Credential ID: ABC-123-XYZ #h-bar()
-    Expires: 2028 #h-bar()
-    #link("https://verify.example.com")[Verify online]
-  ],
+  location: [Verified],
 )
 ```
 
-`url` makes the title clickable; `description` accepts arbitrary content, so any combination of plain text, `#link(...)`, and `#h-bar()` separators works. Use this rather than waiting for dedicated `verification_url` / `expires` fields — content-flexible defaults stay out of your way when your formatting needs evolve.
+**Credential ID, expiry, multiple links** — switch to `cv-entry`, which has a content-flexible `description` field. The trade-off is a slightly heavier visual footprint, but you get full formatting freedom:
+
+```typ
+#cv-entry(
+  title: [AWS Certified Solutions Architect],
+  society: [Amazon Web Services],
+  date: [2025 -- 2028],
+  location: [Verified],
+  description: list(
+    [Credential ID: ABC-123-XYZ],
+    [#link("https://verify.example.com")[Verify online]],
+  ),
+)
+```
+
+The two components are interchangeable inside a `Certificates` section; mix them per entry depending on whether you need the compact one-line layout or the richer description block.
 
 ## Adding a Profile Photo
 
