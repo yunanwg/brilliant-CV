@@ -38,4 +38,5 @@ Visual tests run in Docker (`tests/Dockerfile`) on both maintainer machines and 
 - Run `just build && just test` before committing
 - Don't commit PDFs (handled by .gitignore and pre-commit hooks)
 - Tytanic ref PNGs live next to each `test.typ`; commit intentional regenerations alongside the layout change that caused them
+- When fixing a reported issue, add a regression test (tytanic ref or panic shell) that reproduces the reported scenario in the same PR. Skip only when the change is docs-only or policy-only.
 - Read `CONTRIBUTING.md` for the full contribution workflow
