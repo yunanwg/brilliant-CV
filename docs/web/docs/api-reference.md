@@ -252,7 +252,7 @@ When `ref-full` is `false`, only the entries whose keys appear in
 Renders a vertical bar separator (`|`) for use inside skill entries.
 
 ```typ
-#import "@preview/brilliant-cv:4.0.0": h-bar
+#import "@preview/brilliant-cv:4.0.1": h-bar
 
 [Python #h-bar() SQL #h-bar() Tableau]
 ```

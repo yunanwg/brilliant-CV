@@ -165,7 +165,7 @@ awesome_color = "#1E90FF"
 Create a cover letter with a signature image at the bottom:
 
 ```typ
-#import "@preview/brilliant-cv:4.0.0": letter
+#import "@preview/brilliant-cv:4.0.1": letter
 
 #let metadata = toml("metadata.toml")
 

@@ -1,5 +1,5 @@
 // Imports
-#import "@preview/brilliant-cv:4.0.0": cv
+#import "@preview/brilliant-cv:4.0.1": cv
 
 // Each profile lives in its own folder with a self-contained metadata.toml.
 // Switch profile at compile time:
