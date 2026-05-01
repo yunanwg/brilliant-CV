@@ -49,7 +49,7 @@ Full guide, component gallery, recipes, and configuration reference → **[brill
 
 ## Contributing
 
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions are welcome! See [CONTRIBUTING.md](https://github.com/yunanwg/brilliant-CV/blob/main/CONTRIBUTING.md) for guidelines.
 
 ## Sponsors
 

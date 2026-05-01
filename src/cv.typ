@@ -340,13 +340,13 @@
 ///   unnatural.
 /// - `"none"`: the entire title is rendered in black, no accent highlighting.
 ///
-/// Per-section overrides: pass `highlight` and/or `highlight_letters` to
+/// Per-section overrides: pass `highlight` and/or `highlight-letters` to
 /// override the metadata defaults for a single section.
 ///
 /// - title (str): The title of the section.
 /// - highlight (str): (optional) override `[layout.section].title_highlight`.
 ///   Accepts `"first-letters"`, `"full"`, or `"none"`.
-/// - highlight_letters (int): (optional) override `[layout.section].title_highlight_letters`.
+/// - highlight-letters (int): (optional) override `[layout.section].title_highlight_letters`.
 /// - color (color): (optional) override the accent color for this section.
 /// - metadata (dictionary): (optional) the metadata read from the TOML file.
 /// - awesome-colors (array): (optional) the awesome colors of the CV.
@@ -361,7 +361,7 @@
 #let cv-section(
   title,
   highlight: none,
-  highlight_letters: none,
+  highlight-letters: none,
   color: none,
   metadata: none,
   awesome-colors: _awesome-colors,
@@ -374,8 +374,8 @@
   } else {
     section-cfg.at("title_highlight", default: "first-letters")
   }
-  let letters = if highlight_letters != none {
-    highlight_letters
+  let letters = if highlight-letters != none {
+    highlight-letters
   } else {
     section-cfg.at("title_highlight_letters", default: 3)
   }

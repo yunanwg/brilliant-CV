@@ -50,7 +50,7 @@ profile metadata. Three modes are supported:
   unnatural.
 - `"none"`: the entire title is rendered in black, no accent highlighting.
 
-Per-section overrides: pass `highlight` and/or `highlight_letters` to
+Per-section overrides: pass `highlight` and/or `highlight-letters` to
 override the metadata defaults for a single section.
 
   Accepts `"first-letters"`, `"full"`, or `"none"`.
@@ -59,7 +59,7 @@ override the metadata defaults for a single section.
 |-----------|------|---------|-------------|
 | `title` | str | — | The title of the section. |
 | `highlight` | str | `none` | (optional) override `[layout.section].title_highlight`. |
-| `highlight_letters` | int | `none` | (optional) override `[layout.section].title_highlight_letters`. |
+| `highlight-letters` | int | `none` | (optional) override `[layout.section].title_highlight_letters`. |
 | `color` | color | `none` | (optional) override the accent color for this section. |
 
 ```typ
