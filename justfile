@@ -126,6 +126,11 @@ release version:
     # Do the release
     echo ""
     just bump "$VERSION"
+    # Re-link the local package so `@preview/brilliant-cv:$VERSION` imports
+    # in template/ and docs/pdf/docs.typ resolve to the local source. Without
+    # this, `just build` fails because the new version isn't yet on Universe
+    # and the local link still points at the old version.
+    just link
     just build
     git add -A
     git commit -m "build: bump version to $VERSION"
