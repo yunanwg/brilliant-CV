@@ -42,7 +42,7 @@ The `cv()` function is the main entry point. It runs schema-migration guards (pa
 
 ![cv-section first-letters mode](assets/components/cv-section-first-letters.png)
 
-The default `[layout.section] title_highlight = "first-letters"` highlights the leading 3 chars in the accent color (Latin convention). Override per call with `highlight:` (`"first-letters"` / `"full"` / `"none"`) and `highlight_letters:` (int).
+The default `[layout.section] title_highlight = "first-letters"` highlights the leading 3 chars in the accent color (Latin convention). Override per call with `highlight:` (`"first-letters"` / `"full"` / `"none"`) and `highlight-letters:` (int).
 
 ```typ
 #cv-section("教育背景", highlight: "full")
@@ -61,12 +61,12 @@ The default `[layout.section] title_highlight = "first-letters"` highlights the 
 `"none"` keeps the title in body text color — useful for muted, all-monochrome layouts.
 
 ```typ
-#cv-section("Professional Experience", highlight_letters: 5)
+#cv-section("Professional Experience", highlight-letters: 5)
 ```
 
 ![cv-section 5-letter custom highlight](assets/components/cv-section-custom-letters.png)
 
-`highlight_letters` overrides the default of 3 — handy for short multi-word titles.
+`highlight-letters` overrides the default of 3 — handy for short multi-word titles.
 
 ---
 

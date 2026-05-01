@@ -111,11 +111,11 @@ These are the building blocks of your CV.
 ```typ
 #cv-section("Professional Experience")              // uses [layout.section] defaults
 #cv-section("Skills", highlight: "none")            // no highlight
-#cv-section("Education", highlight_letters: 5)      // first 5 chars in accent
+#cv-section("Education", highlight-letters: 5)      // first 5 chars in accent
 #cv-section("教育背景", highlight: "full")          // entire title in accent (CJK convention)
 ```
 
-Highlight modes are controlled globally by `[layout.section] title_highlight` (`"first-letters"` default, `"full"`, or `"none"`) and the per-call `highlight:` / `highlight_letters:` parameters override on a single section.
+Highlight modes are controlled globally by `[layout.section] title_highlight` (`"first-letters"` default, `"full"`, or `"none"`) and the per-call `highlight:` / `highlight-letters:` parameters override on a single section.
 
 === cv-entry
 
