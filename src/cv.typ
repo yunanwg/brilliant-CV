@@ -518,6 +518,57 @@
 
   if entry-type == "full" {
     // Full entry layout (original cv-entry logic)
+    //
+    // The entry is two stacked rows: a top row (title/society + date/location)
+    // and a bottom row (the subtitle + its counterpart). A row is dropped only
+    // when BOTH of its columns are empty, so a fully-missing title+date pair
+    // collapses its reserved space (issue #181) while a one-sided gap still
+    // keeps the remaining text aligned with its counterpart.
+    // `[]` (empty content) counts as blank too — it's the most natural way to
+    // omit a field, and it renders nothing, so a kept row would only leak the
+    // 6pt row gutter.
+    let is-blank = v => v == none or v == "" or v == []
+
+    let top-left = if society-first-setting { society } else { title }
+    let bottom-left = if society-first-setting { title } else { society }
+    let top-right = if society-first-setting { location } else { date }
+    let bottom-right = if society-first-setting { date } else { location }
+    // The date slot needs the list-marker reset from `styles.dates`.
+    let top-right-is-date = not society-first-setting
+    let bottom-right-is-date = society-first-setting
+
+    let keep-top = not (is-blank(top-left) and is-blank(top-right))
+    let keep-bottom = not (is-blank(bottom-left) and is-blank(bottom-right))
+
+    // Coerce blanks to "" (never `none`) so styling matches a user-passed
+    // empty string, and wrap the date slot in the marker-reset helper.
+    let render = (style, value, is-date) => {
+      let v = if is-blank(value) { "" } else { value }
+      style(if is-date { (styles.dates)(v) } else { v })
+    }
+
+    let left-cells = ()
+    let right-cells = ()
+    if keep-top {
+      left-cells.push(render(styles.a1, top-left, false))
+      right-cells.push(render(styles.a2, top-right, top-right-is-date))
+    }
+    if keep-bottom {
+      left-cells.push(render(styles.b1, bottom-left, false))
+      right-cells.push(render(styles.b2, bottom-right, bottom-right-is-date))
+    }
+
+    let stack = cells => if cells.len() == 0 { [] } else {
+      table(
+        columns: auto,
+        inset: 0pt,
+        stroke: 0pt,
+        row-gutter: 6pt,
+        align: auto,
+        ..cells,
+      )
+    }
+
     table(
       columns: (1fr, date-width),
       inset: 0pt,
@@ -534,33 +585,9 @@
           set image(width: 100%)
           logo
         },
-        table(
-          columns: auto,
-          inset: 0pt,
-          stroke: 0pt,
-          row-gutter: 6pt,
-          align: auto,
-          {
-            (styles.a1)(if society-first-setting { society } else { title })
-          },
-          {
-            (styles.b1)(if society-first-setting { title } else { society })
-          },
-        ),
+        stack(left-cells),
       ),
-      table(
-        columns: auto,
-        inset: 0pt,
-        stroke: 0pt,
-        row-gutter: 6pt,
-        align: auto,
-        (styles.a2)(if society-first-setting { location } else {
-          (styles.dates)(date)
-        }),
-        (styles.b2)(if society-first-setting { (styles.dates)(date) } else {
-          location
-        }),
-      ),
+      stack(right-cells),
     )
     if description != "" and description != none {
       (styles.description)(description)
