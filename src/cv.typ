@@ -399,8 +399,8 @@
         section-title-style(title, color: black)
       } else {
         // "first-letters" (default)
-        let highlighted-text = title.slice(0, calc.min(letters, title.len()))
-        let normal-text = title.slice(calc.min(letters, title.len()))
+        let highlighted-text = title.clusters().slice(0, calc.min(letters, title.len())).join()
+        let normal-text = title.clusters().slice(calc.min(letters, title.len())).join()
         section-title-style(highlighted-text, color: accent-color)
         section-title-style(normal-text, color: black)
       }
