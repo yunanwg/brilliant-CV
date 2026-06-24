@@ -29,7 +29,7 @@ _dev-cleanup:
 # Link local package for development
 link:
     @echo "🔗 Linking local brilliant-cv package..."
-    @utpm ws link --force --no-copy
+    @utpm prj link --force --no-copy preview
     @echo "✅ Local package linked successfully!"
     @echo "💡 Typst will now use your local changes instead of cached version"
 
@@ -60,7 +60,7 @@ watch:
 # Sync dependencies to latest versions
 sync:
     @echo "🔄 Syncing dependencies..."
-    @utpm ws sync
+    @utpm prj sync
     @echo "✅ Dependencies synced!"
 
 # Clean build artifacts

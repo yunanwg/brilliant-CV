@@ -3,7 +3,7 @@
 Thanks for helping keep Brilliant CV polished! This document explains how to run the template locally, adapt it to your needs, and submit improvements upstream.
 
 > **Why the extra setup?**  
-> Typst packages are resolved by namespace (`@preview/<name>:<version>`) and normally live inside Typst’s cache/data directories, so the compiler cannot load this template straight from the repository without a link step. The `justfile` automates that link by calling `utpm ws link --force --no-copy`, which registers the workspace as the authoritative copy of `@preview/brilliant-cv:<version>` on your machine. See the Typst package repository docs for more background on how package resolution works.  
+> Typst packages are resolved by namespace (`@preview/<name>:<version>`) and normally live inside Typst’s cache/data directories, so the compiler cannot load this template straight from the repository without a link step. The `justfile` automates that link by calling `utpm prj link --force --no-copy preview`, which registers the workspace as the authoritative copy of `@preview/brilliant-cv:<version>` on your machine. See the Typst package repository docs for more background on how package resolution works.  
 > [Typst packages](https://github.com/typst/packages)
 
 ---
@@ -38,7 +38,7 @@ Optional but helpful:
 2. **Link the package into Typst**
    ```bash
    just link
-   # or run: utpm ws link --force --no-copy
+   # or run: utpm prj link --force --no-copy preview
    ```
    This step is required before Typst can resolve `#import "@preview/brilliant-cv:<version>"`.
 
