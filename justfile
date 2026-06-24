@@ -36,7 +36,7 @@ link:
 # Unlink local package (restore to using upstream version)
 unlink:
     @echo "🔓 Unlinking local package..."
-    @utpm pkg unlink --yes 2>/dev/null || @echo "💡 Package already unlinked or not found"
+    @utpm pkg unlink @preview/brilliant-cv --yes 2>/dev/null || @echo "💡 Package already unlinked or not found"
     @echo "✅ Local package unlinked - now using upstream version"
 
 # Build CV template for testing
