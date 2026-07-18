@@ -74,4 +74,4 @@ The expected substring is encoded in each fixture's first-line comment as `// ex
 
 ## Native-only inner loop
 
-If you have `tytanic` and `typstyle` installed natively (`cargo install tytanic --version "^0.3"` + `brew install typstyle`), `just test-fast` exercises the OS-independent subset (panics + units) at sub-second speed — useful while iterating. Visual tests still need Docker.
+If you have `tytanic` and `typstyle` installed natively (`cargo install tytanic --version "^0.4.1"` + `brew install typstyle`), `just test-fast` exercises the OS-independent subset (panics + units) at sub-second speed — useful while iterating. Visual tests still need Docker.

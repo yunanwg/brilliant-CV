@@ -40,25 +40,26 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         just \
     && rm -rf /var/lib/apt/lists/*
 
-# typst 0.14.2 (>= the 0.14.0 manifest min). Download then extract in
+# typst 0.15.1 (>= the 0.14.0 manifest min). Download then extract in
 # separate steps — keeping the two-step form for robustness against
 # transient network/io flakes during the build.
 RUN curl -fsSL -o /tmp/typst.tar.xz \
-        https://github.com/typst/typst/releases/download/v0.14.2/typst-aarch64-unknown-linux-musl.tar.xz \
+        https://github.com/typst/typst/releases/download/v0.15.1/typst-aarch64-unknown-linux-musl.tar.xz \
     && tar -xJf /tmp/typst.tar.xz -C /tmp \
     && mv /tmp/typst-aarch64-unknown-linux-musl/typst /usr/local/bin/typst \
     && rm -rf /tmp/typst.tar.xz /tmp/typst-aarch64-unknown-linux-musl
 
-# tytanic 0.3.3 (matches what the test harness expects)
+# tytanic 0.4.1 embeds Typst 0.15.1, keeping the standalone compiler and
+# the visual-reference renderer on the same Typst release.
 RUN curl -fsSL -o /tmp/tytanic.tar.xz \
-        https://github.com/typst-community/tytanic/releases/download/v0.3.3/tytanic-aarch64-unknown-linux-musl.tar.xz \
+        https://github.com/typst-community/tytanic/releases/download/v0.4.1/tytanic-aarch64-unknown-linux-musl.tar.xz \
     && tar -xJf /tmp/tytanic.tar.xz -C /tmp \
     && mv /tmp/tytanic-aarch64-unknown-linux-musl/tt /usr/local/bin/tt \
     && rm -rf /tmp/tytanic.tar.xz /tmp/tytanic-aarch64-unknown-linux-musl
 
-# typstyle 0.14.4 (single binary, no archive)
+# typstyle 0.15.0 (single binary, no archive; built against Typst 0.15)
 RUN curl -fsSL -o /usr/local/bin/typstyle \
-        https://github.com/typstyle-rs/typstyle/releases/download/v0.14.4/typstyle-aarch64-unknown-linux-gnu \
+        https://github.com/typstyle-rs/typstyle/releases/download/v0.15.0/typstyle-aarch64-unknown-linux-gnu \
     && chmod +x /usr/local/bin/typstyle
 
 # Source Sans 3 (Adobe upstream — not in apt)
