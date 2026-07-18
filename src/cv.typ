@@ -332,11 +332,11 @@
 /// The visual treatment of the title is driven by `[layout.section]` in the
 /// profile metadata. Three modes are supported:
 ///
-/// - `"first-letters"` (default): the first `title_highlight_letters` characters
-///   of the title are rendered in the accent color, the rest in black. This is
-///   the conventional Latin-script appearance.
+/// - `"first-letters"` (default): the first `title_highlight_letters` grapheme
+///   clusters of the title are rendered in the accent color, the rest in black.
+///   This is the conventional Latin-script appearance.
 /// - `"full"`: the entire title is rendered in the accent color. Use this for
-///   CJK / non-Latin scripts where splitting the first N codepoints feels
+///   CJK / non-Latin scripts where splitting the first N grapheme clusters feels
 ///   unnatural.
 /// - `"none"`: the entire title is rendered in black, no accent highlighting.
 ///
@@ -399,8 +399,10 @@
         section-title-style(title, color: black)
       } else {
         // "first-letters" (default)
-        let highlighted-text = title.slice(0, calc.min(letters, title.len()))
-        let normal-text = title.slice(calc.min(letters, title.len()))
+        let clusters = title.clusters()
+        let split = calc.min(letters, clusters.len())
+        let highlighted-text = clusters.slice(0, split).join()
+        let normal-text = clusters.slice(split).join()
         section-title-style(highlighted-text, color: accent-color)
         section-title-style(normal-text, color: black)
       }
@@ -1054,4 +1056,3 @@
     bib
   }
 }
-
