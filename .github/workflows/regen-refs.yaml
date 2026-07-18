@@ -1,0 +1,57 @@
+# Regenerate tytanic visual refs on the native arm64 CI runner.
+#
+# Manual tool (workflow_dispatch): run it on a branch after an intentional
+# layout change; it runs `tt update` inside the pinned Docker image (the
+# same environment `just test` / CI use) and pushes the regenerated
+# tests/**/ref PNGs back to the branch it was dispatched on. Review the
+# resulting ref diff visually before merging — same rule as a local
+# `just test-update`.
+name: Regenerate visual refs
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  regen:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Buildx (for layer cache)
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build test image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: tests/Dockerfile
+          tags: brilliant-cv-test
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Regenerate refs (tt update)
+        run: |
+          docker run --rm \
+            -v "$PWD:/workspace" \
+            brilliant-cv-test \
+            tt update --no-fail-fast
+
+      - name: Commit and push regenerated refs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/
+          if git diff --cached --quiet; then
+            echo "No ref changes — nothing to push"
+          else
+            git commit -m "test: regenerate visual refs on arm64 CI runner"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
