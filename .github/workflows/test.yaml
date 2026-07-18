@@ -36,6 +36,11 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      # Guards need only bash + python3 stdlib, so they run on the runner
+      # host — the test image deliberately doesn't ship python3.
+      - name: Machine guards (determinism + profile parity)
+        run: bash tests/guards.sh
+
       - name: Run tytanic + panic suite
         run: |
           docker run --rm \

@@ -27,6 +27,18 @@ SOURCE_FILES = [
     ("CV Components", PROJECT_ROOT / "src" / "cv.typ"),
 ]
 
+# Files scanned by the PUBLIC_FUNCTIONS self-check (see
+# check_public_functions_in_sync below). Broader than SOURCE_FILES: it also
+# covers src/letter.typ and src/utils/styles.typ, whose public (non `_`
+# -prefixed) functions are re-exported by src/lib.typ's wildcard imports but
+# aren't (yet) doc-comment-driven sections of this generated page.
+PUBLIC_API_SOURCE_FILES = [
+    PROJECT_ROOT / "src" / "lib.typ",
+    PROJECT_ROOT / "src" / "cv.typ",
+    PROJECT_ROOT / "src" / "letter.typ",
+    PROJECT_ROOT / "src" / "utils" / "styles.typ",
+]
+
 # Extra utility functions to document (not auto-extracted)
 UTILITY_SECTION = """\
 ---
@@ -45,6 +57,15 @@ Renders a vertical bar separator (`|`) for use inside skill entries.
 """
 
 # Functions to include (public API only)
+#
+# Kept in sync with the actual source by check_public_functions_in_sync():
+# every top-level, non-`_`-prefixed `#let name(...)` across
+# PUBLIC_API_SOURCE_FILES must appear here (and vice versa). `h-bar` and
+# `overwrite-fonts` are documented outside the doc-comment-driven table
+# (h-bar via UTILITY_SECTION below; overwrite-fonts is exported but has no
+# section of its own yet) — they're listed here so the self-check passes,
+# even though neither is defined in a SOURCE_FILES file and so neither
+# produces a new auto-generated section.
 PUBLIC_FUNCTIONS = {
     "cv",
     "letter",
@@ -57,7 +78,54 @@ PUBLIC_FUNCTIONS = {
     "cv-skill-tag",
     "cv-honor",
     "cv-publication",
+    "h-bar",
+    "overwrite-fonts",
 }
+
+# Matches a top-level (column-0) function definition, e.g. `#let cv-entry(`.
+# Excludes non-function `#let name = ...` bindings (states, color tables)
+# because those have no `(` immediately after the name.
+_TOP_LEVEL_LET_RE = re.compile(r"^#let\s+([\w-]+)\s*\(")
+
+
+def scan_public_exports() -> set[str]:
+    """Scan PUBLIC_API_SOURCE_FILES for top-level function definitions whose
+    name doesn't start with `_` — this codebase's convention for
+    private/internal (not meant to survive `#import "...": *`)."""
+    exports: set[str] = set()
+    for filepath in PUBLIC_API_SOURCE_FILES:
+        for line in filepath.read_text().splitlines():
+            match = _TOP_LEVEL_LET_RE.match(line)
+            if match and not match.group(1).startswith("_"):
+                exports.add(match.group(1))
+    return exports
+
+
+def check_public_functions_in_sync() -> None:
+    """Fail fast if the hardcoded PUBLIC_FUNCTIONS allowlist drifts out of
+    sync with the actual public exports in src/. Prevents a newly added
+    public component from silently missing docs, or a stale/typo'd entry
+    from lingering in PUBLIC_FUNCTIONS."""
+    actual = scan_public_exports()
+    missing = actual - PUBLIC_FUNCTIONS
+    extra = PUBLIC_FUNCTIONS - actual
+    if missing or extra:
+        print(
+            "PUBLIC_FUNCTIONS in generate-api-reference.py is out of sync "
+            "with the public exports scanned from src/:",
+            file=sys.stderr,
+        )
+        if missing:
+            print(
+                f"  missing from PUBLIC_FUNCTIONS (exported, undocumented): {sorted(missing)}",
+                file=sys.stderr,
+            )
+        if extra:
+            print(
+                f"  extra in PUBLIC_FUNCTIONS (not actually exported): {sorted(extra)}",
+                file=sys.stderr,
+            )
+        sys.exit(1)
 
 # Parameters to omit from the public docs (internal/deprecated)
 OMIT_PARAMS = {
@@ -369,6 +437,7 @@ def generate_api_reference() -> str:
 
 
 if __name__ == "__main__":
+    check_public_functions_in_sync()
     output = generate_api_reference()
     # If stdout is a terminal, also write to file
     outfile = SCRIPT_DIR / "docs" / "api-reference.md"
