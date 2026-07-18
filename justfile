@@ -218,13 +218,17 @@ docs-generate:
     done
     echo "✅ docs sources generated"
 
+# Regenerate the API reference and compile every public Typst example.
+docs-check: schema-check docs-generate
+    @python3 scripts/check_docs_snippets.py
+
 # Serve documentation site locally
 docs-serve: docs-generate
     @echo "📖 Starting docs server at http://localhost:8000..."
     cd docs/web && uv run --with mkdocs-material --with mkdocs-glightbox mkdocs serve
 
 # Build documentation site
-docs-build: schema-check docs-generate
+docs-build: docs-check
     @echo "📖 Building docs site..."
     cd docs/web && uv run --with mkdocs-material --with mkdocs-glightbox mkdocs build
     @echo "✅ Docs built at docs/web/site/"

@@ -2,6 +2,14 @@
 
 These are the building blocks of your CV. Each example below is followed by the actual rendered output — the PNGs are the same ones the [test suite](https://github.com/yunanwg/brilliant-CV/tree/main/tests/components) uses as visual-regression baselines, so what you see here is exactly what the package produces. For full parameter details, see the [API Reference](api-reference.md).
 
+## Component context in v4
+
+CV components normally read layout settings from the metadata context installed by the enclosing `#show: cv.with(metadata, ...)` rule. Typst state is contextual and positional, so keep component calls inside the `cv()` document body, as the starter does. For standalone composition or tests, pass `metadata: metadata` explicitly; this is a supported escape hatch documented in each applicable component signature.
+
+This ambient behavior is preserved throughout v4 for compatibility. A component used without either explicit metadata or the surrounding `cv()` context now fails with an actionable message at the call site. The state object and underscore-prefixed helpers remain implementation details; a replacement context/factory design belongs in v5 with a migration path.
+
+The supported package-root API is `cv`, `letter`, the nine documented `cv-*` components, `h-bar`, and the compatibility helper `overwrite-fonts`. New templates should configure `[layout.fonts]` rather than call `overwrite-fonts` directly. Dependency symbols such as `fa-*` icons are not re-exported; import them from `fontawesome` directly.
+
 ## Entry Point Functions
 
 ### `cv()`

@@ -4,6 +4,8 @@
 
 This page documents the public Typst functions exported by brilliant-CV. For metadata keys read from `metadata.toml`, see the [Configuration Reference](configuration.md).
 
+Only the root exports documented here are compatibility commitments. Underscore-prefixed helpers and dependency symbols are implementation details. Import Font Awesome icons from `fontawesome` directly.
+
 ## Entry Point Functions
 
 ### `cv()`
@@ -12,6 +14,7 @@ Render a CV document with header, footer, and page layout applied.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `metadata` | dictionary | — | The metadata dictionary read from `metadata.toml`. |
 | `doc` | content | — | The body content of the CV (typically the imported modules). |
 | `profile-photo` | image \| none | `none` | The profile photo to display in the header. Defaults to `none`; pass an `image(...)` to render. When `none`, the photo column is hidden regardless of `display_profile_photo`. |
 | `custom-icons` | dictionary | `(:)` | Custom icons to override or extend the default icon set. |
@@ -23,13 +26,14 @@ Render a cover letter document with header, footer, and page layout applied.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `metadata` | dictionary | — | The metadata dictionary read from `metadata.toml`. |
 | `doc` | content | — | The body content of the letter. |
-| `sender-address` | str \| auto | `auto` | The sender's mailing address. Defaults to `auto`, which reads from `metadata.personal.address` (falls back to `"Your Address Here"` if unset). Pass a string or content to override. |
+| `sender-address` | str \| content \| auto | `auto` | The sender's mailing address. Defaults to `auto`, which reads from `metadata.personal.address` (falls back to `"Your Address Here"` if unset). Pass a string or content to override. |
 | `recipient-name` | str | `"Company Name Here"` | The recipient's name or company displayed in the header. |
 | `recipient-address` | str | `"Company Address Here"` | The recipient's mailing address displayed in the header. Supports multiline content. |
 | `date` | str | `datetime.today().display()` | The date displayed in the letter header. Defaults to today's date. |
 | `subject` | str | `"Subject: Hey!"` | The subject line of the letter. |
-| `signature` | str \| content | `""` | (optional) path to a signature image, or content to display as signature. |
+| `signature` | str \| content | `""` | (optional) content to display as the signature. Pass `image("signature.png")` for an image; a string is rendered as text. |
 | `address-style` | str | `"smallcaps"` | Address rendering style. `"smallcaps"` (default) or `"normal"`. |
 
 ---
@@ -62,10 +66,12 @@ override the metadata defaults for a single section.
 | `highlight` | str | `none` | (optional) override `[layout.section].title_highlight`. |
 | `highlight-letters` | int | `none` | (optional) override `[layout.section].title_highlight_letters`. |
 | `color` | color | `none` | (optional) override the accent color for this section. |
+| `metadata` | dictionary | `none` | (optional) the metadata read from the TOML file. |
+| `awesome-colors` | dictionary | `_awesome-colors` | (optional) the awesome colors of the CV. |
 
 ```typ
 #block(width: 300pt)[
-  #cv-section("Professional Experience")
+  #cv-section("Professional Experience", metadata: _metadata)
 ]
 ```
 
@@ -83,9 +89,12 @@ default), the `title` field is bold/first and `society` is the subtitle.
 | `society` | str | `"Society"` | The society of the entry (company, university, etc.). |
 | `date` | str \| content | `"Date"` | The date(s) of the entry. |
 | `location` | str | `"Location"` | The location of the entry. |
-| `description` | array | `""` | The description of the entry. It can be a string or an array of strings. |
-| `logo` | image | `""` | The logo of the society. If empty, no logo will be displayed. |
+| `description` | str \| array | `""` | The description of the entry. It can be a string or an array of content items. |
+| `logo` | content \| str | `""` | The logo of the society. If empty, no logo will be displayed. |
 | `tags` | array | `()` | The tags of the entry. |
+| `color` | color | `none` | (optional) override the accent color for this entry. |
+| `metadata` | dictionary | `none` | (optional) the metadata read from the TOML file. |
+| `awesome-colors` | dictionary | `_awesome-colors` | (optional) the awesome colors of the CV. |
 
 ```typ
 #block(width: 300pt)[
@@ -98,6 +107,7 @@ default), the `title` field is bold/first and `society` is the subtitle.
       [Analyzed datasets with SQL and Python],
     ),
     tags: ("Python", "SQL"),
+    metadata: _metadata,
   )
 ]
 ```
@@ -115,13 +125,17 @@ adds a role with its own dates, description, and tags.
 |-----------|------|---------|-------------|
 | `society` | str | `"Society"` | The society of the entry (company, university, etc.). |
 | `location` | str | `"Location"` | The location of the entry. |
-| `logo` | image | `""` | The logo of the society. If empty, no logo will be displayed. |
+| `logo` | content \| str | `""` | The logo of the society. If empty, no logo will be displayed. |
+| `color` | color | `none` | (optional) override the accent color for this entry. |
+| `metadata` | dictionary | `none` | (optional) the metadata read from the TOML file. |
+| `awesome-colors` | dictionary | `_awesome-colors` | (optional) the awesome colors of the CV. |
 
 ```typ
 #block(width: 300pt)[
   #cv-entry-start(
     society: [XYZ Corporation],
     location: [San Francisco, CA],
+    metadata: _metadata,
   )
   #cv-entry-continued(
     title: [Data Scientist],
@@ -129,6 +143,7 @@ adds a role with its own dates, description, and tags.
     description: list(
       [Analyzed large datasets with SQL and Python],
     ),
+    metadata: _metadata,
   )
 ]
 ```
@@ -148,6 +163,8 @@ calls can follow a single `cv-entry-start`.
 | `description` | str \| array | `""` | The description of the entry. Can be a string or an array of strings. |
 | `tags` | array | `()` | The tags of the entry. |
 | `color` | color | `none` | (optional) override the accent color for this entry. |
+| `metadata` | dictionary | `none` | (optional) the metadata read from the TOML file. |
+| `awesome-colors` | dictionary | `_awesome-colors` | (optional) the awesome colors of the CV. |
 
 ### `cv-skill()`
 
@@ -219,6 +236,9 @@ Add a Honor to the CV.
 | `issuer` | str | `""` | The issuer of the honor. |
 | `url` | str | `""` | The URL of the honor. |
 | `location` | str | `""` | The location of the honor. |
+| `color` | color | `none` | (optional) override the accent color for this honor. |
+| `awesome-colors` | dictionary | `_awesome-colors` | (optional) The awesome colors of the CV. |
+| `metadata` | dictionary | `none` | (optional) The metadata read from the TOML file. |
 
 ```typ
 #block(width: 300pt)[
@@ -227,6 +247,7 @@ Add a Honor to the CV.
     title: [AWS Certified Security],
     issuer: [Amazon Web Services],
     location: [Online],
+    metadata: _metadata,
   )
 ]
 ```
@@ -242,7 +263,7 @@ When `ref-full` is `false`, only the entries whose keys appear in
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `bib` | bibliography | `""` | The `bibliography` object with the path to the bib file. |
-| `key-list` | list | `list()` | The list of bib keys to include when `ref-full` is `false`. |
+| `key-list` | list | `()` | The list of bib keys to include when `ref-full` is `false`. |
 | `ref-style` | str | `"apa"` | The reference style of the publication list (e.g., `"apa"`). |
 | `ref-full` | bool | `true` | Whether to show all entries (`true`) or only those in `key-list` (`false`). |
 
@@ -252,11 +273,31 @@ When `ref-full` is `false`, only the entries whose keys appear in
 
 ### `h-bar()`
 
-Renders a vertical bar separator (`|`) for use inside skill entries.
+Render a compact vertical separator for inline skill or info lists.
 
 ```typ
-#import "@preview/brilliant-cv:4.0.1": h-bar
-
 [Python #h-bar() SQL #h-bar() Tableau]
 ```
 
+### `overwrite-fonts()`
+
+Overwrite the default fonts when the metadata supplies custom font values.
+
+Each field in `[layout.fonts]` is independently optional: a profile that
+only sets `regular_fonts` keeps the default `header_font`, and vice
+versa. A profile with no `[layout.fonts]` block at all gets pure defaults.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `metadata` | dictionary | — | the metadata object |
+| `latin-fonts` | array | — | the default list of latin fonts |
+| `latin-header-font` | string | — | the default header font |
+
+```typ
+#let fonts = overwrite-fonts(
+  (layout: (:)),
+  ("Source Sans 3",),
+  "Roboto",
+)
+#assert.eq(fonts.header-font, "Roboto")
+```

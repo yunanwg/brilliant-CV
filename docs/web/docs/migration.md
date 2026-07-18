@@ -152,6 +152,18 @@ The following parameter aliases and function aliases have **panicked since v3** 
 
 **Schema migration guards retained:** `inject_ai_prompt` and `inject_keywords` still panic with a clear upgrade message if found in `metadata.toml`. These are kept because silently ignoring an unknown metadata key would be confusing — a user who sees their ATS keywords disappear should know why.
 
+### Supported root exports in v4
+
+The supported package-root API consists of `cv`, `letter`, `cv-section`, `cv-entry`, `cv-entry-start`, `cv-entry-continued`, `cv-skill`, `cv-skill-with-level`, `cv-skill-tag`, `cv-honor`, `cv-publication`, `h-bar`, and `overwrite-fonts`.
+
+`overwrite-fonts` remains explicit for v4 compatibility because older wildcard imports made it reachable. New templates should configure `[layout.fonts]` and let `cv()` or `letter()` resolve fonts; reconsidering the helper belongs in v5.
+
+Older releases also exposed dependency symbols such as `fa-*` icons and internal state through wildcard imports. Those were never documented compatibility commitments and are no longer re-exported. Import icons from Font Awesome directly:
+
+```typ
+#import "@preview/fontawesome:0.6.0": fa-github
+```
+
 ---
 
 ## Migration from v2

@@ -1,7 +1,7 @@
 // overwrite-fonts replaces both regular_fonts and header_font when the
 // user provides a [layout.fonts] override (e.g. for a CJK profile).
 
-#import "/src/utils/styles.typ": overwrite-fonts
+#import "/src/lib.typ": overwrite-fonts
 
 #let metadata = (
   layout: (

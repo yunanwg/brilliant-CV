@@ -1,4 +1,10 @@
 
+/// Render a compact vertical separator for inline skill or info lists.
+///
+/// ```example
+/// [Python #h-bar() SQL #h-bar() Tableau]
+/// ```
+/// -> content
 #let h-bar() = [#h(5pt) | #h(5pt)]
 
 #let _latin-font-list = (
@@ -62,6 +68,15 @@
 /// - metadata (dictionary): the metadata object
 /// - latin-fonts (array): the default list of latin fonts
 /// - latin-header-font (string): the default header font
+///
+/// ```example
+/// #let fonts = overwrite-fonts(
+///   (layout: (:)),
+///   ("Source Sans 3",),
+///   "Roboto",
+/// )
+/// #assert.eq(fonts.header-font, "Roboto")
+/// ```
 /// -> dictionary
 #let overwrite-fonts(metadata, latin-fonts, latin-header-font) = {
   let user-defined-fonts = metadata.layout.at("fonts", default: (:))
@@ -75,4 +90,3 @@
   )
   return (regular-fonts: regular-fonts, header-font: header-font)
 }
-

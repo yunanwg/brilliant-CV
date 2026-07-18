@@ -1,7 +1,7 @@
 // overwrite-fonts returns the default Latin chain when [layout.fonts] is
 // absent from metadata.
 
-#import "/src/utils/styles.typ": overwrite-fonts
+#import "/src/lib.typ": overwrite-fonts
 
 #let result = overwrite-fonts(
   (layout: (:)),
