@@ -30,6 +30,9 @@
 typst init @preview/brilliant-cv
 ```
 
+Using Typst Web? Upload the Font Awesome 7 Free desktop OTF files (Regular,
+Solid, and Brands) to your project so the contact icons render correctly.
+
 Edit `profile_en/metadata.toml` and the content modules in `profile_en/*.typ` — it's the most heavily annotated profile. To add a new variant, copy the directory and tweak the fields that differ.
 
 ```bash

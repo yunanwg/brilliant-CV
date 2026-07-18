@@ -20,6 +20,11 @@ In order to make Typst render correctly, you will have to install the required f
 
 - [Roboto](https://fonts.google.com/specimen/Roboto)
 - [Source Sans 3](https://fonts.google.com/specimen/Source+Sans+3) (or Source Sans Pro)
+- [Font Awesome 7 Free desktop fonts](https://fontawesome.com/download) (Regular, Solid, and Brands OTF files)
+
+For Typst Web, upload the three Font Awesome OTF files to your project. For
+local compilation, install them on your operating system. Without these fonts,
+contact icons render as boxes.
 
 ## Step 3: File Structure Map
 
