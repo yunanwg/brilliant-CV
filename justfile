@@ -226,8 +226,8 @@ docs-build: docs-generate
 #
 # Visual tests run inside the same Linux Docker image (tests/Dockerfile) on
 # both maintainer machines and CI. Persistent refs use fonts verified stable
-# across the two ARM hosts. The image bundles typst 0.14, tytanic 0.3.3,
-# typstyle 0.14.4, Source Sans 3, Roboto, Font Awesome 7, Noto CJK SC.
+# across the two ARM hosts. The image bundles typst 0.15.1, tytanic 0.4.1,
+# typstyle 0.15.0, Source Sans 3, Roboto, Font Awesome 7, Noto CJK SC.
 #
 # Compile-only tests (panics + units) don't need Docker — they run native
 # via `just test-fast` for sub-second inner loops. Visual tests are
