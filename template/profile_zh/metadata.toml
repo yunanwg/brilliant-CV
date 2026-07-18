@@ -51,7 +51,10 @@ letter_footer = "申请信"
 
 
 [inject]
-    injected_keywords_list = ["数据分析师", "GCP", "Python", "SQL", "Tableau"]
+    # OPT-IN（默认关闭）：隐藏的 ATS 关键词文本。部分简历筛选系统会主动检测
+    # 隐藏文字并可能因此扣分或拒绝；启用前请阅读 profile_en/metadata.toml
+    # 中的完整说明，且关键词应与真实技能相符。
+    # injected_keywords_list = ["数据分析师", "GCP", "Python", "SQL", "Tableau"]
 
 [personal]
     first_name = "John"
