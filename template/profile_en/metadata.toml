@@ -66,12 +66,12 @@ letter_footer = "Cover letter"
 
     [layout.section]
         # How the section title is highlighted:
-        #   "first-letters" (default) - first N letters in accent color, rest in black (Latin convention)
+        #   "first-letters" (default) - first N grapheme clusters in accent color, rest in black (Latin convention)
         #   "full"                    - the whole title in accent color (CJK / non-Latin convention)
         #   "none"                    - the whole title in black, no accent
         title_highlight = "first-letters"
 
-        # Number of leading characters to render in accent color when
+        # Number of leading grapheme clusters to render in accent color when
         # title_highlight = "first-letters". Ignored for the other modes.
         title_highlight_letters = 3
 

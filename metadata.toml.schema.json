@@ -134,12 +134,12 @@
             "title_highlight": {
               "type": "string",
               "enum": ["first-letters", "full", "none"],
-              "description": "How section titles are highlighted: 'first-letters' (default, Latin convention) renders the first N characters in accent color; 'full' renders the entire title in accent color (CJK convention); 'none' renders the entire title in black."
+              "description": "How section titles are highlighted: 'first-letters' (default, Latin convention) renders the first N grapheme clusters in accent color; 'full' renders the entire title in accent color (CJK convention); 'none' renders the entire title in black."
             },
             "title_highlight_letters": {
               "type": "integer",
               "minimum": 0,
-              "description": "Number of leading characters rendered in accent color when title_highlight = 'first-letters'. Ignored for the other modes. Defaults to 3."
+              "description": "Number of leading grapheme clusters rendered in accent color when title_highlight = 'first-letters'. Ignored for the other modes. Defaults to 3."
             }
           }
         }

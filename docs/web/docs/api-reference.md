@@ -42,11 +42,11 @@ Add the title of a section.
 The visual treatment of the title is driven by `[layout.section]` in the
 profile metadata. Three modes are supported:
 
-- `"first-letters"` (default): the first `title_highlight_letters` characters
-  of the title are rendered in the accent color, the rest in black. This is
-  the conventional Latin-script appearance.
+- `"first-letters"` (default): the first `title_highlight_letters` grapheme
+  clusters of the title are rendered in the accent color, the rest in black.
+  This is the conventional Latin-script appearance.
 - `"full"`: the entire title is rendered in the accent color. Use this for
-  CJK / non-Latin scripts where splitting the first N codepoints feels
+  CJK / non-Latin scripts where splitting the first N grapheme clusters feels
   unnatural.
 - `"none"`: the entire title is rendered in black, no accent highlighting.
 
