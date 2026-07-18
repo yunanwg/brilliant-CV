@@ -2,10 +2,26 @@
  * Entry point for the package
  */
 
-/* Packages */
-#import "./cv.typ": *
-#import "./letter.typ": *
-#import "./utils/styles.typ": *
+/* Internal modules. Import them as modules so dependency symbols do not
+ * become accidental exports of the package root. The aliases below are the
+ * supported v4 root API. */
+#import "./cv.typ" as _cv
+#import "./letter.typ" as _letter
+#import "./utils/styles.typ" as _styles
+
+#let cv-section = _cv.cv-section
+#let cv-entry = _cv.cv-entry
+#let cv-entry-start = _cv.cv-entry-start
+#let cv-entry-continued = _cv.cv-entry-continued
+#let cv-skill = _cv.cv-skill
+#let cv-skill-with-level = _cv.cv-skill-with-level
+#let cv-skill-tag = _cv.cv-skill-tag
+#let cv-honor = _cv.cv-honor
+#let cv-publication = _cv.cv-publication
+#let h-bar = _styles.h-bar
+// Preserve this historically reachable helper throughout v4. New templates
+// should configure [layout.fonts] and let cv()/letter() resolve it.
+#let overwrite-fonts = _styles.overwrite-fonts
 
 /// Schema migration guard: panic on v3 metadata fields that v4 removed.
 ///
@@ -82,10 +98,10 @@
 ///
 /// -> dictionary  (regular-fonts, header-font, font-size)
 #let _resolve-typography(metadata) = {
-  let font-config = overwrite-fonts(
+  let font-config = _styles.overwrite-fonts(
     metadata,
-    _latin-font-list,
-    _latin-header-font,
+    _styles._latin-font-list,
+    _styles._latin-header-font,
   )
   let font-size = eval(metadata.layout.at("font_size", default: "9pt"))
   (
@@ -140,29 +156,29 @@
 
   // Update metadata state so component functions can read it without
   // having metadata threaded through every call site.
-  cv-metadata.update(metadata)
+  _cv.cv-metadata.update(metadata)
 
   let typography = _resolve-typography(metadata)
   set text(
     font: typography.regular-fonts,
     weight: "regular",
     size: typography.font-size,
-    fill: _regular-colors.lightgray,
+    fill: _styles._regular-colors.lightgray,
   )
   set align(left)
   let paper-size = metadata.layout.at("paper_size", default: "a4")
   set page(
     paper: paper-size,
     margin: _page-margin(paper-size),
-    footer: context _cv-footer(metadata),
+    footer: context _cv._cv-footer(metadata),
   )
 
-  _cv-header(
+  _cv._cv-header(
     metadata,
     profile-photo,
     typography.header-font,
-    _regular-colors,
-    _awesome-colors,
+    _styles._regular-colors,
+    _styles._awesome-colors,
     custom-icons,
     header-info,
   )
@@ -173,12 +189,12 @@
 ///
 /// - metadata (dictionary): The metadata dictionary read from `metadata.toml`.
 /// - doc (content): The body content of the letter.
-/// - sender-address (str | auto): The sender's mailing address. Defaults to `auto`, which reads from `metadata.personal.address` (falls back to `"Your Address Here"` if unset). Pass a string or content to override.
+/// - sender-address (str | content | auto): The sender's mailing address. Defaults to `auto`, which reads from `metadata.personal.address` (falls back to `"Your Address Here"` if unset). Pass a string or content to override.
 /// - recipient-name (str): The recipient's name or company displayed in the header.
 /// - recipient-address (str): The recipient's mailing address displayed in the header. Supports multiline content.
 /// - date (str): The date displayed in the letter header. Defaults to today's date.
 /// - subject (str): The subject line of the letter.
-/// - signature (str | content): (optional) path to a signature image, or content to display as signature.
+/// - signature (str | content): (optional) content to display as the signature. Pass `image("signature.png")` for an image; a string is rendered as text.
 /// - address-style (str): Address rendering style. `"smallcaps"` (default) or `"normal"`.
 /// -> content
 #let letter(
@@ -207,30 +223,30 @@
     font: typography.regular-fonts,
     weight: "regular",
     size: typography.font-size,
-    fill: _regular-colors.lightgray,
+    fill: _styles._regular-colors.lightgray,
   )
   set align(left)
   let paper-size = metadata.layout.at("paper_size", default: "a4")
   set page(
     paper: paper-size,
     margin: _page-margin(paper-size, letter-style: true),
-    footer: _letter-footer(metadata),
+    footer: _letter._letter-footer(metadata),
   )
   set text(size: 12pt)
 
-  _letter-header(
+  _letter._letter-header(
     sender-address: sender-address,
     recipient-name: recipient-name,
     recipient-address: recipient-address,
     date: date,
     subject: subject,
     metadata: metadata,
-    awesome-colors: _awesome-colors,
+    awesome-colors: _styles._awesome-colors,
     address-style: address-style,
   )
   doc
 
   if signature != "" {
-    _letter-signature(signature)
+    _letter._letter-signature(signature)
   }
 }

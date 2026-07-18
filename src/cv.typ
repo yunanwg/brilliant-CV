@@ -2,7 +2,10 @@
  * Functions for the CV template
  */
 
-#import "@preview/fontawesome:0.6.0": *
+#import "@preview/fontawesome:0.6.0": (
+  fa-envelope, fa-gitlab, fa-icon, fa-linkedin, fa-location-dot, fa-orcid,
+  fa-pager, fa-phone, fa-researchgate, fa-square-github,
+)
 #import "./utils/injection.typ": _inject
 #import "./utils/styles.typ": (
   _awesome-colors, _latin-font-list, _latin-header-font, _regular-colors,
@@ -11,6 +14,19 @@
 
 /// Metadata state to avoid passing metadata to every function
 #let cv-metadata = state("cv-metadata", none)
+
+/// Resolve explicit component metadata or the state seeded by `cv()`.
+/// -> dictionary
+#let _resolve-component-metadata(metadata) = {
+  let resolved = if metadata != none { metadata } else { cv-metadata.get() }
+  if resolved == none {
+    panic(
+      "CV component metadata is unavailable. Pass `metadata: ...` explicitly "
+        + "or use the component inside `#show: cv.with(metadata)`.",
+    )
+  }
+  resolved
+}
 
 /// Create header style functions
 /// -> dictionary
@@ -53,72 +69,95 @@
   extraInfo: "",
 )
 
+/// Normalize personal info into non-empty rows before rendering separators.
+/// -> array
+#let _normalize-header-info(personal-info, custom-icons: (:)) = {
+  let rows = ()
+  let row = ()
+
+  for (k, v) in personal-info {
+    if k == "linebreak" {
+      if row.len() > 0 {
+        rows.push(row)
+        row = ()
+      }
+      continue
+    }
+
+    let visible = if k.contains("custom") {
+      let awesome-icon = v.at("awesomeIcon", default: "")
+      let text = v.at("text", default: "")
+      let icon = custom-icons.at(k, default: none)
+      icon != none or awesome-icon != "" or text != ""
+    } else {
+      v != none and v != ""
+    }
+
+    if visible {
+      row.push((k, v))
+    }
+  }
+
+  if row.len() > 0 { rows.push(row) }
+  rows
+}
+
 /// Generate personal info section
 /// -> content
 #let _make-header-info(personal-info, icons, custom-icons) = {
-  let n = 1
-  for (k, v) in personal-info {
-    // A dirty trick to add linebreaks with "linebreak" as key in personalInfo
-    if k == "linebreak" {
-      n = 0
-      linebreak()
-      continue
-    }
-    if k.contains("custom") {
-      let awesome-icon = v.at("awesomeIcon", default: "")
-      let text = v.at("text", default: "")
-      let link-value = v.at("link", default: "")
-      // Look up pre-loaded image from custom-icons dict (passed via cv.with())
-      let icon = custom-icons.at(k, default: none)
-      if icon != none {
-        icon = box(width: 10pt, {
-          set image(width: 100%)
+  let rows = _normalize-header-info(personal-info, custom-icons: custom-icons)
+
+  for (row-index, row) in rows.enumerate() {
+    if row-index > 0 { linebreak() }
+
+    for (item-index, item) in row.enumerate() {
+      let (k, v) = item
+      if item-index > 0 { h-bar() }
+
+      if k.contains("custom") {
+        let awesome-icon = v.at("awesomeIcon", default: "")
+        let text = v.at("text", default: "")
+        let link-value = v.at("link", default: "")
+        let icon = custom-icons.at(k, default: none)
+        if icon != none {
+          icon = box(width: 10pt, {
+            set image(width: 100%)
+            icon
+          })
+        } else if awesome-icon != "" {
+          icon = fa-icon(awesome-icon)
+        }
+        box({
           icon
+          h(5pt)
+          if link-value != "" { link(link-value)[#text] } else { text }
         })
-      } else if awesome-icon != "" {
-        icon = fa-icon(awesome-icon)
+      } else {
+        box({
+          icons.at(k)
+          h(5pt)
+          if k == "email" {
+            link("mailto:" + v)[#v]
+          } else if k == "linkedin" {
+            link("https://www.linkedin.com/in/" + v)[#v]
+          } else if k == "github" {
+            link("https://github.com/" + v)[#v]
+          } else if k == "gitlab" {
+            link("https://gitlab.com/" + v)[#v]
+          } else if k == "homepage" {
+            link("https://" + v)[#v]
+          } else if k == "orcid" {
+            link("https://orcid.org/" + v)[#v]
+          } else if k == "researchgate" {
+            link("https://www.researchgate.net/profile/" + v)[#v]
+          } else if k == "phone" {
+            link("tel:" + v.replace(" ", ""))[#v]
+          } else {
+            v
+          }
+        })
       }
-      box({
-        icon
-        h(5pt)
-        if link-value != "" {
-          link(link-value)[#text]
-        } else {
-          text
-        }
-      })
-    } else if v != "" {
-      box({
-        // Adds icons
-        icons.at(k)
-        h(5pt)
-        // Adds hyperlinks
-        if k == "email" {
-          link("mailto:" + v)[#v]
-        } else if k == "linkedin" {
-          link("https://www.linkedin.com/in/" + v)[#v]
-        } else if k == "github" {
-          link("https://github.com/" + v)[#v]
-        } else if k == "gitlab" {
-          link("https://gitlab.com/" + v)[#v]
-        } else if k == "homepage" {
-          link("https://" + v)[#v]
-        } else if k == "orcid" {
-          link("https://orcid.org/" + v)[#v]
-        } else if k == "researchgate" {
-          link("https://www.researchgate.net/profile/" + v)[#v]
-        } else if k == "phone" {
-          link("tel:" + v.replace(" ", ""))[#v]
-        } else {
-          v
-        }
-      })
     }
-    // Adds hBar
-    if n != personal-info.len() {
-      h-bar()
-    }
-    n = n + 1
   }
 }
 
@@ -372,7 +411,7 @@
 /// - highlight-letters (int): (optional) override `[layout.section].title_highlight_letters`.
 /// - color (color): (optional) override the accent color for this section.
 /// - metadata (dictionary): (optional) the metadata read from the TOML file.
-/// - awesome-colors (array): (optional) the awesome colors of the CV.
+/// - awesome-colors (dictionary): (optional) the awesome colors of the CV.
 ///
 /// ```example
 /// >>> #set text(font: "Source Sans 3")
@@ -389,7 +428,7 @@
   metadata: none,
   awesome-colors: _awesome-colors,
 ) = context {
-  let metadata = if metadata != none { metadata } else { cv-metadata.get() }
+  let metadata = _resolve-component-metadata(metadata)
 
   let section-cfg = metadata.layout.at("section", default: (:))
   let mode = if highlight != none {
@@ -710,11 +749,12 @@
 /// - society (str): The society of the entry (company, university, etc.).
 /// - date (str | content): The date(s) of the entry.
 /// - location (str): The location of the entry.
-/// - description (array): The description of the entry. It can be a string or an array of strings.
-/// - logo (image): The logo of the society. If empty, no logo will be displayed.
+/// - description (str | array): The description of the entry. It can be a string or an array of content items.
+/// - logo (content | str): The logo of the society. If empty, no logo will be displayed.
 /// - tags (array): The tags of the entry.
-/// - metadata (array): (optional) the metadata read from the TOML file.
-/// - awesome-colors (array): (optional) the awesome colors of the CV.
+/// - color (color): (optional) override the accent color for this entry.
+/// - metadata (dictionary): (optional) the metadata read from the TOML file.
+/// - awesome-colors (dictionary): (optional) the awesome colors of the CV.
 ///
 /// ```example
 /// >>> #set text(font: "Source Sans 3")
@@ -745,7 +785,7 @@
   metadata: none,
   awesome-colors: _awesome-colors,
 ) = context {
-  let metadata = if metadata != none { metadata } else { cv-metadata.get() }
+  let metadata = _resolve-component-metadata(metadata)
   let params = _prepare-entry-params(metadata, awesome-colors, color: color)
 
   _make-cv-entry(
@@ -771,9 +811,10 @@
 ///
 /// - society (str): The society of the entry (company, university, etc.).
 /// - location (str): The location of the entry.
-/// - logo (image): The logo of the society. If empty, no logo will be displayed.
-/// - metadata (array): (optional) the metadata read from the TOML file.
-/// - awesome-colors (array): (optional) the awesome colors of the CV.
+/// - logo (content | str): The logo of the society. If empty, no logo will be displayed.
+/// - color (color): (optional) override the accent color for this entry.
+/// - metadata (dictionary): (optional) the metadata read from the TOML file.
+/// - awesome-colors (dictionary): (optional) the awesome colors of the CV.
 ///
 /// ```example
 /// >>> #set text(font: "Source Sans 3")
@@ -802,7 +843,7 @@
   metadata: none,
   awesome-colors: _awesome-colors,
 ) = context {
-  let metadata = if metadata != none { metadata } else { cv-metadata.get() }
+  let metadata = _resolve-component-metadata(metadata)
   if not metadata.layout.entry.display_entry_society_first {
     panic("display_entry_society_first must be true to use cv-entry-start")
   }
@@ -830,8 +871,8 @@
 /// - description (str | array): The description of the entry. Can be a string or an array of strings.
 /// - tags (array): The tags of the entry.
 /// - color (color): (optional) override the accent color for this entry.
-/// - metadata (array): (optional) the metadata read from the TOML file.
-/// - awesome-colors (array): (optional) the awesome colors of the CV.
+/// - metadata (dictionary): (optional) the metadata read from the TOML file.
+/// - awesome-colors (dictionary): (optional) the awesome colors of the CV.
 /// -> content
 #let cv-entry-continued(
   title: "Title",
@@ -842,7 +883,7 @@
   metadata: none,
   awesome-colors: _awesome-colors,
 ) = context {
-  let metadata = if metadata != none { metadata } else { cv-metadata.get() }
+  let metadata = _resolve-component-metadata(metadata)
   if not metadata.layout.entry.display_entry_society_first {
     panic("display_entry_society_first must be true to use cv-entry-continued")
   }
@@ -981,8 +1022,9 @@
 /// - issuer (str): The issuer of the honor.
 /// - url (str): The URL of the honor.
 /// - location (str): The location of the honor.
-/// - awesome-colors (array): (optional) The awesome colors of the CV.
-/// - metadata (array): (optional) The metadata read from the TOML file.
+/// - color (color): (optional) override the accent color for this honor.
+/// - awesome-colors (dictionary): (optional) The awesome colors of the CV.
+/// - metadata (dictionary): (optional) The metadata read from the TOML file.
 ///
 /// ```example
 /// >>> #set text(font: "Source Sans 3")
@@ -1007,7 +1049,7 @@
   awesome-colors: _awesome-colors,
   metadata: none,
 ) = context {
-  let metadata = if metadata != none { metadata } else { cv-metadata.get() }
+  let metadata = _resolve-component-metadata(metadata)
   let accent-color = _resolve-accent-color(color, awesome-colors, metadata)
 
   let honor-date-style(str) = {
@@ -1056,7 +1098,7 @@
 /// `key-list` are included, allowing selective publication lists.
 ///
 /// - bib (bibliography): The `bibliography` object with the path to the bib file.
-/// - key-list (array): The array of bib keys to include when `ref-full` is `false`.
+/// - key-list (list): The list of bib keys to include when `ref-full` is `false`.
 /// - ref-style (str): The reference style of the publication list (e.g., `"apa"`).
 /// - ref-full (bool): Whether to show all entries (`true`) or only those in `key-list` (`false`).
 /// -> content

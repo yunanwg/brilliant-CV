@@ -1,8 +1,10 @@
-// _inject called with all defaults (no prompt, no keywords) compiles
-// without error and produces an empty injection. Smoke test — the helper
-// returns content via place(), so we can't assert.eq on its value.
+// Empty injection has no layout side effects.
 
-#import "/src/utils/injection.typ": _inject
+#import "/src/utils/injection.typ": _compose-injection-text, _inject
 
-#_inject()
-#_inject(custom-ai-prompt-text: none, keywords: ())
+#assert.eq(_compose-injection-text(), "")
+#assert.eq(
+  _compose-injection-text(custom-ai-prompt-text: none, keywords: ()),
+  "",
+)
+#assert.eq(_inject(), [])
