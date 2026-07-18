@@ -3,7 +3,7 @@
 //   - profile photo is suppressed (avatar.png byte changes flap diffs)
 //   - the header uses Source Sans 3 because Roboto Bold rasterizes differently
 //     on Apple and GitHub-hosted ARM CPUs even inside the same Linux image
-//   - tests go via /src/lib.typ directly, not @preview/brilliant-cv:4.0.0,
+//   - tests go via /src/lib.typ directly, not the Universe-published package,
 //     so the test pins the local source. Profile modules import the
 //     published package by themselves; `just link` (or its CI equivalent)
 //     must run before this test so that resolves to local src/.
