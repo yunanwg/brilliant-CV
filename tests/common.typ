@@ -65,16 +65,6 @@
   ),
 )
 
-// Variant with display_name set (CJK convention) — exercises the
-// _make-header-name-section display-name branch in src/cv.typ.
-#let metadata-with-display-name = (
-  ..minimal-metadata,
-  personal: (
-    ..minimal-metadata.personal,
-    display_name: "Jane Q. Doe",
-  ),
-)
-
 // Variant with full-title highlight (CJK / non-Latin section convention).
 #let metadata-section-full = (
   ..minimal-metadata,
