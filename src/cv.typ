@@ -441,11 +441,11 @@
   let accent-color = _resolve-accent-color(color, awesome-colors, metadata)
   let before-entry-skip = eval(metadata.layout.at(
     "before_entry_skip",
-    default: 1pt,
+    default: "1pt",
   ))
   let before-entry-description-skip = eval(metadata.layout.at(
     "before_entry_description_skip",
-    default: 1pt,
+    default: "1pt",
   ))
   // Default date column width. Profiles whose locale needs more room
   // (zh, fr, it, ...) should set [layout] date_width explicitly.
@@ -693,7 +693,6 @@
         },
         (styles.b2)((styles.dates)(date)),
       )
-      (styles.description)(description)
       _create-entry-tag-list(tags, styles.tag)
     }
   }
@@ -1057,7 +1056,7 @@
 /// `key-list` are included, allowing selective publication lists.
 ///
 /// - bib (bibliography): The `bibliography` object with the path to the bib file.
-/// - key-list (list): The list of bib keys to include when `ref-full` is `false`.
+/// - key-list (array): The array of bib keys to include when `ref-full` is `false`.
 /// - ref-style (str): The reference style of the publication list (e.g., `"apa"`).
 /// - ref-full (bool): Whether to show all entries (`true`) or only those in `key-list` (`false`).
 /// -> content
@@ -1065,7 +1064,7 @@
   bib: "",
   ref-style: "apa",
   ref-full: true,
-  key-list: list(),
+  key-list: (),
 ) = {
   let publication-style(str) = {
     text(str)

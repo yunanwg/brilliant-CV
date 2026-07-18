@@ -23,7 +23,7 @@ For running the test suite locally:
 
 Optional but helpful:
 
-- `pre-commit`, `typos` (recommended tools already mentioned in the README)
+- `pre-commit`, `typos` (recommended tools already covered in [Getting Started → Step 8](docs/web/docs/getting-started.md))
 
 ---
 

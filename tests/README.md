@@ -57,6 +57,15 @@ Tytanic has no `expect-panic` annotation — a panicking test is reported as fai
 
 The expected substring is encoded in each fixture's first-line comment as `// expected: <substring>`. Panic tests run native (not in Docker) because they only exercise typst error messages — no rendering involved, OS-independent.
 
+## Machine guards (`tests/guards.sh`)
+
+A few cross-cutting invariants are cheap to check mechanically and easy to lose track of as prose. `tests/guards.sh` (bash + python3 stdlib only — no typst, no tytanic, no Docker) checks:
+
+- **Determinism** — fails if `datetime.today` appears in any `tests/**/test.typ` or `tests/**/fixture.typ` (see "Things that flap pixel diffs" below; comments merely *mentioning* the pattern, e.g. explaining why a fixture pins `date:`, don't count).
+- **Profile parity** — fails if any `template/profile_*/metadata.toml` key path doesn't also exist in `profile_en`, the canonical, docs-driving profile (see AGENTS.md), unless it's in the script's small explicit allowlist of legitimate per-locale keys (e.g. `profile_zh`'s real `personal.display_name` vs. `profile_en`'s commented-out example of the same key).
+
+`just test`, `just test-fast`, and CI all run `bash tests/guards.sh` after the tytanic/panic suites. It has no external dependencies, so it's the cheapest thing to run first when chasing a failure.
+
 ## Adding a test
 
 1. Pick the category — `units` (pure helpers), `components` (one public function), `regression` (full profile), `panics` (schema migration).
@@ -74,4 +83,6 @@ The expected substring is encoded in each fixture's first-line comment as `// ex
 
 ## Native-only inner loop
 
-If you have `tytanic` and `typstyle` installed natively (`cargo install tytanic --version "^0.4.1"` + `brew install typstyle`), `just test-fast` exercises the OS-independent subset (panics + units) at sub-second speed — useful while iterating. Visual tests still need Docker.
+If you have `tytanic` and `typstyle` installed natively (`cargo install tytanic --version "^0.4.1"` + `brew install typstyle`), `just test-fast` exercises the OS-independent subset (panics + units + guards) at sub-second speed — useful while iterating. Visual tests still need Docker.
+
+x86_64 contributors: visual refs can only be regenerated or verified on arm64 (see "Why Docker?" above), so there's no local equivalent of `just test` for you. Run `just test-fast` locally for the fast, OS-independent feedback loop, and let CI verify visuals on its arm64 runner.
