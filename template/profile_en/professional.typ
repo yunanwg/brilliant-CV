@@ -14,6 +14,7 @@
 
 #cv-entry-continued(
   title: [Director of Data Science],
+  date: [2020 - Present],
   description: list(
     [Lead a team of data scientists and analysts to develop and implement data-driven strategies, develop predictive models and algorithms to support decision-making across the organization],
     [Collaborate with executive leadership to identify business opportunities and drive growth, implement best practices for data governance, quality, and security],
