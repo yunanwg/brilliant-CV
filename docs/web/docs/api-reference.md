@@ -156,6 +156,7 @@ Add a skill to the CV.
 |-----------|------|---------|-------------|
 | `type` | str | `"Type"` | The type of the skill. It is displayed on the left side. |
 | `info` | str \| content | `"Info"` | The information about the skill. It is displayed on the right side. Items can be separated by `#h-bar()`. |
+| `type-width` | relative \| fraction \| auto | `17%` | The width of the type column. |
 
 ```typ
 #block(width: 300pt)[
@@ -179,6 +180,7 @@ and 2 empty circles).
 | `type` | str | `"Type"` | The type of the skill. It is displayed on the left side. |
 | `level` | int | `3` | The level of the skill (0--5). Rendered as filled/empty circles in the middle column. |
 | `info` | str \| content | `"Info"` | The information about the skill. It is displayed on the right side. |
+| `type-width` | relative \| fraction \| auto | `17%` | The width of the type column. |
 
 ```typ
 #block(width: 300pt)[

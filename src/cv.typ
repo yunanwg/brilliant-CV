@@ -842,6 +842,7 @@
 ///
 /// - type (str): The type of the skill. It is displayed on the left side.
 /// - info (str | content): The information about the skill. It is displayed on the right side. Items can be separated by `#h-bar()`.
+/// - type-width (relative | fraction | auto): The width of the type column.
 ///
 /// ```example
 /// >>> #set text(font: "Source Sans 3")
@@ -853,7 +854,7 @@
 /// ]
 /// ```
 /// -> content
-#let cv-skill(type: "Type", info: "Info") = {
+#let cv-skill(type: "Type", info: "Info", type-width: 17%) = {
   let skill-type-style(str) = {
     align(right, text(size: 10pt, weight: "bold", str))
   }
@@ -862,7 +863,7 @@
   }
 
   table(
-    columns: (17%, 1fr),
+    columns: (type-width, 1fr),
     inset: 0pt,
     column-gutter: 10pt,
     stroke: none,
@@ -880,6 +881,7 @@
 /// - type (str): The type of the skill. It is displayed on the left side.
 /// - level (int): The level of the skill (0--5). Rendered as filled/empty circles in the middle column.
 /// - info (str | content): The information about the skill. It is displayed on the right side.
+/// - type-width (relative | fraction | auto): The width of the type column.
 ///
 /// ```example
 /// >>> #set text(font: "Source Sans 3")
@@ -897,6 +899,7 @@
   type: "Type",
   level: 3,
   info: "Info",
+  type-width: 17%,
 ) = {
   let skill-type-style(str) = {
     align(right, text(size: 10pt, weight: "bold", str))
@@ -915,7 +918,7 @@
   }
 
   table(
-    columns: (17%, auto, 1fr),
+    columns: (type-width, auto, 1fr),
     inset: 0pt,
     column-gutter: 10pt,
     stroke: none,
