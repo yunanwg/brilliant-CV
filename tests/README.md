@@ -31,6 +31,7 @@ Tytanic discovers tests by walking `tests/` for files literally named `test.typ`
 | `just test-image`             | (docker build)         | Build / refresh the test image (cached after first run)         |
 | `just test-shell`             | Docker (interactive)   | Drop into a shell inside the image for debugging                |
 | `just fmt-check`              | Docker                 | typstyle gate (matches CI version pin exactly)                  |
+| `just schema-check`           | native (`uv`)          | Strict schema, all profiles, and positive/negative contracts    |
 
 The first `just test` invocation builds the Docker image (~3 min — typst + tytanic + typstyle + fonts). Subsequent runs use the cached image (~2 s container startup overhead).
 

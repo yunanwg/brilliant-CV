@@ -1,4 +1,4 @@
-#:schema https://raw.githubusercontent.com/yunanwg/brilliant-CV/main/metadata.toml.schema.json
+#:schema ../metadata.toml.schema.json
 
 # Profile: English. Each profile_<name>/metadata.toml is a complete, self-
 # contained CV configuration. Switch profiles at compile time:
@@ -98,6 +98,11 @@ letter_footer = "Cover letter"
     # detection risks as above, and modern models largely ignore injected
     # instructions — treat as experimental.
     # custom_ai_prompt_text = "Custom prompt text here..."
+
+# Put metadata used only by your own content modules under this open namespace.
+# Package-owned sections remain strict, so typos there are caught by the schema.
+# [custom]
+#     portfolio_url = "https://johndoe.dev/work"
 
 [personal]
     # Your first name, displayed in the header

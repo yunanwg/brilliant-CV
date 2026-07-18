@@ -127,7 +127,7 @@ release version:
     echo ""
     just bump "$VERSION"
     # Re-link the local package so `@preview/brilliant-cv:$VERSION` imports
-    # in template/ and docs/pdf/docs.typ resolve to the local source. Without
+    # in template/ resolve to the local source. Without
     # this, `just build` fails because the new version isn't yet on Universe
     # and the local link still points at the old version.
     just link
@@ -196,6 +196,10 @@ check-version:
         exit 1
     fi
 
+# Validate the editor-facing schema shipped with every initialized starter.
+schema-check:
+    @uv run --quiet --with jsonschema==4.25.1 python scripts/check_metadata_schema.py
+
 # Refresh the auto-derived parts of the docs site:
 #   - api-reference.md (from src/ typst doc-comments)
 #   - assets/components/*.png (from tytanic component test refs — gives
@@ -220,7 +224,7 @@ docs-serve: docs-generate
     cd docs/web && uv run --with mkdocs-material --with mkdocs-glightbox mkdocs serve
 
 # Build documentation site
-docs-build: docs-generate
+docs-build: schema-check docs-generate
     @echo "📖 Building docs site..."
     cd docs/web && uv run --with mkdocs-material --with mkdocs-glightbox mkdocs build
     @echo "✅ Docs built at docs/web/site/"
