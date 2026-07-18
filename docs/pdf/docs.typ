@@ -106,6 +106,29 @@ It is recommended to:
 
 These are the building blocks of your CV.
 
+=== Custom Header Info
+
+`cv()` normally renders `[personal.info]` with automatic icons, links, and separators. Pass `header-info` content when you need exact control over separator placement, line breaks, or local colors without replacing the name, photo, and outer header layout:
+
+```typ
+#import "@preview/brilliant-cv:<version>": cv, h-bar
+
+#let info = metadata.personal.info
+
+#show: cv.with(
+  metadata,
+  header-info: [
+    #link("mailto:" + info.email)[#info.email]
+    #h-bar()
+    #text(fill: black)[Berlin, Germany]
+    #linebreak()
+    #text(fill: rgb("#2E7D32"))[Available for remote work]
+  ],
+)
+```
+
+Custom content inherits the normal header-info typography and accent color. It bypasses automatic `[personal.info]` and `custom-icons` rendering, so include any desired icons and links directly. Pass `header-info: none` to remove the contact row while preserving the rest of the header.
+
 === cv-section
 
 ```typ

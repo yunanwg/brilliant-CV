@@ -15,6 +15,7 @@ Render a CV document with header, footer, and page layout applied.
 | `doc` | content | — | The body content of the CV (typically the imported modules). |
 | `profile-photo` | image \| none | `none` | The profile photo to display in the header. Defaults to `none`; pass an `image(...)` to render. When `none`, the photo column is hidden regardless of `display_profile_photo`. |
 | `custom-icons` | dictionary | `(:)` | Custom icons to override or extend the default icon set. |
+| `header-info` | auto \| none \| str \| content | `auto` | (optional) customize the contact-information row. `auto` (default) renders `metadata.personal.info`; `none` removes the row; a string or content value replaces it while inheriting the default info typography. Use explicit `text(fill: ...)`, `h-bar()`, and `linebreak()` calls inside custom content for granular styling and layout. |
 
 ### `letter()`
 

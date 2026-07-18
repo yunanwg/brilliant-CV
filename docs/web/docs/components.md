@@ -15,6 +15,29 @@ These are the building blocks of your CV. Each example below is followed by the 
 
 The `cv()` function is the main entry point. It runs schema-migration guards (panic on v3 fields), sets page layout, applies fonts, renders the header, and emits `_cv-footer` on every page. All your CV modules go inside its body.
 
+By default, `header-info: auto` renders the entries from `metadata.personal.info`. Pass content to replace that row without reimplementing the name, photo, or header layout:
+
+```typ
+#import "@preview/brilliant-cv:4.0.1": cv, h-bar
+
+#let info = metadata.personal.info
+
+#show: cv.with(
+  metadata,
+  header-info: [
+    #link("mailto:" + info.email)[#info.email]
+    #h-bar()
+    #text(fill: black)[Berlin, Germany]
+    #linebreak()
+    #text(fill: rgb("#2E7D32"))[Available for remote work]
+  ],
+)
+```
+
+![custom header info](assets/components/cv-header-info-custom.png)
+
+Custom content inherits the normal header-info typography and accent color; explicit nested `text(...)` rules can override individual spans. Use `header-info: none` to remove the contact row. The [Custom Header Info](recipes.md#custom-header-info) recipe covers the interaction with metadata and custom icons.
+
 ### `letter()`
 
 ```typ

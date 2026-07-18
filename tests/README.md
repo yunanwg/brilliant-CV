@@ -10,7 +10,7 @@ tests/
   docker-entrypoint.sh          # Registers /workspace as @preview/brilliant-cv:<v>
   common.typ                    # Shared fixtures (not a tytanic test)
   panics/                       # Shell-script smoke tests (not tytanic)
-    <name>/fixture.typ          # Hand-built v3/v2 metadata input
+    <name>/fixture.typ          # Invalid API input or legacy metadata fixture
     run.sh                      # Iterate fixtures, assert non-zero exit + stderr substring
   units/<name>/test.typ         # Tytanic compile-only — assert.eq() on pure helpers
   components/<name>/test.typ    # Tytanic persistent — micro-fixture per public function
@@ -47,9 +47,9 @@ Docker gives **one pinned toolchain**. CPU-specific rasterization can still diff
 
 `profile_zh` ships with `Heiti SC` (macOS-default, not freely redistributable). The Linux Docker image installs `fonts-noto-cjk` instead, and the test fixtures (`regression/cv-zh/test.typ`, `regression/letter-zh/test.typ`) override `[layout.fonts]` to use Noto Sans CJK SC. The tests verify "mixed-script profile renders without errors and the layout is stable" — they do not verify "Heiti SC visually matches" (that's a font-choice concern, checked by the maintainer manually with `just dev`).
 
-## Panic tests are not tytanic tests
+## Panic-contract tests are not tytanic tests
 
-Tytanic has no `expect-panic` annotation — a panicking test is reported as failed. Panic tests live in `tests/panics/<name>/fixture.typ` and are exercised by `tests/panics/run.sh`:
+Tytanic has no `expect-panic` annotation — a panicking test is reported as failed. Public API validation and schema-migration panic fixtures live in `tests/panics/<name>/fixture.typ` and are exercised by `tests/panics/run.sh`:
 
 1. Runs `typst compile --root . <fixture>`
 2. Asserts compile fails (non-zero exit)

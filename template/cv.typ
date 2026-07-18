@@ -1,5 +1,5 @@
 // Imports
-#import "@preview/brilliant-cv:4.0.1": cv
+#import "@preview/brilliant-cv:4.0.1": cv, h-bar
 
 // Each profile lives in its own folder with a self-contained metadata.toml.
 // Switch profile at compile time:
@@ -18,6 +18,13 @@
 #show: cv.with(
   metadata,
   profile-photo: image("assets/avatar.png"),
+  // Replace the generated contact row with arbitrary Typst content:
+  // header-info: [
+  //   #metadata.personal.info.email
+  //   #h-bar()
+  //   #text(fill: black)[Berlin, Germany]
+  // ],
+  // Use `header-info: none` to remove the contact row entirely.
   // To use custom image icons in personal.info.custom-<name> entries,
   // pass them here (keys must match the custom-<name> keys in metadata.toml):
   // custom-icons: (
