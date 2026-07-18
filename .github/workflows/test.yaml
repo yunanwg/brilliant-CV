@@ -45,7 +45,7 @@ jobs:
           docker run --rm \
             -v "$PWD:/workspace" \
             brilliant-cv-test \
-            bash -c "tt run --no-fail-fast && bash tests/panics/run.sh && typst compile docs/pdf/docs.typ /tmp/docs-smoke.pdf"
+            bash -c "tt run --no-fail-fast && bash tests/panics/run.sh && typst compile --root . docs/pdf/docs.typ /tmp/docs-smoke.pdf"
 
       - name: Format check (typstyle)
         run: |
