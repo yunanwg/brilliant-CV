@@ -12,13 +12,13 @@ Thanks for helping keep Brilliant CV polished! This document explains how to run
 
 - [Typst](https://github.com/typst/typst) CLI `>= 0.14.0` (matches `typst.toml`)
 - [utpm](https://github.com/Thumuss/utpm) (Workspace/package manager used by the automation)
-- Fonts listed in `README.md` (Roboto, Source Sans 3, Font Awesome 6)
+- Fonts used by the template (Roboto, Source Sans 3, Font Awesome 7)
 - macOS/Linux shell with `just` (or run the equivalent commands manually)
 
 For running the test suite locally:
 
 - **Docker** (or OrbStack / Colima / Podman) — `just test` builds and runs `tests/Dockerfile`, the same Linux image CI uses. One source of truth for typst / tytanic / typstyle versions and font installation, so visual-regression refs are pixel-deterministic across all machines. First build is ~3 min; later runs are cached.
-- [tytanic](https://github.com/typst-community/tytanic) `>= 0.3` and [typstyle](https://github.com/typstyle-rs/typstyle) `0.14.4` are **optional** for the native fast-path (`just test-fast` — panic + unit tests, sub-second). Install via `cargo install tytanic --version "^0.3"` and `brew install typstyle`. Visual tests always run in Docker.
+- [tytanic](https://github.com/typst-community/tytanic) `>= 0.4.1` and [typstyle](https://github.com/typstyle-rs/typstyle) `0.15.0` are **optional** for the native fast-path (`just test-fast` — panic + unit tests, sub-second). Install via `cargo install tytanic --version "^0.4.1"` and `brew install typstyle`. Visual tests always run in Docker.
 - A C-locale `bash` is enough for the panic-fixture smoke tests (`tests/panics/run.sh`, used by `just test-fast`).
 
 Optional but helpful:

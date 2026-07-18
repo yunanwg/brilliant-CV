@@ -4,10 +4,12 @@ repos:
     hooks:
     - id: end-of-file-fixer
     - id: trailing-whitespace
-  - repo: https://github.com/typstyle-rs/typstyle
+  - repo: https://github.com/typstyle-rs/pre-commit-typstyle
+    # The hook mirror has no v0.15.0 tag yet; pin the formatter below.
     rev: 'v0.14.4'
     hooks:
       - id: typstyle
+        additional_dependencies: ['cli:typstyle:0.15.0']
   - repo: local
     hooks:
       - id: delete-all-pdfs
