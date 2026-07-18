@@ -8,6 +8,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 # CI runs the test suite inside the same Docker image used locally
 # (tests/Dockerfile). One source of truth for typst / tytanic / typstyle
 # versions and font installation. Persistent refs additionally select fonts
@@ -41,7 +45,7 @@ jobs:
           docker run --rm \
             -v "$PWD:/workspace" \
             brilliant-cv-test \
-            bash -c "tt run --no-fail-fast && bash tests/panics/run.sh"
+            bash -c "tt run --no-fail-fast && bash tests/panics/run.sh && typst compile docs/pdf/docs.typ /tmp/docs-smoke.pdf"
 
       - name: Format check (typstyle)
         run: |
