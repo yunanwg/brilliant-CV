@@ -1,4 +1,4 @@
-#:schema https://raw.githubusercontent.com/yunanwg/brilliant-CV/main/metadata.toml.schema.json
+#:schema ../metadata.toml.schema.json
 
 # Profile: German. See profile_en/metadata.toml for inline documentation
 # of every field.

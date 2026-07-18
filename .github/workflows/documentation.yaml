@@ -20,6 +20,9 @@ jobs:
 
       - uses: astral-sh/setup-uv@v7
 
+      - name: Validate shipped metadata schema
+        run: uv run --with jsonschema==4.25.1 python scripts/check_metadata_schema.py
+
       # Generate the API reference from typst doc-comments.
       # configuration.md is no longer generated — it live-includes
       # template/profile_en/metadata.toml via pymdownx.snippets.

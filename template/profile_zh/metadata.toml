@@ -1,4 +1,4 @@
-#:schema https://raw.githubusercontent.com/yunanwg/brilliant-CV/main/metadata.toml.schema.json
+#:schema ../metadata.toml.schema.json
 
 # Profile: Chinese. Demonstrates the explicit-typography pattern — every
 # locale-specific decision is made in this file, with no hidden `language`

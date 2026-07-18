@@ -24,3 +24,9 @@ repos:
         language: system
         pass_filenames: false
         files: \.(typ|toml)$
+      - id: check-metadata-schema
+        name: Validate metadata schema
+        entry: bash -c 'just schema-check'
+        language: system
+        pass_filenames: false
+        files: ^(template/metadata\.toml\.schema\.json|template/profile_[^/]+/metadata\.toml|scripts/check_metadata_schema\.py)$
