@@ -21,7 +21,7 @@
 ## ✨ Key Features
 
 - **Profile-based variants** — Each `profile_<name>/` is a complete, self-contained CV. Switch with `--input profile=fr` at compile time. No language whitelist; any script (CJK, Arabic, Hebrew, …) is configurable via `[layout.fonts]`.
-- **AI & ATS friendly** — Keyword injection helps your CV pass automated screening systems.
+- **Optional ATS keyword injection** — Opt-in hidden keyword text for automated screeners, marked as a PDF artifact so screen readers skip it. Off by default: some screening systems detect and penalize hidden text, so read the notes in `metadata.toml` before enabling, and keep keywords truthful.
 - **Pixel-perfect tested** — 40+ tests run inside a Linux Docker baseline; layout regressions can't slip past CI.
 
 ## Quick Start

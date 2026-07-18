@@ -164,7 +164,7 @@ The package entry point is unchanged, but you should update any version-pinned i
 
 ```typ
 // Before (v2)
-#import "@preview/brilliant-cv:4.0.1": *
+#import "@preview/brilliant-cv:2.3.0": *
 
 // After (v3)
 #import "@preview/brilliant-cv:4.0.1": *

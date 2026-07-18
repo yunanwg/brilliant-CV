@@ -49,7 +49,7 @@ build:
 # Build and open the result
 open: build
     @echo "👀 Opening generated CV..."
-    @open temp/cv.pdf
+    @open temp/cv.pdf 2>/dev/null || xdg-open temp/cv.pdf 2>/dev/null || echo "💡 Could not auto-open; find it at temp/cv.pdf"
 
 # Watch for changes and rebuild automatically
 watch:
@@ -75,7 +75,7 @@ reset: unlink clean
     @echo "🔄 Development environment reset"
     @echo "💡 Run 'just dev' to start development again"
 
-# Release a new version (bump, build, commit, tag, push)
+# Release a new version (bump, build, test, commit, tag, push)
 # Usage: just release 3.2.0
 release version:
     #!/usr/bin/env bash
@@ -132,28 +132,31 @@ release version:
     # and the local link still points at the old version.
     just link
     just build
+    just test
     git add -A
     git commit -m "build: bump version to $VERSION"
     git tag "v$VERSION"
-    git push origin main --tags
+    git push origin main "v$VERSION"
     echo ""
-    echo "🎉 Version $VERSION released!"
+    echo "🎉 Version $VERSION built, tested, committed, tagged, and pushed!"
 
 # Bump version in all files
 # Usage: just bump 3.2.0
 bump version:
     @echo "📦 Bumping version to {{version}}..."
     @# Update typst.toml
-    @sed -i '' 's/^version = ".*"/version = "{{version}}"/' typst.toml
+    @sed -i.bak 's/^version = ".*"/version = "{{version}}"/' typst.toml && rm -f typst.toml.bak
     @echo "  ✓ typst.toml"
     @# Update all template imports in .typ files
-    @find template docs -name "*.typ" -exec sed -i '' 's/@preview\/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*/@preview\/brilliant-cv:{{version}}/g' {} \;
+    @find template docs -name "*.typ" -exec sed -i.bak 's/@preview\/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*/@preview\/brilliant-cv:{{version}}/g' {} \;
+    @find template docs -name "*.bak" -delete
     @echo "  ✓ template/*.typ and docs/*.typ files"
     @# Update version strings in documentation markdown files
-    @find docs/web/docs -name "*.md" -exec sed -i '' 's/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*/brilliant-cv:{{version}}/g' {} \;
+    @find docs/web/docs -name "*.md" -exec sed -i.bak 's/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*/brilliant-cv:{{version}}/g' {} \;
+    @find docs/web/docs -name "*.bak" -delete
     @echo "  ✓ docs/web/docs/*.md files"
     @# Update version in API reference generator script
-    @sed -i '' 's/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*/brilliant-cv:{{version}}/g' docs/web/generate-api-reference.py
+    @sed -i.bak 's/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*/brilliant-cv:{{version}}/g' docs/web/generate-api-reference.py && rm -f docs/web/generate-api-reference.py.bak
     @echo "  ✓ generate-api-reference.py"
     @echo "✅ Version bumped to {{version}}"
     @echo ""
@@ -300,7 +303,7 @@ compare baseline new:
         diff-pdf --output-diff=temp/compare/diff.pdf "{{baseline}}" "{{new}}" || true; \
         echo "📄 Visual diff saved to temp/compare/diff.pdf"; \
         echo "👀 Opening files for review..."; \
-        open "{{baseline}}" "{{new}}" temp/compare/diff.pdf; \
+        open "{{baseline}}" "{{new}}" temp/compare/diff.pdf 2>/dev/null || xdg-open "{{baseline}}" "{{new}}" temp/compare/diff.pdf 2>/dev/null || echo "💡 Could not auto-open; check {{baseline}}, {{new}}, and temp/compare/diff.pdf manually"; \
     fi
 
 # Build and compare against a baseline PDF (deprecated — use `just test`)
