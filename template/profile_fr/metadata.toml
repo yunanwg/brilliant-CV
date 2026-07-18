@@ -38,7 +38,10 @@ letter_footer = "Lettre de motivation"
 
 
 [inject]
-    injected_keywords_list = ["Analyste de Données", "GCP", "Python", "SQL", "Tableau"]
+    # OPT-IN: hidden ATS keyword text — disabled by default. See
+    # profile_en/metadata.toml for the trade-offs (some screening systems
+    # detect hidden text and may penalize it; keep keywords truthful).
+    # injected_keywords_list = ["Analyste de Données", "GCP", "Python", "SQL", "Tableau"]
 
 [personal]
     first_name = "John"

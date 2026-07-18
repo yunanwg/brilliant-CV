@@ -1,3 +1,12 @@
+// Required fonts: Roboto, Source Sans 3 (or Source Sans Pro), and the
+// Font Awesome 7 Free desktop OTFs (Regular, Solid, Brands) — get them from
+// https://fonts.google.com/specimen/Roboto,
+// https://fonts.google.com/specimen/Source+Sans+3, and
+// https://fontawesome.com/download. Install locally for desktop Typst.
+// On typst.app, the web app does not bundle Font Awesome — upload the three
+// .otf files to your project instead, or contact icons render as boxes.
+// See https://yunanwg.github.io/brilliant-CV/ (Troubleshooting) for details.
+
 // Imports
 #import "@preview/brilliant-cv:4.0.1": letter
 
@@ -18,6 +27,7 @@
   // date defaults to today; pass a string to override:
   date: datetime.today().display(),
   subject: "Subject: Hey!",
+  // Scanned signatures are personal and sensitive — avoid committing real ones to public git repos.
   signature: image("assets/signature.png"),
   // address-style: "normal",  // use "normal" to disable smallcaps on addresses
 )
