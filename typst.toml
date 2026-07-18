@@ -4,7 +4,7 @@ version = "4.0.1"
 entrypoint = "src/lib.typ"
 authors = ["Yunan Wang <https://github.com/yunanwg>"]
 license = "Apache-2.0"
-description = "💼 another CV template for your job application, yet powered by Typst and more"
+description = "💼 Modular, multilingual CV and cover letter template"
 repository = "https://github.com/yunanwg/brilliant-CV"
 keywords = [
     "cv",

@@ -12,4 +12,5 @@
     "wilson2022",
   ),
   ref-style: "apa",
+  ref-full: false,
 )
