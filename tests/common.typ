@@ -5,7 +5,7 @@
  * This file does not match that pattern, so it's invisible to `tt run` and
  * `tt list` while still being importable from any test via:
  *
- *     #import "/tests/common.typ": minimal-metadata
+ *     #import "/tests/common.typ": minimal-metadata, test-font-list
  *
  * The `/`-prefixed path resolves against the project root (the directory
  * containing typst.toml), so this works regardless of test depth.
@@ -17,6 +17,12 @@
 // Edit with care: changing any field here flips every component-level ref
 // PNG. Prefer constructing local overrides in the test rather than mutating
 // this fixture.
+//
+// Production metadata intentionally includes fallback families that are not
+// part of the test image. Snapshots use one installed font so missing fallback
+// warnings cannot obscure real compile or pixel failures.
+#let test-font-list = ("Source Sans 3",)
+
 #let minimal-metadata = (
   header_quote: "",
   cv_footer: "Test CV",
@@ -29,13 +35,8 @@
     paper_size: "a4",
     date_width: "3.6cm",
     fonts: (
-      regular_fonts: (
-        "Source Sans 3",
-        "Linux Libertine",
-        "Font Awesome 6 Free",
-        "Font Awesome 6 Brands",
-      ),
-      header_font: "Roboto",
+      regular_fonts: test-font-list,
+      header_font: "Source Sans 3",
     ),
     header: (
       header_align: "left",

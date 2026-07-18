@@ -4,11 +4,11 @@
 // (date only) to prove the surviving text stays aligned with its counterpart.
 
 #import "/src/cv.typ": cv-entry, cv-metadata
-#import "/src/utils/styles.typ": _latin-font-list, _regular-colors
-#import "/tests/common.typ": minimal-metadata
+#import "/src/utils/styles.typ": _regular-colors
+#import "/tests/common.typ": minimal-metadata, test-font-list
 
 #set page(width: 16cm, height: auto, margin: 0.5cm)
-#set text(font: _latin-font-list, size: 9pt, fill: _regular-colors.lightgray)
+#set text(font: test-font-list, size: 9pt, fill: _regular-colors.lightgray)
 
 // title-first layout (display_entry_society_first = false) — the configuration
 // the reporter uses, where title + date sit on the dropped top row.

@@ -2,11 +2,11 @@
 // company below. Inverted from the conventional layout.
 
 #import "/src/cv.typ": cv-entry, cv-metadata
-#import "/src/utils/styles.typ": _latin-font-list, _regular-colors
-#import "/tests/common.typ": metadata-role-first
+#import "/src/utils/styles.typ": _regular-colors
+#import "/tests/common.typ": metadata-role-first, test-font-list
 
 #set page(width: 16cm, height: auto, margin: 0.5cm)
-#set text(font: _latin-font-list, size: 9pt, fill: _regular-colors.lightgray)
+#set text(font: test-font-list, size: 9pt, fill: _regular-colors.lightgray)
 #cv-metadata.update(metadata-role-first)
 
 #cv-entry(

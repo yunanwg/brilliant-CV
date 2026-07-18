@@ -1,6 +1,8 @@
 // Regression: full English profile rendered end-to-end. Mirrors what a user
 // gets from `typst compile cv.typ --input profile=en`, except:
 //   - profile photo is suppressed (avatar.png byte changes flap diffs)
+//   - the header uses Source Sans 3 because Roboto Bold rasterizes differently
+//     on Apple and GitHub-hosted ARM CPUs even inside the same Linux image
 //   - tests go via /src/lib.typ directly, not @preview/brilliant-cv:4.0.0,
 //     so the test pins the local source. Profile modules import the
 //     published package by themselves; `just link` (or its CI equivalent)
@@ -13,6 +15,7 @@
   ..metadata,
   layout: (
     ..metadata.layout,
+    fonts: (..metadata.layout.fonts, header_font: "Source Sans 3"),
     header: (..metadata.layout.header, display_profile_photo: false),
   ),
 )
