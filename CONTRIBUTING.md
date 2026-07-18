@@ -132,4 +132,6 @@ After CI passes, a maintainer will review. Be ready to:
 - Rebase / squash based on review requests.
 - Provide snippets of rendered output if the diff touches styles or layouts.
 
+---
+
 Thanks again for contributing! If you hit any setup hurdles, start a discussion or issue before opening a PR so we can keep these docs accurate.
