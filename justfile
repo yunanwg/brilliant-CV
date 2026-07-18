@@ -9,7 +9,7 @@ default:
 dev:
     @echo "🚀 Starting development lifecycle..."
     @echo "🔗 Linking workspace..."
-    @just link || @echo "⚠️  Link failed or already linked"
+    @just link
     @echo "👁️  Starting watch mode (Ctrl+C to exit and cleanup)..."
     @echo "💡 When you exit, we'll build final version and cleanup automatically"
     @mkdir -p temp
@@ -28,10 +28,28 @@ _dev-cleanup:
 
 # Link local package for development
 link:
-    @echo "🔗 Linking local brilliant-cv package..."
-    @utpm ws link --force --no-copy
-    @echo "✅ Local package linked successfully!"
-    @echo "💡 Typst will now use your local changes instead of cached version"
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "🔗 Linking local brilliant-cv package..."
+    task_output=$(utpm ws link --force --no-copy 2>&1) || {
+        printf '%s\n' "$task_output"
+        exit 1
+    }
+    printf '%s\n' "$task_output"
+    if grep -Eq '(^|[[:space:]])ERROR([[:space:]]|:)|Operation not permitted' <<<"$task_output"; then
+        echo "❌ utpm reported a linking error" >&2
+        exit 1
+    fi
+    task_version=$(python3 -c \
+        'import tomllib; print(tomllib.load(open("typst.toml", "rb"))["package"]["version"])')
+    task_type=$(typst eval \
+        "import \"@preview/brilliant-cv:${task_version}\": cv; type(cv)")
+    if [[ "$task_type" != '"function"' ]]; then
+        echo "❌ linked package postcondition failed: cv resolved as $task_type" >&2
+        exit 1
+    fi
+    echo "✅ Local package linked successfully!"
+    echo "💡 Typst will now use your local changes instead of cached version"
 
 # Unlink local package (restore to using upstream version)
 unlink:
@@ -39,12 +57,13 @@ unlink:
     @utpm pkg unlink --yes 2>/dev/null || @echo "💡 Package already unlinked or not found"
     @echo "✅ Local package unlinked - now using upstream version"
 
-# Build CV template for testing
-build:
-    @echo "🏗️  Building CV template..."
+# Build both user-facing starter entrypoints for testing
+build: link
+    @echo "🏗️  Building CV and cover-letter templates..."
     @mkdir -p temp
     @typst compile template/cv.typ temp/cv.pdf
-    @echo "✅ CV built successfully at temp/cv.pdf"
+    @typst compile template/letter.typ temp/letter.pdf
+    @echo "✅ Starters built successfully at temp/cv.pdf and temp/letter.pdf"
 
 # Build and open the result
 open: build
@@ -52,7 +71,7 @@ open: build
     @open temp/cv.pdf 2>/dev/null || xdg-open temp/cv.pdf 2>/dev/null || echo "💡 Could not auto-open; find it at temp/cv.pdf"
 
 # Watch for changes and rebuild automatically
-watch:
+watch: link
     @echo "👁️  Watching for changes in template..."
     @mkdir -p temp
     typst watch template/cv.typ temp/cv.pdf
@@ -66,8 +85,7 @@ sync:
 # Clean build artifacts
 clean:
     @echo "🧹 Cleaning build artifacts..."
-    @find . -name "*.pdf" -not -path "./template/src/*" -delete
-    @rm -rf temp/
+    @rm -rf -- temp
     @echo "✅ Build artifacts cleaned"
 
 # Reset development environment
@@ -90,6 +108,10 @@ check-version:
 release-contract-self-test:
     @python3 scripts/test_release_contract.py
 
+# Check immutable CI inputs and narrow automation write boundaries.
+ci-contract-check:
+    @python3 scripts/check_ci_contract.py
+
 # Assemble exactly what Typst Universe receives, then compile every starter.
 package-check:
     #!/usr/bin/env bash
@@ -99,11 +121,11 @@ package-check:
     python3 scripts/release_contract.py smoke "$PACKAGE_DIR"
 
 # Full pre-release contract. Tag only after this passes on the version-bump PR.
-verify-release: check-version release-contract-self-test schema-check docs-check test fmt-check package-check
+verify-release: check-version release-contract-self-test ci-contract-check schema-check docs-check test fmt-check package-check
 
 # Validate the editor-facing schema shipped with every initialized starter.
 schema-check:
-    @uv run --quiet --with jsonschema==4.25.1 python scripts/check_metadata_schema.py
+    @uv run --with-requirements scripts/requirements-checks.lock python scripts/check_metadata_schema.py
 
 # Refresh the auto-derived parts of the docs site:
 #   - api-reference.md (from src/ typst doc-comments)
@@ -114,7 +136,7 @@ docs-generate:
     #!/usr/bin/env bash
     set -euo pipefail
     echo "📖 Generating API reference..."
-    uv run --quiet --no-project docs/web/generate-api-reference.py
+    python3 docs/web/generate-api-reference.py
     echo "🖼  Copying component render refs..."
     mkdir -p docs/web/docs/assets/components
     for dir in tests/components/*/; do
@@ -130,12 +152,12 @@ docs-check: schema-check docs-generate
 # Serve documentation site locally
 docs-serve: docs-generate
     @echo "📖 Starting docs server at http://localhost:8000..."
-    cd docs/web && uv run --with mkdocs-material --with mkdocs-glightbox mkdocs serve
+    cd docs/web && uv run --with-requirements requirements.lock mkdocs serve
 
 # Build documentation site
 docs-build: docs-check
     @echo "📖 Building docs site..."
-    cd docs/web && uv run --with mkdocs-material --with mkdocs-glightbox mkdocs build
+    cd docs/web && uv run --with-requirements requirements.lock mkdocs build
     @echo "✅ Docs built at docs/web/site/"
 
 # --- Test suite (Docker-based, Linux baseline) -----------------------------

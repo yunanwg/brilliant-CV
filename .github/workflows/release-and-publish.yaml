@@ -15,7 +15,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -23,9 +23,9 @@ jobs:
       - name: Fetch the release branch boundary
         run: git fetch --no-tags origin main:refs/remotes/origin/main
 
-      - uses: astral-sh/setup-uv@v7
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
 
-      - uses: typst-community/setup-typst@v5
+      - uses: typst-community/setup-typst@63ac138db421d586de61f7f5ac3bcef6a2e6c78c # v5
         with:
           typst-version: 0.15.1
 
@@ -33,10 +33,12 @@ jobs:
         run: python3 scripts/release_contract.py check-release-ref "${{ github.ref_name }}"
 
       - name: Test release guards
-        run: python3 scripts/test_release_contract.py
+        run: |
+          python3 scripts/test_release_contract.py
+          python3 scripts/check_ci_contract.py
 
       - name: Validate shipped metadata schema
-        run: uv run --quiet --with jsonschema==4.25.1 python scripts/check_metadata_schema.py
+        run: uv run --with-requirements scripts/requirements-checks.lock python scripts/check_metadata_schema.py
 
       - name: Validate generated docs and public examples
         run: |
@@ -49,7 +51,7 @@ jobs:
           python3 scripts/release_contract.py smoke "$RUNNER_TEMP/package"
 
       - name: Upload verified package payload
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: package-payload
           path: ${{ runner.temp }}/package/
@@ -61,11 +63,11 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           persist-credentials: false
 
-      - uses: typst-community/setup-typst@v5
+      - uses: typst-community/setup-typst@63ac138db421d586de61f7f5ac3bcef6a2e6c78c # v5
         with:
           typst-version: 0.14.0
 
@@ -79,13 +81,13 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           persist-credentials: false
 
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
 
-      - uses: docker/build-push-action@v7
+      - uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
           file: tests/Dockerfile
@@ -110,11 +112,11 @@ jobs:
       actions: read
       contents: write
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           persist-credentials: false
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
         with:
           name: package-payload
           path: ${{ runner.temp }}/package

@@ -14,31 +14,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
 
-      - uses: astral-sh/setup-uv@v7
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
 
-      - uses: typst-community/setup-typst@v5
+      - uses: typst-community/setup-typst@63ac138db421d586de61f7f5ac3bcef6a2e6c78c # v5
         with:
           typst-version: 0.14.0
 
       - name: Validate shipped metadata schema
-        run: uv run --with jsonschema==4.25.1 python scripts/check_metadata_schema.py
+        run: uv run --with-requirements scripts/requirements-checks.lock python scripts/check_metadata_schema.py
 
-      # Generate the API reference from typst doc-comments.
-      # configuration.md is no longer generated — it live-includes
-      # template/profile_en/metadata.toml via pymdownx.snippets.
-      - run: uv run --no-project docs/web/generate-api-reference.py
-      - name: Check generated API reference and compile its examples
+      - name: Generate and validate public documentation
         run: |
+          python3 docs/web/generate-api-reference.py
           git diff --exit-code -- docs/web/docs/api-reference.md
           python3 scripts/check_docs_snippets.py
 
-      # Copy component render refs from tests/components/ so components.md
-      # can show "what does this look like" panels beside each example.
-      # Mirrors the `just docs-generate` recipe used locally.
       - name: Copy component render refs
         run: |
           mkdir -p docs/web/docs/assets/components
@@ -47,14 +43,35 @@ jobs:
             cp "$dir/ref/1.png" "docs/web/docs/assets/components/$name.png"
           done
 
-      # Build MkDocs site
-      - run: uv tool install mkdocs --with mkdocs-material --with mkdocs-glightbox
-      - run: cd docs/web && mkdocs build --strict --site-dir ../../public
+      - name: Build strict MkDocs site from lockfile
+        run: cd docs/web && uv run --with-requirements requirements.lock mkdocs build --strict --site-dir ../../public
 
-      # Deploy to GitHub Pages (push to main only — PRs build for
-      # validation but never deploy)
-      - uses: peaceiris/actions-gh-pages@v4
-        if: github.event_name == 'push'
+      - name: Upload documentation site
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: documentation-site
+          path: public/
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy:
+    if: github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: documentation-site
+          path: public
+
+      - uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public

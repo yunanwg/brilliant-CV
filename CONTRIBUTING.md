@@ -2,8 +2,10 @@
 
 Thanks for helping keep Brilliant CV polished! This document explains how to run the template locally, adapt it to your needs, and submit improvements upstream.
 
-> **Why the extra setup?**  
-> Typst packages are resolved by namespace (`@preview/<name>:<version>`) and normally live inside Typst’s cache/data directories, so the compiler cannot load this template straight from the repository without a link step. The `justfile` automates that link by calling `utpm ws link --force --no-copy`, which registers the workspace as the authoritative copy of `@preview/brilliant-cv:<version>` on your machine. See the Typst package repository docs for more background on how package resolution works.  
+> **Why the extra setup?**
+>
+> Typst packages are resolved by namespace (`@preview/<name>:<version>`) and normally live inside Typst’s cache/data directories, so the compiler cannot load this template straight from the repository without a link step. The `justfile` automates that link by calling `utpm ws link --force --no-copy`, which registers the workspace as the authoritative copy of `@preview/brilliant-cv:<version>` on your machine. See the Typst package repository docs for more background on how package resolution works.
+>
 > [Typst packages](https://github.com/typst/packages)
 
 ---
@@ -163,6 +165,30 @@ environment with required reviewer protection and a fine-grained
 `TYPST_PACKAGES_TOKEN` that can update the maintainer fork and open its upstream
 PR. `PAT_TOKEN` remains only as a temporary compatibility fallback; the normal
 repository `GITHUB_TOKEN` creates the GitHub Release.
+
+### Reproducible automation
+
+Third-party GitHub Actions are pinned to immutable commit SHAs, with the
+corresponding major version in a comment. Dependabot updates those pins weekly;
+do not replace them with mutable tags in a feature PR. The Docker test image is
+pinned by base-image digest, package versions, and download checksums.
+
+Python tools have reviewed direct pins plus hash-locked transitive dependencies:
+
+```bash
+uv pip compile --universal --generate-hashes docs/web/requirements.txt --output-file docs/web/requirements.lock
+uv pip compile --universal --generate-hashes scripts/requirements-checks.txt --output-file scripts/requirements-checks.lock
+```
+
+Commit each input file and its regenerated lockfile together. Dependabot covers
+both Python directories as well as GitHub Actions.
+
+The weekly sponsor refresh uses two separate credentials: a read-only
+`SPONSORS_TOKEN` for the Sponsors API and a repository-scoped
+`AUTOMATION_PR_TOKEN` that may push only the automation branch and open its PR.
+It never writes directly to `main`. The manual visual-ref workflow likewise
+refuses to run on `main`; dispatch it from the feature branch whose refs you
+intend to review.
 
 ---
 

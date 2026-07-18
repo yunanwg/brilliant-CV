@@ -1,0 +1,2 @@
+# Pinned schema-check dependency used locally and in CI.
+jsonschema==4.26.0
