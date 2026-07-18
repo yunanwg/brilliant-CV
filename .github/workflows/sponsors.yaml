@@ -13,7 +13,7 @@ jobs:
     name: Update Sponsors
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         # Default GITHUB_TOKEN is enough for checkout/push (permissions:
         # contents: write above); no need for the cross-repo PAT here.
 

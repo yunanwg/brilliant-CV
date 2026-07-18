@@ -24,7 +24,7 @@ jobs:
             # 0.15.1 matches the pinned test toolchain (tests/Dockerfile).
             typst-version: ['0.14.0', '0.15.1']
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
               with:
                 path: ${{ env.CHECKOUT_PATH }}
 
