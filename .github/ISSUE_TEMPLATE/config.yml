@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Troubleshooting & Documentation
+    url: https://yunanwg.github.io/brilliant-CV/troubleshooting/
+    about: Check the troubleshooting FAQ (fonts, icons, paths, migration) before opening an issue.
+  - name: Questions & Discussions
+    url: https://github.com/yunanwg/brilliant-CV/discussions
+    about: Ask open-ended questions, share your CV, or discuss ideas that aren't a specific bug or feature request.

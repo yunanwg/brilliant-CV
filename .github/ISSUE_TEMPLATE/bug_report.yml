@@ -1,0 +1,108 @@
+name: Bug report
+description: Report a problem with brilliant-cv (compile errors, panics, wrong rendering, ...)
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Before filing, please check the
+        [Troubleshooting page](https://yunanwg.github.io/brilliant-CV/troubleshooting/) —
+        fonts, icons, paths, and other common issues are already documented there.
+
+  - type: input
+    id: package-version
+    attributes:
+      label: brilliant-cv version
+      description: >
+        The version you imported, e.g. from `#import "@preview/brilliant-cv:4.0.1"` in your
+        `cv.typ`/`letter.typ`, or from `typst.toml` if you develop against a local checkout.
+      placeholder: "4.0.1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: compile-method
+    attributes:
+      label: How do you compile?
+      options:
+        - Local CLI (typst compile / typst watch)
+        - typst.app web editor
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: typst-version
+    attributes:
+      label: Typst version
+      description: >
+        Output of `typst --version` for local CLI. For typst.app, the compiler version shown
+        in the editor (Help / project settings).
+      placeholder: "typst 0.14.0 (abcdef1234)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: profile
+    attributes:
+      label: Profile in use
+      description: Which starter profile are you using or basing your CV on?
+      options:
+        - profile_en
+        - profile_fr
+        - profile_de
+        - profile_it
+        - profile_zh
+        - Custom / own profile
+    validations:
+      required: false
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened, and what did you expect?
+      description: >
+        Steps to reproduce, what actually happened, and what you expected instead. Include the
+        relevant `metadata.toml` snippet or `.typ` code if it helps reproduce the issue.
+      placeholder: |
+        Steps to reproduce:
+        1. ...
+        2. ...
+
+        What happened:
+        ...
+
+        What I expected:
+        ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: error-output
+    attributes:
+      label: Full error output / panic message
+      description: >
+        Paste the complete terminal output or the panic message from typst.app. This field
+        renders as a code block automatically — no need to add triple backticks yourself.
+      render: shell
+    validations:
+      required: false
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: "macOS 14.5, Windows 11, Ubuntu 22.04, ..."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: >
+            I checked the [Troubleshooting page](https://yunanwg.github.io/brilliant-CV/troubleshooting/)
+            and my issue isn't covered there.
+          required: true

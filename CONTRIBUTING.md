@@ -132,4 +132,10 @@ After CI passes, a maintainer will review. Be ready to:
 - Rebase / squash based on review requests.
 - Provide snippets of rendered output if the diff touches styles or layouts.
 
+---
+
+## 6. Automation transparency
+
+The maintainer runs a GitHub App assistant (`cove-by-yunan`, aka "Spark") that may file or triage issues, apply labels, and manage milestones under the maintainer's oversight. If a comment, label, or issue update comes from that bot account, it's this automation acting on the maintainer's behalf, not an unsupervised process — so you know when you're interacting with it.
+
 Thanks again for contributing! If you hit any setup hurdles, start a discussion or issue before opening a PR so we can keep these docs accurate.
