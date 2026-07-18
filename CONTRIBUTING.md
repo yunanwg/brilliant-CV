@@ -80,7 +80,20 @@ If you simply want to adapt the template to your own profile:
 - Update the relevant `profile_<name>/*.typ` files with your content.
 - Keep `src/` untouched unless you plan to submit the enhancement back.
 
-### 4.2 Feature / bug-fix contributions
+### 4.2 Public API design
+
+Brilliant CV aims to stay simple to use while remaining flexible enough for varied CVs. Every public parameter and metadata field makes the package more capable, but also adds documentation, testing, and long-term compatibility costs. A request for an isolated styling control does not automatically justify a new option.
+
+Before expanding the public API, ask:
+
+1. Can the use case already be expressed clearly by composing existing components or following a documented recipe?
+2. Is the need likely to recur across multiple CVs, rather than representing one document's preference?
+3. Does the proposed option describe a stable, general concept instead of exposing an implementation detail?
+4. Can its behavior be explained, tested, and maintained without making the common path harder to understand?
+
+If existing composition is clear enough, prefer documenting that approach. If a new API is justified, introduce the smallest backward-compatible surface that solves the general case, and include documentation and regression coverage in the same PR.
+
+### 4.3 Feature / bug-fix contributions
 
 1. **Create a branch** and make your changes in `src/` and/or `template/`.
 2. **Document anything user-facing**:
