@@ -14,12 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PAT_TOKEN }}
-      
+        # Default GITHUB_TOKEN is enough for checkout/push (permissions:
+        # contents: write above); no need for the cross-repo PAT here.
+
       - name: Generate Sponsors
         uses: JamesIves/github-sponsors-readme-action@v1
         with:
+          # PAT_TOKEN is required here specifically: the Sponsors GraphQL
+          # API can't be read with the default GITHUB_TOKEN. Recommend
+          # scoping this to a fine-grained PAT with read-only sponsorship
+          # access rather than a broad classic PAT.
           token: ${{ secrets.PAT_TOKEN }}
           file: 'README.md'
           marker: 'sponsors'

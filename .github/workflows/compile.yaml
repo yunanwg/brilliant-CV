@@ -4,8 +4,13 @@ permissions:
 
 on:
     push:
+      branches: [main]
     pull_request:
     workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   CHECKOUT_PATH: ./project
@@ -13,6 +18,11 @@ env:
 jobs:
     compile:
         runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            # 0.14.0 proves the declared compiler floor in typst.toml;
+            # 0.15.1 matches the pinned test toolchain (tests/Dockerfile).
+            typst-version: ['0.14.0', '0.15.1']
         steps:
             - uses: actions/checkout@v4
               with:
@@ -42,7 +52,9 @@ jobs:
                 file: ./${{ env.CHECKOUT_PATH }}/typst.toml
                 field: template.entrypoint
 
-            - uses: typst-community/setup-typst@v3
+            - uses: typst-community/setup-typst@v5
+              with:
+                typst-version: ${{ matrix.typst-version }}
             - run: |
                 mkdir -p $HOME/.local/share/typst/packages/preview/${{ steps.get-package-name.outputs.value }}/${{ steps.get-package-version.outputs.value }}
                 cp -r -a ${{ env.CHECKOUT_PATH }}/. $HOME/.local/share/typst/packages/preview/${{ steps.get-package-name.outputs.value }}/${{ steps.get-package-version.outputs.value }}

@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -35,8 +40,10 @@ jobs:
       - run: uv tool install mkdocs --with mkdocs-material --with mkdocs-glightbox
       - run: cd docs/web && mkdocs build --strict --site-dir ../../public
 
-      # Deploy to GitHub Pages
+      # Deploy to GitHub Pages (push to main only — PRs build for
+      # validation but never deploy)
       - uses: peaceiris/actions-gh-pages@v4
+        if: github.event_name == 'push'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
