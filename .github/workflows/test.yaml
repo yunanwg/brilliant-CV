@@ -10,8 +10,8 @@ on:
 
 # CI runs the test suite inside the same Docker image used locally
 # (tests/Dockerfile). One source of truth for typst / tytanic / typstyle
-# versions and font installation, so refs are pixel-deterministic across
-# the maintainer's Apple Silicon Mac and CI Linux.
+# versions and font installation. Persistent refs additionally select fonts
+# verified stable across the maintainer's Apple Silicon Mac and CI Linux.
 #
 # Architecture: arm64 native on both sides. Cross-arch (x86 image via
 # Rosetta on Apple Silicon, or vice versa) drifts FreeType pixels;

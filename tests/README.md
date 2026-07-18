@@ -1,6 +1,6 @@
 # Tests
 
-Test suite for `brilliant-cv`, powered by [tytanic](https://github.com/typst-community/tytanic). All visual tests run inside a Linux Docker image (`tests/Dockerfile`) on **both** maintainer machines and CI, so reference PNGs are pixel-deterministic — no cross-OS antialiasing differences to absorb. Tolerance is `max-delta=1, max-deviations=0` (perfect match required).
+Test suite for `brilliant-cv`, powered by [tytanic](https://github.com/typst-community/tytanic). All visual tests run inside a pinned Linux Docker image (`tests/Dockerfile`) on **both** maintainer machines and CI. Persistent fixtures use fonts verified stable across those ARM hosts. Tolerance is `max-delta=1, max-deviations=0` (perfect match required).
 
 ## Layout
 
@@ -23,7 +23,7 @@ Tytanic discovers tests by walking `tests/` for files literally named `test.typ`
 
 | Command                       | Where                  | What it does                                                    |
 | ----------------------------- | ---------------------- | --------------------------------------------------------------- |
-| `just test`                   | Docker (`linux/amd64`) | Full suite — tytanic visual + panic shell smoke tests           |
+| `just test`                   | Docker (`linux/arm64`) | Full suite — tytanic visual + panic shell smoke tests           |
 | `just test-fast`              | native (host shell)    | Panic + unit tests only (compile-only, sub-second)              |
 | `just test-panics`            | native                 | Just the panic-fixture shell script                             |
 | `just test-filter '<glob>'`   | Docker                 | Visual tests matching a tytanic glob, e.g. `'components/*'`     |
@@ -41,7 +41,7 @@ macOS and Linux render text with different antialiasing engines (CoreText vs fre
 1. **Loose tolerance** to absorb cross-OS noise (we tried this — see git log, max-delta=50 was needed). 25× looser than ideal, hides real regressions.
 2. **Per-OS refs** with `ref/`, `ref-macos/`, `ref-linux/` — tytanic doesn't natively support multiple ref dirs, requires hacky path swapping.
 
-Docker gives **one source of truth**: `tt run` produces byte-identical pixels on every machine, so `max-delta=1, max-deviations=0` is achievable.
+Docker gives **one pinned toolchain**. CPU-specific rasterization can still differ between Apple Silicon and GitHub-hosted ARM runners, so persistent snapshots use Source Sans 3 for Latin text. Production profiles still default to Roboto; its visual fidelity is checked manually with `just dev`. Together this keeps `max-delta=1, max-deviations=0` meaningful without changing user-facing font defaults.
 
 ## CJK profile tests
 
@@ -69,6 +69,7 @@ The expected substring is encoded in each fixture's first-line comment as `// ex
 
 - **`datetime.today()`** — never in test fixtures. The `letter()` `date:` arg defaults to today's date; tests must override (`date: "2026-01-01"`).
 - **Profile photo `assets/avatar.png`** — bytes change → rasterization changes → diff flips without layout changes. Component + regression tests omit `profile-photo:`.
+- **Roboto Bold in persistent refs** — it rasterizes differently on Apple and GitHub-hosted ARM CPUs even in the same container. Use Source Sans 3 in snapshots; verify the production Roboto default manually with `just dev`.
 - **Dockerfile changes** — bumping a font / binary version changes rendering. Always regenerate refs (`just test-update`) in the same commit.
 
 ## Native-only inner loop
