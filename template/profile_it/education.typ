@@ -19,7 +19,7 @@
 #cv-entry(
   title: [Laurea in informatica],
   society: [Università della California, Los Angeles],
-  date: [2018 - 2020],
+  date: [2014 - 2018],
   location: [USA],
   logo: image("../assets/logos/ucla.png"),
   description: list(
