@@ -1,14 +1,15 @@
 # Test environment for brilliant-cv. The CI workflow and the
 # `just test` / `just test-update` recipes both run inside this image so
-# the maintainer's Apple Silicon Mac and CI Linux see identical pixel
-# output — tytanic ref PNGs are an arm64 Linux baseline.
+# the maintainer's Apple Silicon Mac and CI Linux use the same toolchain.
+# Persistent refs also use fonts verified stable across both ARM hosts.
 #
 # Architecture: arm64 only. Running x86_64 binaries via Rosetta/QEMU
 # translation produces FreeType-rasterized pixels that drift from
 # native x86_64 (empirically: ~5912 deviating pixels in Roboto-rendered
 # headers, see commit history for the migration). Sticking to a single
-# native arch (arm64) gives byte-identical refs between maintainer's
-# Mac and the GitHub-hosted ubuntu-24.04-arm runner.
+# native arch (arm64) removes the larger cross-architecture drift. Some
+# fonts (notably Roboto Bold) still vary between ARM CPU implementations,
+# so persistent refs use Source Sans 3; see tests/README.md.
 #
 # Build:  docker build -t brilliant-cv-test -f tests/Dockerfile .
 # Run:    docker run --rm -v "$(pwd)":/workspace brilliant-cv-test <cmd>

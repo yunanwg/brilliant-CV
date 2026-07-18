@@ -5,8 +5,8 @@
 // code paths in the cv-entry-start spacing logic; see issue #172.
 
 #import "/src/cv.typ": cv-entry-continued, cv-entry-start, cv-metadata
-#import "/src/utils/styles.typ": _latin-font-list, _regular-colors
-#import "/tests/common.typ": minimal-metadata
+#import "/src/utils/styles.typ": _regular-colors
+#import "/tests/common.typ": minimal-metadata, test-font-list
 
 #let metadata-with-logo = (
   ..minimal-metadata,
@@ -20,7 +20,7 @@
 )
 
 #set page(width: 16cm, height: auto, margin: 0.5cm)
-#set text(font: _latin-font-list, size: 9pt, fill: _regular-colors.lightgray)
+#set text(font: test-font-list, size: 9pt, fill: _regular-colors.lightgray)
 #cv-metadata.update(metadata-with-logo)
 
 #cv-entry-start(

@@ -225,8 +225,8 @@ docs-build: docs-generate
 # --- Test suite (Docker-based, Linux baseline) -----------------------------
 #
 # Visual tests run inside the same Linux Docker image (tests/Dockerfile) on
-# both maintainer machines and CI. Refs are pixel-deterministic — no
-# cross-OS antialiasing. The image bundles typst 0.14, tytanic 0.3.3,
+# both maintainer machines and CI. Persistent refs use fonts verified stable
+# across the two ARM hosts. The image bundles typst 0.14, tytanic 0.3.3,
 # typstyle 0.14.4, Source Sans 3, Roboto, Font Awesome 7, Noto CJK SC.
 #
 # Compile-only tests (panics + units) don't need Docker — they run native
@@ -265,7 +265,7 @@ test-panics:
 test-filter PAT: test-image
     @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} tt run --no-fail-fast -e 'glob:"{{PAT}}"'
 
-# Regenerate ref PNGs (in Docker, so CI sees identical pixels)
+# Regenerate ref PNGs in the pinned Docker toolchain
 test-update: test-image
     @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} tt update --no-fail-fast
 
