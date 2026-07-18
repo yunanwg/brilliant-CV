@@ -19,7 +19,7 @@
 #cv-entry(
   title: [Bachelors of Science in Informatik],
   society: [Universität von Kalifornien, Los Angeles],
-  date: [2018 - 2020],
+  date: [2014 - 2018],
   location: [USA],
   logo: image("../assets/logos/ucla.png"),
   description: list(
