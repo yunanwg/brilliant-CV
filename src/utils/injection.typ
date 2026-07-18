@@ -2,6 +2,14 @@
 A module containing the injection logic for the AI prompt and keywords.
 */
 
+/// Place hidden ATS/LLM-screener text into the document.
+///
+/// The text renders as 2pt white and is wrapped in `pdf.artifact` (Typst
+/// 0.14+) so assistive technology skips it, while plain-text extraction —
+/// what ATS pipelines read — still sees it. Note the text remains
+/// extractable via copy/paste, and some screeners actively detect hidden
+/// text; the template ships with injection disabled by default.
+/// Emits nothing when there is nothing to inject.
 #let _inject(
   custom-ai-prompt-text: none,
   keywords: (),
@@ -16,5 +24,13 @@ A module containing the injection logic for the AI prompt and keywords.
     parts.push(keywords.join(" "))
   }
 
-  place(text(parts.join(" "), size: 2pt, fill: white), dx: 0%, dy: 0%)
+  if parts.len() == 0 {
+    return
+  }
+
+  place(
+    pdf.artifact(text(parts.join(" "), size: 2pt, fill: white)),
+    dx: 0%,
+    dy: 0%,
+  )
 }
