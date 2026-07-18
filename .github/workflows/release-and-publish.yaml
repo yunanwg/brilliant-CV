@@ -9,7 +9,6 @@ on:
       version:
         description: 'Version number (e.g., 4.0.0 or 4.0.0-test)'
         required: true
-        default: '4.0.0'
         type: string
         
 permissions:
@@ -55,15 +54,6 @@ jobs:
             exit 1
           fi
           echo "✅ Version format valid: $VERSION"
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v${{ steps.version.outputs.version }}
-          name: v${{ steps.version.outputs.version }}
-          generate_release_notes: true
-          token: ${{ secrets.PAT_TOKEN }}
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
 
       - name: Update typst.toml version
         run: |
@@ -159,6 +149,7 @@ jobs:
           echo "✅ Package validation passed"
 
       - name: Create PR in upstream repository
+        if: ${{ !endsWith(steps.version.outputs.version, '-test') }}
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
@@ -244,6 +235,15 @@ jobs:
           # Return to main directory for cleanup
           cd "$MAIN_DIR"
 
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: v${{ steps.version.outputs.version }}
+          generate_release_notes: true
+          token: ${{ secrets.PAT_TOKEN }}
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+
       - name: Upload package as artifact
         uses: actions/upload-artifact@v4
         with:
@@ -266,8 +266,13 @@ jobs:
           echo "2. Monitor the PR for any feedback from maintainers"
           echo "3. Once merged, the package will be available via @preview/brilliant-cv:${{ steps.version.outputs.version }}"
           echo "4. Update your documentation with the new import statement"
-          
-          # Restore original typst.toml
+
+      - name: Restore typst.toml
+        if: always()
+        run: |
+          # Restore original typst.toml regardless of job outcome, so a
+          # failed run never leaves the repo checkout with a bumped
+          # version committed to the working tree.
           if [ -f "typst.toml.backup" ]; then
             mv typst.toml.backup typst.toml
             echo "✅ Original typst.toml restored"
