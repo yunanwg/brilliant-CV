@@ -132,6 +132,38 @@ After CI passes, a maintainer will review. Be ready to:
 - Rebase / squash based on review requests.
 - Provide snippets of rendered output if the diff touches styles or layouts.
 
+## 6. Release workflow
+
+Releases are reviewable changes, not a local one-shot command. From a fully
+clean checkout of the latest `origin/main`, prepare a normal PR with:
+
+```bash
+just prepare-release 4.1.0
+just verify-release
+```
+
+`prepare-release` updates only the manifest and current-version examples.
+Historical imports in the migration guide stay historical. It never commits,
+tags, or pushes on your behalf. Review and merge the version-bump PR normally,
+then create `v4.1.0` on that exact `main` commit.
+
+The tag workflow fails closed unless all of these agree:
+
+- tag, manifest version, starter imports, and current documentation;
+- the tag commit and an immutable commit already present on `origin/main`;
+- the exact `typst.toml` package payload and its `exclude` contract;
+- fresh `typst init` builds of both CV and letter, for all five profiles, on
+  Typst 0.14.0 and 0.15.1;
+- schema, generated docs, public snippets, visual tests, panic tests, and
+  formatting.
+
+Only that verified payload is uploaded and copied into the Typst Universe
+submission. The GitHub Release is created last. Configure the `release`
+environment with required reviewer protection and a fine-grained
+`TYPST_PACKAGES_TOKEN` that can update the maintainer fork and open its upstream
+PR. `PAT_TOKEN` remains only as a temporary compatibility fallback; the normal
+repository `GITHUB_TOKEN` creates the GitHub Release.
+
 ---
 
 Thanks again for contributing! If you hit any setup hurdles, start a discussion or issue before opening a PR so we can keep these docs accurate.

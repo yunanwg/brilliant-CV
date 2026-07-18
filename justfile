@@ -75,126 +75,31 @@ reset: unlink clean
     @echo "🔄 Development environment reset"
     @echo "💡 Run 'just dev' to start development again"
 
-# Release a new version (bump, build, test, commit, tag, push)
-# Usage: just release 3.2.0
-release version:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    VERSION="{{version}}"
+# Prepare a version-bump PR. This never commits, tags, or pushes.
+# Usage: just prepare-release 4.1.0
+prepare-release version:
+    @python3 scripts/release_contract.py bump "{{version}}"
+    @just docs-generate
+    @just check-version
 
-    # Validate version format
-    if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        echo "❌ Invalid version format: $VERSION"
-        echo "   Expected format: X.Y.Z (e.g., 3.2.0)"
-        exit 1
-    fi
-
-    # Check if tag already exists
-    if git tag -l "v$VERSION" | grep -q "v$VERSION"; then
-        echo "❌ Tag v$VERSION already exists!"
-        echo "   Use a different version number."
-        exit 1
-    fi
-
-    # Check for uncommitted changes
-    if ! git diff --quiet || ! git diff --cached --quiet; then
-        echo "⚠️  You have uncommitted changes:"
-        git status --short
-        echo ""
-        read -p "Continue anyway? [y/N] " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            echo "Aborted."
-            exit 1
-        fi
-    fi
-
-    # Show what will happen
-    CURRENT=$(grep '^version = ' typst.toml | sed 's/version = "\(.*\)"/\1/')
-    echo "🚀 Release Summary:"
-    echo "   Current version: $CURRENT"
-    echo "   New version:     $VERSION"
-    echo "   Branch:          $(git branch --show-current)"
-    echo ""
-    read -p "Proceed with release? [y/N] " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo "Aborted."
-        exit 1
-    fi
-
-    # Do the release
-    echo ""
-    just bump "$VERSION"
-    # Re-link the local package so `@preview/brilliant-cv:$VERSION` imports
-    # in template/ resolve to the local source. Without
-    # this, `just build` fails because the new version isn't yet on Universe
-    # and the local link still points at the old version.
-    just link
-    just build
-    just test
-    git add -A
-    git commit -m "build: bump version to $VERSION"
-    git tag "v$VERSION"
-    git push origin main "v$VERSION"
-    echo ""
-    echo "🎉 Version $VERSION built, tested, committed, tagged, and pushed!"
-
-# Bump version in all files
-# Usage: just bump 3.2.0
-bump version:
-    @echo "📦 Bumping version to {{version}}..."
-    @# Update typst.toml
-    @sed -i.bak 's/^version = ".*"/version = "{{version}}"/' typst.toml && rm -f typst.toml.bak
-    @echo "  ✓ typst.toml"
-    @# Update all template imports in .typ files
-    @find template docs -name "*.typ" -exec sed -i.bak 's/@preview\/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*/@preview\/brilliant-cv:{{version}}/g' {} \;
-    @find template docs -name "*.bak" -delete
-    @echo "  ✓ template/*.typ and docs/*.typ files"
-    @# Update version strings in documentation markdown files
-    @find docs/web/docs -name "*.md" -exec sed -i.bak 's/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*/brilliant-cv:{{version}}/g' {} \;
-    @find docs/web/docs -name "*.bak" -delete
-    @echo "  ✓ docs/web/docs/*.md files"
-    @# Update version in API reference generator script
-    @sed -i.bak 's/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*/brilliant-cv:{{version}}/g' docs/web/generate-api-reference.py && rm -f docs/web/generate-api-reference.py.bak
-    @echo "  ✓ generate-api-reference.py"
-    @echo "✅ Version bumped to {{version}}"
-    @echo ""
-    @echo "📋 Next steps:"
-    @echo "   1. git add -A && git commit -m 'build: bump version to {{version}}'"
-    @echo "   2. git tag v{{version}}"
-    @echo "   3. git push origin main --tags"
-
-# Check that all version references are consistent
+# Check that the manifest, starter, and current documentation agree.
 check-version:
+    @python3 scripts/release_contract.py check-version
+
+# Exercise the release guard itself against an isolated Git fixture.
+release-contract-self-test:
+    @python3 scripts/test_release_contract.py
+
+# Assemble exactly what Typst Universe receives, then compile every starter.
+package-check:
     #!/usr/bin/env bash
     set -euo pipefail
-    TOML_VERSION=$(grep '^version = ' typst.toml | sed 's/version = "\(.*\)"/\1/')
-    echo "📦 Version in typst.toml: $TOML_VERSION"
-    echo ""
-    MISMATCHED=()
-    # Find files with actual version numbers (not <version> placeholders)
-    while IFS= read -r file; do
-        # Skip files that only have placeholder versions like <version>
-        if grep -q "@preview/brilliant-cv:[0-9]" "$file" 2>/dev/null; then
-            if ! grep -q "@preview/brilliant-cv:$TOML_VERSION" "$file" 2>/dev/null; then
-                MISMATCHED+=("$file")
-            fi
-        fi
-    done < <(find template docs -name "*.typ" -exec grep -l "@preview/brilliant-cv:" {} \;)
-    if [ ${#MISMATCHED[@]} -eq 0 ]; then
-        echo "✅ All version references are consistent!"
-        exit 0
-    else
-        echo "❌ Version mismatch in ${#MISMATCHED[@]} files:"
-        for file in "${MISMATCHED[@]}"; do
-            FOUND=$(grep -o "@preview/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*" "$file" | head -1)
-            echo "   $file → $FOUND"
-        done
-        echo ""
-        echo "💡 Run: just bump $TOML_VERSION"
-        exit 1
-    fi
+    PACKAGE_DIR=$(mktemp -d)/package
+    python3 scripts/release_contract.py assemble "$PACKAGE_DIR"
+    python3 scripts/release_contract.py smoke "$PACKAGE_DIR"
+
+# Full pre-release contract. Tag only after this passes on the version-bump PR.
+verify-release: check-version release-contract-self-test schema-check docs-check test fmt-check package-check
 
 # Validate the editor-facing schema shipped with every initialized starter.
 schema-check:

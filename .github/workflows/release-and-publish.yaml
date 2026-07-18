@@ -4,276 +4,200 @@ on:
   push:
     tags:
       - 'v*.*.*'
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version number (e.g., 4.0.0 or 4.0.0-test)'
-        required: true
-        type: string
-        
-permissions:
-  contents: write
-  pull-requests: write
-  actions: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  release-and-publish:
+  verify-contract:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - name: Checkout current repository
-        uses: actions/checkout@v7
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          persist-credentials: false
 
-      - name: Extract and validate version
-        id: version
+      - name: Fetch the release branch boundary
+        run: git fetch --no-tags origin main:refs/remotes/origin/main
+
+      - uses: astral-sh/setup-uv@v7
+
+      - uses: typst-community/setup-typst@v5
+        with:
+          typst-version: 0.15.1
+
+      - name: Verify immutable release ref
+        run: python3 scripts/release_contract.py check-release-ref "${{ github.ref_name }}"
+
+      - name: Test release guards
+        run: python3 scripts/test_release_contract.py
+
+      - name: Validate shipped metadata schema
+        run: uv run --quiet --with jsonschema==4.25.1 python scripts/check_metadata_schema.py
+
+      - name: Validate generated docs and public examples
         run: |
-          # Extract version from different trigger sources
-          if [ "${{ github.event_name }}" = "push" ] && [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            # Extract version from tag push (remove 'v' prefix if present)
-            VERSION="${{ github.ref_name }}"
-            VERSION=${VERSION#v}
-            echo "Version from tag push: $VERSION"
-          else
-            # Use manual input for workflow_dispatch
-            VERSION="${{ github.event.inputs.version }}"
-            if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
-              echo "⚠️ version input is empty, using default"
-              VERSION="4.0.0"
-            fi
-            echo "Version from manual input: $VERSION"
-          fi
-          
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Version: $VERSION"
-          
-          # Validate version format (allow test suffix)
-          if ! echo "$VERSION" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+(-test)?$'; then
-            echo "❌ Invalid version format: $VERSION"
-            echo "Expected format: X.Y.Z or X.Y.Z-test (e.g., 2.0.7 or 2.0.7-test)"
-            exit 1
-          fi
-          echo "✅ Version format valid: $VERSION"
+          python3 scripts/release_contract.py check-generated-docs
+          python3 scripts/check_docs_snippets.py
 
-      - name: Update typst.toml version
+      - name: Assemble and smoke-test exact package payload
         run: |
-          # Create backup and update version
-          cp typst.toml typst.toml.backup
-          sed -i 's/^version = ".*"/version = "${{ steps.version.outputs.version }}"/' typst.toml
-          
-          echo "=== Updated typst.toml ==="
-          echo "Original version:"
-          grep '^version = ' typst.toml.backup
-          echo "New version:"
-          grep '^version = ' typst.toml
+          python3 scripts/release_contract.py assemble "$RUNNER_TEMP/package"
+          python3 scripts/release_contract.py smoke "$RUNNER_TEMP/package"
 
-      - name: Prepare package files
+      - name: Upload verified package payload
+        uses: actions/upload-artifact@v7
+        with:
+          name: package-payload
+          path: ${{ runner.temp }}/package/
+          if-no-files-found: error
+          retention-days: 7
+
+  verify-minimum-typst:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: typst-community/setup-typst@v5
+        with:
+          typst-version: 0.14.0
+
+      - name: Fresh-init every starter on the compiler floor
         run: |
-          # Create package directory structure
-          PACKAGE_DIR="packages/preview/brilliant-cv/${{ steps.version.outputs.version }}"
-          mkdir -p "$PACKAGE_DIR"
+          python3 scripts/release_contract.py assemble "$RUNNER_TEMP/package"
+          python3 scripts/release_contract.py smoke "$RUNNER_TEMP/package"
 
-          echo "=== Preparing package files ==="
-          echo "Target directory: $PACKAGE_DIR"
+  verify-tests:
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
-          # Drive rsync's exclude list from typst.toml's [package].exclude
-          # so the manifest is the single source of truth for what ships
-          # to Universe. Adding a new exclude in typst.toml automatically
-          # takes effect here — no second hard-coded list to keep in sync.
-          MANIFEST_EXCLUDES=$(python3 -c '
-          import tomllib
-          with open("typst.toml", "rb") as f:
-              cfg = tomllib.load(f)
-          for item in cfg["package"].get("exclude", []):
-              print(f"--exclude={item}")
-          ')
+      - uses: docker/setup-buildx-action@v3
 
-          # Always-exclude set for workflow-runtime artifacts that
-          # shouldn't ship and aren't appropriate to list in typst.toml.
-          RUNTIME_EXCLUDES=(
-            --exclude=.git
-            --exclude=packages
-            --exclude=typst.toml.backup
-          )
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: tests/Dockerfile
+          tags: brilliant-cv-test
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-          echo "=== Manifest excludes (from typst.toml) ==="
-          echo "$MANIFEST_EXCLUDES"
+      - name: Run all tests and formatting checks
+        run: |
+          bash tests/guards.sh
+          docker run --rm \
+            -v "$PWD:/workspace" \
+            brilliant-cv-test \
+            bash -c "tt run --no-fail-fast && bash tests/panics/run.sh && typstyle --check src template tests"
 
-          # shellcheck disable=SC2086
-          rsync -av $MANIFEST_EXCLUDES "${RUNTIME_EXCLUDES[@]}" . "$PACKAGE_DIR/"
+  publish:
+    needs: [verify-contract, verify-minimum-typst, verify-tests]
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
-          echo "=== Package structure ==="
-          find "$PACKAGE_DIR" -type f | sort
+      - uses: actions/download-artifact@v7
+        with:
+          name: package-payload
+          path: ${{ runner.temp }}/package
 
-          echo "=== Package typst.toml content ==="
-          cat "$PACKAGE_DIR/typst.toml"
+      - name: Recheck downloaded payload
+        run: python3 scripts/release_contract.py check-payload "$RUNNER_TEMP/package"
 
-          echo "=== Package size ==="
-          du -sh "$PACKAGE_DIR"
-
-          # Assert: no manifest-excluded path leaked into the prepared
-          # package. If any did, typst.toml claims something the release
-          # path didn't honor — exactly the drift this rewrite eliminates.
-          LEAKED=()
-          while IFS= read -r excluded; do
-              if [ -e "$PACKAGE_DIR/$excluded" ]; then
-                  LEAKED+=("$excluded")
-              fi
-          done < <(python3 -c '
-          import tomllib
-          with open("typst.toml", "rb") as f:
-              cfg = tomllib.load(f)
-          for item in cfg["package"].get("exclude", []):
-              print(item)
-          ')
-
-          if [ "${#LEAKED[@]}" -gt 0 ]; then
-              echo "❌ Manifest-excluded paths leaked into package:"
-              printf '   %s\n' "${LEAKED[@]}"
-              echo "Fix the rsync invocation above or remove the entries from typst.toml exclude."
-              exit 1
-          fi
-          echo "✅ All manifest-excluded paths verified absent from package"
-
-          # Validate required files exist
-          if [ ! -f "$PACKAGE_DIR/typst.toml" ]; then
-            echo "❌ Missing typst.toml in package"
-            exit 1
-          fi
-
-          if [ ! -f "$PACKAGE_DIR/src/lib.typ" ]; then
-            echo "❌ Missing src/lib.typ (entrypoint) in package"
-            exit 1
-          fi
-
-          echo "✅ Package validation passed"
-
-      - name: Create PR in upstream repository
-        if: ${{ !endsWith(steps.version.outputs.version, '-test') }}
+      - name: Open or update the Typst Universe submission
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GH_TOKEN: ${{ secrets.TYPST_PACKAGES_TOKEN || secrets.PAT_TOKEN }}
+          VERSION: ${{ github.ref_name }}
+          PACKAGE_DIR: ${{ runner.temp }}/package
         run: |
-          echo "=== Creating PR in upstream repository ==="
-          
-          # Store the absolute path to the main workflow directory
-          MAIN_DIR="$(pwd)"
-          echo "Main workflow directory: $MAIN_DIR"
-          
-          # Set up git config and authentication first
+          set -euo pipefail
+          VERSION=${VERSION#v}
+          BRANCH="brilliant-cv-$VERSION"
+
+          if [ -z "$GH_TOKEN" ]; then
+            echo "TYPST_PACKAGES_TOKEN is required (PAT_TOKEN is a temporary fallback)."
+            exit 1
+          fi
+
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           gh auth setup-git
-          
-          # Clone your existing fork of the typst/packages repository
-          echo "=== Using existing fork: yunanwg/our-Typst-packages ==="
-          gh repo clone yunanwg/our-Typst-packages temp-fork
-          cd temp-fork
-          
-          # Add upstream remote (if it doesn't exist)
-          if ! git remote get-url upstream >/dev/null 2>&1; then
-            git remote add upstream https://github.com/typst/packages.git
-          fi
-          
-          # Fetch latest from upstream and sync fork
-          git fetch upstream
-          git checkout main
-          git reset --hard upstream/main
-          git push origin main --force
-          
-          # Create new branch for package submission (delete if exists)
-          BRANCH_NAME="brilliant-cv-${{ steps.version.outputs.version }}"
-          
-          # Delete branch if it exists (both local and remote)
-          if git show-ref --verify --quiet refs/heads/$BRANCH_NAME; then
-            echo "⚠️ Local branch $BRANCH_NAME exists, deleting..."
-            git branch -D $BRANCH_NAME
-          fi
-          
-          if git ls-remote --heads origin $BRANCH_NAME | grep -q $BRANCH_NAME; then
-            echo "⚠️ Remote branch $BRANCH_NAME exists, deleting..."
-            git push origin --delete $BRANCH_NAME
-          fi
-          
-          git checkout -b "$BRANCH_NAME"
-          
-          # Copy package files from the correct location
-          mkdir -p "packages/preview/brilliant-cv"
-          cp -r "$MAIN_DIR/packages/preview/brilliant-cv/${{ steps.version.outputs.version }}" "packages/preview/brilliant-cv/"
-          
-          # Commit changes
-          git add .
-          git commit -m "bump: brilliant-cv to v${{ steps.version.outputs.version }}
+          gh repo clone yunanwg/our-Typst-packages universe
+          cd universe
+          git remote add upstream https://github.com/typst/packages.git
+          git fetch --no-tags upstream main
 
-          Update brilliant-cv package to version ${{ steps.version.outputs.version }}"
-          
-          # Push branch to YOUR fork (auth already set up)
-          git push -u origin "$BRANCH_NAME"
-          
-          # Create PR from your fork to upstream
+          TARGET="packages/preview/brilliant-cv/$VERSION"
+          if git cat-file -e "upstream/main:$TARGET" 2>/dev/null; then
+            echo "$TARGET is already present on typst/packages main."
+            exit 0
+          fi
+
+          REMOTE_SHA=$(git ls-remote --heads origin "$BRANCH" | awk '{print $1}')
+          git switch --create "$BRANCH" upstream/main
+          mkdir -p "$TARGET"
+          cp -a "$PACKAGE_DIR/." "$TARGET/"
+          git add "$TARGET"
+          git commit -m "brilliant-cv:$VERSION"
+
+          if [ -n "$REMOTE_SHA" ]; then
+            git push \
+              --force-with-lease="refs/heads/$BRANCH:$REMOTE_SHA" \
+              origin "$BRANCH"
+          else
+            git push --set-upstream origin "$BRANCH"
+          fi
+
+          OPEN_PR=$(gh pr list \
+            --repo typst/packages \
+            --head "yunanwg:$BRANCH" \
+            --state open \
+            --json url \
+            --jq '.[0].url // ""')
+          if [ -n "$OPEN_PR" ]; then
+            echo "Reused existing submission: $OPEN_PR"
+            exit 0
+          fi
+
+          CLOSED_PR=$(gh pr list \
+            --repo typst/packages \
+            --head "yunanwg:$BRANCH" \
+            --state closed \
+            --json mergedAt,url \
+            --jq '[.[] | select(.mergedAt == null)][0].url // ""')
+          if [ -n "$CLOSED_PR" ]; then
+            echo "A closed, unmerged submission already exists: $CLOSED_PR"
+            exit 1
+          fi
+
           gh pr create \
             --repo typst/packages \
-            --title "brilliant-cv:${{ steps.version.outputs.version }}" \
-            --body "I am submitting
-          - [ ] a new package
-          - [X] an update for a package
-          
-          Description: This update brings brilliant-cv to version ${{ steps.version.outputs.version }}.
-          
-          I have read and followed the submission guidelines and, in particular, I
-          - [X] selected [a name](https://github.com/typst/packages/blob/main/docs/manifest.md#naming-rules) that isn't the most obvious or canonical name for what the package does
-          - [X] added a [\`typst.toml\`](https://github.com/typst/packages/blob/main/docs/manifest.md#package-metadata) file with all required keys
-          - [X] added a [\`README.md\`](https://github.com/typst/packages/blob/main/docs/documentation.md) with documentation for my package
-          - [X] have chosen [a license](https://github.com/typst/packages/blob/main/docs/licensing.md) and added a \`LICENSE\` file or linked one in my \`README.md\`
-          - [X] tested my package locally on my system and it worked
-          - [X] [\`exclude\`d](https://github.com/typst/packages/blob/main/docs/tips.md#what-to-commit-what-to-exclude) PDFs or README images, if any, but not the LICENSE
-          - [X] ensured that my package is licensed such that users can use and distribute the contents of its template directory without restriction, after modifying them through normal use." \
-            --head "yunanwg:$BRANCH_NAME" \
-            --base main
+            --head "yunanwg:$BRANCH" \
+            --base main \
+            --title "brilliant-cv:$VERSION" \
+            --body "Update brilliant-cv to $VERSION. The submitted directory is the exact payload validated from the immutable v$VERSION tag on Typst 0.14.0 and 0.15.1."
 
-          echo "✅ PR created successfully from fork to upstream repository"
-          
-          # Return to main directory for cleanup
-          cd "$MAIN_DIR"
-
+      # This deliberately runs last: a GitHub Release means the package
+      # payload passed every gate and its Universe submission was accepted.
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v3
-        with:
-          tag_name: v${{ steps.version.outputs.version }}
-          name: v${{ steps.version.outputs.version }}
-          generate_release_notes: true
-          token: ${{ secrets.PAT_TOKEN }}
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-
-      - name: Upload package as artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: brilliant-cv-${{ steps.version.outputs.version }}
-          path: packages/preview/brilliant-cv/${{ steps.version.outputs.version }}/
-          retention-days: 7
-
-      - name: Workflow Summary
-        run: |
-          echo "=== RELEASE AND PUBLISH COMPLETED ==="
-          echo "✅ Version: ${{ steps.version.outputs.version }}"
-          if [ "${{ github.event_name }}" = "push" ]; then
-            echo "✅ GitHub release created: v${{ steps.version.outputs.version }}"
-          fi
-          echo "✅ PR created in: typst/packages"
-          echo "✅ Package uploaded as workflow artifact"
-          echo ""
-          echo "🔗 **Next Steps:**"
-          echo "1. Visit https://github.com/typst/packages to review the PR"
-          echo "2. Monitor the PR for any feedback from maintainers"
-          echo "3. Once merged, the package will be available via @preview/brilliant-cv:${{ steps.version.outputs.version }}"
-          echo "4. Update your documentation with the new import statement"
-
-      - name: Restore typst.toml
-        if: always()
-        run: |
-          # Restore original typst.toml regardless of job outcome, so a
-          # failed run never leaves the repo checkout with a bumped
-          # version committed to the working tree.
-          if [ -f "typst.toml.backup" ]; then
-            mv typst.toml.backup typst.toml
-            echo "✅ Original typst.toml restored"
-          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" --generate-notes --verify-tag

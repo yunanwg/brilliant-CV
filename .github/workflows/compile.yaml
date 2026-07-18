@@ -1,62 +1,50 @@
 name: Compile Test
+
 permissions:
   contents: read
 
 on:
-    push:
-      branches: [main]
-    pull_request:
-    workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  CHECKOUT_PATH: ./project
-
 jobs:
-    compile:
-        runs-on: ubuntu-latest
-        strategy:
-          matrix:
-            # 0.14.0 proves the declared compiler floor in typst.toml;
-            # 0.15.1 matches the pinned test toolchain (tests/Dockerfile).
-            typst-version: ['0.14.0', '0.15.1']
-        steps:
-            - uses: actions/checkout@v7
-              with:
-                path: ${{ env.CHECKOUT_PATH }}
+  compile:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 0.14.0 proves the declared compiler floor in typst.toml;
+        # 0.15.1 matches the pinned test toolchain (tests/Dockerfile).
+        typst-version: ['0.14.0', '0.15.1']
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
-            - uses: SebRollen/toml-action@v1.2.0
-              id: get-package-name
-              with:
-                file: ./${{ env.CHECKOUT_PATH }}/typst.toml
-                field: package.name
+      - uses: typst-community/setup-typst@v5
+        with:
+          typst-version: ${{ matrix.typst-version }}
 
-            - uses: SebRollen/toml-action@v1.2.0
-              id: get-package-version
-              with:
-                file: ./${{ env.CHECKOUT_PATH }}/typst.toml
-                field: package.version
+      - name: Assemble exact package payload
+        run: python3 scripts/release_contract.py assemble "$RUNNER_TEMP/package"
 
-            - uses: SebRollen/toml-action@v1.2.0
-              id: get-template-path
-              with:
-                file: ./${{ env.CHECKOUT_PATH }}/typst.toml
-                field: template.path
+      - name: Fresh-init CV and letter for every profile
+        run: python3 scripts/release_contract.py smoke "$RUNNER_TEMP/package"
 
-            - uses: SebRollen/toml-action@v1.2.0
-              id: get-template-entrypoint
-              with:
-                file: ./${{ env.CHECKOUT_PATH }}/typst.toml
-                field: template.entrypoint
+  release-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
-            - uses: typst-community/setup-typst@v5
-              with:
-                typst-version: ${{ matrix.typst-version }}
-            - run: |
-                mkdir -p $HOME/.local/share/typst/packages/preview/${{ steps.get-package-name.outputs.value }}/${{ steps.get-package-version.outputs.value }}
-                cp -r -a ${{ env.CHECKOUT_PATH }}/. $HOME/.local/share/typst/packages/preview/${{ steps.get-package-name.outputs.value }}/${{ steps.get-package-version.outputs.value }}
-            - run: typst c ${{ env.CHECKOUT_PATH }}/${{ steps.get-template-path.outputs.value }}/${{ steps.get-template-entrypoint.outputs.value }}
-
+      - name: Check version and release-tool guards
+        run: |
+          python3 scripts/release_contract.py check-version
+          python3 scripts/test_release_contract.py
