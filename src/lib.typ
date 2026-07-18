@@ -117,15 +117,26 @@
 /// - doc (content): The body content of the CV (typically the imported modules).
 /// - profile-photo (image | none): The profile photo to display in the header. Defaults to `none`; pass an `image(...)` to render. When `none`, the photo column is hidden regardless of `display_profile_photo`.
 /// - custom-icons (dictionary): Custom icons to override or extend the default icon set.
+/// - header-info (auto | none | str | content): (optional) customize the contact-information row. `auto` (default) renders `metadata.personal.info`; `none` removes the row; a string or content value replaces it while inheriting the default info typography. Use explicit `text(fill: ...)`, `h-bar()`, and `linebreak()` calls inside custom content for granular styling and layout.
 /// -> content
 #let cv(
   metadata,
   doc,
   profile-photo: none,
   custom-icons: (:),
+  header-info: auto,
 ) = {
   _check-v3-legacy(metadata)
   _check-v2-inject-legacy(metadata)
+
+  if (
+    header-info != auto
+      and header-info != none
+      and type(header-info) != str
+      and type(header-info) != content
+  ) {
+    panic("header-info must be auto, none, a string, or content")
+  }
 
   // Update metadata state so component functions can read it without
   // having metadata threaded through every call site.
@@ -153,6 +164,7 @@
     _regular-colors,
     _awesome-colors,
     custom-icons,
+    header-info,
   )
   doc
 }

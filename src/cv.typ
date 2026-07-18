@@ -28,7 +28,7 @@
     str,
   ),
   last-name: str => text(font: header-font, size: 32pt, weight: "bold", str),
-  info: str => text(size: header-info-font-size, fill: accent-color, str),
+  info: body => text(size: header-info-font-size, fill: accent-color, body),
   quote: str => text(
     size: 10pt,
     weight: "medium",
@@ -134,27 +134,39 @@
   display-name,
   first-name,
   last-name,
-  personal-info,
+  header-info,
   header-quote,
-  custom-icons,
 ) = {
-  table(
-    columns: 1fr,
-    inset: 0pt,
-    stroke: none,
-    row-gutter: 6mm,
+  let rows = (
     if display-name != none {
       (styles.first-name)(display-name)
     } else [#(styles.first-name)(first-name) #h(5pt) #(styles.last-name)(
         last-name,
       )],
-    [#(styles.info)(_make-header-info(
-      personal-info,
-      _personal-info-icons,
-      custom-icons,
-    ))],
-    ..if header-quote != none { ([#(styles.quote)(header-quote)],) },
   )
+
+  if header-info != none {
+    rows.push([#(styles.info)(header-info)])
+  }
+  if header-quote != none {
+    rows.push([#(styles.quote)(header-quote)])
+  }
+
+  let result = table(
+    columns: 1fr,
+    inset: 0pt,
+    stroke: none,
+    row-gutter: 6mm,
+    ..rows,
+  )
+
+  // With neither contact info nor a quote, retain the single row-gutter that
+  // normally separates the name from the rest of the document.
+  if rows.len() == 1 {
+    [#result #v(6mm)]
+  } else {
+    result
+  }
 }
 
 /// Create header photo section. When `profile-photo` is `none` the column
@@ -194,6 +206,7 @@
 /// - regular-colors (array): the regular colors of the CV.
 /// - awesome-colors (array): the awesome colors of the CV.
 /// - custom-icons (dictionary): pre-loaded image objects for custom personal info entries.
+/// - header-info (auto | none | str | content): contact information content. `auto` renders metadata.personal.info; `none` omits the row; strings or content replace the generated row.
 /// -> content
 #let _cv-header(
   metadata,
@@ -202,6 +215,7 @@
   regular-colors,
   awesome-colors,
   custom-icons,
+  header-info,
 ) = {
   // Parameters
   let header-alignment = eval(metadata.layout.header.header_align)
@@ -231,6 +245,16 @@
   // split feels wrong.
   let display-name = metadata.personal.at("display_name", default: none)
 
+  let rendered-header-info = if header-info == auto {
+    _make-header-info(
+      personal-info,
+      _personal-info-icons,
+      custom-icons,
+    )
+  } else {
+    header-info
+  }
+
   // Injection
   _inject(
     custom-ai-prompt-text: custom-ai-prompt-text,
@@ -251,9 +275,8 @@
     display-name,
     first-name,
     last-name,
-    personal-info,
+    rendered-header-info,
     header-quote,
-    custom-icons,
   )
 
   let photo-section = _make-header-photo-section(

@@ -132,6 +132,43 @@ To add a custom contact entry with an image icon (instead of a Font Awesome icon
 
 When a `custom-icons` entry is provided, it takes priority over the `awesomeIcon` value from TOML.
 
+## Custom Header Info
+
+The default header turns `[personal.info]` entries into linked contact items, inserts icons, and places `h-bar()` between them automatically. When you need precise control over separators, line breaks, or which spans use the accent color, pass custom content through `header-info`:
+
+```typ
+#import "@preview/brilliant-cv:4.0.1": cv, h-bar
+
+#let info = metadata.personal.info
+
+#show: cv.with(
+  metadata,
+  profile-photo: image("assets/avatar.png"),
+  header-info: [
+    #link("mailto:" + info.email)[#info.email]
+    #h-bar()
+    #text(fill: black)[Berlin, Germany]
+    #linebreak()
+    #text(fill: rgb("#2E7D32"))[Available for remote work]
+  ],
+)
+```
+
+The replacement inherits the default header-info font size and accent color. Style individual spans explicitly to override those defaults. Because the replacement bypasses automatic `[personal.info]` rendering, add any desired icons and links directly in the content; `custom-icons` only applies to the default `auto` renderer.
+
+Use a function when that keeps your template clearer, but call it before passing the result—the API accepts the resulting content rather than a renderer callback:
+
+```typ
+#let render-info(info) = [#info.email #h-bar() #info.location]
+
+#show: cv.with(
+  metadata,
+  header-info: render-info(metadata.personal.info),
+)
+```
+
+Pass `header-info: none` to remove the contact row while keeping the name, optional quote, photo, and surrounding layout intact.
+
 ## Color Customization
 
 ### Preset Colors
