@@ -19,6 +19,13 @@ letter_footer = "申请信"
     [layout.fonts]
         # Mixed Source Sans 3 + Heiti SC. Typst's codepoint-level fallback
         # picks Heiti SC for CJK characters and Source Sans 3 for Latin.
+        # Heiti SC ships only with macOS — on other platforms (and on
+        # typst.app) it silently falls back to a different font, changing
+        # the look. Cross-platform/typst.app users should use
+        # "Noto Sans CJK SC" instead (install it locally, or upload it to
+        # your typst.app project), e.g.:
+        #   regular_fonts = ["Source Sans 3", "Noto Sans CJK SC"]
+        #   header_font = "Noto Sans CJK SC"
         regular_fonts = ["Source Sans 3", "Heiti SC"]
         header_font = "Heiti SC"
 
