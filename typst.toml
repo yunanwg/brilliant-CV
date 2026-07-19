@@ -20,6 +20,7 @@ compiler = "0.14.0"
 exclude = [
     "docs",
     "tests",
+    "scripts",
     "justfile",
     ".github",
     ".pre-commit-config.yaml",

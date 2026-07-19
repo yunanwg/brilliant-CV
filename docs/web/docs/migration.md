@@ -30,7 +30,7 @@ You also need to flatten the v3 `[lang.<code>]` structure to top-level fields. v
 
 ```typ
 // Before (v3)
-#import "@preview/brilliant-cv:4.0.1": cv
+#import "@preview/brilliant-cv:3.3.0": cv
 #let metadata = toml("./metadata.toml")
 #let cv-language = sys.inputs.at("language", default: none)
 #let metadata = if cv-language != none {
@@ -45,6 +45,7 @@ You also need to flatten the v3 `[lang.<code>]` structure to top-level fields. v
 }
 
 // After (v4) — profile-based, no merge
+// release-current-version
 #import "@preview/brilliant-cv:4.0.1": cv
 #let profile = sys.inputs.at("profile", default: "en")
 #let metadata = toml("profile_" + profile + "/metadata.toml")
@@ -179,7 +180,7 @@ The package entry point is unchanged, but you should update any version-pinned i
 #import "@preview/brilliant-cv:2.3.0": *
 
 // After (v3)
-#import "@preview/brilliant-cv:4.0.1": *
+#import "@preview/brilliant-cv:3.3.0": *
 ```
 
 ### 2. Parameter Renaming (now panics)
