@@ -15,9 +15,9 @@ body:
     attributes:
       label: brilliant-cv version
       description: >
-        The version you imported, e.g. from `#import "@preview/brilliant-cv:4.0.1"` in your
+        The version you imported, e.g. from `#import "@preview/brilliant-cv:4.1.0"` in your
         `cv.typ`/`letter.typ`, or from `typst.toml` if you develop against a local checkout.
-      placeholder: "4.0.1"
+      placeholder: "4.1.0"
     validations:
       required: true
 
