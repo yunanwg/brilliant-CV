@@ -167,6 +167,11 @@ that cross-repository scope both to update the maintainer fork and to open the
 upstream PR. `PAT_TOKEN` remains only as a temporary compatibility fallback;
 the normal repository `GITHUB_TOKEN` creates the GitHub Release.
 
+The upstream PR description is rendered from
+`.github/typst-packages-pr-body.md`. Keep that checked-in body aligned with the
+[Typst Packages submission template](https://github.com/typst/packages/blob/main/.github/pull_request_template.md);
+the CI contract rejects missing checklist sections or an inline replacement.
+
 ### Reproducible automation
 
 Third-party GitHub Actions are pinned to immutable commit SHAs, with the
