@@ -54,6 +54,12 @@ def policy_errors(root: Path) -> list[str]:
         if forbidden in release:
             errors.append(f"release workflow contains forbidden operation: {forbidden}")
 
+    sponsors = (root / ".github/workflows/sponsors.yaml").read_text()
+    if "workflow_dispatch:" not in sponsors:
+        errors.append("sponsor refresh must remain manually dispatchable")
+    if "schedule:" in sponsors:
+        errors.append("sponsor refresh must remain manual-only")
+
     precommit = (root / ".pre-commit-config.yaml").read_text()
     if "delete-all-pdfs" in precommit or 'find . -type f -name "*.pdf" -delete' in precommit:
         errors.append("pre-commit must reject PDFs, not delete workspace files")

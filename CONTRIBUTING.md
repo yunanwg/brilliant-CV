@@ -183,12 +183,12 @@ uv pip compile --universal --generate-hashes scripts/requirements-checks.txt --o
 Commit each input file and its regenerated lockfile together. Dependabot covers
 both Python directories as well as GitHub Actions.
 
-The weekly sponsor refresh uses two separate credentials: a read-only
-`SPONSORS_TOKEN` for the Sponsors API and a repository-scoped
+The manually dispatched sponsor refresh uses two separate credentials: a
+read-only `SPONSORS_TOKEN` for the Sponsors API and a repository-scoped
 `AUTOMATION_PR_TOKEN` that may push only the automation branch and open its PR.
-It never writes directly to `main`. The manual visual-ref workflow likewise
-refuses to run on `main`; dispatch it from the feature branch whose refs you
-intend to review.
+Run it only after both secrets are configured. It never writes directly to
+`main`. The manual visual-ref workflow likewise refuses to run on `main`;
+dispatch it from the feature branch whose refs you intend to review.
 
 ---
 
