@@ -74,11 +74,11 @@ RUN mkdir -p /usr/local/share/fonts/SourceSans3 \
     && unzip -q /tmp/ss3.zip -d /usr/local/share/fonts/SourceSans3 \
     && rm /tmp/ss3.zip
 
-# Font Awesome 7.2.0 desktop (matches @preview/fontawesome:0.6.0 expected
+# Font Awesome 7.3.0 desktop (matches @preview/fontawesome:0.6.2 expected
 # family names — apt's fonts-font-awesome is FA 6 with different names)
 RUN curl -fsSL --retry 3 -o /tmp/fa.zip \
-        https://github.com/FortAwesome/Font-Awesome/releases/download/7.2.0/fontawesome-free-7.2.0-desktop.zip \
-    && echo "5717251cdd7b3f3df989f9fada0ca65b6609045c04a0c1bd78fb27acb3bf84cb  /tmp/fa.zip" | sha256sum -c - \
+        https://github.com/FortAwesome/Font-Awesome/releases/download/7.3.0/fontawesome-free-7.3.0-desktop.zip \
+    && echo "719c61d1b2b595d166af27dac1fdce1391726b6eed7986076aa13b232976cfcd  /tmp/fa.zip" | sha256sum -c - \
     && unzip -q /tmp/fa.zip -d /tmp/fa \
     && find /tmp/fa -name '*.otf' -exec cp {} /usr/local/share/fonts/ \; \
     && rm -rf /tmp/fa.zip /tmp/fa \
