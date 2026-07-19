@@ -42,6 +42,21 @@ def docker_errors(text: str) -> list[str]:
     return errors
 
 
+def release_remote_errors(text: str) -> list[str]:
+    """Reject fork-clone remote setup that is not safe to repeat."""
+    if "gh repo clone" not in text or "git remote add upstream" not in text:
+        return []
+    if (
+        "git remote get-url upstream" in text
+        and "git remote set-url upstream" in text
+    ):
+        return []
+    return [
+        "release workflow must handle the upstream remote that gh repo clone "
+        "may create for forks"
+    ]
+
+
 def policy_errors(root: Path) -> list[str]:
     errors: list[str] = []
     for path in sorted((root / ".github/workflows").glob("*.yaml")):
@@ -50,6 +65,7 @@ def policy_errors(root: Path) -> list[str]:
     errors.extend(docker_errors((root / "tests/Dockerfile").read_text()))
 
     release = (root / ".github/workflows/release-and-publish.yaml").read_text()
+    errors.extend(release_remote_errors(release))
     for forbidden in ("workflow_dispatch", "git reset --hard", "git push origin main --force"):
         if forbidden in release:
             errors.append(f"release workflow contains forbidden operation: {forbidden}")
@@ -83,6 +99,20 @@ def self_test() -> None:
     assert not action_errors(Path("ok.yaml"), "uses: owner/action@" + "a" * 40)
     assert action_errors(Path("bad.yaml"), "uses: owner/action@v7")
     assert docker_errors("FROM ubuntu:24.04\nRUN curl https://github.com/x\n")
+    unsafe_remote = """\
+gh repo clone owner/fork universe
+git remote add upstream https://github.com/upstream/repo.git
+"""
+    safe_remote = """\
+gh repo clone owner/fork universe
+if git remote get-url upstream >/dev/null 2>&1; then
+  git remote set-url upstream https://github.com/upstream/repo.git
+else
+  git remote add upstream https://github.com/upstream/repo.git
+fi
+"""
+    assert release_remote_errors(unsafe_remote)
+    assert not release_remote_errors(safe_remote)
 
 
 def main() -> int:

@@ -144,7 +144,11 @@ jobs:
           gh auth setup-git
           gh repo clone yunanwg/our-Typst-packages universe
           cd universe
-          git remote add upstream https://github.com/typst/packages.git
+          if git remote get-url upstream >/dev/null 2>&1; then
+            git remote set-url upstream https://github.com/typst/packages.git
+          else
+            git remote add upstream https://github.com/typst/packages.git
+          fi
           git fetch --no-tags upstream main
 
           TARGET="packages/preview/brilliant-cv/$VERSION"
