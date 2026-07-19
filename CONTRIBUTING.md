@@ -161,10 +161,11 @@ The tag workflow fails closed unless all of these agree:
 
 Only that verified payload is uploaded and copied into the Typst Universe
 submission. The GitHub Release is created last. Configure the `release`
-environment with required reviewer protection and a fine-grained
-`TYPST_PACKAGES_TOKEN` that can update the maintainer fork and open its upstream
-PR. `PAT_TOKEN` remains only as a temporary compatibility fallback; the normal
-repository `GITHUB_TOKEN` creates the GitHub Release.
+environment with required reviewer protection and a dedicated classic
+`TYPST_PACKAGES_TOKEN` limited to the `public_repo` scope. The workflow needs
+that cross-repository scope both to update the maintainer fork and to open the
+upstream PR. `PAT_TOKEN` remains only as a temporary compatibility fallback;
+the normal repository `GITHUB_TOKEN` creates the GitHub Release.
 
 ### Reproducible automation
 

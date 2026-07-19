@@ -35,6 +35,7 @@ def main() -> int:
             '#import "@preview/brilliant-cv:4.0.1": cv\n',
         )
         for relative in (
+            ".github/ISSUE_TEMPLATE/bug_report.yml",
             "docs/web/generate-api-reference.py",
             "docs/web/docs/getting-started.md",
             "docs/web/docs/components.md",
@@ -91,6 +92,9 @@ def main() -> int:
         assert "Version contract passed: 4.0.2" in result.stdout
         assert 'version = "4.0.2"' in (fixture / "typst.toml").read_text()
         assert "brilliant-cv:4.0.2" in (fixture / "template/cv.typ").read_text()
+        assert "brilliant-cv:4.0.2" in (
+            fixture / ".github/ISSUE_TEMPLATE/bug_report.yml"
+        ).read_text()
 
         migration = (fixture / "docs/web/docs/migration.md").read_text()
         assert migration.count("brilliant-cv:4.0.2") == 1
