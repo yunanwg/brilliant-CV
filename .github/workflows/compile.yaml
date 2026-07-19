@@ -23,11 +23,11 @@ jobs:
         # 0.15.1 matches the pinned test toolchain (tests/Dockerfile).
         typst-version: ['0.14.0', '0.15.1']
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           persist-credentials: false
 
-      - uses: typst-community/setup-typst@v5
+      - uses: typst-community/setup-typst@63ac138db421d586de61f7f5ac3bcef6a2e6c78c # v5
         with:
           typst-version: ${{ matrix.typst-version }}
 
@@ -40,7 +40,7 @@ jobs:
   release-contract:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           persist-credentials: false
 
@@ -48,3 +48,4 @@ jobs:
         run: |
           python3 scripts/release_contract.py check-version
           python3 scripts/test_release_contract.py
+          python3 scripts/check_ci_contract.py

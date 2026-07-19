@@ -21,14 +21,24 @@ concurrency:
 jobs:
   regen:
     runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v7
+      - name: Require a feature branch
+        run: |
+          if [[ "$GITHUB_REF" != refs/heads/* || "$GITHUB_REF_NAME" == "main" ]]; then
+            echo "Dispatch this workflow from a feature branch, never main or a tag."
+            exit 1
+          fi
+
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.ref_name }}
 
       - name: Set up Buildx (for layer cache)
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
 
       - name: Build test image
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
           file: tests/Dockerfile
