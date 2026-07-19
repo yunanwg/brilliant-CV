@@ -24,7 +24,7 @@ does not bundle the font files themselves.
 Make sure you import `h-bar` from the package:
 
 ```typ
-#import "@preview/brilliant-cv:4.0.1": h-bar
+#import "@preview/brilliant-cv:4.1.0": h-bar
 ```
 
 The old name `hBar` has been removed in v3. See the [Migration Guide](migration.md) for all renamed functions.

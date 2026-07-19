@@ -46,7 +46,7 @@ You also need to flatten the v3 `[lang.<code>]` structure to top-level fields. v
 
 // After (v4) — profile-based, no merge
 // release-current-version
-#import "@preview/brilliant-cv:4.0.1": cv
+#import "@preview/brilliant-cv:4.1.0": cv
 #let profile = sys.inputs.at("profile", default: "en")
 #let metadata = toml("profile_" + profile + "/metadata.toml")
 #let import-modules(modules) = {

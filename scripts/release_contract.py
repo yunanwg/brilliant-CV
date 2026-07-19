@@ -19,7 +19,8 @@ ROOT = Path(__file__).resolve().parent.parent
 MANIFEST = ROOT / "typst.toml"
 SEMVER = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
 IMPORT = re.compile(r"@preview/brilliant-cv:([0-9]+\.[0-9]+\.[0-9]+)")
-CURRENT_DOC_SOURCES = (
+CURRENT_VERSION_SOURCES = (
+    ROOT / ".github/ISSUE_TEMPLATE/bug_report.yml",
     ROOT / "docs/web/generate-api-reference.py",
     ROOT / "docs/web/docs/getting-started.md",
     ROOT / "docs/web/docs/components.md",
@@ -82,7 +83,7 @@ def package_version() -> str:
 
 def current_reference_files() -> list[Path]:
     files = sorted((ROOT / "template").glob("**/*.typ"))
-    files.extend(path for path in CURRENT_DOC_SOURCES if path.exists())
+    files.extend(path for path in CURRENT_VERSION_SOURCES if path.exists())
     return files
 
 

@@ -8,7 +8,7 @@
 // See https://yunanwg.github.io/brilliant-CV/ (Troubleshooting) for details.
 
 // Imports
-#import "@preview/brilliant-cv:4.0.1": cv, h-bar
+#import "@preview/brilliant-cv:4.1.0": cv, h-bar
 
 // Each profile lives in its own folder with a self-contained metadata.toml.
 // Switch profile at compile time:

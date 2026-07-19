@@ -1,5 +1,5 @@
 // Imports
-#import "@preview/brilliant-cv:4.0.1": cv-entry, cv-section, h-bar
+#import "@preview/brilliant-cv:4.1.0": cv-entry, cv-section, h-bar
 
 
 #cv-section("Istruzione")

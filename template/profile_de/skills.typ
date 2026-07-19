@@ -1,5 +1,5 @@
 // Imports
-#import "@preview/brilliant-cv:4.0.1": (
+#import "@preview/brilliant-cv:4.1.0": (
   cv-section, cv-skill, cv-skill-tag, cv-skill-with-level, h-bar,
 )
 
