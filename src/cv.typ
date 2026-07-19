@@ -2,7 +2,7 @@
  * Functions for the CV template
  */
 
-#import "@preview/fontawesome:0.6.0": (
+#import "@preview/fontawesome:0.6.2": (
   fa-envelope, fa-gitlab, fa-icon, fa-linkedin, fa-location-dot, fa-orcid,
   fa-pager, fa-phone, fa-researchgate, fa-square-github,
 )
@@ -948,7 +948,7 @@
 ///
 /// ```example
 /// >>> #set text(font: "Source Sans 3")
-/// >>> #import "@preview/fontawesome:0.6.0": *
+/// >>> #import "@preview/fontawesome:0.6.2": *
 /// #block(width: 300pt)[
 ///   #cv-skill-with-level(
 ///     type: [Languages],

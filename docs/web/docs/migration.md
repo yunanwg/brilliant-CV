@@ -162,7 +162,7 @@ The supported package-root API consists of `cv`, `letter`, `cv-section`, `cv-ent
 Older releases also exposed dependency symbols such as `fa-*` icons and internal state through wildcard imports. Those were never documented compatibility commitments and are no longer re-exported. Import icons from Font Awesome directly:
 
 ```typ
-#import "@preview/fontawesome:0.6.0": fa-github
+#import "@preview/fontawesome:0.6.2": fa-github
 ```
 
 ---
