@@ -47,11 +47,13 @@ Full guide, component gallery, recipes, and configuration reference → **[brill
 
 ## Gallery
 
-| Style | Preview |
-|-------|---------|
-| **Standard** | ![Standard Brilliant CV preview](https://github.com/mintyfrankie/mintyfrankie/assets/77310871/94f5fb5c-03d0-4912-b6d6-11ee7d27a9a3) |
-| **French (Red)** | ![French red Brilliant CV preview](https://github.com/mintyfrankie/brilliant-CV/assets/77310871/fed7b66c-728e-4213-aa58-aa26db3b1362) |
-| **Chinese (Green)** | ![Chinese green Brilliant CV preview](https://github.com/mintyfrankie/brilliant-CV/assets/77310871/cb9c16f5-8ad7-4256-92fe-089c108d07f5) |
+The same design across scripts — one profile per language, all from the same building blocks:
+
+| English | Français | 中文 |
+|:---:|:---:|:---:|
+| ![English CV preview](https://raw.githubusercontent.com/yunanwg/brilliant-CV/main/docs/previews/cv-en.png) | ![French CV preview](https://raw.githubusercontent.com/yunanwg/brilliant-CV/main/docs/previews/cv-fr.png) | ![Chinese CV preview](https://raw.githubusercontent.com/yunanwg/brilliant-CV/main/docs/previews/cv-zh.png) |
+
+_Previews are generated in CI from the live template (`just previews`) — see [`scripts/render_previews.sh`](scripts/render_previews.sh)._
 
 ## Contributing
 
