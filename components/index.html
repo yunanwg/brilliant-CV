@@ -1,0 +1,1222 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A modern, modular CV template for Typst">
+      
+      
+      
+        <link rel="canonical" href="https://yunanwg.github.io/brilliant-CV/components/">
+      
+      
+        <link rel="prev" href="../getting-started/">
+      
+      
+        <link rel="next" href="../recipes/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Components - brilliant-CV</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#component-gallery" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="brilliant-CV" class="md-header__button md-logo" aria-label="brilliant-CV" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            brilliant-CV
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Components
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/yunanwg/brilliant-CV" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    brilliant-CV
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../getting-started/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../configuration/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../migration/" class="md-tabs__link">
+          
+  
+  
+  Migration &amp; FAQ
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="brilliant-CV" class="md-nav__button md-logo" aria-label="brilliant-CV" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    brilliant-CV
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/yunanwg/brilliant-CV" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    brilliant-CV
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#component-context-in-v4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component context in v4
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entry-point-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entry Point Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entry Point Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cv()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#letter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        letter()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cv-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CV Components
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CV Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cv-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cv-section
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cv-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cv-entry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-roles-at-one-company-cv-entry-start-cv-entry-continued" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiple Roles at One Company — cv-entry-start + cv-entry-continued
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cv-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cv-skill
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cv-skill-with-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cv-skill-with-level
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cv-skill-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cv-skill-tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cv-honor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cv-honor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cv-publication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cv-publication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recipes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration &amp; FAQ
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Migration &amp; FAQ
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="component-gallery">Component Gallery<a class="headerlink" href="#component-gallery" title="Permanent link">¶</a></h1>
+<p>These are the building blocks of your CV. Each example below is followed by the actual rendered output — the PNGs are the same ones the <a href="https://github.com/yunanwg/brilliant-CV/tree/main/tests/components">test suite</a> uses as visual-regression baselines, so what you see here is exactly what the package produces. For full parameter details, see the <a href="../api-reference/">API Reference</a>.</p>
+<h2 id="component-context-in-v4">Component context in v4<a class="headerlink" href="#component-context-in-v4" title="Permanent link">¶</a></h2>
+<p>CV components normally read layout settings from the metadata context installed by the enclosing <code>#show: cv.with(metadata, ...)</code> rule. Typst state is contextual and positional, so keep component calls inside the <code>cv()</code> document body, as the starter does. For standalone composition or tests, pass <code>metadata: metadata</code> explicitly; this is a supported escape hatch documented in each applicable component signature.</p>
+<p>This ambient behavior is preserved throughout v4 for compatibility. A component used without either explicit metadata or the surrounding <code>cv()</code> context now fails with an actionable message at the call site. The state object and underscore-prefixed helpers remain implementation details; a replacement context/factory design belongs in v5 with a migration path.</p>
+<p>The supported package-root API is <code>cv</code>, <code>letter</code>, the nine documented <code>cv-*</code> components, <code>h-bar</code>, and the compatibility helper <code>overwrite-fonts</code>. New templates should configure <code>[layout.fonts]</code> rather than call <code>overwrite-fonts</code> directly. Dependency symbols such as <code>fa-*</code> icons are not re-exported; import them from <code>fontawesome</code> directly.</p>
+<h2 id="entry-point-functions">Entry Point Functions<a class="headerlink" href="#entry-point-functions" title="Permanent link">¶</a></h2>
+<h3 id="cv"><code>cv()</code><a class="headerlink" href="#cv" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>#show: cv.with(
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  metadata,
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  profile-photo: image("assets/avatar.png"),
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>)
+</code></pre></div>
+<p>The <code>cv()</code> function is the main entry point. It runs schema-migration guards (panic on v3 fields), sets page layout, applies fonts, renders the header, and emits <code>_cv-footer</code> on every page. All your CV modules go inside its body.</p>
+<p>By default, <code>header-info: auto</code> renders the entries from <code>metadata.personal.info</code>. Pass content to replace that row without reimplementing the name, photo, or header layout:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>#import "@preview/brilliant-cv:4.1.0": cv, h-bar
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>#let info = metadata.personal.info
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>#show: cv.with(
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  metadata,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  header-info: [
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    #link("mailto:" + info.email)[#info.email]
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    #h-bar()
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    #text(fill: black)[Berlin, Germany]
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    #linebreak()
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    #text(fill: rgb("#2E7D32"))[Available for remote work]
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  ],
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>)
+</code></pre></div>
+<p><a class="glightbox" data-type="image" data-width="90%" data-height="auto" href="../assets/components/cv-header-info-custom.png" data-desc-position="bottom"><img alt="custom header info" src="../assets/components/cv-header-info-custom.png"></a></p>
+<p>Custom content inherits the normal header-info typography and accent color; explicit nested <code>text(...)</code> rules can override individual spans. Use <code>header-info: none</code> to remove the contact row. The <a href="../recipes/#custom-header-info">Custom Header Info</a> recipe covers the interaction with metadata and custom icons.</p>
+<h3 id="letter"><code>letter()</code><a class="headerlink" href="#letter" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>#show: letter.with(
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  metadata,
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  sender-address: "123 Main St, City, State 12345",
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  recipient-name: "ABC Company",
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  recipient-address: "456 Business Ave, City, State 67890",
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  subject: "Application for Data Analyst Position",
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  signature: image("assets/signature.png"),
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>)
+</code></pre></div>
+<p><code>letter()</code> mirrors <code>cv()</code> for cover-letter pages with letter-formal margins and a 12pt body. <code>sender-address</code> defaults to <code>auto</code>, which reads <code>metadata.personal.address</code> (falls back to <code>"Your Address Here"</code> if unset). Use <code>address-style: "normal"</code> to disable smallcaps on addresses.</p>
+<hr>
+<h2 id="cv-components">CV Components<a class="headerlink" href="#cv-components" title="Permanent link">¶</a></h2>
+<h3 id="cv-section"><code>cv-section</code><a class="headerlink" href="#cv-section" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>#cv-section("Education")
+</code></pre></div>
+<p><a class="glightbox" data-type="image" data-width="90%" data-height="auto" href="../assets/components/cv-section-first-letters.png" data-desc-position="bottom"><img alt="cv-section first-letters mode" src="../assets/components/cv-section-first-letters.png"></a></p>
+<p>The default <code>[layout.section] title_highlight = "first-letters"</code> highlights the leading 3 chars in the accent color (Latin convention). Override per call with <code>highlight:</code> (<code>"first-letters"</code> / <code>"full"</code> / <code>"none"</code>) and <code>highlight-letters:</code> (int).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>#cv-section("教育背景", highlight: "full")
+</code></pre></div>
+<p><a class="glightbox" data-type="image" data-width="90%" data-height="auto" href="../assets/components/cv-section-full.png" data-desc-position="bottom"><img alt="cv-section full mode" src="../assets/components/cv-section-full.png"></a></p>
+<p><code>"full"</code> mode colors the entire title — the CJK convention used by <code>profile_zh</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>#cv-section("Education", highlight: "none")
+</code></pre></div>
+<p><a class="glightbox" data-type="image" data-width="90%" data-height="auto" href="../assets/components/cv-section-none.png" data-desc-position="bottom"><img alt="cv-section none mode" src="../assets/components/cv-section-none.png"></a></p>
+<p><code>"none"</code> keeps the title in body text color — useful for muted, all-monochrome layouts.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>#cv-section("Professional Experience", highlight-letters: 5)
+</code></pre></div>
+<p><a class="glightbox" data-type="image" data-width="90%" data-height="auto" href="../assets/components/cv-section-custom-letters.png" data-desc-position="bottom"><img alt="cv-section 5-letter custom highlight" src="../assets/components/cv-section-custom-letters.png"></a></p>
+<p><code>highlight-letters</code> overrides the default of 3 — handy for short multi-word titles.</p>
+<hr>
+<h3 id="cv-entry"><code>cv-entry</code><a class="headerlink" href="#cv-entry" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>#cv-entry(
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  title: [Senior Data Scientist],
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  society: [Acme Analytics],
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  date: [2022 -- 2024],
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  location: [San Francisco, CA],
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  description: list(
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    [Led a team of 5 in building a real-time fraud detection pipeline.],
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    [Reduced false-positive rate by 38% using gradient-boosted models.],
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  ),
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  tags: ([Python], [SQL], [Kubernetes]),
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>)
+</code></pre></div>
+<p><a class="glightbox" data-type="image" data-width="90%" data-height="auto" href="../assets/components/cv-entry-full.png" data-desc-position="bottom"><img alt="cv-entry with all fields" src="../assets/components/cv-entry-full.png"></a></p>
+<p>The default <code>[layout.entry] display_entry_society_first = true</code> puts the company name bold on top, role below. Tags render as pill-style badges.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>#cv-entry(
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  title: [Data Engineer],
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  society: [Initech],
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  date: [2018 -- 2020],
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  location: [Austin, TX],
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  description: [Built and maintained the company-wide data warehouse on Snowflake.],
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>)
+</code></pre></div>
+<p><a class="glightbox" data-type="image" data-width="90%" data-height="auto" href="../assets/components/cv-entry-no-tags.png" data-desc-position="bottom"><img alt="cv-entry without tags" src="../assets/components/cv-entry-no-tags.png"></a></p>
+<p>Omitting <code>tags:</code> collapses the tag block entirely (no empty stripe).</p>
+<p>When <code>display_entry_society_first = false</code>, the role becomes the bold anchor and the company moves below — useful for academic or freelance CVs where role hierarchy matters more than employer:</p>
+<p><a class="glightbox" data-type="image" data-width="90%" data-height="auto" href="../assets/components/cv-entry-role-first.png" data-desc-position="bottom"><img alt="cv-entry role-first layout" src="../assets/components/cv-entry-role-first.png"></a></p>
+<hr>
+<h3 id="multiple-roles-at-one-company-cv-entry-start-cv-entry-continued">Multiple Roles at One Company — <code>cv-entry-start</code> + <code>cv-entry-continued</code><a class="headerlink" href="#multiple-roles-at-one-company-cv-entry-start-cv-entry-continued" title="Permanent link">¶</a></h3>
+<p>Use this pair when one person held multiple titles at the same employer:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>#cv-entry-start(
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  society: [XYZ Corporation],
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  location: [San Francisco, CA],
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>)
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>#cv-entry-continued(
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  title: [Data Scientist],
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  date: [2020 -- 2022],
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  description: list([Built ML pipelines for product recommendations.]),
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>)
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>#cv-entry-continued(
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  title: [Senior Data Scientist],
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  date: [2022 -- 2024],
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  description: list([Promoted to lead the personalization team.]),
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>)
+</code></pre></div>
+<p><a class="glightbox" data-type="image" data-width="90%" data-height="auto" href="../assets/components/cv-entry-start-continued.png" data-desc-position="bottom"><img alt="cv-entry-start + two continued" src="../assets/components/cv-entry-start-continued.png"></a></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Requires <code>display_entry_society_first = true</code> in <code>metadata.toml</code>. The pair panics with a clear message if the layout is set to role-first — see <a href="https://github.com/yunanwg/brilliant-CV/tree/main/tests/panics"><code>tests/panics/entry-start-needs-society-first</code></a> for the actual error.</p>
+</div>
+<hr>
+<h3 id="cv-skill"><code>cv-skill</code><a class="headerlink" href="#cv-skill" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>#cv-skill(
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  type: [Languages],
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  info: [English (native) #h-bar() Mandarin (fluent) #h-bar() French (B2)],
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>)
+</code></pre></div>
+<p><a class="glightbox" data-type="image" data-width="90%" data-height="auto" href="../assets/components/cv-skill-basic.png" data-desc-position="bottom"><img alt="cv-skill basic row" src="../assets/components/cv-skill-basic.png"></a></p>
+<p>The simplest skills row — type label on the left, free-form content on the right. Use <code>#h-bar()</code> to separate items with the conventional inline bar.</p>
+<hr>
+<h3 id="cv-skill-with-level"><code>cv-skill-with-level</code><a class="headerlink" href="#cv-skill-with-level" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>#cv-skill-with-level(
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  type: [Python],
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  level: 5,
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  info: [Expert — daily for 8+ years],
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>)
+</code></pre></div>
+<p><a class="glightbox" data-type="image" data-width="90%" data-height="auto" href="../assets/components/cv-skill-with-level-5.png" data-desc-position="bottom"><img alt="cv-skill-with-level at 5/5" src="../assets/components/cv-skill-with-level-5.png"></a></p>
+<p>Five filled/empty circles render the level. Pass an integer in the range 0–5; the function does not clamp, so a value outside that range will render the wrong number of circles.</p>
+<hr>
+<h3 id="cv-skill-tag"><code>cv-skill-tag</code><a class="headerlink" href="#cv-skill-tag" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>#cv-skill-tag([Python])
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>#cv-skill-tag([SQL])
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>#cv-skill-tag([AWS])
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>#cv-skill-tag([Kubernetes])
+</code></pre></div>
+<p><a class="glightbox" data-type="image" data-width="90%" data-height="auto" href="../assets/components/cv-skill-tag-basic.png" data-desc-position="bottom"><img alt="cv-skill-tag pill badges" src="../assets/components/cv-skill-tag-basic.png"></a></p>
+<p>Pill-style badges. Useful inside a <code>cv-skill</code> info field for certifications or tech stacks where each item deserves visual weight.</p>
+<hr>
+<h3 id="cv-honor"><code>cv-honor</code><a class="headerlink" href="#cv-honor" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>#cv-honor(
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  date: [2022],
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  title: [AWS Certified Security — Specialty],
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  issuer: [Amazon Web Services],
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  url: "https://aws.amazon.com/certification/certified-security-specialty/",
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  location: [Online],
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>)
+</code></pre></div>
+<p><a class="glightbox" data-type="image" data-width="90%" data-height="auto" href="../assets/components/cv-honor-with-url.png" data-desc-position="bottom"><img alt="cv-honor with link" src="../assets/components/cv-honor-with-url.png"></a></p>
+<p>When <code>url</code> is set, the title becomes a clickable link in the rendered PDF. Omit <code>url</code> to render the title as plain bold text:</p>
+<p><a class="glightbox" data-type="image" data-width="90%" data-height="auto" href="../assets/components/cv-honor-no-url.png" data-desc-position="bottom"><img alt="cv-honor without link" src="../assets/components/cv-honor-no-url.png"></a></p>
+<hr>
+<h3 id="cv-publication"><code>cv-publication</code><a class="headerlink" href="#cv-publication" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>#cv-publication(
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  bib: bibliography("assets/publications.bib"),
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  key-list: ("smith2020", "jones2021"),
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  ref-style: "ieee",
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  ref-full: false,
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>)
+</code></pre></div>
+<p>Renders a typst <code>bibliography</code> object styled to match the rest of the CV. Set <code>ref-full: true</code> to show every entry from the bib file; pair <code>ref-full: false</code> with <code>key-list:</code> to publish only the entries whose keys you want featured. <code>ref-style:</code> accepts any <a href="https://typst.app/docs/reference/model/bibliography/">typst bibliography style</a> (<code>"apa"</code>, <code>"ieee"</code>, <code>"chicago-author-date"</code>, …).</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Visual examples for <code>cv-publication</code> are not included here — the rendered output depends entirely on your bib file. See <a href="https://github.com/yunanwg/brilliant-CV/blob/main/template/profile_en/publications.typ"><code>template/profile_en/publications.typ</code></a> for a working example using the bundled <code>template/assets/publications.bib</code>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link", "navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.tracking", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
