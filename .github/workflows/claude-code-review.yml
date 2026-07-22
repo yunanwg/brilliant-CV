@@ -2,13 +2,16 @@ name: Claude Code Review
 
 on:
   pull_request:
-    types: [opened, synchronize, ready_for_review, reopened]
-    # Optional: Only run on specific file changes
-    # paths:
-    #   - "src/**/*.ts"
-    #   - "src/**/*.tsx"
-    #   - "src/**/*.js"
-    #   - "src/**/*.jsx"
+    # Review once when a PR opens or leaves draft. `synchronize` is intentionally
+    # omitted so follow-up pushes don't re-run the review on every commit — tag
+    # @claude manually if a later revision needs another pass.
+    types: [opened, ready_for_review]
+    # Only review changes to the published package and the user-facing template.
+    # Docs-only / tests-only / CI-only PRs skip AI review, mirroring the repo
+    # convention that such changes also skip regression tests.
+    paths:
+      - "src/**"
+      - "template/**"
 
 jobs:
   claude-review:
@@ -39,6 +42,6 @@ jobs:
           plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
           plugins: 'code-review@claude-code-plugins'
           prompt: '/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}'
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
-          # or https://code.claude.com/docs/en/cli-reference for available options
+          # Pin the model and cap iterations to keep review cost predictable.
+          claude_args: '--model claude-sonnet-5 --max-turns 15'
 
