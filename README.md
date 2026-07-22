@@ -20,14 +20,15 @@
 
 ## ✨ Key Features
 
-- **Profile-based variants** — Each `profile_<name>/` is a complete, self-contained CV. Switch with `--input profile=fr` at compile time. No language whitelist; any script (CJK, Arabic, Hebrew, …) is configurable via `[layout.fonts]`.
-- **Optional ATS keyword injection** — Opt-in hidden keyword text for automated screeners, marked as a PDF artifact so screen readers skip it. Off by default: some screening systems detect and penalize hidden text, so read the notes in `metadata.toml` before enabling, and keep keywords truthful.
-- **Pixel-perfect tested** — 40+ tests run inside a Linux Docker baseline; layout regressions can't slip past CI.
+- **One profile, one complete CV — bind it to anything** — Each `profile_<name>/` is a self-contained variant you can target at a specific job, audience, or language, switched with `--input profile=<name>` at compile time. Profiles are fully decoupled from language: any script (CJK, Arabic, Hebrew, …) works via `[layout.fonts]`.
+- **Compose from modular content** — Build each CV from reusable blocks (experience, education, projects, publications, skills), and keep as many tailored variants as you need — a long academic version, a one-page industry cut, one per application — from the same building blocks.
+- **Polished by default** — Clean, modern typography with Font Awesome icons and a matching cover letter, for a professional result without fighting the layout.
 
 ## Quick Start
 
 ```bash
-typst init @preview/brilliant-cv
+typst init @preview/brilliant-cv   # scaffolds a project directory with the template
+cd brilliant-cv
 ```
 
 Using Typst Web? Upload the Font Awesome 7 Free desktop OTF files (Regular,
@@ -39,6 +40,8 @@ Edit `profile_en/metadata.toml` and the content modules in `profile_en/*.typ` �
 typst compile cv.typ                    # default profile
 typst compile cv.typ --input profile=fr # switch profile at compile time
 ```
+
+> **Optional:** embed a hidden, ATS-friendly keyword layer for automated screeners — opt-in and off by default. Read the notes in `profile_en/metadata.toml` before enabling, and keep keywords truthful.
 
 Full guide, component gallery, recipes, and configuration reference → **[brilliant-CV Documentation](https://yunanwg.github.io/brilliant-CV/)**.
 
@@ -52,7 +55,7 @@ Full guide, component gallery, recipes, and configuration reference → **[brill
 
 ## Contributing
 
-Contributions are welcome! See the [project repository](https://github.com/yunanwg/brilliant-CV) for the current contribution guidelines.
+Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) to get started.
 
 ## Sponsors
 
