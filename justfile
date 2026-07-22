@@ -218,6 +218,12 @@ test-update: test-image
 test-shell: test-image
     @docker run --rm -it --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}}
 
+# Regenerate README gallery preview PNGs (docs/previews/) in the pinned image,
+# so CJK renders with the same Noto baseline CI uses. The update-previews
+# workflow drives the same script.
+previews: test-image
+    @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} bash scripts/render_previews.sh docs/previews
+
 # --- Code quality (typstyle) ----------------------------------------------
 
 # Format all Typst sources in place (native — typstyle is pure-Rust, no fonts)
