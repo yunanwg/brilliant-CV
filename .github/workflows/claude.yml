@@ -30,21 +30,33 @@ jobs:
         with:
           fetch-depth: 1
 
+      # Give Claude a real Typst toolchain so it can compile-test its own
+      # changes and run the native panic/guard suites before opening a PR.
+      # The tytanic visual-regression suite (Docker + pinned fonts) is left to
+      # test.yaml on the PR Claude opens — reproducing it here is heavy and the
+      # pixel refs are not deterministic outside the test image.
+      - name: Set up Typst
+        uses: typst-community/setup-typst@v4
+      - name: Set up just
+        uses: extractions/setup-just@v2
+      - name: Link local package
+        run: just link
+
       - name: Run Claude Code
         id: claude
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
-          # This is an optional setting that allows Claude to read CI results on PRs
+          # Allows Claude to read CI results on PRs
           additional_permissions: |
             actions: read
 
-          # Optional: Give a custom prompt to Claude. If this is not specified, Claude will perform the instructions specified in the comment that tagged it.
-          # prompt: 'Update the pull request description to include a summary of changes.'
-
-          # Optional: Add claude_args to customize behavior and configuration
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
-          # or https://code.claude.com/docs/en/cli-reference for available options
-          # claude_args: '--allowed-tools Bash(gh pr *)'
+          # Pin the model, cap iterations, and scope tools to this repo's
+          # verification loop: typst compile + native panics + machine guards.
+          # Visual regressions are verified by CI, not here.
+          claude_args: |
+            --model claude-sonnet-5
+            --max-turns 20
+            --allowedTools "Edit,Read,Write,Bash(just link),Bash(typst compile:*),Bash(bash tests/panics/run.sh),Bash(bash tests/guards.sh)"
 
