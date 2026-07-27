@@ -38,7 +38,7 @@ jobs:
       - name: Set up Typst
         uses: typst-community/setup-typst@v4
       - name: Set up just
-        uses: extractions/setup-just@v2
+        uses: extractions/setup-just@v4
       - name: Link local package
         run: just link
 
