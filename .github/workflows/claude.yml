@@ -36,7 +36,7 @@ jobs:
       # test.yaml on the PR Claude opens — reproducing it here is heavy and the
       # pixel refs are not deterministic outside the test image.
       - name: Set up Typst
-        uses: typst-community/setup-typst@v4
+        uses: typst-community/setup-typst@v5
       - name: Set up just
         uses: extractions/setup-just@v4
       - name: Link local package
