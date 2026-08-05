@@ -127,35 +127,38 @@
         } else if awesome-icon != "" {
           icon = fa-icon(awesome-icon)
         }
-        box({
-          icon
-          h(5pt)
-          if link-value != "" { link(link-value)[#text] } else { text }
-        })
+        let body = if text != "" { [#icon #h(5pt) #text] } else { icon }
+        box(if link-value != "" { link(link-value)[#body] } else { body })
       } else {
-        box({
-          icons.at(k)
-          h(5pt)
-          if k == "email" {
-            link("mailto:" + v)[#v]
-          } else if k == "linkedin" {
-            link("https://www.linkedin.com/in/" + v)[#v]
-          } else if k == "github" {
-            link("https://github.com/" + v)[#v]
-          } else if k == "gitlab" {
-            link("https://gitlab.com/" + v)[#v]
-          } else if k == "homepage" {
-            link("https://" + v)[#v]
-          } else if k == "orcid" {
-            link("https://orcid.org/" + v)[#v]
-          } else if k == "researchgate" {
-            link("https://www.researchgate.net/profile/" + v)[#v]
-          } else if k == "phone" {
-            link("tel:" + v.replace(" ", ""))[#v]
+        let icon = icons.at(k)
+        let dest = if k == "email" {
+          "mailto:" + v
+        } else if k == "linkedin" {
+          "https://www.linkedin.com/in/" + v
+        } else if k == "github" {
+          "https://github.com/" + v
+        } else if k == "gitlab" {
+          "https://gitlab.com/" + v
+        } else if k == "homepage" {
+          "https://" + v
+        } else if k == "orcid" {
+          "https://orcid.org/" + v
+        } else if k == "researchgate" {
+          "https://www.researchgate.net/profile/" + v
+        } else if k == "phone" {
+          "tel:" + v.replace(" ", "")
+        } else {
+          ""
+        }
+        box(
+          if dest != "" {
+            link(dest)[#icon #h(5pt) #v]
           } else {
+            icon
+            h(5pt)
             v
-          }
-        })
+          },
+        )
       }
     }
   }
