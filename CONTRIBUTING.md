@@ -101,6 +101,7 @@ If existing composition is clear enough, prefer documenting that approach. If a 
 2. **Document anything user-facing**:
    - Update `README.md` (or `docs/`) for new parameters.
    - Add comments to `metadata.toml` if you introduce new knobs.
+   - The hand-written pages under `docs/web/docs/` follow Simplified Technical English, with a fixed terminology table. Read the “Documentation Style” section in `AGENTS.md` before you write prose there.
 3. **Keep compatibility**:
    - For renamed parameters, follow the aliasing approach already used in `src/lib.typ`.
    - Don’t remove template options without deprecation notes.
