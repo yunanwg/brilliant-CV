@@ -11,7 +11,7 @@ typst init @preview/brilliant-cv
 Replace the version with the latest or any release (after 2.0.0) if needed:
 
 ```bash
-typst init @preview/brilliant-cv:4.0.1
+typst init @preview/brilliant-cv:4.1.0
 ```
 
 ## Step 2: Install Fonts
@@ -20,6 +20,11 @@ In order to make Typst render correctly, you will have to install the required f
 
 - [Roboto](https://fonts.google.com/specimen/Roboto)
 - [Source Sans 3](https://fonts.google.com/specimen/Source+Sans+3) (or Source Sans Pro)
+- [Font Awesome 7 Free desktop fonts](https://fontawesome.com/download) (Regular, Solid, and Brands OTF files)
+
+For Typst Web, upload the three Font Awesome OTF files to your project. For
+local compilation, install them on your operating system. Without these fonts,
+contact icons render as boxes.
 
 ## Step 3: File Structure Map
 
@@ -36,6 +41,13 @@ After bootstrapping, your project will contain these files:
 
 !!! tip
     Don't edit the package source files under `@preview/brilliant-cv` — they are managed by the Typst package manager.
+
+!!! warning "Keep personal files out of public repos"
+    Many people track their filled-in CV project in a public git repo (see
+    Step 8). Your `assets/` folder ends up holding a real profile photo and,
+    if you use `letter.typ`, a scanned signature — both are sensitive.
+    Consider a private repo, or `.gitignore` the real files and commit
+    placeholders instead.
 
 ## Step 4: Configure profile_en/metadata.toml
 
@@ -54,7 +66,7 @@ The most important keys to set first:
 Open `profile_en/education.typ` and replace its contents with:
 
 ```typ
-#import "@preview/brilliant-cv:4.0.1": cv-section, cv-entry
+#import "@preview/brilliant-cv:4.1.0": cv-section, cv-entry
 
 #cv-section("Education")
 
@@ -89,3 +101,39 @@ It is recommended to:
 2. Use [`typstyle`](https://github.com/typstyle-rs/typstyle) and `pre-commit` to keep your `.typ` files consistently formatted.
 3. Use [`typos`](https://github.com/crate-ci/typos) to catch spelling mistakes if your CV is in English.
 4. Wire up CI to compile your CV on every push — see [Recipes → CI/CD with GitHub Actions](recipes.md#cicd-with-github-actions).
+
+## 中文快速上手 (Chinese quickstart)
+
+The template ships `profile_zh/` as a ready-made example — copy it, or copy
+`profile_en/` to `profile_zh/` and edit `metadata.toml`. v4 has no automatic
+"language" mode: fonts, name layout, section styling, and date column width
+are all set explicitly:
+
+```toml
+[personal]
+display_name = "王道尔"        # overrides the Latin first/last name split
+
+[layout]
+date_width = "4.7cm"          # wider column fits Chinese month/year strings
+
+[layout.fonts]
+regular_fonts = ["Source Sans 3", "Heiti SC"]  # Latin + CJK fallback chain
+header_font = "Heiti SC"
+
+[layout.section]
+title_highlight = "full"      # whole title in accent color, not split by codepoint
+```
+
+!!! tip
+    Heiti SC ships only with macOS — elsewhere (and on typst.app) it silently
+    falls back to a different font, changing the look. For cross-platform or
+    typst.app use, swap it for `"Noto Sans CJK SC"` in both font fields above
+    (install it locally, or upload it to your typst.app project).
+
+Compile with the profile flag:
+
+```bash
+typst compile cv.typ --input profile=zh
+```
+
+See [Troubleshooting → Non-Latin Characters](troubleshooting.md#non-latin-characters-showing-as-boxes) if characters render as boxes.

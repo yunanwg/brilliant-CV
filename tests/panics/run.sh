@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 #
-# Smoke tests for v3/v2 schema migration panics.
+# Smoke tests for public API and schema-migration panic contracts.
 #
-# Tytanic 0.2 reports any panicking test as failed (no expect-panic
-# annotation), so panic assertions are exercised here as a small bash loop
-# instead of via tytanic.
+# Tytanic reports any panicking test as failed (no expect-panic annotation),
+# so panic assertions are exercised here as a small bash loop instead of via
+# tytanic.
 #
 # Each fixture's first line is `// expected: <substring>`. The test passes
 # when:

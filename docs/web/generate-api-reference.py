@@ -25,26 +25,17 @@ PROJECT_ROOT = SCRIPT_DIR.parent.parent
 SOURCE_FILES = [
     ("Entry Point Functions", PROJECT_ROOT / "src" / "lib.typ"),
     ("CV Components", PROJECT_ROOT / "src" / "cv.typ"),
+    ("Utility Functions", PROJECT_ROOT / "src" / "utils" / "styles.typ"),
 ]
 
-# Extra utility functions to document (not auto-extracted)
-UTILITY_SECTION = """\
----
-
-## Utility Functions
-
-### `h-bar()`
-
-Renders a vertical bar separator (`|`) for use inside skill entries.
-
-```typ
-#import "@preview/brilliant-cv:4.0.1": h-bar
-
-[Python #h-bar() SQL #h-bar() Tableau]
-```
-"""
+# The package root is the public contract. Internal modules and dependencies
+# are not scanned for exports merely because they contain top-level bindings.
+PUBLIC_API_SOURCE_FILE = PROJECT_ROOT / "src" / "lib.typ"
 
 # Functions to include (public API only)
+#
+# Kept in sync with explicit root bindings in src/lib.typ and with the
+# doc-comment sections extracted below.
 PUBLIC_FUNCTIONS = {
     "cv",
     "letter",
@@ -57,21 +48,52 @@ PUBLIC_FUNCTIONS = {
     "cv-skill-tag",
     "cv-honor",
     "cv-publication",
+    "h-bar",
+    "overwrite-fonts",
 }
 
-# Parameters to omit from the public docs (internal/deprecated)
-OMIT_PARAMS = {
-    "metadata",
-    "awesome-colors",
-    "awesomeColors",
-    "profilePhoto",
-    "myAddress",
-    "recipientName",
-    "recipientAddress",
-    "refStyle",
-    "refFull",
-    "keyList",
-}
+# Match root functions and explicit aliases. Private bindings are filtered.
+_ROOT_BINDING_RE = re.compile(r"^#let\s+([\w-]+)\s*(?:\(|=)")
+
+
+def scan_public_exports() -> set[str]:
+    """Scan explicit, non-private bindings in the package root."""
+    exports: set[str] = set()
+    for line in PUBLIC_API_SOURCE_FILE.read_text().splitlines():
+        match = _ROOT_BINDING_RE.match(line)
+        if match and not match.group(1).startswith("_"):
+            exports.add(match.group(1))
+    return exports
+
+
+def check_public_functions_in_sync() -> None:
+    """Fail fast if the hardcoded PUBLIC_FUNCTIONS allowlist drifts out of
+    sync with the actual public exports in src/. Prevents a newly added
+    public component from silently missing docs, or a stale/typo'd entry
+    from lingering in PUBLIC_FUNCTIONS."""
+    actual = scan_public_exports()
+    missing = actual - PUBLIC_FUNCTIONS
+    extra = PUBLIC_FUNCTIONS - actual
+    if missing or extra:
+        print(
+            "PUBLIC_FUNCTIONS in generate-api-reference.py is out of sync "
+            "with the public exports scanned from src/:",
+            file=sys.stderr,
+        )
+        if missing:
+            print(
+                f"  missing from PUBLIC_FUNCTIONS (exported, undocumented): {sorted(missing)}",
+                file=sys.stderr,
+            )
+        if extra:
+            print(
+                f"  extra in PUBLIC_FUNCTIONS (not actually exported): {sorted(extra)}",
+                file=sys.stderr,
+            )
+        sys.exit(1)
+
+# Every current signature parameter is part of the generated contract.
+OMIT_PARAMS: set[str] = set()
 
 
 @dataclass
@@ -257,6 +279,24 @@ def parse_source_file(filepath: Path) -> list[Function]:
 
                 desc, doc_params, return_type, example = parse_doc_comment(doc_text)
 
+                signature_names = set(sig_params)
+                documented_names = {param.name for param in doc_params}
+                undocumented = signature_names - documented_names
+                stale = documented_names - signature_names
+                if undocumented or stale:
+                    details = []
+                    if undocumented:
+                        details.append(
+                            "undocumented signature params: "
+                            + ", ".join(sorted(undocumented))
+                        )
+                    if stale:
+                        details.append(
+                            "documented params absent from signature: "
+                            + ", ".join(sorted(stale))
+                        )
+                    raise ValueError(f"{filepath}:{name}: " + "; ".join(details))
+
                 # Merge defaults from signature into doc params.
                 # `none` is a valid Typst default and must be preserved in the
                 # generated table — filtering it out incorrectly renders the
@@ -309,17 +349,9 @@ def format_function_md(func: Function) -> str:
             lines.append(f"| `{p.name}` | {ptype} | {default} | {desc} |")
         lines.append("")
 
-    # Example code block (strip internal details like metadata: _metadata)
+    # Example code block
     if func.example:
-        cleaned_lines = []
-        for line in func.example.splitlines():
-            # Remove standalone metadata param lines (e.g. "    metadata: _metadata,")
-            if re.match(r"^\s*metadata:\s*_metadata,?\s*$", line):
-                continue
-            # Remove inline metadata param from function calls
-            line = re.sub(r",\s*metadata:\s*_metadata", "", line)
-            cleaned_lines.append(line)
-        cleaned = "\n".join(cleaned_lines).strip()
+        cleaned = func.example.strip()
         if cleaned:
             lines.append("```typ")
             lines.append(cleaned)
@@ -343,13 +375,34 @@ def generate_api_reference() -> str:
         "For metadata keys read from `metadata.toml`, see the [Configuration Reference](configuration.md)."
     )
     sections.append("")
+    sections.append(
+        "Only the root exports documented here are compatibility commitments. "
+        "Underscore-prefixed helpers and dependency symbols are implementation "
+        "details. Import Font Awesome icons from `fontawesome` directly."
+    )
+    sections.append("")
 
     file_sections = []
+    documented_functions: set[str] = set()
     for section_title, filepath in SOURCE_FILES:
         functions = parse_source_file(filepath)
         if not functions:
             continue
+        for function in functions:
+            if function.name in documented_functions:
+                raise ValueError(f"duplicate public function: {function.name}")
+            documented_functions.add(function.name)
         file_sections.append((section_title, functions))
+
+    if documented_functions != PUBLIC_FUNCTIONS:
+        missing = PUBLIC_FUNCTIONS - documented_functions
+        unexpected = documented_functions - PUBLIC_FUNCTIONS
+        details = []
+        if missing:
+            details.append("missing docs: " + ", ".join(sorted(missing)))
+        if unexpected:
+            details.append("unexpected docs: " + ", ".join(sorted(unexpected)))
+        raise ValueError("public API documentation mismatch: " + "; ".join(details))
 
     for idx, (section_title, functions) in enumerate(file_sections):
         sections.append(f"## {section_title}")
@@ -362,15 +415,13 @@ def generate_api_reference() -> str:
             sections.append("---")
             sections.append("")
 
-    # Add utility section
-    sections.append(UTILITY_SECTION)
-
     return "\n".join(sections)
 
 
 if __name__ == "__main__":
+    check_public_functions_in_sync()
     output = generate_api_reference()
     # If stdout is a terminal, also write to file
     outfile = SCRIPT_DIR / "docs" / "api-reference.md"
-    outfile.write_text(output + "\n")
+    outfile.write_text(output.rstrip() + "\n")
     print(f"Generated {outfile}", file=sys.stderr)

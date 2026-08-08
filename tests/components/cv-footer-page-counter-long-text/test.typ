@@ -6,10 +6,10 @@
 // counter take their natural widths and the center text gets the rest.
 
 #import "/src/cv.typ": _cv-footer
-#import "/src/utils/styles.typ": _latin-font-list
+#import "/tests/common.typ": test-font-list
 
 #set page(width: 16cm, height: auto, margin: 0.5cm)
-#set text(font: _latin-font-list, size: 9pt)
+#set text(font: test-font-list, size: 9pt)
 
 #let metadata = (
   cv_footer: "Senior Staff Software Engineer · Curriculum Vitae · Last Updated 2026",

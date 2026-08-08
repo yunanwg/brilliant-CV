@@ -15,7 +15,7 @@ A modern, modular, and feature-rich CV template for [Typst](https://typst.app).
 
 - **Separation of Style & Content** — Write your CV entries in simple Typst files; the template handles layout and styling.
 - **Profile-based Variants** — Each `profile_<name>/` is a complete, self-contained CV. Switch with `--input profile=fr` at compile time. No language whitelist; any script (CJK, Arabic, Hebrew, …) is configurable explicitly via `[layout.fonts]`.
-- **AI & ATS Friendly** — Unique "keyword injection" feature to help your CV pass automated screening systems.
+- **Optional ATS Keyword Injection** — Opt-in hidden keyword text for automated screeners, marked as a PDF artifact so screen readers skip it. Off by default — some screening systems detect and penalize hidden text; see the `[inject]` notes in `metadata.toml` before enabling.
 - **Highly Customizable** — Tweak colors, fonts, layout, and section highlights via per-profile `metadata.toml` files.
 - **Pixel-perfect Tested** — 40+ tests (panic, unit, component, regression) run inside a Linux Docker baseline so refs are deterministic. Layout regressions can't slip past CI.
 - **Zero-Setup** — Get started in seconds with the Typst CLI.

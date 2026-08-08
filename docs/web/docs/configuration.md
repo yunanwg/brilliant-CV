@@ -12,7 +12,7 @@ To add a new profile, copy `profile_en/` to `profile_<new>/` and edit the fields
 
 ## How to read this page
 
-The reference below is the canonical [`template/profile_en/metadata.toml`](https://github.com/yunanwg/brilliant-CV/blob/main/template/profile_en/metadata.toml) included verbatim — comments in the TOML *are* the field documentation. This file is the source of truth: the docs site and the offline PDF reference (`docs/pdf/docs.typ` Section 6) both pull from it via live snippets, so you can never read a stale field description here.
+The reference below is the canonical [`template/profile_en/metadata.toml`](https://github.com/yunanwg/brilliant-CV/blob/main/template/profile_en/metadata.toml) included verbatim — comments in the TOML *are* the field documentation. The web documentation pulls from it via a live snippet, so the field descriptions stay aligned with the starter project.
 
 Every other shipped profile (`profile_fr`, `profile_de`, `profile_it`, `profile_zh`) follows the same schema; differences are in field *values*, not field *names*.
 
@@ -24,6 +24,6 @@ Every other shipped profile (`profile_fr`, `profile_de`, `profile_it`, `profile_
 
 ## Schema
 
-A JSON Schema is also published at [`metadata.toml.schema.json`](https://github.com/yunanwg/brilliant-CV/blob/main/metadata.toml.schema.json). If your editor supports `#:schema` directives (helix, neovim with taplo, VS Code with Even Better TOML), you'll get inline validation, autocomplete, and error highlighting on every `metadata.toml`.
+A strict JSON Schema is included in every initialized starter at [`template/metadata.toml.schema.json`](https://github.com/yunanwg/brilliant-CV/blob/main/template/metadata.toml.schema.json). Each profile uses a local `#:schema ../metadata.toml.schema.json` directive, so supported editors (Helix, Neovim with Taplo, or VS Code with Even Better TOML) provide validation and autocomplete without depending on the repository's `main` branch or network access.
 
-The schema is enforced at *compile time* by `cv()` and `letter()` for v3-removed fields (panic-with-migration-message — see [Migration Guide](migration.md)) but TOML key typos are silently ignored by typst's TOML parser, so the JSON Schema is your first line of defense against `headerAlign` (wrong) vs `header_align` (correct).
+Core package-owned namespaces are closed: unknown keys and invalid value types are reported by the editor. Put data used only by your own modules under the open top-level `[custom]` namespace. At compile time, `cv()` and `letter()` additionally guard v3-removed fields with migration errors (see the [Migration Guide](migration.md)); Typst itself does not apply JSON Schema while compiling.

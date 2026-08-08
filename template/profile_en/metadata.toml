@@ -1,4 +1,4 @@
-#:schema https://raw.githubusercontent.com/yunanwg/brilliant-CV/main/metadata.toml.schema.json
+#:schema ../metadata.toml.schema.json
 
 # Profile: English. Each profile_<name>/metadata.toml is a complete, self-
 # contained CV configuration. Switch profiles at compile time:
@@ -66,12 +66,12 @@ letter_footer = "Cover letter"
 
     [layout.section]
         # How the section title is highlighted:
-        #   "first-letters" (default) - first N letters in accent color, rest in black (Latin convention)
+        #   "first-letters" (default) - first N grapheme clusters in accent color, rest in black (Latin convention)
         #   "full"                    - the whole title in accent color (CJK / non-Latin convention)
         #   "none"                    - the whole title in black, no accent
         title_highlight = "first-letters"
 
-        # Number of leading characters to render in accent color when
+        # Number of leading grapheme clusters to render in accent color when
         # title_highlight = "first-letters". Ignored for the other modes.
         title_highlight_letters = 3
 
@@ -84,11 +84,25 @@ letter_footer = "Cover letter"
 
 
 [inject]
-    # Hidden text injected into the PDF for ATS keyword matching (invisible to readers)
-    # custom_ai_prompt_text = "Custom prompt text here..."  # Uncomment to add a custom ATS prompt string
+    # OPT-IN: hidden keyword text (2pt, white) placed in the PDF so automated
+    # screening systems (ATS) that match keywords can pick it up. Disabled by
+    # default — uncomment to enable, and weigh the trade-offs first:
+    #   - Some ATS vendors and recruiters actively detect hidden text and may
+    #     treat it as manipulation, up to rejecting the application outright.
+    #   - The text stays extractable: copy/paste or "select all" reveals it.
+    #     (It is marked as a PDF artifact, so screen readers skip it.)
+    #   - Keep any keywords truthful to skills you actually have.
+    # injected_keywords_list = ["Data Analyst", "GCP", "Python", "SQL", "Tableau"]
 
-    # Hidden keywords injected into PDF metadata for ATS keyword matching (invisible to readers)
-    injected_keywords_list = ["Data Analyst", "GCP", "Python", "SQL", "Tableau"]
+    # Optional free-form hidden prompt aimed at LLM-based screeners. Same
+    # detection risks as above, and modern models largely ignore injected
+    # instructions — treat as experimental.
+    # custom_ai_prompt_text = "Custom prompt text here..."
+
+# Put metadata used only by your own content modules under this open namespace.
+# Package-owned sections remain strict, so typos there are caught by the schema.
+# [custom]
+#     portfolio_url = "https://johndoe.dev/work"
 
 [personal]
     # Your first name, displayed in the header

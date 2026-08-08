@@ -1,11 +1,11 @@
 // cv-honor without url — title renders as plain bold text.
 
 #import "/src/cv.typ": cv-honor, cv-metadata
-#import "/src/utils/styles.typ": _latin-font-list, _regular-colors
-#import "/tests/common.typ": minimal-metadata
+#import "/src/utils/styles.typ": _regular-colors
+#import "/tests/common.typ": minimal-metadata, test-font-list
 
 #set page(width: 16cm, height: auto, margin: 0.5cm)
-#set text(font: _latin-font-list, size: 9pt, fill: _regular-colors.lightgray)
+#set text(font: test-font-list, size: 9pt, fill: _regular-colors.lightgray)
 #cv-metadata.update(minimal-metadata)
 
 #cv-honor(

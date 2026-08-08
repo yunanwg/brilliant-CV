@@ -4,15 +4,17 @@ repos:
     hooks:
     - id: end-of-file-fixer
     - id: trailing-whitespace
-  - repo: https://github.com/typstyle-rs/typstyle
+  - repo: https://github.com/typstyle-rs/pre-commit-typstyle
+    # The hook mirror has no v0.15.0 tag yet; pin the formatter below.
     rev: 'v0.14.4'
     hooks:
       - id: typstyle
+        additional_dependencies: ['cli:typstyle:0.15.0']
   - repo: local
     hooks:
-      - id: delete-all-pdfs
-        name: Delete all PDFs
-        entry: bash -c 'find . -type f -name "*.pdf" -delete'
+      - id: reject-pdfs
+        name: Reject committed PDFs
+        entry: bash -c 'echo "PDF artifacts must not be committed; keep them under ignored temp/." >&2; exit 1' --
         language: system
         types: [file]
         files: \.pdf$
@@ -22,3 +24,15 @@ repos:
         language: system
         pass_filenames: false
         files: \.(typ|toml)$
+      - id: check-metadata-schema
+        name: Validate metadata schema
+        entry: bash -c 'just schema-check'
+        language: system
+        pass_filenames: false
+        files: ^(template/metadata\.toml\.schema\.json|template/profile_[^/]+/metadata\.toml|scripts/check_metadata_schema\.py)$
+      - id: check-ci-contract
+        name: Check immutable CI inputs
+        entry: bash -c 'just ci-contract-check'
+        language: system
+        pass_filenames: false
+        files: ^(\.github/workflows/|tests/Dockerfile|justfile|\.pre-commit-config\.yaml|docs/web/requirements\.(txt|lock)|scripts/(requirements-checks\.(txt|lock)|check_ci_contract\.py))

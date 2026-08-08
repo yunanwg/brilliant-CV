@@ -8,12 +8,23 @@ Paths in module files are relative to the module file itself, not the project ro
 
 Install Roboto and Source Sans 3 (or Source Sans Pro) locally. For non-Latin profiles, install the font(s) listed in `[layout.fonts] regular_fonts` and `[layout.fonts] header_font` for that profile (e.g. "Heiti SC" for Chinese on macOS, or "Noto Sans CJK SC" as a freely-redistributable alternative).
 
+## Icons Render as Boxes
+
+Contact icons use the Font Awesome desktop fonts. Download the
+[Font Awesome 7 Free desktop package](https://fontawesome.com/download), then:
+
+- In Typst Web, upload the Regular, Solid, and Brands OTF files to your project.
+- For local compilation, install the same OTF files on your operating system.
+
+Recompile after adding the fonts. The package provides the icon mappings, but
+does not bundle the font files themselves.
+
 ## h-bar() Not Working
 
 Make sure you import `h-bar` from the package:
 
 ```typ
-#import "@preview/brilliant-cv:4.0.1": h-bar
+#import "@preview/brilliant-cv:4.1.0": h-bar
 ```
 
 The old name `hBar` has been removed in v3. See the [Migration Guide](migration.md) for all renamed functions.

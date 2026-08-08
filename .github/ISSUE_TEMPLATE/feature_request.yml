@@ -1,0 +1,53 @@
+name: Feature request
+description: Suggest an idea, new component, or configuration option for brilliant-cv
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion! Brilliant CV deliberately keeps its public API (metadata
+        fields, component parameters) minimal — every new option is a documentation, testing,
+        and long-term compatibility commitment. See
+        [CONTRIBUTING.md §4.2 "Public API design"](https://github.com/yunanwg/brilliant-CV/blob/main/CONTRIBUTING.md#42-public-api-design)
+        for the checklist the maintainer uses to evaluate requests. If your idea is a one-off
+        styling tweak for your own CV, it can often be achieved today via existing components
+        or Typst `show`/`set` rules — check the
+        [Recipes](https://yunanwg.github.io/brilliant-CV/recipes/) page first.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: >
+        A clear description of the problem or limitation you're running into. Ex. "I'm always
+        frustrated when [...]". Focus on the underlying need, not just the proposed fix.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: A clear and concise description of what you'd like to happen.
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: >
+        Any alternative solutions, workarounds, or existing composition (e.g. `show`/`set`
+        rules, an existing `cv-*` component, a documented recipe) you've already tried or
+        considered.
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        By submitting this request you confirm you've checked whether it's better served by
+        composing existing components/recipes rather than adding new public API (per §4.2
+        above) — this helps the maintainer triage faster.

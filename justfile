@@ -9,7 +9,7 @@ default:
 dev:
     @echo "🚀 Starting development lifecycle..."
     @echo "🔗 Linking workspace..."
-    @just link || @echo "⚠️  Link failed or already linked"
+    @just link
     @echo "👁️  Starting watch mode (Ctrl+C to exit and cleanup)..."
     @echo "💡 When you exit, we'll build final version and cleanup automatically"
     @mkdir -p temp
@@ -28,10 +28,28 @@ _dev-cleanup:
 
 # Link local package for development
 link:
-    @echo "🔗 Linking local brilliant-cv package..."
-    @utpm prj link --force --no-copy preview
-    @echo "✅ Local package linked successfully!"
-    @echo "💡 Typst will now use your local changes instead of cached version"
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "🔗 Linking local brilliant-cv package..."
+    task_output=$(utpm prj link --force --no-copy preview 2>&1) || {
+        printf '%s\n' "$task_output"
+        exit 1
+    }
+    printf '%s\n' "$task_output"
+    if grep -Eq '(^|[[:space:]])ERROR([[:space:]]|:)|Operation not permitted' <<<"$task_output"; then
+        echo "❌ utpm reported a linking error" >&2
+        exit 1
+    fi
+    task_version=$(python3 -c \
+        'import tomllib; print(tomllib.load(open("typst.toml", "rb"))["package"]["version"])')
+    task_type=$(typst eval \
+        "import \"@preview/brilliant-cv:${task_version}\": cv; type(cv)")
+    if [[ "$task_type" != '"function"' ]]; then
+        echo "❌ linked package postcondition failed: cv resolved as $task_type" >&2
+        exit 1
+    fi
+    echo "✅ Local package linked successfully!"
+    echo "💡 Typst will now use your local changes instead of cached version"
 
 # Unlink local package (restore to using upstream version)
 unlink:
@@ -39,20 +57,21 @@ unlink:
     @utpm pkg unlink @preview/brilliant-cv --yes 2>/dev/null || @echo "💡 Package already unlinked or not found"
     @echo "✅ Local package unlinked - now using upstream version"
 
-# Build CV template for testing
-build:
-    @echo "🏗️  Building CV template..."
+# Build both user-facing starter entrypoints for testing
+build: link
+    @echo "🏗️  Building CV and cover-letter templates..."
     @mkdir -p temp
     @typst compile template/cv.typ temp/cv.pdf
-    @echo "✅ CV built successfully at temp/cv.pdf"
+    @typst compile template/letter.typ temp/letter.pdf
+    @echo "✅ Starters built successfully at temp/cv.pdf and temp/letter.pdf"
 
 # Build and open the result
 open: build
     @echo "👀 Opening generated CV..."
-    @open temp/cv.pdf
+    @open temp/cv.pdf 2>/dev/null || xdg-open temp/cv.pdf 2>/dev/null || echo "💡 Could not auto-open; find it at temp/cv.pdf"
 
 # Watch for changes and rebuild automatically
-watch:
+watch: link
     @echo "👁️  Watching for changes in template..."
     @mkdir -p temp
     typst watch template/cv.typ temp/cv.pdf
@@ -66,8 +85,7 @@ sync:
 # Clean build artifacts
 clean:
     @echo "🧹 Cleaning build artifacts..."
-    @find . -name "*.pdf" -not -path "./template/src/*" -delete
-    @rm -rf temp/
+    @rm -rf -- temp
     @echo "✅ Build artifacts cleaned"
 
 # Reset development environment
@@ -75,123 +93,39 @@ reset: unlink clean
     @echo "🔄 Development environment reset"
     @echo "💡 Run 'just dev' to start development again"
 
-# Release a new version (bump, build, commit, tag, push)
-# Usage: just release 3.2.0
-release version:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    VERSION="{{version}}"
+# Prepare a version-bump PR. This never commits, tags, or pushes.
+# Usage: just prepare-release 4.1.0
+prepare-release version:
+    @python3 scripts/release_contract.py bump "{{version}}"
+    @just docs-generate
+    @just check-version
 
-    # Validate version format
-    if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        echo "❌ Invalid version format: $VERSION"
-        echo "   Expected format: X.Y.Z (e.g., 3.2.0)"
-        exit 1
-    fi
-
-    # Check if tag already exists
-    if git tag -l "v$VERSION" | grep -q "v$VERSION"; then
-        echo "❌ Tag v$VERSION already exists!"
-        echo "   Use a different version number."
-        exit 1
-    fi
-
-    # Check for uncommitted changes
-    if ! git diff --quiet || ! git diff --cached --quiet; then
-        echo "⚠️  You have uncommitted changes:"
-        git status --short
-        echo ""
-        read -p "Continue anyway? [y/N] " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            echo "Aborted."
-            exit 1
-        fi
-    fi
-
-    # Show what will happen
-    CURRENT=$(grep '^version = ' typst.toml | sed 's/version = "\(.*\)"/\1/')
-    echo "🚀 Release Summary:"
-    echo "   Current version: $CURRENT"
-    echo "   New version:     $VERSION"
-    echo "   Branch:          $(git branch --show-current)"
-    echo ""
-    read -p "Proceed with release? [y/N] " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo "Aborted."
-        exit 1
-    fi
-
-    # Do the release
-    echo ""
-    just bump "$VERSION"
-    # Re-link the local package so `@preview/brilliant-cv:$VERSION` imports
-    # in template/ and docs/pdf/docs.typ resolve to the local source. Without
-    # this, `just build` fails because the new version isn't yet on Universe
-    # and the local link still points at the old version.
-    just link
-    just build
-    git add -A
-    git commit -m "build: bump version to $VERSION"
-    git tag "v$VERSION"
-    git push origin main --tags
-    echo ""
-    echo "🎉 Version $VERSION released!"
-
-# Bump version in all files
-# Usage: just bump 3.2.0
-bump version:
-    @echo "📦 Bumping version to {{version}}..."
-    @# Update typst.toml
-    @sed -i '' 's/^version = ".*"/version = "{{version}}"/' typst.toml
-    @echo "  ✓ typst.toml"
-    @# Update all template imports in .typ files
-    @find template docs -name "*.typ" -exec sed -i '' 's/@preview\/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*/@preview\/brilliant-cv:{{version}}/g' {} \;
-    @echo "  ✓ template/*.typ and docs/*.typ files"
-    @# Update version strings in documentation markdown files
-    @find docs/web/docs -name "*.md" -exec sed -i '' 's/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*/brilliant-cv:{{version}}/g' {} \;
-    @echo "  ✓ docs/web/docs/*.md files"
-    @# Update version in API reference generator script
-    @sed -i '' 's/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*/brilliant-cv:{{version}}/g' docs/web/generate-api-reference.py
-    @echo "  ✓ generate-api-reference.py"
-    @echo "✅ Version bumped to {{version}}"
-    @echo ""
-    @echo "📋 Next steps:"
-    @echo "   1. git add -A && git commit -m 'build: bump version to {{version}}'"
-    @echo "   2. git tag v{{version}}"
-    @echo "   3. git push origin main --tags"
-
-# Check that all version references are consistent
+# Check that the manifest, starter, and current documentation agree.
 check-version:
+    @python3 scripts/release_contract.py check-version
+
+# Exercise the release guard itself against an isolated Git fixture.
+release-contract-self-test:
+    @python3 scripts/test_release_contract.py
+
+# Check immutable CI inputs and narrow automation write boundaries.
+ci-contract-check:
+    @python3 scripts/check_ci_contract.py
+
+# Assemble exactly what Typst Universe receives, then compile every starter.
+package-check:
     #!/usr/bin/env bash
     set -euo pipefail
-    TOML_VERSION=$(grep '^version = ' typst.toml | sed 's/version = "\(.*\)"/\1/')
-    echo "📦 Version in typst.toml: $TOML_VERSION"
-    echo ""
-    MISMATCHED=()
-    # Find files with actual version numbers (not <version> placeholders)
-    while IFS= read -r file; do
-        # Skip files that only have placeholder versions like <version>
-        if grep -q "@preview/brilliant-cv:[0-9]" "$file" 2>/dev/null; then
-            if ! grep -q "@preview/brilliant-cv:$TOML_VERSION" "$file" 2>/dev/null; then
-                MISMATCHED+=("$file")
-            fi
-        fi
-    done < <(find template docs -name "*.typ" -exec grep -l "@preview/brilliant-cv:" {} \;)
-    if [ ${#MISMATCHED[@]} -eq 0 ]; then
-        echo "✅ All version references are consistent!"
-        exit 0
-    else
-        echo "❌ Version mismatch in ${#MISMATCHED[@]} files:"
-        for file in "${MISMATCHED[@]}"; do
-            FOUND=$(grep -o "@preview/brilliant-cv:[0-9]*\.[0-9]*\.[0-9]*" "$file" | head -1)
-            echo "   $file → $FOUND"
-        done
-        echo ""
-        echo "💡 Run: just bump $TOML_VERSION"
-        exit 1
-    fi
+    PACKAGE_DIR=$(mktemp -d)/package
+    python3 scripts/release_contract.py assemble "$PACKAGE_DIR"
+    python3 scripts/release_contract.py smoke "$PACKAGE_DIR"
+
+# Full pre-release contract. Tag only after this passes on the version-bump PR.
+verify-release: check-version release-contract-self-test ci-contract-check schema-check docs-check test fmt-check package-check
+
+# Validate the editor-facing schema shipped with every initialized starter.
+schema-check:
+    @uv run --with-requirements scripts/requirements-checks.lock python scripts/check_metadata_schema.py
 
 # Refresh the auto-derived parts of the docs site:
 #   - api-reference.md (from src/ typst doc-comments)
@@ -202,7 +136,7 @@ docs-generate:
     #!/usr/bin/env bash
     set -euo pipefail
     echo "📖 Generating API reference..."
-    uv run --quiet --no-project docs/web/generate-api-reference.py
+    python3 docs/web/generate-api-reference.py
     echo "🖼  Copying component render refs..."
     mkdir -p docs/web/docs/assets/components
     for dir in tests/components/*/; do
@@ -211,23 +145,27 @@ docs-generate:
     done
     echo "✅ docs sources generated"
 
+# Regenerate the API reference and compile every public Typst example.
+docs-check: schema-check docs-generate
+    @python3 scripts/check_docs_snippets.py
+
 # Serve documentation site locally
 docs-serve: docs-generate
     @echo "📖 Starting docs server at http://localhost:8000..."
-    cd docs/web && uv run --with mkdocs-material --with mkdocs-glightbox mkdocs serve
+    cd docs/web && uv run --with-requirements requirements.lock mkdocs serve
 
 # Build documentation site
-docs-build: docs-generate
+docs-build: docs-check
     @echo "📖 Building docs site..."
-    cd docs/web && uv run --with mkdocs-material --with mkdocs-glightbox mkdocs build
+    cd docs/web && uv run --with-requirements requirements.lock mkdocs build
     @echo "✅ Docs built at docs/web/site/"
 
 # --- Test suite (Docker-based, Linux baseline) -----------------------------
 #
 # Visual tests run inside the same Linux Docker image (tests/Dockerfile) on
-# both maintainer machines and CI. Refs are pixel-deterministic — no
-# cross-OS antialiasing. The image bundles typst 0.14, tytanic 0.3.3,
-# typstyle 0.14.4, Source Sans 3, Roboto, Font Awesome 7, Noto CJK SC.
+# both maintainer machines and CI. Persistent refs use fonts verified stable
+# across the two ARM hosts. The image bundles typst 0.15.1, tytanic 0.4.1,
+# typstyle 0.15.0, Source Sans 3, Roboto, Font Awesome 7, Noto CJK SC.
 #
 # Compile-only tests (panics + units) don't need Docker — they run native
 # via `just test-fast` for sub-second inner loops. Visual tests are
@@ -250,12 +188,19 @@ _test-docker CMD: test-image
 
 # Run the full test suite — tytanic visual + panic smoke tests in Docker
 test: test-image
+    @bash tests/guards.sh
     @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} bash -c "tt run --no-fail-fast && bash tests/panics/run.sh"
 
 # Compile-only tests (panics + units) — runs native, no Docker, sub-second
-test-fast: link
+#
+# No `link` prerequisite: units/ and panics/ fixtures use root-relative
+# imports (`/src/...`, `/tests/...`), never `@preview/brilliant-cv:...`, so
+# utpm's local package link is not needed here (confirmed via
+# `grep -r '@preview' tests/units tests/panics` — no matches).
+test-fast:
     @tt run --no-fail-fast -e 'glob:"units/*"'
     @bash tests/panics/run.sh
+    @bash tests/guards.sh
 
 # Run only the panic-fixture shell-script smoke tests (native)
 test-panics:
@@ -265,13 +210,19 @@ test-panics:
 test-filter PAT: test-image
     @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} tt run --no-fail-fast -e 'glob:"{{PAT}}"'
 
-# Regenerate ref PNGs (in Docker, so CI sees identical pixels)
+# Regenerate ref PNGs in the pinned Docker toolchain
 test-update: test-image
     @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} tt update --no-fail-fast
 
 # Drop into an interactive shell inside the test image (debugging aid)
 test-shell: test-image
     @docker run --rm -it --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}}
+
+# Regenerate README gallery preview PNGs (docs/previews/) in the pinned image,
+# so CJK renders with the same Noto baseline CI uses. The update-previews
+# workflow drives the same script.
+previews: test-image
+    @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} bash scripts/render_previews.sh docs/previews
 
 # --- Code quality (typstyle) ----------------------------------------------
 
@@ -300,7 +251,7 @@ compare baseline new:
         diff-pdf --output-diff=temp/compare/diff.pdf "{{baseline}}" "{{new}}" || true; \
         echo "📄 Visual diff saved to temp/compare/diff.pdf"; \
         echo "👀 Opening files for review..."; \
-        open "{{baseline}}" "{{new}}" temp/compare/diff.pdf; \
+        open "{{baseline}}" "{{new}}" temp/compare/diff.pdf 2>/dev/null || xdg-open "{{baseline}}" "{{new}}" temp/compare/diff.pdf 2>/dev/null || echo "💡 Could not auto-open; check {{baseline}}, {{new}}, and temp/compare/diff.pdf manually"; \
     fi
 
 # Build and compare against a baseline PDF (deprecated — use `just test`)

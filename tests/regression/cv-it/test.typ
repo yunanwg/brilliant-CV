@@ -8,6 +8,7 @@
   ..metadata,
   layout: (
     ..metadata.layout,
+    fonts: (..metadata.layout.fonts, header_font: "Source Sans 3"),
     header: (..metadata.layout.header, display_profile_photo: false),
   ),
 )

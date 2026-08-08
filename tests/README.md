@@ -1,6 +1,6 @@
 # Tests
 
-Test suite for `brilliant-cv`, powered by [tytanic](https://github.com/typst-community/tytanic). All visual tests run inside a Linux Docker image (`tests/Dockerfile`) on **both** maintainer machines and CI, so reference PNGs are pixel-deterministic — no cross-OS antialiasing differences to absorb. Tolerance is `max-delta=1, max-deviations=0` (perfect match required).
+Test suite for `brilliant-cv`, powered by [tytanic](https://github.com/typst-community/tytanic). All visual tests run inside a pinned Linux Docker image (`tests/Dockerfile`) on **both** maintainer machines and CI. Persistent fixtures use fonts verified stable across those ARM hosts. Tolerance is `max-delta=1, max-deviations=0` (perfect match required).
 
 ## Layout
 
@@ -10,7 +10,7 @@ tests/
   docker-entrypoint.sh          # Registers /workspace as @preview/brilliant-cv:<v>
   common.typ                    # Shared fixtures (not a tytanic test)
   panics/                       # Shell-script smoke tests (not tytanic)
-    <name>/fixture.typ          # Hand-built v3/v2 metadata input
+    <name>/fixture.typ          # Invalid API input or legacy metadata fixture
     run.sh                      # Iterate fixtures, assert non-zero exit + stderr substring
   units/<name>/test.typ         # Tytanic compile-only — assert.eq() on pure helpers
   components/<name>/test.typ    # Tytanic persistent — micro-fixture per public function
@@ -23,7 +23,7 @@ Tytanic discovers tests by walking `tests/` for files literally named `test.typ`
 
 | Command                       | Where                  | What it does                                                    |
 | ----------------------------- | ---------------------- | --------------------------------------------------------------- |
-| `just test`                   | Docker (`linux/amd64`) | Full suite — tytanic visual + panic shell smoke tests           |
+| `just test`                   | Docker (`linux/arm64`) | Full suite — tytanic visual + panic shell smoke tests           |
 | `just test-fast`              | native (host shell)    | Panic + unit tests only (compile-only, sub-second)              |
 | `just test-panics`            | native                 | Just the panic-fixture shell script                             |
 | `just test-filter '<glob>'`   | Docker                 | Visual tests matching a tytanic glob, e.g. `'components/*'`     |
@@ -31,6 +31,7 @@ Tytanic discovers tests by walking `tests/` for files literally named `test.typ`
 | `just test-image`             | (docker build)         | Build / refresh the test image (cached after first run)         |
 | `just test-shell`             | Docker (interactive)   | Drop into a shell inside the image for debugging                |
 | `just fmt-check`              | Docker                 | typstyle gate (matches CI version pin exactly)                  |
+| `just schema-check`           | native (`uv`)          | Strict schema, all profiles, and positive/negative contracts    |
 
 The first `just test` invocation builds the Docker image (~3 min — typst + tytanic + typstyle + fonts). Subsequent runs use the cached image (~2 s container startup overhead).
 
@@ -41,21 +42,30 @@ macOS and Linux render text with different antialiasing engines (CoreText vs fre
 1. **Loose tolerance** to absorb cross-OS noise (we tried this — see git log, max-delta=50 was needed). 25× looser than ideal, hides real regressions.
 2. **Per-OS refs** with `ref/`, `ref-macos/`, `ref-linux/` — tytanic doesn't natively support multiple ref dirs, requires hacky path swapping.
 
-Docker gives **one source of truth**: `tt run` produces byte-identical pixels on every machine, so `max-delta=1, max-deviations=0` is achievable.
+Docker gives **one pinned toolchain**. CPU-specific rasterization can still differ between Apple Silicon and GitHub-hosted ARM runners, so persistent snapshots use Source Sans 3 for Latin text. Production profiles still default to Roboto; its visual fidelity is checked manually with `just dev`. Together this keeps `max-delta=1, max-deviations=0` meaningful without changing user-facing font defaults.
 
 ## CJK profile tests
 
 `profile_zh` ships with `Heiti SC` (macOS-default, not freely redistributable). The Linux Docker image installs `fonts-noto-cjk` instead, and the test fixtures (`regression/cv-zh/test.typ`, `regression/letter-zh/test.typ`) override `[layout.fonts]` to use Noto Sans CJK SC. The tests verify "mixed-script profile renders without errors and the layout is stable" — they do not verify "Heiti SC visually matches" (that's a font-choice concern, checked by the maintainer manually with `just dev`).
 
-## Panic tests are not tytanic tests
+## Panic-contract tests are not tytanic tests
 
-Tytanic has no `expect-panic` annotation — a panicking test is reported as failed. Panic tests live in `tests/panics/<name>/fixture.typ` and are exercised by `tests/panics/run.sh`:
+Tytanic has no `expect-panic` annotation — a panicking test is reported as failed. Public API validation and schema-migration panic fixtures live in `tests/panics/<name>/fixture.typ` and are exercised by `tests/panics/run.sh`:
 
 1. Runs `typst compile --root . <fixture>`
 2. Asserts compile fails (non-zero exit)
 3. Asserts stderr contains the expected v4 migration substring
 
 The expected substring is encoded in each fixture's first-line comment as `// expected: <substring>`. Panic tests run native (not in Docker) because they only exercise typst error messages — no rendering involved, OS-independent.
+
+## Machine guards (`tests/guards.sh`)
+
+A few cross-cutting invariants are cheap to check mechanically and easy to lose track of as prose. `tests/guards.sh` (bash + python3 stdlib only — no typst, no tytanic, no Docker) checks:
+
+- **Determinism** — fails if `datetime.today` appears in any `tests/**/test.typ` or `tests/**/fixture.typ` (see "Things that flap pixel diffs" below; comments merely *mentioning* the pattern, e.g. explaining why a fixture pins `date:`, don't count).
+- **Profile parity** — fails if any `template/profile_*/metadata.toml` key path doesn't also exist in `profile_en`, the canonical, docs-driving profile (see AGENTS.md), unless it's in the script's small explicit allowlist of legitimate per-locale keys (e.g. `profile_zh`'s real `personal.display_name` vs. `profile_en`'s commented-out example of the same key).
+
+`just test`, `just test-fast`, and CI all run `bash tests/guards.sh` after the tytanic/panic suites. It has no external dependencies, so it's the cheapest thing to run first when chasing a failure.
 
 ## Adding a test
 
@@ -69,8 +79,11 @@ The expected substring is encoded in each fixture's first-line comment as `// ex
 
 - **`datetime.today()`** — never in test fixtures. The `letter()` `date:` arg defaults to today's date; tests must override (`date: "2026-01-01"`).
 - **Profile photo `assets/avatar.png`** — bytes change → rasterization changes → diff flips without layout changes. Component + regression tests omit `profile-photo:`.
+- **Roboto Bold in persistent refs** — it rasterizes differently on Apple and GitHub-hosted ARM CPUs even in the same container. Use Source Sans 3 in snapshots; verify the production Roboto default manually with `just dev`.
 - **Dockerfile changes** — bumping a font / binary version changes rendering. Always regenerate refs (`just test-update`) in the same commit.
 
 ## Native-only inner loop
 
-If you have `tytanic` and `typstyle` installed natively (`cargo install tytanic --version "^0.3"` + `brew install typstyle`), `just test-fast` exercises the OS-independent subset (panics + units) at sub-second speed — useful while iterating. Visual tests still need Docker.
+If you have `tytanic` and `typstyle` installed natively (`cargo install tytanic --version "^0.4.1"` + `brew install typstyle`), `just test-fast` exercises the OS-independent subset (panics + units + guards) at sub-second speed — useful while iterating. Visual tests still need Docker.
+
+x86_64 contributors: visual refs can only be regenerated or verified on arm64 (see "Why Docker?" above), so there's no local equivalent of `just test` for you. Run `just test-fast` locally for the fast, OS-independent feedback loop, and let CI verify visuals on its arm64 runner.

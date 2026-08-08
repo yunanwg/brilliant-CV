@@ -1,11 +1,11 @@
 // cv-entry-start + cv-entry-continued — multi-role pattern at one company.
 
 #import "/src/cv.typ": cv-entry-continued, cv-entry-start, cv-metadata
-#import "/src/utils/styles.typ": _latin-font-list, _regular-colors
-#import "/tests/common.typ": minimal-metadata
+#import "/src/utils/styles.typ": _regular-colors
+#import "/tests/common.typ": minimal-metadata, test-font-list
 
 #set page(width: 16cm, height: auto, margin: 0.5cm)
-#set text(font: _latin-font-list, size: 9pt, fill: _regular-colors.lightgray)
+#set text(font: test-font-list, size: 9pt, fill: _regular-colors.lightgray)
 #cv-metadata.update(minimal-metadata)
 
 #cv-entry-start(
