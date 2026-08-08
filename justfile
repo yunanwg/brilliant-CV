@@ -185,16 +185,21 @@ test: test-image
     @bash tests/guards.sh
     @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} bash -c "tt run --no-fail-fast && bash tests/panics/run.sh"
 
-# Compile-only tests (panics + units) — runs native, no Docker, sub-second
-#
 # No `link` prerequisite: units/ and panics/ fixtures use root-relative
 # imports (`/src/...`, `/tests/...`), never `@preview/brilliant-cv:...`, so
 # utpm's local package link is not needed here (confirmed via
 # `grep -r '@preview' tests/units tests/panics` — no matches).
+
+# Compile-only tests, native and sub-second. Runs NO visual regression tests.
 test-fast:
     @tt run --no-fail-fast -e 'glob:"units/*"'
     @bash tests/panics/run.sh
     @bash tests/guards.sh
+    @echo
+    @echo "⚠️  Visual regression tests did NOT run. This suite is compile-only:"
+    @echo "   layout, spacing and glyph changes are invisible to it. Verify with"
+    @echo "   'just test' on arm64, or let CI check the refs, before concluding"
+    @echo "   that a change has no visual impact."
 
 # Run only the panic-fixture shell-script smoke tests (native)
 test-panics:
