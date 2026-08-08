@@ -76,12 +76,6 @@ watch: link
     @mkdir -p temp
     typst watch template/cv.typ temp/cv.pdf
 
-# Sync dependencies to latest versions
-sync:
-    @echo "🔄 Syncing dependencies..."
-    @utpm prj sync
-    @echo "✅ Dependencies synced!"
-
 # Clean build artifacts
 clean:
     @echo "🧹 Cleaning build artifacts..."
