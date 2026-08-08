@@ -127,7 +127,11 @@
         } else if awesome-icon != "" {
           icon = fa-icon(awesome-icon)
         }
-        let body = if text != "" { [#icon #h(5pt) #text] } else { icon }
+        let body = if text != "" {
+          icon
+          h(5pt)
+          text
+        } else { icon }
         box(if link-value != "" { link(link-value)[#body] } else { body })
       } else {
         let icon = icons.at(k)
@@ -152,7 +156,11 @@
         }
         box(
           if dest != "" {
-            link(dest)[#icon #h(5pt) #v]
+            link(dest, {
+              icon
+              h(5pt)
+              v
+            })
           } else {
             icon
             h(5pt)
