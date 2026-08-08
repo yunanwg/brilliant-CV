@@ -2,8 +2,8 @@
 
 ## Adding a New Module
 
-1. Create a new file, e.g. `profile_en/volunteering.typ`
-2. Add your imports and content (sections, entries, etc.)
+1. Create a new file, for example `profile_en/volunteering.typ`
+2. Add your imports and your content (sections, entries, and more)
 3. In `cv.typ`, add `"volunteering"` to the `import-modules` call
 
 ## Switching Profiles at Compile Time
@@ -12,39 +12,41 @@
 typst compile cv.typ --input profile=fr
 ```
 
-The `profile` input picks which `profile_<name>/` directory to load. For non-Latin scripts (Chinese, Japanese, Korean, Russian, Arabic, …), configure typography explicitly in `[layout.fonts]` (font fallback chain), `[layout.section]` (title highlighting), and `[personal] display_name`. See `template/profile_zh/metadata.toml` for a complete example.
+The `profile` input selects the `profile_<name>/` directory to load. For a non-Latin script (Chinese, Japanese, Korean, Russian, Arabic, and more), configure the typography explicitly. Set the font fallback chain in `[layout.fonts]`, the title highlight in `[layout.section]`, and the name in `[personal] display_name`. For a complete example, see `template/profile_zh/metadata.toml`.
 
 ## Adding a New Profile
 
-Each profile is **self-contained** — one `profile_<name>/metadata.toml` holds the complete CV configuration for that variant. To add a new profile (e.g. a Swedish CV):
+Each profile is **self-contained**. One `profile_<name>/metadata.toml` holds the complete CV configuration for that variant. To add a new profile, for example a Swedish CV, do these steps:
 
 1. Copy an existing profile directory:
     ```bash
     cp -r template/profile_en template/profile_swe
     ```
-2. Edit `profile_swe/metadata.toml` — change `header_quote`, `cv_footer`, `letter_footer`, and any other fields that differ from English.
+2. Edit `profile_swe/metadata.toml`. Change `header_quote`, `cv_footer`, `letter_footer`, and each other field that is different from English.
 3. Edit the `.typ` modules under `profile_swe/` for Swedish content.
 4. Compile with `typst compile cv.typ --input profile=swe`.
 
-There is no shared root metadata or merge mechanism in v4. **Profile = a complete CV config**; copy-paste is the way to start a new one.
+v4 has no shared root metadata and no merge mechanism. **One profile is one complete CV configuration.** To start a new profile, copy an existing one.
 
 ### Profile ≠ language
 
-The profile name is just a directory suffix — it doesn't carry semantic meaning to the package. You can have `profile_us/` and `profile_uk/` (both English text, different locations / phone numbers / layouts) sitting next to `profile_zh/` (Chinese with Heiti SC); each profile's `metadata.toml` is independently complete. Pick whatever directory names make sense for your variants.
+The profile name is only a directory suffix. It has no meaning for the package. For example, you can keep `profile_us/` and `profile_uk/` next to `profile_zh/`. The first two hold English text with different locations, phone numbers, and layouts. The third holds Chinese text with Heiti SC.
 
-### Sharing config across profiles
+The `metadata.toml` of each profile is complete on its own. Select the directory names that are correct for your variants.
 
-If you maintain many profiles and want to share fields (GitHub username, layout colors, etc.), the package itself does not provide a merge mechanism. Common user-side options:
+### Sharing configuration across profiles
 
-- **A small Python/shell preprocessor** that reads a canonical base + per-profile overrides and writes the profile `metadata.toml` files at build time.
-- **`typstyle`-friendly hand-edits** — for 2-3 profiles, manual sync is usually fine.
-- **Symlinks or `git rerere`** to keep selected fields in sync.
+The package has no merge mechanism for shared fields, such as a GitHub username or the layout colors. If you keep many profiles, these options are available to you:
 
-The framework keeps "one profile = one file" so your tooling stays free.
+- **A small Python or shell preprocessor.** It reads a canonical base and the overrides of each profile, then writes the profile `metadata.toml` files at build time.
+- **`typstyle`-friendly manual edits.** For 2 or 3 profiles, manual synchronization is usually sufficient.
+- **Symlinks or `git rerere`** to keep the selected fields synchronized.
+
+The package keeps one profile in one file, so you can select your own tools.
 
 ## Skills with Inline Separators
 
-Use `#h-bar()` to separate skill items within `cv-skill`:
+Use `#h-bar()` to separate the skill items in `cv-skill`:
 
 ```typ
 #cv-skill(
@@ -55,9 +57,9 @@ Use `#h-bar()` to separate skill items within `cv-skill`:
 
 ## Verification Links and Richer Certificate Metadata
 
-`cv-honor` is intentionally compact: it ships with `date`, `title`, `issuer`, `url`, and `location` — no free-form description slot. Pick the right component based on what you need to surface.
+`cv-honor` is compact. It has `date`, `title`, `issuer`, `url`, and `location`, but it has no free-form description field. Select the component that shows the data you need.
 
-**Just a clickable verification link** — pass the verification URL as `url`. The title becomes a link; `location` is a good place for short status text:
+**For a clickable verification link only**, pass the verification URL as `url`. The title becomes a link. Put short status text in `location`:
 
 ```typ
 #cv-honor(
@@ -69,7 +71,7 @@ Use `#h-bar()` to separate skill items within `cv-skill`:
 )
 ```
 
-**Credential ID, expiry, multiple links** — switch to `cv-entry`, which has a content-flexible `description` field. The trade-off is a slightly heavier visual footprint, but you get full formatting freedom:
+**For a credential ID, an expiry date, or more than one link**, use `cv-entry`. Its `description` field accepts any content. This component uses more space on the page, but it gives you full control of the format:
 
 ```typ
 #cv-entry(
@@ -84,11 +86,11 @@ Use `#h-bar()` to separate skill items within `cv-skill`:
 )
 ```
 
-The two components are interchangeable inside a `Certificates` section; mix them per entry depending on whether you need the compact one-line layout or the richer description block.
+You can use the two components together in one `Certificates` section. For each entry, select `cv-honor` for the compact one-line layout, or `cv-entry` for the larger description block.
 
 ## Adding a Profile Photo
 
-The profile photo is passed as an argument to `cv()` in your `cv.typ`, not set in `metadata.toml`:
+You pass the profile photo as an argument to `cv()` in your `cv.typ`. You do not set it in `metadata.toml`:
 
 ```typ
 #show: cv.with(
@@ -103,11 +105,11 @@ Control the shape with `profile_photo_radius` in `[layout.header]`:
 - `"0%"` — square
 - `"10%"` — rounded corners
 
-Set `display_profile_photo = false` in `[layout.header]` to hide the photo entirely.
+To hide the photo, set `display_profile_photo = false` in `[layout.header]`.
 
 ## Custom Contact Icon with Image
 
-To add a custom contact entry with an image icon (instead of a Font Awesome icon):
+To add a custom contact entry with an image icon in place of a Font Awesome icon, do these steps:
 
 1. Define the entry in `metadata.toml` with an `awesomeIcon` fallback:
 
@@ -118,7 +120,7 @@ To add a custom contact entry with an image icon (instead of a Font Awesome icon
     link = "https://example.com"
     ```
 
-2. Pass the image in `cv.typ` via the `custom-icons` parameter (the key must match `custom-1`):
+2. Pass the image in `cv.typ` with the `custom-icons` parameter. The key must agree with `custom-1`:
 
     ```typ
     #show: cv.with(
@@ -130,11 +132,11 @@ To add a custom contact entry with an image icon (instead of a Font Awesome icon
     )
     ```
 
-When a `custom-icons` entry is provided, it takes priority over the `awesomeIcon` value from TOML.
+If you give a `custom-icons` entry, it has priority over the `awesomeIcon` value from the TOML file.
 
 ## Custom Header Info
 
-The default header turns `[personal.info]` entries into linked contact items, inserts icons, and places `h-bar()` between them automatically. When you need precise control over separators, line breaks, or which spans use the accent color, pass custom content through `header-info`:
+The default header makes a linked contact item from each `[personal.info]` entry. It adds the icons and puts `h-bar()` between the items automatically. You can also control the separators, the line breaks, and the accent color of each span. To do this, pass your own content in `header-info`:
 
 ```typ
 #import "@preview/brilliant-cv:4.1.0": cv, h-bar
@@ -154,9 +156,9 @@ The default header turns `[personal.info]` entries into linked contact items, in
 )
 ```
 
-The replacement inherits the default header-info font size and accent color. Style individual spans explicitly to override those defaults. Because the replacement bypasses automatic `[personal.info]` rendering, add any desired icons and links directly in the content; `custom-icons` only applies to the default `auto` renderer.
+Your content inherits the default font size and accent color of the header info. To override these defaults, style each span explicitly. Your content also replaces the automatic rendering of `[personal.info]`. Add the icons and the links that you want directly in the content. `custom-icons` applies only to the default `auto` renderer.
 
-Use a function when that keeps your template clearer, but call it before passing the result—the API accepts the resulting content rather than a renderer callback:
+You can use a function to make your template clearer. Call the function first, then pass its result. The API accepts content, not a renderer callback:
 
 ```typ
 #let render-info(info) = [#info.email #h-bar() #info.location]
@@ -167,13 +169,13 @@ Use a function when that keeps your template clearer, but call it before passing
 )
 ```
 
-Pass `header-info: none` to remove the contact row while keeping the name, optional quote, photo, and surrounding layout intact.
+To remove the contact row, pass `header-info: none`. The name, the optional quote, the photo, and the rest of the layout do not change.
 
 ## Color Customization
 
 ### Preset Colors
 
-Set `awesome_color` in `[layout]` to one of the built-in presets:
+Set `awesome_color` in `[layout]` to one of these presets:
 
 | Name | Hex |
 |------|-----|
@@ -190,7 +192,7 @@ awesome_color = "nephritis"
 
 ### Custom Hex Color
 
-Pass any hex color string directly:
+You can also set any hex color string directly:
 
 ```toml
 [layout]
@@ -223,11 +225,11 @@ Dear Hiring Manager,
 Sincerely,
 ```
 
-Leave `signature` as `""` (default) to omit the signature image.
+To omit the signature image, leave `signature` as `""`. This is the default value.
 
 ## CI/CD with GitHub Actions
 
-A minimal workflow to compile your CV on every push:
+This is a minimal workflow that compiles your CV on each push:
 
 ```yaml
 name: Build CV
@@ -254,4 +256,4 @@ jobs:
 ```
 
 !!! tip
-    If your CV uses custom fonts, add a step to install them before compiling. See the [Troubleshooting](troubleshooting.md) page for font issues.
+    If your CV uses custom fonts, add a step that installs them before the compile step. For font problems, see the [Troubleshooting](troubleshooting.md) page.

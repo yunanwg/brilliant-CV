@@ -1,14 +1,14 @@
 # Component Gallery
 
-These are the building blocks of your CV. Each example below is followed by the actual rendered output — the PNGs are the same ones the [test suite](https://github.com/yunanwg/brilliant-CV/tree/main/tests/components) uses as visual-regression baselines, so what you see here is exactly what the package produces. For full parameter details, see the [API Reference](api-reference.md).
+These are the building blocks of your CV. Each example has the rendered output after it. The PNGs are the same files that the [test suite](https://github.com/yunanwg/brilliant-CV/tree/main/tests/components) uses as visual-regression baselines, so this page shows exactly what the package produces. For the full parameter details, see the [API Reference](api-reference.md).
 
 ## Component context in v4
 
-CV components normally read layout settings from the metadata context installed by the enclosing `#show: cv.with(metadata, ...)` rule. Typst state is contextual and positional, so keep component calls inside the `cv()` document body, as the starter does. For standalone composition or tests, pass `metadata: metadata` explicitly; this is a supported escape hatch documented in each applicable component signature.
+CV components usually read the layout configuration from the metadata context. The enclosing `#show: cv.with(metadata, ...)` rule installs this context. Typst state is contextual and positional, so the component calls must stay in the `cv()` document body, as the starter does. For standalone composition or for tests, pass `metadata: metadata` explicitly. This alternative is supported, and each applicable component signature documents it.
 
-This ambient behavior is preserved throughout v4 for compatibility. A component used without either explicit metadata or the surrounding `cv()` context now fails with an actionable message at the call site. The state object and underscore-prefixed helpers remain implementation details; a replacement context/factory design belongs in v5 with a migration path.
+v4 keeps this ambient behavior for compatibility. A component with no explicit metadata and no surrounding `cv()` context fails with a clear message at the call site. The state object and the underscore-prefixed helpers are implementation details. A replacement context design, or factory design, belongs in v5 with a migration path.
 
-The supported package-root API is `cv`, `letter`, the nine documented `cv-*` components, `h-bar`, and the compatibility helper `overwrite-fonts`. New templates should configure `[layout.fonts]` rather than call `overwrite-fonts` directly. Dependency symbols such as `fa-*` icons are not re-exported; import them from `fontawesome` directly.
+The supported package-root API is `cv`, `letter`, the nine documented `cv-*` components, `h-bar`, and the compatibility helper `overwrite-fonts`. A new template must configure `[layout.fonts]` and must not call `overwrite-fonts` directly. The package does not re-export dependency symbols such as the `fa-*` icons. Import them from `fontawesome` directly.
 
 ## Entry Point Functions
 
@@ -21,9 +21,9 @@ The supported package-root API is `cv`, `letter`, the nine documented `cv-*` com
 )
 ```
 
-The `cv()` function is the main entry point. It runs schema-migration guards (panic on v3 fields), sets page layout, applies fonts, renders the header, and emits `_cv-footer` on every page. All your CV modules go inside its body.
+The `cv()` function is the main entry point. It operates the schema-migration guards, which panic on v3 fields. It also sets the page layout, applies the fonts, renders the header, and puts `_cv-footer` on every page. All your CV modules go in its body.
 
-By default, `header-info: auto` renders the entries from `metadata.personal.info`. Pass content to replace that row without reimplementing the name, photo, or header layout:
+By default, `header-info: auto` renders the entries from `metadata.personal.info`. To replace that row, pass your own content. The name, the photo, and the header layout do not change:
 
 ```typ
 #import "@preview/brilliant-cv:4.1.0": cv, h-bar
@@ -44,7 +44,7 @@ By default, `header-info: auto` renders the entries from `metadata.personal.info
 
 ![custom header info](assets/components/cv-header-info-custom.png)
 
-Custom content inherits the normal header-info typography and accent color; explicit nested `text(...)` rules can override individual spans. Use `header-info: none` to remove the contact row. The [Custom Header Info](recipes.md#custom-header-info) recipe covers the interaction with metadata and custom icons.
+Your content inherits the normal typography and accent color of the header info. Nested `text(...)` rules can override each span. To remove the contact row, use `header-info: none`. The [Custom Header Info](recipes.md#custom-header-info) recipe describes the interaction with the metadata and with the custom icons.
 
 ### `letter()`
 
@@ -59,7 +59,7 @@ Custom content inherits the normal header-info typography and accent color; expl
 )
 ```
 
-`letter()` mirrors `cv()` for cover-letter pages with letter-formal margins and a 12pt body. `sender-address` defaults to `auto`, which reads `metadata.personal.address` (falls back to `"Your Address Here"` if unset). Use `address-style: "normal"` to disable smallcaps on addresses.
+`letter()` is equivalent to `cv()` for cover-letter pages. It uses formal letter margins and a 12pt body. The default value of `sender-address` is `auto`, which reads `metadata.personal.address`. If that field is not set, the value becomes `"Your Address Here"`. To remove the smallcaps from the addresses, use `address-style: "normal"`.
 
 ---
 
@@ -73,7 +73,7 @@ Custom content inherits the normal header-info typography and accent color; expl
 
 ![cv-section first-letters mode](assets/components/cv-section-first-letters.png)
 
-The default `[layout.section] title_highlight = "first-letters"` highlights the leading 3 chars in the accent color (Latin convention). Override per call with `highlight:` (`"first-letters"` / `"full"` / `"none"`) and `highlight-letters:` (int).
+The default value `[layout.section] title_highlight = "first-letters"` highlights the first 3 characters in the accent color. This is the Latin convention. To override it in one call, use `highlight:` (`"first-letters"`, `"full"`, or `"none"`) and `highlight-letters:` (an integer).
 
 ```typ
 #cv-section("教育背景", highlight: "full")
@@ -81,7 +81,7 @@ The default `[layout.section] title_highlight = "first-letters"` highlights the 
 
 ![cv-section full mode](assets/components/cv-section-full.png)
 
-`"full"` mode colors the entire title — the CJK convention used by `profile_zh`.
+The `"full"` mode colors the complete title. This is the CJK convention, and `profile_zh` uses it.
 
 ```typ
 #cv-section("Education", highlight: "none")
@@ -89,7 +89,7 @@ The default `[layout.section] title_highlight = "first-letters"` highlights the 
 
 ![cv-section none mode](assets/components/cv-section-none.png)
 
-`"none"` keeps the title in body text color — useful for muted, all-monochrome layouts.
+The `"none"` mode keeps the title in the body text color. This is useful for a muted, monochrome layout.
 
 ```typ
 #cv-section("Professional Experience", highlight-letters: 5)
@@ -97,7 +97,7 @@ The default `[layout.section] title_highlight = "first-letters"` highlights the 
 
 ![cv-section 5-letter custom highlight](assets/components/cv-section-custom-letters.png)
 
-`highlight-letters` overrides the default of 3 — handy for short multi-word titles.
+`highlight-letters` overrides the default value of 3. This is useful for a short title with more than one word.
 
 ---
 
@@ -119,7 +119,7 @@ The default `[layout.section] title_highlight = "first-letters"` highlights the 
 
 ![cv-entry with all fields](assets/components/cv-entry-full.png)
 
-The default `[layout.entry] display_entry_society_first = true` puts the company name bold on top, role below. Tags render as pill-style badges.
+The default value `[layout.entry] display_entry_society_first = true` puts the company name in bold on the first line, and the role under it. Tags render as pill-style badges.
 
 ```typ
 #cv-entry(
@@ -133,9 +133,9 @@ The default `[layout.entry] display_entry_society_first = true` puts the company
 
 ![cv-entry without tags](assets/components/cv-entry-no-tags.png)
 
-Omitting `tags:` collapses the tag block entirely (no empty stripe).
+If you omit `tags:`, the tag block collapses completely and leaves no empty stripe.
 
-When `display_entry_society_first = false`, the role becomes the bold anchor and the company moves below — useful for academic or freelance CVs where role hierarchy matters more than employer:
+When `display_entry_society_first = false`, the role becomes the bold anchor and the company moves under it. This is useful for an academic CV or a freelance CV, where the role is more important than the employer:
 
 ![cv-entry role-first layout](assets/components/cv-entry-role-first.png)
 
@@ -143,7 +143,7 @@ When `display_entry_society_first = false`, the role becomes the bold anchor and
 
 ### Multiple Roles at One Company — `cv-entry-start` + `cv-entry-continued`
 
-Use this pair when one person held multiple titles at the same employer:
+When one person had more than one title at the same employer, use this pair of components:
 
 ```typ
 #cv-entry-start(
@@ -165,7 +165,7 @@ Use this pair when one person held multiple titles at the same employer:
 ![cv-entry-start + two continued](assets/components/cv-entry-start-continued.png)
 
 !!! warning
-    Requires `display_entry_society_first = true` in `metadata.toml`. The pair panics with a clear message if the layout is set to role-first — see [`tests/panics/entry-start-needs-society-first`](https://github.com/yunanwg/brilliant-CV/tree/main/tests/panics) for the actual error.
+    This pair needs `display_entry_society_first = true` in `metadata.toml`. If the layout is role-first, the pair panics with a clear message. For the actual error, see [`tests/panics/entry-start-needs-society-first`](https://github.com/yunanwg/brilliant-CV/tree/main/tests/panics).
 
 ---
 
@@ -180,7 +180,7 @@ Use this pair when one person held multiple titles at the same employer:
 
 ![cv-skill basic row](assets/components/cv-skill-basic.png)
 
-The simplest skills row — type label on the left, free-form content on the right. Use `#h-bar()` to separate items with the conventional inline bar.
+This is the most simple skills row. The type label is on the left, and free-form content is on the right. Use `#h-bar()` to separate the items with the conventional inline bar.
 
 ---
 
@@ -196,7 +196,7 @@ The simplest skills row — type label on the left, free-form content on the rig
 
 ![cv-skill-with-level at 5/5](assets/components/cv-skill-with-level-5.png)
 
-Five filled/empty circles render the level. Pass an integer in the range 0–5; the function does not clamp, so a value outside that range will render the wrong number of circles.
+Five circles, filled or empty, show the level. Pass an integer from 0 to 5. The function does not clamp the value, so a value outside that range renders the wrong number of circles.
 
 ---
 
@@ -211,7 +211,7 @@ Five filled/empty circles render the level. Pass an integer in the range 0–5; 
 
 ![cv-skill-tag pill badges](assets/components/cv-skill-tag-basic.png)
 
-Pill-style badges. Useful inside a `cv-skill` info field for certifications or tech stacks where each item deserves visual weight.
+Pill-style badges. These are useful in a `cv-skill` info field, for certifications or tech stacks where each item needs visual weight.
 
 ---
 
@@ -229,7 +229,7 @@ Pill-style badges. Useful inside a `cv-skill` info field for certifications or t
 
 ![cv-honor with link](assets/components/cv-honor-with-url.png)
 
-When `url` is set, the title becomes a clickable link in the rendered PDF. Omit `url` to render the title as plain bold text:
+When you set `url`, the title becomes a clickable link in the PDF. If you omit `url`, the title renders as plain bold text:
 
 ![cv-honor without link](assets/components/cv-honor-no-url.png)
 
@@ -246,7 +246,7 @@ When `url` is set, the title becomes a clickable link in the rendered PDF. Omit 
 )
 ```
 
-Renders a typst `bibliography` object styled to match the rest of the CV. Set `ref-full: true` to show every entry from the bib file; pair `ref-full: false` with `key-list:` to publish only the entries whose keys you want featured. `ref-style:` accepts any [typst bibliography style](https://typst.app/docs/reference/model/bibliography/) (`"apa"`, `"ieee"`, `"chicago-author-date"`, …).
+This component renders a Typst `bibliography` object with the style of the rest of the CV. To show every entry from the bib file, set `ref-full: true`. To show only selected entries, set `ref-full: false` and give their keys in `key-list:`. `ref-style:` accepts any [typst bibliography style](https://typst.app/docs/reference/model/bibliography/), such as `"apa"`, `"ieee"`, or `"chicago-author-date"`.
 
 !!! tip
-    Visual examples for `cv-publication` are not included here — the rendered output depends entirely on your bib file. See [`template/profile_en/publications.typ`](https://github.com/yunanwg/brilliant-CV/blob/main/template/profile_en/publications.typ) for a working example using the bundled `template/assets/publications.bib`.
+    This page has no visual example for `cv-publication`, because the output depends on your bib file. For a working example with the bundled `template/assets/publications.bib`, see [`template/profile_en/publications.typ`](https://github.com/yunanwg/brilliant-CV/blob/main/template/profile_en/publications.typ).

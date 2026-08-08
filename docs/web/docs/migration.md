@@ -2,29 +2,29 @@
 
 ## Migration from v3
 
-v4 introduces a **profile-based** architecture: each CV variant lives in its own `profile_<name>/` directory with a self-contained `metadata.toml` and content modules. This solves [#142](https://github.com/yunanwg/brilliant-CV/issues/142) — you can now vary *any* field per profile (`[personal.info]`, `[layout]`, `[inject]`, the lot), not just the three localized strings v3 supported via `[lang.<code>]`.
+v4 has a **profile-based** architecture. Each CV variant is in its own `profile_<name>/` directory, with a self-contained `metadata.toml` and its content modules. This corrects [#142](https://github.com/yunanwg/brilliant-CV/issues/142). You can now change *any* field for each profile, which includes `[personal.info]`, `[layout]`, and `[inject]`. v3 supported only the three localized strings in `[lang.<code>]`.
 
 ### Design principles
 
-- **One profile = one complete CV configuration.** Look at a single `profile_<name>/metadata.toml` and you see the full effective config for that profile — no merging, no inheritance.
-- **No root `metadata.toml`.** The v4 template ships only profile directories; there is no shared/base config layer.
-- **DRY is the user's job, not the framework's.** If you maintain many profiles and want to share config, you can add your own preprocessor or symlinks; the package stays simple.
+- **One profile is one complete CV configuration.** A single `profile_<name>/metadata.toml` shows the full effective configuration for that profile. There is no merge and no inheritance.
+- **No root `metadata.toml`.** The v4 template contains only profile directories. There is no shared base configuration layer.
+- **DRY is the work of the user, not of the package.** To share configuration between many profiles, you can add your own preprocessor or symlinks. The package stays simple.
 
 ### Upgrade steps
 
-**1. Rename your module folder to a profile folder:**
+**1. Rename your module directory to a profile directory:**
 
 ```
 modules_en/  →  profile_en/
 ```
 
-**2. Move your `metadata.toml` into the profile folder and flatten the schema:**
+**2. Move your `metadata.toml` into the profile directory and flatten the schema:**
 
 ```
 metadata.toml  →  profile_en/metadata.toml
 ```
 
-You also need to flatten the v3 `[lang.<code>]` structure to top-level fields. v4 panics on detection of any v3-only schema field (consistent with the existing v2→v3 `inject_*` migration guards) — see "Schema migration guards" below for the exact field mapping.
+You must also flatten the v3 `[lang.<code>]` structure to top-level fields. When v4 finds a v3-only schema field, it panics. This is the same behavior as the v2 to v3 `inject_*` migration guards. For the exact field mapping, see "Schema migration guards".
 
 **3. Update your `cv.typ`:**
 
@@ -64,23 +64,23 @@ You also need to flatten the v3 `[lang.<code>]` structure to top-level fields. v
 typst compile cv.typ --input profile=fr
 ```
 
-**6. Adding more profiles.** Copy `profile_en/` to `profile_<new>/` and edit the fields that differ. Each profile is independent — there's no DRY mechanism inside the package, by design.
+**6. Add more profiles.** Copy `profile_en/` to `profile_<new>/`. Then edit the fields that are different. Each profile is independent. The package has no DRY mechanism, and this is intentional.
 
 See [Recipes → Switching Profiles](recipes.md#switching-profiles-at-compile-time) for compile-time examples.
 
 ### Schema migration guards (panic on v3 fields)
 
-v4 follows the same pattern the package already used for the v2→v3 `inject_ai_prompt` / `inject_keywords` migration: when a removed v3 schema field is detected at compile time, the package **panics with a migration message** rather than silently falling back. This avoids the "silent fallback" anti-pattern that hides behavior changes.
+v4 uses the same pattern as the v2 to v3 migration of `inject_ai_prompt` and `inject_keywords`. When the package finds a removed v3 schema field at compile time, it **panics with a migration message**. It does not fall back silently. A silent fallback is an anti-pattern, because it hides a change of behavior.
 
 The guarded fields and their replacements:
 
 | v3 field | Panic? | v4 replacement |
 |---|---|---|
 | `language` | ✅ | Set typography explicitly: `[layout.fonts] regular_fonts`, `[layout.fonts] header_font`, `[layout.section] title_highlight`, `[personal] display_name`, `[layout] date_width` |
-| `non_latin_font` | ✅ | List both fonts in `[layout.fonts] regular_fonts = ["Source Sans 3", "Heiti SC"]` and set `[layout.fonts] header_font`. typst's codepoint-level fallback handles mixed scripts — verified empirically (`pdffonts` shows identical embedded subsets to the v3 trigger). |
-| `non_latin_name` | ✅ | `[personal] display_name` — overrides the Latin first/last split with a single styled string |
+| `non_latin_font` | ✅ | List both fonts in `[layout.fonts] regular_fonts = ["Source Sans 3", "Heiti SC"]` and set `[layout.fonts] header_font`. Typst selects the font for each codepoint, so mixed scripts work. A test with `pdffonts` shows the same embedded subsets as the v3 trigger. |
+| `non_latin_name` | ✅ | `[personal] display_name`. It replaces the Latin split of first name and last name with one styled string. |
 | `[lang.<code>]` table | ✅ | Set `header_quote`, `cv_footer`, `letter_footer` as top-level fields in `profile_<name>/metadata.toml` |
-| `[lang.non_latin]` table | ✅ (covered by `[lang.*]` panic above) | Use `[personal] display_name` and `[layout.fonts]` |
+| `[lang.non_latin]` table | ✅ (the `[lang.*]` panic in the previous row covers it) | Use `[personal] display_name` and `[layout.fonts]` |
 
 #### v3 (`language=zh`) → v4 example
 
@@ -118,21 +118,21 @@ title_highlight = "full"
 display_name = "王道尔"
 ```
 
-The `_is-non-latin()` whitelist and `_default-date-width()` lookup table are gone from `src/utils/lang.typ` (file deleted). Adding a new non-Latin script (Arabic, Hebrew, Thai, Devanagari, …) no longer requires a framework change — users configure typography directly.
+v4 removes the file `src/utils/lang.typ`, with its `_is-non-latin()` whitelist and its `_default-date-width()` lookup table. A new non-Latin script (Arabic, Hebrew, Thai, Devanagari, and more) no longer needs a change to the package. Users configure the typography directly.
 
 ### Why panic instead of silent fallback?
 
-The package supports three backward-compat patterns. v4 deliberately picks **panic-with-migration-message** for schema changes:
+The package has three patterns for backward compatibility. For schema changes, v4 uses **panic with a migration message**:
 
 | Pattern | When used | Example |
 |---|---|---|
 | **Panic with migration message** | Removed metadata schema fields | `inject_ai_prompt`, v3 `language` / `non_latin_*` / `[lang.*]` |
 | **Fully removed** | Renamed function/parameter aliases | `cvEntry`, `profilePhoto`, `awesomeColors` (typst gives a generic "unknown parameter" error) |
-| **Silent fallback** | ❌ Avoided in v4 — was used briefly for v3 metadata fields and removed because hidden behavior changes broke the "explicit > implicit" design |
+| **Silent fallback** | ❌ Not used in v4. v3 metadata fields used it for a short time. v4 removed it, because a hidden change of behavior broke the "explicit > implicit" design. |
 
 ### Removed in v4 (no longer panic — fully removed)
 
-The following parameter aliases and function aliases have **panicked since v3** and are now **removed entirely** in v4. Code still using them will fail with a generic "unknown parameter" / "unknown function" error rather than the v3 deprecation panic.
+These parameter aliases and function aliases **panicked in v3**. v4 **removes them completely**. Code that still uses them fails with a generic "unknown parameter" or "unknown function" error, not with the v3 deprecation panic.
 
 **Parameter aliases (now removed):**
 
@@ -149,17 +149,17 @@ The following parameter aliases and function aliases have **panicked since v3** 
 
 **Function aliases (now removed):**
 
-`cvEntry`, `cvEntryStart`, `cvEntryContinued`, `cvSection`, `cvSkill`, `cvSkillWithLevel`, `cvSkillTag`, `cvHonor`, `cvPublication`, `hBar` — use the kebab-case equivalents.
+`cvEntry`, `cvEntryStart`, `cvEntryContinued`, `cvSection`, `cvSkill`, `cvSkillWithLevel`, `cvSkillTag`, `cvHonor`, `cvPublication`, and `hBar`. Use the kebab-case names.
 
-**Schema migration guards retained:** `inject_ai_prompt` and `inject_keywords` still panic with a clear upgrade message if found in `metadata.toml`. These are kept because silently ignoring an unknown metadata key would be confusing — a user who sees their ATS keywords disappear should know why.
+**Schema migration guards kept:** if `metadata.toml` contains `inject_ai_prompt` or `inject_keywords`, the package still panics with a clear upgrade message. A silent ignore of an unknown metadata key is confusing. A user whose ATS keywords disappear must know the cause.
 
 ### Supported root exports in v4
 
 The supported package-root API consists of `cv`, `letter`, `cv-section`, `cv-entry`, `cv-entry-start`, `cv-entry-continued`, `cv-skill`, `cv-skill-with-level`, `cv-skill-tag`, `cv-honor`, `cv-publication`, `h-bar`, and `overwrite-fonts`.
 
-`overwrite-fonts` remains explicit for v4 compatibility because older wildcard imports made it reachable. New templates should configure `[layout.fonts]` and let `cv()` or `letter()` resolve fonts; reconsidering the helper belongs in v5.
+`overwrite-fonts` stays in the API for v4 compatibility, because older wildcard imports made it reachable. In a new template, configure `[layout.fonts]` and let `cv()` or `letter()` resolve the fonts. A new decision about this helper belongs in v5.
 
-Older releases also exposed dependency symbols such as `fa-*` icons and internal state through wildcard imports. Those were never documented compatibility commitments and are no longer re-exported. Import icons from Font Awesome directly:
+Older releases also made dependency symbols available through wildcard imports, such as the `fa-*` icons and the internal state. These symbols were never documented compatibility commitments, and the package no longer re-exports them. Import the icons from Font Awesome directly:
 
 ```typ
 #import "@preview/fontawesome:0.6.2": fa-github
@@ -169,11 +169,11 @@ Older releases also exposed dependency symbols such as `fa-*` icons and internal
 
 ## Migration from v2
 
-v3 introduces a new directory structure, kebab-case naming, and removes several deprecated features. If you are upgrading from v2, follow these steps.
+v3 has a new directory structure and kebab-case names. It also removes several deprecated features. If you upgrade from v2, do these steps.
 
 ### 1. Update Imports
 
-The package entry point is unchanged, but you should update any version-pinned imports:
+The package entry point does not change. Update each version-pinned import:
 
 ```typ
 // Before (v2)
@@ -185,7 +185,7 @@ The package entry point is unchanged, but you should update any version-pinned i
 
 ### 2. Parameter Renaming (now panics)
 
-In v3, all camelCase parameter aliases **panic at compile time** instead of silently mapping to the new names. Update all call sites:
+In v3, all camelCase parameter aliases **panic at compile time**. They do not map silently to the new names. Update every call site:
 
 | Old (v2, camelCase) | New (v3, kebab-case) | Function |
 |---------------------|----------------------|----------|
@@ -193,14 +193,14 @@ In v3, all camelCase parameter aliases **panic at compile time** instead of sile
 | `myAddress` | `sender-address` | `letter()` |
 | `recipientName` | `recipient-name` | `letter()` |
 | `recipientAddress` | `recipient-address` | `letter()` |
-| `awesomeColors` | `awesome-colors` | `cv-section`, `cv-entry`, `cv-honor`, etc. |
+| `awesomeColors` | `awesome-colors` | `cv-section`, `cv-entry`, `cv-honor`, and more |
 | `refStyle` | `ref-style` | `cv-publication` |
 | `refFull` | `ref-full` | `cv-publication` |
 | `keyList` | `key-list` | `cv-publication` |
 
 ### 3. Removed Function Aliases (now panic)
 
-The old camelCase function names now panic immediately. Rename all usages:
+The old camelCase function names now panic immediately. Rename every use:
 
 | Old (v2) | New (v3) |
 |----------|----------|
@@ -217,7 +217,7 @@ The old camelCase function names now panic immediately. Rename all usages:
 
 ### 4. Removed `[inject]` Keys (now panic)
 
-The old injection keys have been removed. If your `metadata.toml` still contains them, the CV will panic:
+v3 removes the old injection keys. If your `metadata.toml` still contains them, the CV panics:
 
 ```toml
 # Before (v2) — these now cause panics
@@ -232,35 +232,35 @@ injected_keywords_list = ["Python", "SQL"]
 # custom_ai_prompt_text = "Optional custom prompt"
 ```
 
-- `inject_keywords` has been removed — if `injected_keywords_list` is present, keywords are injected automatically
-- `inject_ai_prompt` has been removed — use `custom_ai_prompt_text` instead
+- `inject_keywords` is removed. If `injected_keywords_list` is present, the package injects the keywords automatically.
+- `inject_ai_prompt` is removed. Use `custom_ai_prompt_text`.
 
 ### 5. Template Updates
 
-If you are using the template, update your `cv.typ` and `letter.typ` to use the new parameter names. See the [API Reference](api-reference.md) for the current signatures.
+If you use the template, update `cv.typ` and `letter.typ` with the new parameter names. For the current signatures, see the [API Reference](api-reference.md).
 
 ---
 
 ## Migration from v1
 
 !!! note
-    The version v1 is now deprecated, due to the compliance to Typst Packages standard. However, if you want to continue to develop on the older version, please refer to the `v1-legacy` branch.
+    Version v1 is deprecated, because the package now obeys the Typst Packages standard. To continue work on the older version, use the `v1-legacy` branch.
 
-With an existing CV project using the v1 version of the template, a migration is needed, including replacing some files and some content in certain files.
+An existing CV project that uses v1 needs a migration. You must replace some files, and some content in other files.
 
-1. **Delete old submodule** — Remove the `brilliant-CV` folder and `.gitmodules`. Future package management is handled directly by Typst.
+1. **Remove the old submodule** — Remove the `brilliant-CV` directory and `.gitmodules`. Typst now does the package management.
 
-2. **Migrate metadata** — Migrate all the config from `metadata.typ` by creating a new `metadata.toml`. Follow the example TOML file in the repo — it is rather straightforward to migrate.
+2. **Migrate the metadata** — Create a new `metadata.toml` and move all the configuration from `metadata.typ` into it. Use the example TOML file in the repository as a model.
 
-3. **Update entry points** — For `cv.typ` and `letter.typ`, copy the new files from the repo, and adapt the modules you have in your project.
+3. **Update the entry points** — Copy the new `cv.typ` and `letter.typ` from the repository. Then adapt them to the modules in your project.
 
 4. **Update module files** in `modules_*/`:
-    1. Delete the old import `#import "../brilliant-CV/template.typ": *`, and replace it with the import statements from the new template files.
-    2. Due to the Typst path handling mechanism, one cannot directly pass the path string to some functions anymore. This concerns, for example, the `logo` argument in `cv-entry`, but also `cv-publication` as well. Some parameter names were changed, but most importantly, **you should pass a function instead of a string** (i.e. `image("logo.png")` instead of `"logo.png"`). Refer to the new template files for reference.
+    1. Remove the old import `#import "../brilliant-CV/template.typ": *`. Replace it with the import statements from the new template files.
+    2. Typst changed its path handling, so some functions no longer accept a path string. This applies to the `logo` argument in `cv-entry` and to `cv-publication`. Some parameter names also changed. **Pass a function, not a string.** For example, use `image("logo.png")` in place of `"logo.png"`. For more information, see the new template files.
 
-5. **Install fonts** — You might need to install `FontAwesome 6`, `Roboto` and `Source Sans Pro` on your local system now, as new Typst package guidelines discourage including these large files.
+5. **Install the fonts** — You can need `FontAwesome 6`, `Roboto`, and `Source Sans Pro` on your local system. The new Typst package guidelines are against the inclusion of these large files in a package.
 
-6. **Compile** — Run `typst compile cv.typ` without passing the `font-path` flag. All should be good now — congrats!
+6. **Compile** — Run `typst compile cv.typ`. Do not use the `font-path` flag. The migration is then complete.
 
 !!! tip
-    Feel free to [raise an issue](https://github.com/yunanwg/brilliant-CV/issues) for more assistance should you encounter a problem that you cannot solve on your own.
+    If you have a problem that you cannot solve, [raise an issue](https://github.com/yunanwg/brilliant-CV/issues).

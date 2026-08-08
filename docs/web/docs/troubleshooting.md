@@ -6,7 +6,7 @@ Paths in module files are relative to the module file itself, not the project ro
 
 ## Font Missing
 
-Install Roboto and Source Sans 3 (or Source Sans Pro) locally. For non-Latin profiles, install the font(s) listed in `[layout.fonts] regular_fonts` and `[layout.fonts] header_font` for that profile (e.g. "Heiti SC" for Chinese on macOS, or "Noto Sans CJK SC" as a freely-redistributable alternative).
+Install Roboto and Source Sans 3 (or Source Sans Pro) locally. For a non-Latin profile, install each font that `[layout.fonts] regular_fonts` and `[layout.fonts] header_font` name for that profile. For example, Chinese on macOS uses "Heiti SC". "Noto Sans CJK SC" is a freely-redistributable alternative.
 
 ## Icons Render as Boxes
 
@@ -16,33 +16,33 @@ Contact icons use the Font Awesome desktop fonts. Download the
 - In Typst Web, upload the Regular, Solid, and Brands OTF files to your project.
 - For local compilation, install the same OTF files on your operating system.
 
-Recompile after adding the fonts. The package provides the icon mappings, but
-does not bundle the font files themselves.
+After you add the fonts, compile the CV again. The package contains the icon
+mappings, but it does not contain the font files.
 
 ## h-bar() Not Working
 
-Make sure you import `h-bar` from the package:
+Make sure that you import `h-bar` from the package:
 
 ```typ
 #import "@preview/brilliant-cv:4.1.0": h-bar
 ```
 
-The old name `hBar` has been removed in v3. See the [Migration Guide](migration.md) for all renamed functions.
+v3 removed the old name `hBar`. See the [Migration Guide](migration.md) for all renamed functions.
 
 ## Wrong metadata.toml Key Silently Ignored
 
-Typst TOML parsing doesn't warn on unknown keys. Double-check key names against the [Configuration Reference](configuration.md). Common mistakes: `headerAlign` (wrong) vs `header_align` (correct).
+Typst gives no warning for an unknown key in a TOML file. Make sure that each key name agrees with the [Configuration Reference](configuration.md). A common error is `headerAlign`. The correct key is `header_align`.
 
 ## New Module Not Appearing
 
-After creating a new module file, you must add its name to the `import-modules((...))` call in `cv.typ`.
+After you create a new module file, you must add its name to the `import-modules((...))` call in `cv.typ`.
 
 ## Profile Photo Not Showing
 
-Check two things:
+Make sure that these two conditions are true:
 
 1. `display_profile_photo` must be `true` in `[layout.header]` of your `metadata.toml`
-2. The photo is passed as an argument in `cv.typ`, **not** set in `metadata.toml`:
+2. You pass the photo as an argument in `cv.typ`. You do **not** set it in `metadata.toml`:
 
 ```typ
 #show: cv.with(
@@ -51,14 +51,14 @@ Check two things:
 )
 ```
 
-The image path is relative to the `cv.typ` file. If your photo is in a different directory, adjust the path accordingly.
+The image path is relative to the `cv.typ` file. If your photo is in a different directory, change the path.
 
 ## Non-Latin Characters Showing as Boxes
 
-If Chinese, Japanese, Korean, Russian, Arabic, etc. characters render as empty boxes or tofu:
+If Chinese, Japanese, Korean, Russian, Arabic, or other non-Latin characters render as empty boxes (also called tofu), do these steps:
 
-1. **Install the appropriate font on your system** (e.g. "Heiti SC" for Chinese on macOS; "Noto Sans CJK SC" on Linux is a freely-redistributable alternative).
-2. **List both Latin and non-Latin fonts in `[layout.fonts] regular_fonts`** — typst's codepoint-level fallback picks per character, so a single font chain handles mixed scripts:
+1. **Install the correct font on your system.** For example, Chinese on macOS uses "Heiti SC". On Linux, "Noto Sans CJK SC" is a freely-redistributable alternative.
+2. **List the Latin fonts and the non-Latin fonts in `[layout.fonts] regular_fonts`.** Typst selects the font for each codepoint, so one font chain is sufficient for mixed scripts:
 
     ```toml
     [layout.fonts]
@@ -66,7 +66,7 @@ If Chinese, Japanese, Korean, Russian, Arabic, etc. characters render as empty b
     header_font = "Heiti SC"                        # heading uses CJK glyphs
     ```
 
-3. **Optionally override the header name** with `[personal] display_name` to replace the Latin "first (light) + last (bold)" split with a single styled string:
+3. **You can also replace the header name.** Set `[personal] display_name` to one styled string. It replaces the Latin split of first name (light) and last name (bold):
 
     ```toml
     [personal]
@@ -77,10 +77,10 @@ See the [Configuration Reference](configuration.md) for the complete `[layout.fo
 
 ## Typst Version Compatibility
 
-brilliant-CV requires **Typst 0.14.0** or newer (set in `typst.toml` as `compiler = "0.14.0"`). If you encounter unexpected errors, check your Typst version:
+brilliant-CV needs **Typst 0.14.0** or newer. `typst.toml` sets this as `compiler = "0.14.0"`. If you get unexpected errors, make sure that your Typst version is recent enough:
 
 ```bash
 typst --version
 ```
 
-Update to the latest Typst release if you're on an older version.
+If your version is older, update to the most recent Typst release.
