@@ -31,7 +31,7 @@ link:
     #!/usr/bin/env bash
     set -euo pipefail
     echo "🔗 Linking local brilliant-cv package..."
-    task_output=$(utpm ws link --force --no-copy 2>&1) || {
+    task_output=$(utpm prj link --force --no-copy preview 2>&1) || {
         printf '%s\n' "$task_output"
         exit 1
     }
@@ -54,7 +54,7 @@ link:
 # Unlink local package (restore to using upstream version)
 unlink:
     @echo "🔓 Unlinking local package..."
-    @utpm pkg unlink --yes 2>/dev/null || @echo "💡 Package already unlinked or not found"
+    @utpm pkg unlink @preview/brilliant-cv --yes 2>/dev/null || @echo "💡 Package already unlinked or not found"
     @echo "✅ Local package unlinked - now using upstream version"
 
 # Build both user-facing starter entrypoints for testing
@@ -75,12 +75,6 @@ watch: link
     @echo "👁️  Watching for changes in template..."
     @mkdir -p temp
     typst watch template/cv.typ temp/cv.pdf
-
-# Sync dependencies to latest versions
-sync:
-    @echo "🔄 Syncing dependencies..."
-    @utpm ws sync
-    @echo "✅ Dependencies synced!"
 
 # Clean build artifacts
 clean:
