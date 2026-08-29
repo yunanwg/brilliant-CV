@@ -29,12 +29,12 @@ Run `just link` before any local development. This registers the local package w
 - `template/profile_<name>/metadata.toml` — Each profile is a complete, self-contained CV configuration. v4 has no root `metadata.toml`.
 - `template/profile_<name>/*.typ` — Content modules per profile (education, professional, projects, certificates, publications, skills)
 
-Changes to `src/` affect all downstream users. Never break backward compatibility without a deprecation path.
+Changes to `src/` affect all downstream users. To rename a parameter, keep the old name working through the aliasing approach already used in `src/lib.typ`; to retire a template option, ship a deprecation note in the same PR.
 
 ## Things You Will Get Wrong Without Reading This
 
 ### Schema migration guards panic, they don't silently fall back
-`src/lib.typ:_check-v3-legacy` panics on v3-only fields (`language`, `non_latin_font`, `non_latin_name`, `[lang.*]`). The same applies to v2 inject keys (`inject_ai_prompt`, `inject_keywords`). These are **intentional** — do not "fix" them. The v4 design picks panic-with-migration-message over silent fallback to avoid hiding behavior changes.
+`src/lib.typ:_check-v3-legacy` panics on v3-only fields (`language`, `non_latin_font`, `non_latin_name`, `[lang.*]`). The same applies to v2 inject keys (`inject_ai_prompt`, `inject_keywords`). These panics are **intentional**: the v4 design picks panic-with-migration-message over silent fallback to avoid hiding behavior changes. When one fires, migrate the offending `metadata.toml` to the replacement field the panic message names — leave the guard itself alone.
 
 ### Two documentation pages are generated — edit the source, not the output
 - `docs/web/docs/api-reference.md` ← generated from `src/` doc-comments
