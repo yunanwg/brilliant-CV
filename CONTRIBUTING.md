@@ -101,7 +101,7 @@ If existing composition is clear enough, prefer documenting that approach. If a 
 2. **Document anything user-facing**:
    - Update `README.md` (or `docs/`) for new parameters.
    - Add comments to `metadata.toml` if you introduce new knobs.
-   - The hand-written pages under `docs/web/docs/` follow Simplified Technical English, with a fixed terminology table. Read the “Documentation Style” section in `AGENTS.md` before you write prose there.
+   - The hand-written pages under `docs/web/docs/` follow Simplified Technical English, with a fixed terminology table. Read [4.4 Documentation style](#44-documentation-style) before you write prose there.
 3. **Keep compatibility**:
    - For renamed parameters, follow the aliasing approach already used in `src/lib.typ`.
    - Don’t remove template options without deprecation notes.
@@ -119,6 +119,35 @@ If existing composition is clear enough, prefer documenting that approach. If a 
 
 5. **Commit using conventional commits** (the repo follows conventional commit messages for history clarity).
 6. **Open a PR** describing the change, how to test it, and screenshots/PDF snippets if the visual output changed.
+
+### 4.4 Documentation style
+
+The hand-written pages under `docs/web/docs/` follow ASD-STE100 Simplified Technical English. Most readers of this project are not native English speakers, and these rules keep the pages short, unambiguous, and easy to translate.
+
+Recommended tool: the `simple-english` skill at <https://github.com/AminBlg/SimpleEnglish>. It carries the 53-rule catalog and a mandatory self-check. Use **pragmatic mode**, which keeps domain vocabulary (Typst, profile, metadata, compile). The skill is not vendored in this repository; install it yourself.
+
+In scope: `index.md`, `getting-started.md`, `troubleshooting.md`, `recipes.md`, `migration.md`, `components.md`.
+
+Out of scope: `api-reference.md` and `configuration.md` are generated. To change their prose, edit the doc-comments in `src/` or the comments in `template/profile_en/metadata.toml`, then run `just docs-generate`.
+
+Never rewrite code blocks, inline code, file paths, commands, config keys, or quoted errors. Reflow the prose around them. `just docs-check` does **not** gate these pages: it compiles the snippets in the generated `api-reference.md` only. Verify by diffing every code block and link target against the previous revision.
+
+#### Terminology
+
+One term per concept, across every page. These choices are already applied:
+
+| Concept | Use | Not |
+|---|---|---|
+| Configuration data | `configuration` | `config` |
+| The published library | `package` | `framework` |
+| The starter project a user copies | `template` | — |
+| Filesystem location | `directory` | `folder` |
+| Taking something away | `remove` | `delete` |
+| What Typst puts on the page | `render` | `display` |
+| Making information visible to a reader | `show` | `display` |
+| Confirming a state | `make sure that` | `check`, `verify`, `confirm` |
+
+Write `for example` and `that is` instead of `e.g.` and `i.e.` Name the items instead of writing `etc.`
 
 ---
 
