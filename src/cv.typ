@@ -699,7 +699,22 @@
     // With a logo, the image's natural row height pads the gap, so a more
     // aggressive collapse is fine. Without a logo the row is just text height
     // and -10pt overlaps the next title (issue #172).
-    v(if display-logo and logo != "" { -10pt } else { -6pt })
+    //
+    // The upcoming cv-entry-continued call applies its own `v(before-entry-skip)`
+    // before rendering (see the top of this function), which exists to space a
+    // new *entry* from the previous one -- not to space this shared company
+    // header from its own first role title. Left alone, that makes the
+    // company -> title gap drift with before_entry_skip even though the
+    // equivalent gap in a plain cv-entry (its society/title row-gutter) never
+    // does (issue #243). Cancel the deviation from the shipped default (1pt,
+    // mirrored from the fallback in _prepare-entry-params above) so this gap
+    // stays anchored to the same visual density regardless of how a profile
+    // tunes before_entry_skip for spacing between separate entries.
+    v(
+      (if display-logo and logo != "" { -10pt } else { -6pt })
+        + 1pt
+        - before-entry-skip,
+    )
   } else if entry-type == "continued" {
     // Entry continued layout (original cv-entry-continued logic)
     // If the date contains a linebreak, use legacy side-to-side layout
