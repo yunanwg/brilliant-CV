@@ -488,18 +488,17 @@
 // "start" case anchors its trailing skip to this same value (see there), so
 // it's factored out here rather than repeated as a second "1pt" literal --
 // bumping the default only requires editing this one constant.
-#let _default-before-entry-skip = 1pt
+#let _default-before-entry-skip = "1pt"
 
 /// Prepare common entry parameters
 /// -> dictionary
 #let _prepare-entry-params(metadata, awesome-colors, color: none) = {
   // Common parameter calculations
   let accent-color = _resolve-accent-color(color, awesome-colors, metadata)
-  let before-entry-skip = if "before_entry_skip" in metadata.layout {
-    eval(metadata.layout.before_entry_skip)
-  } else {
-    _default-before-entry-skip
-  }
+  let before-entry-skip = eval(metadata.layout.at(
+    "before_entry_skip",
+    default: _default-before-entry-skip,
+  ))
   let before-entry-description-skip = eval(metadata.layout.at(
     "before_entry_description_skip",
     default: "1pt",
@@ -703,24 +702,10 @@
         (styles.a1)(society), (styles.a2)(location),
       )
     }
-    // With a logo, the image's natural row height pads the gap, so a more
-    // aggressive collapse is fine. Without a logo the row is just text height
-    // and -10pt overlaps the next title (issue #172).
-    //
-    // The upcoming cv-entry-continued call applies its own `v(before-entry-skip)`
-    // before rendering (see the top of this function), which exists to space a
-    // new *entry* from the previous one -- not to space this shared company
-    // header from its own first role title. Left alone, that makes the
-    // company -> title gap drift with before_entry_skip even though the
-    // equivalent gap in a plain cv-entry (its society/title row-gutter) never
-    // does (issue #243). Cancel the deviation from the shipped default
-    // (_default-before-entry-skip, shared with _prepare-entry-params so the
-    // two can't drift out of sync) so this gap stays anchored to the same
-    // visual density regardless of how a profile tunes before_entry_skip for
-    // spacing between separate entries.
+    // Keep the company -> first role gap anchored to the default density.
     v(
       (if display-logo and logo != "" { -10pt } else { -6pt })
-        + _default-before-entry-skip
+        + eval(_default-before-entry-skip)
         - before-entry-skip,
     )
   } else if entry-type == "continued" {

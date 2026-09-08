@@ -1,12 +1,5 @@
-// cv-entry-start + cv-entry-continued with a tuned (negative) before_entry_skip.
-//
-// Regression for issue #243: the company -> title gap inside a
-// start/continued group used to be governed by before_entry_skip (the
-// between-entries knob), while a plain cv-entry's equivalent gap is a fixed
-// row-gutter untouched by that setting. Profiles that tune before_entry_skip
-// away from the 1pt default (e.g. to fit a dense CV on one page) made the
-// two gaps visibly diverge. Both entry styles are rendered here so the
-// snapshot fails if that divergence reappears.
+// Regression for issue #243: tuning before_entry_skip must not change the
+// company -> first role gap inside a start/continued group.
 
 #import "/src/cv.typ": cv-entry, cv-entry-continued, cv-entry-start, cv-metadata
 #import "/src/utils/styles.typ": _regular-colors
