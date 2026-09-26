@@ -201,31 +201,48 @@ awesome_color = "#1E90FF"
 
 ## Cover Letter with Signature
 
-Create a cover letter with a signature image at the bottom:
+There are two ways to add a signature to a cover letter.
+
+**Keep the closing, the signature, and your name together (recommended).** Put them in an unbreakable block at the end of the letter body. If the block does not fit on the page, the full block moves to the next page:
 
 ```typ
 #import "@preview/brilliant-cv:4.1.1": letter
 
-#let metadata = toml("metadata.toml")
+#let metadata = toml("profile_en/metadata.toml")
 
 #show: letter.with(
   metadata,
-  sender-address: "123 Main Street, City, State 12345",
   recipient-name: "Acme Analytics",
   recipient-address: "456 Business Ave, City, State 67890",
-  date: datetime.today().display(),
   subject: "Application for Data Analyst Position",
-  signature: image("assets/signature.png"),
 )
 
 Dear Hiring Manager,
 
 // Your letter content here...
 
-Sincerely,
+#block(breakable: false)[
+  Sincerely,
+
+  #image("assets/signature.png", width: 25%)
+
+  John Doe
+]
 ```
 
-To omit the signature image, leave `signature` as `""`. This is the default value.
+You control the order and the alignment of the lines in the block. For example, to put the signature on the right, use `#align(right, image("assets/signature.png", width: 25%))`.
+
+**Use the `signature` parameter.** `letter()` puts the image on the right, below the letter body:
+
+```typ
+#show: letter.with(
+  metadata,
+  subject: "Application for Data Analyst Position",
+  signature: image("assets/signature.png"),
+)
+```
+
+The closing lines that you write in the body do not move with this image. Use this option only when the body leaves room for the image. To omit the signature image, leave `signature` as `""`. This is the default value.
 
 ## CI/CD with GitHub Actions
 

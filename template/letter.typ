@@ -28,8 +28,6 @@
   // date defaults to today; pass a string to override:
   date: datetime.today().display(),
   subject: "Application for Head of Data Science",
-  // Scanned signatures are personal and sensitive — avoid committing real ones to public git repos.
-  signature: image("assets/signature.png"),
   // address-style: "normal",  // use "normal" to disable smallcaps on addresses
 )
 
@@ -41,12 +39,19 @@ In my current role as Director of Data Science at XYZ Corporation, I have gained
 
 I believe that my experience in data analysis makes me an ideal candidate for the Head of Data Science position at Acme Analytics. I am particularly excited about the opportunity to apply my skills to support your organization's mission and drive impactful insights. Your focus on driving innovative solutions to complex problems aligns closely with my own passion for using data analysis to drive positive change in organizations.
 
-In my current role, I have been responsible for leading data projects from initiation to completion. I work closely with cross-functional teams to identify business problems and use data to develop solutions that drive business outcomes. I have a proven track record of delivering high-quality work on time and within budget.
-
 Furthermore, I have extensive experience in developing and implementing data-driven solutions that improve business operations. For example, as a volunteer analyst I built predictive models that increased donation efficiency by 25%. I have also built Tableau dashboards that give stakeholders a clear view of business performance, so that they can make more informed decisions.
 
 As a highly motivated and detail-oriented individual, I am confident that I would thrive in the fast-paced and dynamic environment at Acme Analytics. I am excited about the opportunity to work with a talented team of professionals and to continue developing my skills in data analysis.
 
 Thank you for considering my application. I look forward to the opportunity to discuss my qualifications further.
 
-Sincerely,
+// Keep the closing, the signature, and your name together: an unbreakable
+// block moves to the next page as one unit. Scanned signatures are personal
+// and sensitive — avoid committing real ones to public git repos.
+#block(breakable: false)[
+  Sincerely,
+
+  #image("assets/signature.png", width: 25%)
+
+  John Doe
+]
