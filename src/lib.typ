@@ -194,7 +194,7 @@
 /// - recipient-address (str): The recipient's mailing address displayed in the header. Supports multiline content.
 /// - date (str): The date displayed in the letter header. Defaults to today's date.
 /// - subject (str): The subject line of the letter.
-/// - signature (str | content): (optional) content to display as the signature. Pass `image("signature.png")` for an image; a string is rendered as text.
+/// - signature (str | content | none): (optional) content to display as the signature. Pass `image("signature.png")` for an image; a string is rendered as text. The signature reserves its height: when it does not fit below the body, it moves to the next page. `""` or `none` omits it.
 /// - address-style (str): Address rendering style. `"smallcaps"` (default) or `"normal"`.
 /// -> content
 #let letter(
@@ -246,7 +246,7 @@
   )
   doc
 
-  if signature != "" {
+  if signature not in ("", none) {
     _letter._letter-signature(signature)
   }
 }
