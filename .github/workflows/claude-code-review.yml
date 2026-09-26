@@ -43,5 +43,6 @@ jobs:
           plugins: 'code-review@claude-code-plugins'
           prompt: '/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}'
           # Pin the model and cap iterations to keep review cost predictable.
-          claude_args: '--model claude-sonnet-5 --max-turns 15'
+          # 15 turns ran out on ordinary PRs (#258, #261) and failed the check.
+          claude_args: '--model claude-sonnet-5 --max-turns 30'
 
