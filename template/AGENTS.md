@@ -42,7 +42,9 @@ only.
      page: `typst compile cv.typ "cv-{p}.png"`. Typst does not create a
      missing output folder.
 5. **Keep personal data local.** A scanned signature, a phone number, and
-   application folders do not belong in a public repository.
+   application folders do not belong in a public repository. Before the
+   first commit, add `applications/`, `*.pdf`, and `assets/signature.*` to a
+   `.gitignore` in this folder.
 
 ## Useful patterns
 

@@ -458,7 +458,37 @@ def smoke(package_dir: Path) -> None:
                         str(output),
                     ]
                 )
-    print(f"Fresh-init smoke passed: CV + letter, 5 profiles, {typst_version()}")
+
+        # template/AGENTS.md documents a per-application subfolder that reads
+        # ../../profile_<name>/ and compiles with `--root .`; keep that
+        # documented workflow working.
+        if not (project / "AGENTS.md").is_file():
+            raise ContractError("fresh init did not create AGENTS.md")
+        application = project / "applications" / "smoke"
+        application.mkdir(parents=True)
+        source = (project / "cv.typ").read_text(encoding="utf-8")
+        nested = source.replace('"profile_"', '"../../profile_"').replace(
+            'image("assets/', 'image("../../assets/'
+        )
+        if nested == source:
+            raise ContractError("starter cv.typ no longer uses profile_ paths")
+        (application / "cv.typ").write_text(nested, encoding="utf-8")
+        run(
+            [
+                "typst",
+                "compile",
+                "--package-path",
+                str(package_root),
+                "--root",
+                str(project),
+                str(application / "cv.typ"),
+                str(temporary / "application-cv.pdf"),
+            ]
+        )
+    print(
+        "Fresh-init smoke passed: CV + letter, 5 profiles, AGENTS.md subfolder "
+        f"workflow, {typst_version()}"
+    )
 
 
 def check_release_ref(tag: str) -> None:
