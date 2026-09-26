@@ -93,6 +93,22 @@
 
 /* Layout */
 
+/// Apply the package's PDF metadata to `body` without overriding a
+/// `set document(...)` the user wrote before the show rule: each field is
+/// filled only when it is still at Typst's default.
+///
+/// -> content
+#let _with-document-info(info, body) = context {
+  set document(
+    title: if document.title != none { document.title } else { info.title },
+    author: if document.author != () { document.author } else { info.author },
+    keywords: if document.keywords != () { document.keywords } else {
+      info.keywords
+    },
+  )
+  body
+}
+
 /// Resolve typography (font list, header font, font size) from metadata.
 /// Pure helper — the actual `set text` rule is applied by the caller because
 /// `set` rules don't propagate out of nested function bodies in typst.
@@ -163,7 +179,7 @@
   // having metadata threaded through every call site.
   _cv.cv-metadata.update(metadata)
 
-  set document(.._identity._document-info(
+  show: _with-document-info.with(_identity._document-info(
     metadata,
     metadata.at("cv_footer", default: none),
   ))
@@ -230,7 +246,7 @@
   _check-v2-inject-legacy(metadata)
 
   // Resolve sender-address: auto reads from metadata, explicit value overrides
-  set document(.._identity._document-info(metadata, subject))
+  show: _with-document-info.with(_identity._document-info(metadata, subject))
 
   let sender-address = if sender-address == auto {
     metadata.personal.at("address", default: "Your Address Here")

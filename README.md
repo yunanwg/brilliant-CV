@@ -41,7 +41,7 @@ typst compile cv.typ                    # default profile
 typst compile cv.typ --input profile=fr # switch profile at compile time
 ```
 
-> **Optional:** embed a hidden, ATS-friendly keyword layer for automated screeners — opt-in and off by default. Read the notes in `profile_en/metadata.toml` before enabling, and keep keywords truthful.
+> **Optional:** embed a hidden, ATS-friendly keyword layer for automated screeners — opt-in and off by default. The same keywords are also written openly to the PDF Keywords metadata field. Read the notes in `profile_en/metadata.toml` before enabling, and keep keywords truthful.
 
 Full guide, component gallery, recipes, and configuration reference → **[brilliant-CV Documentation](https://yunanwg.github.io/brilliant-CV/)**.
 
