@@ -2,7 +2,7 @@
 
 # Profile: French. See profile_en/metadata.toml for inline documentation
 # of every field.
-header_quote = "Analyste de données expérimenté à la recherche d'un emploi à temps plein disponible dès maintenant"
+header_quote = "Responsable data science qui transforme des données complexes en décisions métier"
 cv_footer = "Résumé"
 letter_footer = "Lettre de motivation"
 
@@ -59,7 +59,7 @@ letter_footer = "Lettre de motivation"
 
         [personal.info.custom-degree]
             awesomeIcon = "graduation-cap"
-            text = "Doctorat en Science des Données"
+            text = "Master en Science des Données"
             link = "https://www.example.com"
 
         [personal.info.custom-cert]

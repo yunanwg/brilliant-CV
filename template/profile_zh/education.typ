@@ -7,7 +7,7 @@
 #cv-entry(
   title: [数据科学硕士],
   society: [奥罗拉州立大学],
-  date: [2018 - 2020],
+  date: [2015 - 2017],
   location: [美国华盛顿州奥罗拉市],
   logo: image("../assets/logos/aurora_state.png"),
   description: list(
@@ -19,7 +19,7 @@
 #cv-entry(
   title: [计算机科学学士],
   society: [奥罗拉州立大学],
-  date: [2014 - 2018],
+  date: [2011 - 2015],
   location: [美国华盛顿州奥罗拉市],
   logo: image("../assets/logos/aurora_state.png"),
   description: list(

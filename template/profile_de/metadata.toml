@@ -2,7 +2,7 @@
 
 # Profile: German. See profile_en/metadata.toml for inline documentation
 # of every field.
-header_quote = "Erfahrener Datenanalyst sucht ab sofort eine Vollzeitstelle"
+header_quote = "Data-Science-Führungskraft, die komplexe Daten in Geschäftsentscheidungen übersetzt"
 cv_footer = "Lebenslauf"
 letter_footer = "Anschreiben"
 
@@ -59,7 +59,7 @@ letter_footer = "Anschreiben"
 
         [personal.info.custom-degree]
             awesomeIcon = "graduation-cap"
-            text = "Doktorat in Datenwissenschaft"
+            text = "Master in Datenwissenschaft"
             link = "https://www.example.com"
 
         [personal.info.custom-cert]

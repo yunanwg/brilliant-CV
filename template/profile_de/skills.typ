@@ -27,8 +27,8 @@
   type: [Zertifizierungen],
   info: [
     #cv-skill-tag([AWS Zertifiziert])
-    #cv-skill-tag([Google Analytics])
-    #cv-skill-tag([Tableau Desktop])
+    #cv-skill-tag([Angewandte Datenwissenschaft])
+    #cv-skill-tag([SQL-Grundlagen])
   ],
 )
 

@@ -2,7 +2,7 @@
 
 # Profile: Italian. See profile_en/metadata.toml for inline documentation
 # of every field.
-header_quote = "Senior data analyst attualmente disponibile per una posizione di lavoro full-time"
+header_quote = "Responsabile data science che trasforma dati complessi in decisioni di business"
 cv_footer = "Curriculum vitae"
 letter_footer = "Lettera di presentazione"
 
@@ -59,7 +59,7 @@ letter_footer = "Lettera di presentazione"
 
         [personal.info.custom-degree]
             awesomeIcon = "graduation-cap"
-            text = "Dottorato in Scienze dei Dati"
+            text = "Master in Data Science"
             link = "https://www.example.com"
 
         [personal.info.custom-cert]

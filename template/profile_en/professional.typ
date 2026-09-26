@@ -14,7 +14,7 @@
 
 #cv-entry-continued(
   title: [Director of Data Science],
-  date: [2020 - Present],
+  date: [2022 - Present],
   description: list(
     [Lead a team of data scientists and analysts to develop and implement data-driven strategies, develop predictive models and algorithms to support decision-making across the organization],
     [Collaborate with executive leadership to identify business opportunities and drive growth, implement best practices for data governance, quality, and security],
@@ -24,7 +24,7 @@
 
 #cv-entry-continued(
   title: [Data Scientist],
-  date: [2017 - 2020 #linebreak() 2021 - 2022],
+  date: [2020 - 2022],
   description: list(
     [Analyze large datasets with SQL and Python, collaborate with teams to uncover business insights],
     [Create data visualizations and dashboards in Tableau, develop and maintain data pipelines with AWS],

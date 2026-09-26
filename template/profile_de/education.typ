@@ -7,7 +7,7 @@
 #cv-entry(
   title: [Master of Data Science],
   society: [Aurora State University],
-  date: [2018 - 2020],
+  date: [2015 - 2017],
   location: [Aurora, WA],
   logo: image("../assets/logos/aurora_state.png"),
   description: list(
@@ -19,7 +19,7 @@
 #cv-entry(
   title: [Bachelors of Science in Informatik],
   society: [Aurora State University],
-  date: [2014 - 2018],
+  date: [2011 - 2015],
   location: [Aurora, WA],
   logo: image("../assets/logos/aurora_state.png"),
   description: list(

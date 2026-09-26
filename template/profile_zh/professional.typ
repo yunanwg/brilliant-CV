@@ -9,7 +9,7 @@
 #cv-entry-start(
   society: [XYZ 公司],
   logo: image("../assets/logos/xyz_corp.png"),
-  location: [旧金山, CA],
+  location: [上海],
 )
 
 #cv-entry-continued(

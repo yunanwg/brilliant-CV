@@ -45,6 +45,19 @@ Edit those source comments, then run `just docs-generate`. Every other page unde
 ### Each profile's metadata.toml is the single source of truth for that profile
 All user configuration flows through `template/profile_<name>/metadata.toml`. v4 has no merging or inheritance — one profile = one complete CV configuration. When adding new config options, update the comments in `template/profile_en/metadata.toml` first (it drives docs generation), then mirror to other profiles as needed.
 
+### Starter profile content is read as facts
+Users point their own agents at a fresh `typst init` folder, and those agents treat `template/profile_<name>/` as the candidate's real record — they flag or act on every contradiction. Each profile must be internally consistent: header badges, dates, locations, skill tags, bib authorship, and `template/letter.typ` must agree with the entries. Profiles are separate localized personas, so they do not have to match each other. The shared skeleton is:
+
+| Period | Fact |
+|---|---|
+| 2011–2015 | BSc, Aurora State University |
+| 2015–2017 | Master, Aurora State University (header `custom-degree` says Master, not PhD) |
+| Summers 2016–2017 | Internship, PQR Corporation |
+| 2017–2020 | Data Analyst, ABC Company |
+| 2020–present | XYZ Corporation, located in the profile's header city (`profile_en`: Data Scientist 2020–2022, Director 2022–present) |
+
+John Doe co-authors every entry in `template/assets/publications.bib`. When you edit a date or a role, check every profile that contains it.
+
 ### Typst snippets in `docs/` are compile-tested by hand, not by CI
 `just docs-check` compiles the snippets in the generated `api-reference.md` only. For a snippet you write anywhere else in `docs/`, drop it into a temp `.typ`, set up `cv-metadata.update(minimal-metadata)` from `tests/common.typ`, and run `typst compile --root . <file>` inside the test image. Don't ship code from memory — take every public function name and parameter from the actual signature in `src/`, and match the file you check against the import the snippet uses.
 

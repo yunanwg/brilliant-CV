@@ -32,10 +32,10 @@
 #cv-skill(
   type: [Certifications],
   info: [
-    #cv-skill-tag([AWS Certified])
-    #cv-skill-tag([Google Analytics])
+    #cv-skill-tag([AWS Security])
     #cv-skill-tag([Tableau Desktop])
-    #cv-skill-tag([Scrum Master])
+    #cv-skill-tag([Applied Data Science])
+    #cv-skill-tag([SQL Fundamentals])
   ],
 )
 

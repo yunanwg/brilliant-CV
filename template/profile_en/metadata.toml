@@ -7,7 +7,7 @@
 # the fields that differ.
 
 # Italic tagline displayed below your name and contact info
-header_quote = "Experienced Data Analyst looking for a full time job starting from now"
+header_quote = "Data science leader turning complex data into business decisions"
 
 # Text shown in the left side of the footer on CV pages
 cv_footer = "Curriculum vitae"
@@ -127,7 +127,7 @@ letter_footer = "Cover letter"
         # Shown as clickable icon in header; auto-links to github.com/<value>
         github = "yunanwg"
         # Shown as phone icon in header; displayed as-is with a tel: link
-        phone = "+33 6 12 34 56 78"
+        phone = "+1 (415) 555-0132"
         # Shown as envelope icon in header; auto-links to mailto:<value>
         email = "john.doe@me.org"
         # Shown as clickable icon in header; auto-links to linkedin.com/in/<value>
@@ -149,7 +149,7 @@ letter_footer = "Cover letter"
         [personal.info.custom-degree]
             awesomeIcon = "graduation-cap" # See https://typst.app/universe/package/fontawesome/
             # Display text shown next to the icon in the header
-            text = "PhD in Data Science"
+            text = "Master of Data Science"
             # URL the icon/text links to; omit for non-clickable entries
             link = "https://www.example.com"
 
