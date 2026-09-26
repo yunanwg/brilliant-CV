@@ -23,7 +23,7 @@ jobs:
       - name: Fetch the release branch boundary
         run: git fetch --no-tags origin main:refs/remotes/origin/main
 
-      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
 
       - uses: typst-community/setup-typst@63ac138db421d586de61f7f5ac3bcef6a2e6c78c # v5
         with:
