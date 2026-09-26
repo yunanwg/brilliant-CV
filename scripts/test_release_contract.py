@@ -159,6 +159,31 @@ def main() -> int:
     assert excluded("*.pdf", "template/out/cv.pdf")
     assert excluded("out/", "template/out/cv.pdf")
     assert not excluded("out/", "template/out")
+    # `*` stays within one path segment; `**` spans segments.
+    assert excluded("/docs/*.md", "docs/index.md")
+    assert not excluded("/docs/*.md", "docs/web/docs/index.md")
+    assert excluded("/docs/**/*.md", "docs/web/docs/index.md")
+
+    with tempfile.TemporaryDirectory(prefix="payload-leak-test-") as directory:
+        package = Path(directory)
+        write(package / "AGENTS.md", "repo-only\n")
+        write(package / "template/AGENTS.md", "starter\n")
+        assert release_contract.excluded_files(package, ("/AGENTS.md",)) == ["AGENTS.md"]
+        assert release_contract.excluded_files(package, ("AGENTS.md",)) == [
+            "AGENTS.md",
+            "template/AGENTS.md",
+        ]
+
+    original_config = release_contract.package_config
+    release_contract.package_config = lambda: {"exclude": ["!template/keep.md"]}
+    try:
+        release_contract.normalized_excludes()
+    except release_contract.ContractError as error:
+        assert "negated" in str(error)
+    else:
+        raise AssertionError("negated exclude glob was not rejected")
+    finally:
+        release_contract.package_config = original_config
 
     print("release-contract bump regression passed")
     return 0
