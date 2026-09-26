@@ -484,10 +484,7 @@
   )
 }
 
-// Shipped default for `[layout] before_entry_skip`. `_make-cv-entry`'s
-// "start" case anchors its trailing skip to this same value (see there), so
-// it's factored out here rather than repeated as a second "1pt" literal --
-// bumping the default only requires editing this one constant.
+// Shipped default for `[layout] before_entry_skip`.
 #let _default-before-entry-skip = "1pt"
 
 /// Prepare common entry parameters
@@ -702,7 +699,9 @@
         (styles.a1)(society), (styles.a2)(location),
       )
     }
-    // Keep the company -> first role gap anchored to the default density.
+    // A logo row pads the gap, so it can collapse further; -10pt without a
+    // logo overlaps the next title (issue #172). Cancel any non-default
+    // before_entry_skip so the company -> first role gap stays fixed (#243).
     v(
       (if display-logo and logo != "" { -10pt } else { -6pt })
         + eval(_default-before-entry-skip)
