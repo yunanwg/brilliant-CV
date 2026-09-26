@@ -12,6 +12,10 @@ Only the root exports documented here are compatibility commitments. Underscore-
 
 Render a CV document with header, footer, and page layout applied.
 
+Sets the PDF metadata: the title is `<name> — <cv_footer>`, the author is
+the name (`[personal] display_name` when set), and the keywords are
+`[inject] injected_keywords_list`.
+
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `metadata` | dictionary | — | The metadata dictionary read from `metadata.toml`. |
@@ -27,6 +31,10 @@ Render a cover letter document with header, footer, and page layout applied.
 The letter body uses a 12pt font size. `[layout] font_size` applies only to
 `cv()`. To change the body size, add `#set text(size: ...)` after the
 `show` rule; the header and the footer keep their sizes.
+
+Sets the PDF metadata: the title is `<name> — <subject>`, the author is
+the name (`[personal] display_name` when set), and the keywords are
+`[inject] injected_keywords_list`.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|

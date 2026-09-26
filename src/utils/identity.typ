@@ -31,3 +31,36 @@
     metadata.personal.first_name + " " + metadata.personal.last_name
   }
 }
+
+/// Build the PDF document metadata (title, author, keywords) for a CV or a
+/// cover letter. Pass the result to `set document(..info)`.
+///
+/// - The title is `<name> — <label>`, or the name alone when `label` is
+///   `none` or empty. The CV passes its `cv_footer`; the letter passes its
+///   subject.
+/// - The author is the resolved name when it is a string. PDF authors must be
+///   strings, so a content-valued name built in Typst leaves it empty.
+/// - The keywords are `[inject] injected_keywords_list`: declared openly in
+///   the standard PDF field that ATS parsers and search tools read.
+///
+/// - metadata (dictionary): the metadata object
+/// - label (str | content | none): the document label after the name
+/// -> dictionary
+#let _document-info(metadata, label) = {
+  let name = _display-name(metadata)
+  let title = if label == none or label == "" {
+    name
+  } else if type(name) == str and type(label) == str {
+    name + " — " + label
+  } else {
+    [#name — #label]
+  }
+  let keywords = metadata
+    .at("inject", default: (:))
+    .at("injected_keywords_list", default: ())
+  (
+    title: title,
+    author: if type(name) == str { name } else { () },
+    keywords: keywords,
+  )
+}

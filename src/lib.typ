@@ -8,6 +8,7 @@
 #import "./cv.typ" as _cv
 #import "./letter.typ" as _letter
 #import "./utils/styles.typ" as _styles
+#import "./utils/identity.typ" as _identity
 
 #let cv-section = _cv.cv-section
 #let cv-entry = _cv.cv-entry
@@ -129,6 +130,10 @@
 
 /// Render a CV document with header, footer, and page layout applied.
 ///
+/// Sets the PDF metadata: the title is `<name> — <cv_footer>`, the author is
+/// the name (`[personal] display_name` when set), and the keywords are
+/// `[inject] injected_keywords_list`.
+///
 /// - metadata (dictionary): The metadata dictionary read from `metadata.toml`.
 /// - doc (content): The body content of the CV (typically the imported modules).
 /// - profile-photo (image | none): The profile photo to display in the header. Defaults to `none`; pass an `image(...)` to render. When `none`, the photo column is hidden regardless of `display_profile_photo`.
@@ -157,6 +162,11 @@
   // Update metadata state so component functions can read it without
   // having metadata threaded through every call site.
   _cv.cv-metadata.update(metadata)
+
+  set document(.._identity._document-info(
+    metadata,
+    metadata.at("cv_footer", default: none),
+  ))
 
   let typography = _resolve-typography(metadata)
   set text(
@@ -191,6 +201,10 @@
 /// `cv()`. To change the body size, add `#set text(size: ...)` after the
 /// `show` rule; the header and the footer keep their sizes.
 ///
+/// Sets the PDF metadata: the title is `<name> — <subject>`, the author is
+/// the name (`[personal] display_name` when set), and the keywords are
+/// `[inject] injected_keywords_list`.
+///
 /// - metadata (dictionary): The metadata dictionary read from `metadata.toml`.
 /// - doc (content): The body content of the letter.
 /// - sender-address (str | content | auto): The sender's mailing address. Defaults to `auto`, which reads from `metadata.personal.address` (falls back to `"Your Address Here"` if unset). Pass a string or content to override.
@@ -216,6 +230,8 @@
   _check-v2-inject-legacy(metadata)
 
   // Resolve sender-address: auto reads from metadata, explicit value overrides
+  set document(.._identity._document-info(metadata, subject))
+
   let sender-address = if sender-address == auto {
     metadata.personal.at("address", default: "Your Address Here")
   } else {

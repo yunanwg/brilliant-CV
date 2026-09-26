@@ -15,7 +15,8 @@ A modern, modular CV template for [Typst](https://typst.app).
 
 - **Separation of Style & Content** — You write your CV entries in simple Typst files. The package applies the layout and the style.
 - **Profile-based Variants** — Each `profile_<name>/` directory is one complete CV. To select a profile at compile time, use `--input profile=fr`. There is no language whitelist. You configure any script (CJK, Arabic, Hebrew, and more) explicitly in `[layout.fonts]`.
-- **Optional ATS Keyword Injection** — The package can add hidden keyword text for automated screeners. It marks this text as a PDF artifact, so screen readers skip it. The function is off by default, because some screening systems find hidden text and penalize it. Read the `[inject]` notes in `metadata.toml` before you enable it.
+- **Optional ATS Keyword Injection** — The package can add hidden keyword text for automated screeners. It marks this text as a PDF artifact, so screen readers skip it. The function is off by default, because some screening systems find hidden text and penalize it. Read the `[inject]` notes in `metadata.toml` before you enable it. The same keywords also go into the standard PDF "Keywords" metadata field, which is visible and not hidden.
+- **PDF Metadata** — The CV and the cover letter set the PDF title, the author, and the keywords from your profile. Search tools and screeners can read them.
 - **Highly Customizable** — You set colors, fonts, layout, and section highlights in the `metadata.toml` file of each profile.
 - **Pixel-perfect Tested** — More than 40 tests (panic, unit, component, regression) run in a Linux Docker baseline. The refs are deterministic, so CI catches every layout regression.
 - **Zero-Setup** — The Typst CLI creates a new project with one command.
