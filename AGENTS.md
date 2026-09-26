@@ -64,6 +64,9 @@ John Doe co-authors every entry in `template/assets/publications.bib`. When you 
 ### Visual tests are pixel-deterministic because they run in Docker
 Refs are generated in `tests/Dockerfile` on both maintainer machines and CI, so there is no cross-OS noise to absorb. `just test-fast` skipping the visual suite is the main way a regression slips through locally. CJK regression tests use Noto Sans CJK SC (Linux baseline) instead of macOS Heiti SC — Heiti SC visual fidelity is verified manually by the maintainer with `just dev`. See `tests/README.md` for the full layout.
 
+### `template/AGENTS.md` ships to users
+It is the instruction file that users' agents read in a freshly initialized starter; it is distinct from this contributor guide. Keep it short and version-independent: rules and workflow only, with the API left to the installed package's doc-comments. Compile-test every command in it against a fresh `typst init` before you change it. `release_contract.py` lists it as a required payload file.
+
 ### `typst.toml` `exclude` globs use gitignore semantics
 Typst Universe's bundler applies `[package].exclude` like `.gitignore` lines: a pattern without a slash matches at any depth. Anchor repository-only paths with a leading `/` (for example `"/AGENTS.md"`), or a same-named file under `template/` disappears from the published starter. `scripts/release_contract.py` models the same rules, and `just package-check` fails on a mismatch.
 

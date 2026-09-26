@@ -38,6 +38,7 @@ After this step, your project contains these files:
 | `profile_en/*.typ` | Your English content modules. Edit these files. |
 | `profile_<name>/...` | Other profile variants (fr, de, it, and zh are examples) |
 | `assets/` | Your profile photo and logos |
+| `AGENTS.md` | Instructions for AI coding agents (Claude Code, Codex, and others) that work in this folder |
 
 !!! tip
     Do not edit the package source files under `@preview/brilliant-cv`. The Typst package manager controls these files.

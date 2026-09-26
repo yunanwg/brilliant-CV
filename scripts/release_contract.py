@@ -326,6 +326,7 @@ def required_payload_paths() -> tuple[PurePosixPath, ...]:
             "src/lib.typ",
             "template/cv.typ",
             "template/letter.typ",
+            "template/AGENTS.md",
             "template/metadata.toml.schema.json",
             "thumbnail.png",
             "README.md",
