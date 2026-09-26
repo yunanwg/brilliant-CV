@@ -15,6 +15,8 @@
 #       keys (see ALLOWLIST below).
 #   (d) Thumbnail guard — thumbnail.png is byte-identical to
 #       docs/previews/cv-en.png, the render it is copied from.
+#   (e) Layout-grid guard — src/ uses `grid` for layout, never `table`,
+#       which Typst tags as a data table in the PDF.
 #   (c) Starter-persona guard — every entry in the starter bibliography
 #       lists John Doe as an author (see "Starter profile content is read
 #       as facts" in AGENTS.md).
@@ -246,6 +248,23 @@ if [[ -z "$thumbnail_check" ]]; then
   pass "thumbnail.png meets the Typst Universe size rules"
 else
   fail "thumbnail.png breaks the Typst Universe rules: $thumbnail_check"
+fi
+
+echo
+echo "Guard: layout grids (no table() in src/)"
+
+# --- (e) Layout-grid guard ---------------------------------------------------
+#
+# Typst tags `table` as a data table in the PDF structure tree, which screen
+# readers and structure-aware parsers then read cell by cell. The package
+# only lays things out, so it uses `grid` (tagged as a plain division).
+# Pixel refs and text snapshots cannot see tags, so check the source.
+table_hits=$(grep -rnE '(^|[^.[:alnum:]_-])table\(' src --include='*.typ' | grep -vE '^[^:]+:[0-9]+:[[:space:]]*//')
+if [[ -z "$table_hits" ]]; then
+  pass "src/ lays out with grid(), not table()"
+else
+  fail "table() found in src/ — use grid() for layout:"
+  printf '       %s\n' "$table_hits" >&2
 fi
 
 echo
