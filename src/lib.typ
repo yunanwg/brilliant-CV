@@ -9,6 +9,7 @@
 #import "./letter.typ" as _letter
 #import "./utils/styles.typ" as _styles
 #import "./utils/identity.typ" as _identity
+#import "./utils/introspect.typ" as _introspect
 
 #let cv-section = _cv.cv-section
 #let cv-entry = _cv.cv-entry
@@ -150,6 +151,20 @@
 /// the name (`[personal] display_name` when set), and the keywords are
 /// `[inject] injected_keywords_list`.
 ///
+/// *Experimental layout hooks.* Compile or query with
+/// `--input brilliant-cv-query=1` and every component also emits an
+/// invisible `metadata` element labelled `<brilliant-cv>`; the layout does
+/// not change. `typst query cv.typ '<brilliant-cv>' --field value --input
+/// brilliant-cv-query=1` returns one JSON object per element, each with
+/// `kind` and `page` (the physical page on which it ends): `section`
+/// (`title`), `entry` (`title`, `society`, `date`, `location`),
+/// `entry-start` (`society`, `location`), `entry-continued` (`title`,
+/// `date`), `skill` (`type`, optional `level`), `honor` (`title`, `issuer`,
+/// `date`), `publication` (`mode`: `"full"` or `"selected"`, and the
+/// selected `keys`), and a final `document` (`pages`). Values
+/// are plain text. `letter()` emits the `document` element. Field names may
+/// change in a minor release.
+///
 /// - metadata (dictionary): The metadata dictionary read from `metadata.toml`.
 /// - doc (content): The body content of the CV (typically the imported modules).
 /// - profile-photo (image | none): The profile photo to display in the header. Defaults to `none`; pass an `image(...)` to render. When `none`, the photo column is hidden regardless of `display_profile_photo`.
@@ -209,6 +224,8 @@
     header-info,
   )
   doc
+  // Emitted last, so its page is the final page: `pages` is the page count.
+  _introspect._emit("document")
 }
 
 /// Render a cover letter document with header, footer, and page layout applied.
@@ -220,6 +237,10 @@
 /// Sets the PDF metadata: the title is `<name> — <subject>`, the author is
 /// the name (`[personal] display_name` when set), and the keywords are
 /// `[inject] injected_keywords_list`.
+///
+/// With `--input brilliant-cv-query=1`, the letter emits one experimental
+/// `<brilliant-cv>` element of kind `document` with its page count (see
+/// `cv()`).
 ///
 /// - metadata (dictionary): The metadata dictionary read from `metadata.toml`.
 /// - doc (content): The body content of the letter.
@@ -286,4 +307,6 @@
   if signature not in ("", none) {
     _letter._letter-signature(signature)
   }
+  // Emitted last, so its page is the final page: `pages` is the page count.
+  _introspect._emit("document")
 }

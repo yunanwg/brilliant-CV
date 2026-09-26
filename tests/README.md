@@ -10,6 +10,7 @@ tests/
   docker-entrypoint.sh          # Registers /workspace as @preview/brilliant-cv:<v>
   common.typ                    # Shared fixtures (not a tytanic test)
   panics/                       # Shell-script smoke tests (not tytanic)
+  query/                        # Shell test for the experimental layout hooks (needs --input, so not tytanic)
     <name>/fixture.typ          # Invalid API input or legacy metadata fixture
     run.sh                      # Iterate fixtures, assert non-zero exit + stderr substring
   units/<name>/test.typ         # Tytanic compile-only — assert.eq() on pure helpers
@@ -23,7 +24,7 @@ Tytanic discovers tests by walking `tests/` for files literally named `test.typ`
 
 | Command                       | Where                  | What it does                                                    |
 | ----------------------------- | ---------------------- | --------------------------------------------------------------- |
-| `just test`                   | Docker (`linux/arm64`) | Full suite — tytanic visual + panic shell smoke tests           |
+| `just test`                   | Docker (`linux/arm64`) | Full suite — tytanic visual + panic smoke + query-hook tests     |
 | `just test-fast`              | native (host shell)    | Panic + unit tests only (compile-only, sub-second)              |
 | `just test-panics`            | native                 | Just the panic-fixture shell script                             |
 | `just test-filter '<glob>'`   | Docker                 | Visual tests matching a tytanic glob, e.g. `'components/*'`     |

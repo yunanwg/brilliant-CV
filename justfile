@@ -183,7 +183,7 @@ _test-docker CMD: test-image
 # Run the full test suite — tytanic visual + panic smoke tests in Docker
 test: test-image
     @bash tests/guards.sh
-    @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} bash -c "tt run --no-fail-fast && bash tests/panics/run.sh"
+    @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} bash -c "tt run --no-fail-fast && bash tests/panics/run.sh && bash tests/query/run.sh"
 
 # No `link` prerequisite: units/ and panics/ fixtures use root-relative
 # imports (`/src/...`, `/tests/...`), never `@preview/brilliant-cv:...`, so

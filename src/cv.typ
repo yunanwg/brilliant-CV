@@ -8,6 +8,7 @@
 )
 #import "./utils/injection.typ": _inject
 #import "./utils/identity.typ": _display-name, _display-name-override
+#import "./utils/introspect.typ": _emit
 #import "./utils/styles.typ": (
   _awesome-colors, _latin-font-list, _latin-header-font, _regular-colors,
   _resolve-accent-color, _set-accent-color, h-bar,
@@ -480,7 +481,10 @@
         section-title-style(normal-text, color: black)
       }
       #h(2pt)
-      #box(width: 1fr, line(stroke: 0.9pt, length: 100%))],
+      #box(width: 1fr, line(stroke: 0.9pt, length: 100%))#_emit(
+        "section",
+        title: title,
+      )],
   )
 }
 
@@ -818,6 +822,13 @@
     tags: tags,
     metadata: metadata,
   )
+  _emit(
+    "entry",
+    title: title,
+    society: society,
+    date: date,
+    location: location,
+  )
 }
 
 /// Add the start of an entry to the CV. Use this together with one or more
@@ -876,6 +887,7 @@
     logo: logo,
     metadata: metadata,
   )
+  _emit("entry-start", society: society, location: location)
 }
 
 /// Add a continued entry to the CV. Must be used after a `cv-entry-start` call
@@ -917,6 +929,7 @@
     tags: tags,
     metadata: metadata,
   )
+  _emit("entry-continued", title: title, date: date)
 }
 
 /// Add a skill to the CV.
@@ -950,6 +963,7 @@
     stroke: none,
     skill-type-style(type), skill-info-style(info),
   )
+  _emit("skill", type: type)
   v(-6pt)
 }
 
@@ -1005,6 +1019,7 @@
     stroke: none,
     skill-type-style(type), skill-level-style(level), skill-info-style(info),
   )
+  _emit("skill", type: type, level: level)
   v(-6pt)
 }
 
@@ -1106,6 +1121,7 @@
     },
     honor-location-style(location),
   )
+  _emit("honor", title: title, issuer: issuer, date: date)
   v(-6pt)
 }
 
@@ -1140,4 +1156,9 @@
     }
     bib
   }
+  _emit(
+    "publication",
+    mode: if ref-full { "full" } else { "selected" },
+    keys: if ref-full { () } else { key-list.map(str) },
+  )
 }

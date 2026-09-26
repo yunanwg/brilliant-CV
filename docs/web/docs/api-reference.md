@@ -16,6 +16,20 @@ Sets the PDF metadata: the title is `<name> — <cv_footer>`, the author is
 the name (`[personal] display_name` when set), and the keywords are
 `[inject] injected_keywords_list`.
 
+**Experimental layout hooks.** Compile or query with
+`--input brilliant-cv-query=1` and every component also emits an
+invisible `metadata` element labelled `<brilliant-cv>`; the layout does
+not change. `typst query cv.typ '<brilliant-cv>' --field value --input
+brilliant-cv-query=1` returns one JSON object per element, each with
+`kind` and `page` (the physical page on which it ends): `section`
+(`title`), `entry` (`title`, `society`, `date`, `location`),
+`entry-start` (`society`, `location`), `entry-continued` (`title`,
+`date`), `skill` (`type`, optional `level`), `honor` (`title`, `issuer`,
+`date`), `publication` (`mode`: `"full"` or `"selected"`, and the
+selected `keys`), and a final `document` (`pages`). Values
+are plain text. `letter()` emits the `document` element. Field names may
+change in a minor release.
+
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `metadata` | dictionary | — | The metadata dictionary read from `metadata.toml`. |
@@ -35,6 +49,10 @@ The letter body uses a 12pt font size. `[layout] font_size` applies only to
 Sets the PDF metadata: the title is `<name> — <subject>`, the author is
 the name (`[personal] display_name` when set), and the keywords are
 `[inject] injected_keywords_list`.
+
+With `--input brilliant-cv-query=1`, the letter emits one experimental
+`<brilliant-cv>` element of kind `document` with its page count (see
+`cv()`).
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|

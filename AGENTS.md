@@ -15,7 +15,7 @@ Run `just link` before any local development. This registers the local package w
 | `just link` | Once, before anything else | Without it every import fails |
 | `just build` | You changed `src/` or `template/` | Compiles both starter entrypoints |
 | `just test-fast` | Inner loop | Native, sub-second. Panics + units only — runs **no** visual regression tests |
-| `just test` | Before committing | Full suite, tytanic visual + panic smoke. Needs a running Docker daemon |
+| `just test` | Before committing | Full suite: tytanic visual, panic smoke, and query-hook tests. Needs a running Docker daemon |
 | `just test-update` | A layout change moved pixels on purpose | Regenerates ref PNGs in Docker; review the new PNGs before committing |
 | `just fmt-check` | Before committing | typstyle gate, same image as CI |
 | `just docs-generate` | You changed doc-comments in `src/` or comments in `template/profile_en/metadata.toml` | Regenerates the two generated pages |
