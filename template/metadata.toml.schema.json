@@ -174,7 +174,7 @@
         "display_name": {
           "type": "string",
           "minLength": 1,
-          "description": "Optional single styled name that replaces the split first/last treatment."
+          "description": "Optional single styled name that replaces the split first/last treatment in the header, and the name in the footers and the cover letter."
         },
         "address": {
           "type": "string",

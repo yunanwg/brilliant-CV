@@ -110,8 +110,9 @@ letter_footer = "Cover letter"
     # Your last name, displayed in the header
     last_name = "Doe"
     # (Optional) display_name overrides the Latin "first (light) + last (bold)"
-    # split with a single styled string. Use this for CJK profiles or any
-    # profile where the split treatment feels wrong:
+    # split with a single styled string. The footers and the cover letter
+    # also use it. Use this for CJK profiles or any profile where the split
+    # treatment feels wrong:
     # display_name = "王道尔"
     # Your mailing address, used as default sender-address in the cover letter
     # address = "123 Main St, San Francisco, CA 94102"

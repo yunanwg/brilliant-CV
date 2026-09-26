@@ -66,7 +66,7 @@ If Chinese, Japanese, Korean, Russian, Arabic, or other non-Latin characters ren
     header_font = "Heiti SC"                        # heading uses CJK glyphs
     ```
 
-3. **You can also replace the header name.** Set `[personal] display_name` to one styled string. It replaces the Latin split of first name (light) and last name (bold):
+3. **You can also replace the header name.** Set `[personal] display_name` to one styled string. It replaces the Latin split of first name (light) and last name (bold). The footers and the cover letter also use it:
 
     ```toml
     [personal]

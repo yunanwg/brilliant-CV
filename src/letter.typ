@@ -4,6 +4,7 @@
 
 #import "./utils/styles.typ": _awesome-colors, _set-accent-color
 #import "./utils/injection.typ": _inject
+#import "./utils/identity.typ": _display-name
 
 #let _letter-header(
   sender-address: "Your Address Here",
@@ -15,9 +16,7 @@
   awesome-colors: _awesome-colors,
   address-style: "smallcaps",
 ) = {
-  let sender-name = (
-    metadata.personal.first_name + " " + metadata.personal.last_name
-  )
+  let sender-name = _display-name(metadata)
 
   let accent-color = _set-accent-color(awesome-colors, metadata)
 
@@ -70,9 +69,7 @@
 
 #let _letter-footer(metadata) = {
   // Parameters
-  let sender-name = (
-    metadata.personal.first_name + " " + metadata.personal.last_name
-  )
+  let sender-name = _display-name(metadata)
   let letter-footer-text = metadata.at("letter_footer", default: "")
   let display-footer = metadata
     .layout

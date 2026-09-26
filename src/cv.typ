@@ -7,6 +7,7 @@
   fa-pager, fa-phone, fa-researchgate, fa-square-github,
 )
 #import "./utils/injection.typ": _inject
+#import "./utils/identity.typ": _display-name
 #import "./utils/styles.typ": (
   _awesome-colors, _latin-font-list, _latin-header-font, _regular-colors,
   _resolve-accent-color, _set-accent-color, h-bar,
@@ -357,8 +358,7 @@
 /// -> content
 #let _cv-footer(metadata) = {
   // Parameters
-  let first-name = metadata.personal.first_name
-  let last-name = metadata.personal.last_name
+  let name = _display-name(metadata)
   let footer-text = metadata.at("cv_footer", default: "")
   let display-page-counter = metadata
     .layout
@@ -386,7 +386,7 @@
       columns: (auto, 1fr, auto),
       inset: -5pt,
       stroke: none,
-      align(left, footer-style([#first-name #last-name])),
+      align(left, footer-style(name)),
       align(center, footer-style(footer-text)),
       align(right, footer-style(counter(page).display())),
     )
@@ -395,7 +395,7 @@
       columns: (1fr, auto),
       inset: -5pt,
       stroke: none,
-      footer-style([#first-name #last-name]), footer-style(footer-text),
+      footer-style(name), footer-style(footer-text),
     )
   }
 }
