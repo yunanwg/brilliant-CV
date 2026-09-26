@@ -20,7 +20,7 @@
 )
 
 #cv-entry(
-  title: [Bachelors of Science in Informatik],
+  title: [Bachelor of Science in Informatik],
   society: [Aurora State University],
   date: [2011 - 2015],
   location: [Aurora, WA],

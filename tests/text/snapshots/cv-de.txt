@@ -11,7 +11,7 @@ Aurora, WA
 Lernens und Netzwerkanalyse
 • Kurs: Big-Data-Systeme und -Technologien | Data Mining und Exploration | Natural Language Processing
 Aurora State University
-Bachelors of Science in Informatik
+Bachelor of Science in Informatik
 Aurora, WA
 2011 - 2015
 • Dissertation: Erforschung des Einsatzes von Algorithmen des maschinellen Lernens zur Vorhersage von Aktienkursen: Eine
@@ -55,11 +55,11 @@ Doe, J., & Smith, A. (2020). An Introduction to Data Analysis Techniques. Journa
 Doe, J., & Wilson, D. (2022). Machine Learning for Data Analysis. Springer.
 Jones, S., Doe, J., & Brown, M. (2021). Exploratory Data Analysis for Predictive Modeling. Proceedings of the International Conference on
 Data Science, 256–267.
+Fähigkeiten
+Sprachen Deutsch (Muttersprache) | Englisch (Fließend) | Französisch (Konversation)
 John Doe Lebenslauf
 
 --- page break ---
-Fähigkeiten
-Sprachen      Deutsch (Muttersprache) | Englisch (Fließend) | Französisch (Konversation)
 Programmierung      Python | SQL | R
 Technologie Stack Tableau | Snowflake | AWS | Docker | Git
 Zertifizierungen AWS Zertifiziert Angewandte Datenwissenschaft SQL-Grundlagen

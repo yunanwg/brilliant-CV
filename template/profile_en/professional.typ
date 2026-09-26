@@ -26,8 +26,8 @@
   title: [Data Scientist],
   date: [2020 - 2022],
   description: list(
-    [Analyze large datasets with SQL and Python, collaborate with teams to uncover business insights],
-    [Create data visualizations and dashboards in Tableau, develop and maintain data pipelines with AWS],
+    [Built churn and demand-forecasting models in Python and SparkSQL on Snowflake],
+    [Deployed model scoring pipelines on AWS and monitored their accuracy in production],
   ),
 )
 

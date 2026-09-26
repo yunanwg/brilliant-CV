@@ -466,25 +466,26 @@ def smoke(package_dir: Path) -> None:
             raise ContractError("fresh init did not create AGENTS.md")
         application = project / "applications" / "smoke"
         application.mkdir(parents=True)
-        source = (project / "cv.typ").read_text(encoding="utf-8")
-        nested = source.replace('"profile_"', '"../../profile_"').replace(
-            'image("assets/', 'image("../../assets/'
-        )
-        if nested == source:
-            raise ContractError("starter cv.typ no longer uses profile_ paths")
-        (application / "cv.typ").write_text(nested, encoding="utf-8")
-        run(
-            [
-                "typst",
-                "compile",
-                "--package-path",
-                str(package_root),
-                "--root",
-                str(project),
-                str(application / "cv.typ"),
-                str(temporary / "application-cv.pdf"),
-            ]
-        )
+        for entrypoint in ("cv.typ", "letter.typ"):
+            source = (project / entrypoint).read_text(encoding="utf-8")
+            nested = source.replace('"profile_"', '"../../profile_"').replace(
+                '"assets/', '"../../assets/'
+            )
+            if nested == source:
+                raise ContractError(f"starter {entrypoint} no longer uses profile_ paths")
+            (application / entrypoint).write_text(nested, encoding="utf-8")
+            run(
+                [
+                    "typst",
+                    "compile",
+                    "--package-path",
+                    str(package_root),
+                    "--root",
+                    str(project),
+                    str(application / entrypoint),
+                    str(temporary / f"application-{entrypoint.removesuffix('.typ')}.pdf"),
+                ]
+            )
     print(
         "Fresh-init smoke passed: CV + letter, 5 profiles, AGENTS.md subfolder "
         f"workflow, {typst_version()}"

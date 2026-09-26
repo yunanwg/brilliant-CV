@@ -6,9 +6,8 @@
 
 #cv-section("Skills")
 
-#cv-skill-with-level(
+#cv-skill(
   type: [Languages],
-  level: 4,
   info: [English (Native) #h-bar() French (Fluent) #h-bar() Chinese (Conversational)],
 )
 

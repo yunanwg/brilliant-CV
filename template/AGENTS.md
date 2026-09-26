@@ -38,18 +38,36 @@ only.
    - For a file in a subfolder that reads `../../profile_<name>/`, add
      `--root .` and run from this folder:
      `typst compile --root . applications/<company>/cv.typ`
-   - To check the page count and the layout, compile to PNG, one file per
-     page: `typst compile cv.typ "cv-{p}.png"`. Typst does not create a
-     missing output folder.
+   - To check the page count without rendering (Typst 0.15+):
+     `typst eval --input brilliant-cv-query=1 'query(<brilliant-cv>).last().value.pages' --in cv.typ`.
+     Each element also reports the `page` on which it ends, so you can list
+     what spilled to page 2; the `cv()` doc-comment lists the fields.
+   - To see the layout, compile to PNG, one file per page:
+     `typst compile --root . applications/<company>/cv.typ "applications/<company>/cv-{p}.png"`.
+     Typst does not create a missing output folder.
 5. **Keep personal data local.** A scanned signature, a phone number, and
    application folders do not belong in a public repository. Before the
    first commit, add `applications/`, `*.pdf`, and `assets/signature.*` to a
    `.gitignore` in this folder.
 
+## Tailor a CV for one application
+
+1. Copy `cv.typ` and `letter.typ` to `applications/<company>/`. In both
+   copies, change `"profile_"` to `"../../profile_"` and `"assets/` to
+   `"../../assets/`.
+2. Keep only the modules you need, or paste the chosen entries from
+   `profile_<name>/*.typ` into this file. Do not edit the profile for one job.
+3. Override a profile value for this application only:
+   `#metadata.insert("header_quote", "…")` before `cv.with(metadata)`.
+4. In the letter copy, set `recipient-name`, `recipient-address`, `subject`,
+   and a fixed `date:` (the default is today, so it changes on every compile).
+5. Verify with the commands in rule 4 from this folder, with `--root .`.
+
 ## Useful patterns
 
-- Override a profile value for one application without editing the
-  profile: `#metadata.insert("header_quote", "…")` before `cv.with(metadata)`.
 - The cover-letter body is 12pt. `[layout] font_size` applies to the CV only.
 - To keep the closing, the signature, and the name together on one page,
   put them in `#block(breakable: false)[…]` at the end of the letter.
+- Letter addresses use small caps by default, which prints "ß" as "SS" and
+  e-mail addresses in capitals. Pass `address-style: "normal"` to keep them
+  as written.

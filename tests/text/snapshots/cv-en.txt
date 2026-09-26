@@ -10,7 +10,7 @@ Aurora, WA
 • Thesis: Predicting Customer Churn in Telecommunications Industry using Machine Learning Algorithms and Network Analysis
 • Course: Big Data Systems and Technologies | Data Mining and Exploration | Natural Language Processing
 Aurora State University
-Bachelors of Science in Computer Science
+Bachelor of Science in Computer Science
 Aurora, WA
 2011 - 2015
 • Thesis: Exploring the Use of Machine Learning Algorithms for Predicting Stock Prices: A Comparative Study of Regression and Time-
@@ -34,8 +34,8 @@ to support decision-making across the organization
 governance, quality, and security
 Dataiku Snowflake SparkSQL
 Data Scientist 2020 - 2022
-• Analyze large datasets with SQL and Python, collaborate with teams to uncover business insights
-• Create data visualizations and dashboards in Tableau, develop and maintain data pipelines with AWS
+• Built churn and demand-forecasting models in Python and SparkSQL on Snowflake
+• Deployed model scoring pipelines on AWS and monitored their accuracy in production
 ABC Company
 Data Analyst
 New York, NY
@@ -88,7 +88,7 @@ Publications
 Data Science, 2021, pp. 256–267.
 [3] J. Doe and D. Wilson, Machine Learning for Data Analysis. Springer, 2022.
 Skills
-Languages      English (Native) | French (Fluent) | Chinese (Conversational)
+Languages English (Native) | French (Fluent) | Chinese (Conversational)
 Programming      Python | SQL | R
 Tech Stack Tableau | Snowflake | AWS | Docker | Git
 Frameworks &
