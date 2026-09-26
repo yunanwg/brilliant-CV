@@ -9,7 +9,10 @@
   society: [Aurora State University],
   date: [2015 - 2017],
   location: [Aurora, WA],
-  logo: image("../assets/logos/aurora_state.png"),
+  logo: image(
+    "../assets/logos/aurora_state.png",
+    alt: "Aurora State University logo",
+  ),
   description: list(
     [Thesis: Predicting Customer Churn in Telecommunications Industry using Machine Learning Algorithms and Network Analysis],
     [Course: Big Data Systems and Technologies #h-bar() Data Mining and Exploration #h-bar() Natural Language Processing],
@@ -21,7 +24,10 @@
   society: [Aurora State University],
   date: [2011 - 2015],
   location: [Aurora, WA],
-  logo: image("../assets/logos/aurora_state.png"),
+  logo: image(
+    "../assets/logos/aurora_state.png",
+    alt: "Aurora State University logo",
+  ),
   description: list(
     [Thesis: Exploring the Use of Machine Learning Algorithms for Predicting Stock Prices: A Comparative Study of Regression and Time-Series Models],
     [Course: Database Systems #h-bar() Computer Networks #h-bar() Software Engineering #h-bar() Artificial Intelligence],

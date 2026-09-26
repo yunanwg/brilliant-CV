@@ -9,7 +9,7 @@
   society: [奥罗拉州立大学],
   date: [2015 - 2017],
   location: [美国华盛顿州奥罗拉市],
-  logo: image("../assets/logos/aurora_state.png"),
+  logo: image("../assets/logos/aurora_state.png", alt: "奥罗拉州立大学标志"),
   description: list(
     [论文: 使用机器学习算法和网络分析预测电信行业的客户流失],
     [课程: 大数据系统与技术 #h-bar() 数据挖掘与探索 #h-bar() 自然语言处理],
@@ -21,7 +21,7 @@
   society: [奥罗拉州立大学],
   date: [2011 - 2015],
   location: [美国华盛顿州奥罗拉市],
-  logo: image("../assets/logos/aurora_state.png"),
+  logo: image("../assets/logos/aurora_state.png", alt: "奥罗拉州立大学标志"),
   description: list(
     [论文: 探索使用机器学习算法预测股票价格: 回归与时间序列模型的比较研究],
     [课程: 数据库系统 #h-bar() 计算机网络 #h-bar() 软件工程 #h-bar() 人工智能],

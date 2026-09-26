@@ -8,7 +8,7 @@
 
 #cv-entry-start(
   society: [XYZ 公司],
-  logo: image("../assets/logos/xyz_corp.png"),
+  logo: image("../assets/logos/xyz_corp.png", alt: "XYZ 公司标志"),
   location: [上海],
 )
 
@@ -25,7 +25,7 @@
 #cv-entry(
   title: [数据分析师],
   society: [ABC 公司],
-  logo: image("../assets/logos/abc_company.png"),
+  logo: image("../assets/logos/abc_company.png", alt: "ABC 公司标志"),
   date: [2017 - 2020],
   location: [纽约, NY],
   description: list(
@@ -37,7 +37,7 @@
 #cv-entry(
   title: [数据分析实习生],
   society: [PQR 公司],
-  logo: image("../assets/logos/pqr_corp.png"),
+  logo: image("../assets/logos/pqr_corp.png", alt: "PQR 公司标志"),
   date: list(
     [2017年夏季],
     [2016年夏季],

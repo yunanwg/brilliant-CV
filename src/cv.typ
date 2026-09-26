@@ -237,7 +237,7 @@
     rows.push([#(styles.quote)(header-quote)])
   }
 
-  let result = table(
+  let result = grid(
     columns: 1fr,
     inset: 0pt,
     stroke: none,
@@ -273,7 +273,7 @@
 /// Create header table
 /// -> content
 #let _make-header(contents, columns, align) = {
-  table(
+  grid(
     columns: columns,
     inset: 0pt,
     stroke: none,
@@ -416,7 +416,7 @@
     // Name and page counter take their natural widths; the center
     // footer text gets all the remaining space so long captions don't
     // get squeezed into a third of the page (issue #173).
-    table(
+    grid(
       columns: (auto, 1fr, auto),
       inset: -5pt,
       stroke: none,
@@ -425,7 +425,7 @@
       align(right, footer-style(counter(page).display())),
     )
   } else {
-    table(
+    grid(
       columns: (1fr, auto),
       inset: -5pt,
       stroke: none,
@@ -674,7 +674,7 @@
     }
 
     let stack = cells => if cells.len() == 0 { [] } else {
-      table(
+      grid(
         columns: auto,
         inset: 0pt,
         stroke: 0pt,
@@ -684,13 +684,13 @@
       )
     }
 
-    table(
+    grid(
       columns: (1fr, date-width),
       inset: 0pt,
       stroke: 0pt,
       gutter: 6pt,
       align: (x, y) => if x == 1 { right } else { auto },
-      table(
+      grid(
         columns: (if display-logo and logo != "" { 4% } else { 0% }, 1fr),
         inset: 0pt,
         stroke: 0pt,
@@ -712,7 +712,7 @@
     // Entry start layout (original cv-entry-start logic)
     if display-logo and logo != "" {
       // With logo: 3-column layout
-      table(
+      grid(
         columns: (4%, 1fr, date-width),
         inset: 0pt,
         stroke: 0pt,
@@ -727,7 +727,7 @@
       )
     } else {
       // Without logo: 2-column layout (matches cv-entry alignment)
-      table(
+      grid(
         columns: (1fr, date-width),
         inset: 0pt,
         stroke: 0pt,
@@ -757,7 +757,7 @@
     }
 
     if not multiple-dates {
-      table(
+      grid(
         columns: (1fr, date-width),
         inset: 0pt,
         stroke: 0pt,
@@ -773,7 +773,7 @@
       }
       _create-entry-tag-list(tags, styles.tag)
     } else {
-      table(
+      grid(
         columns: (1fr, date-width),
         inset: 0pt,
         stroke: 0pt,
@@ -805,7 +805,7 @@
 /// - date (str | content): The date(s) of the entry.
 /// - location (str): The location of the entry.
 /// - description (str | array): The description of the entry. It can be a string or an array of content items.
-/// - logo (content | str): The logo of the society. If empty, no logo will be displayed.
+/// - logo (content | str): The logo of the society. If empty, no logo will be displayed. Pass `image("logo.png", alt: "Company logo")` so the PDF stays accessible (PDF/UA requires alt text).
 /// - tags (array): The tags of the entry.
 /// - color (color): (optional) override the accent color for this entry.
 /// - metadata (dictionary): (optional) the metadata read from the TOML file.
@@ -873,7 +873,7 @@
 ///
 /// - society (str): The society of the entry (company, university, etc.).
 /// - location (str): The location of the entry.
-/// - logo (content | str): The logo of the society. If empty, no logo will be displayed.
+/// - logo (content | str): The logo of the society. If empty, no logo will be displayed. Pass `image("logo.png", alt: "Company logo")` so the PDF stays accessible (PDF/UA requires alt text).
 /// - color (color): (optional) override the accent color for this entry.
 /// - metadata (dictionary): (optional) the metadata read from the TOML file.
 /// - awesome-colors (dictionary): (optional) the awesome colors of the CV.
@@ -989,7 +989,7 @@
     text(str)
   }
 
-  table(
+  grid(
     columns: (type-width, 1fr),
     inset: 0pt,
     column-gutter: 10pt,
@@ -1045,7 +1045,7 @@
     }
   }
 
-  table(
+  grid(
     columns: (type-width, auto, 1fr),
     inset: 0pt,
     column-gutter: 10pt,
@@ -1134,7 +1134,7 @@
     )
   }
 
-  table(
+  grid(
     columns: (16%, 1fr, 15%),
     inset: 0pt,
     column-gutter: 10pt,

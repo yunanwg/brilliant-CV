@@ -27,7 +27,7 @@
 #show: cv.with(
   metadata,
   // Profile photos are personal and sensitive — avoid committing real ones to public git repos.
-  profile-photo: image("assets/avatar.png"),
+  profile-photo: image("assets/avatar.png", alt: "Profile photo"),
   // Replace the generated contact row with arbitrary Typst content:
   // header-info: [
   //   #metadata.personal.info.email
@@ -38,7 +38,7 @@
   // To use custom image icons in personal.info.custom-<name> entries,
   // pass them here (keys must match the custom-<name> keys in metadata.toml):
   // custom-icons: (
-  //   "custom-cert": image("assets/my-icon.png"),
+  //   "custom-cert": image("assets/my-icon.png", alt: "Certificate"),
   // ),
 )
 

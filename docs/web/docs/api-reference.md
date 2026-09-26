@@ -36,7 +36,7 @@ change in a minor release.
 |-----------|------|---------|-------------|
 | `metadata` | dictionary | — | The metadata dictionary read from `metadata.toml`. |
 | `doc` | content | — | The body content of the CV (typically the imported modules). |
-| `profile-photo` | image \| none | `none` | The profile photo to display in the header. Defaults to `none`; pass an `image(...)` to render. When `none`, the photo column is hidden regardless of `display_profile_photo`. |
+| `profile-photo` | image \| none | `none` | The profile photo to display in the header. Defaults to `none`; pass an `image("avatar.png", alt: "Profile photo")` to render; the alt text keeps the PDF accessible. When `none`, the photo column is hidden regardless of `display_profile_photo`. |
 | `custom-icons` | dictionary | `(:)` | Custom icons to override or extend the default icon set. |
 | `header-info` | auto \| none \| str \| content | `auto` | (optional) customize the contact-information row. `auto` (default) renders `metadata.personal.info`; `none` removes the row; a string or content value replaces it while inheriting the default info typography. Use explicit `text(fill: ...)`, `h-bar()`, and `linebreak()` calls inside custom content for granular styling and layout. |
 
@@ -65,7 +65,7 @@ With `--input brilliant-cv-query=1`, the letter emits one experimental
 | `recipient-address` | str | `"Company Address Here"` | The recipient's mailing address displayed in the header. Supports multiline content. |
 | `date` | str | `datetime.today().display()` | The date displayed in the letter header. Defaults to today's date. |
 | `subject` | str | `"Subject: Hey!"` | The subject line of the letter. |
-| `signature` | str \| content \| none | `""` | (optional) content to display as the signature. Pass `image("signature.png")` for an image; a string is rendered as text. The signature reserves its height: when it does not fit below the body, it moves to the next page. `""` or `none` omits it. |
+| `signature` | str \| content \| none | `""` | (optional) content to display as the signature. Pass `image("signature.png", alt: "Signature")` for an image; a string is rendered as text. The signature reserves its height: when it does not fit below the body, it moves to the next page. `""` or `none` omits it. |
 | `address-style` | str | `"smallcaps"` | Address rendering style. `"smallcaps"` (default) or `"normal"`. |
 
 ---
@@ -122,7 +122,7 @@ default), the `title` field is bold/first and `society` is the subtitle.
 | `date` | str \| content | `"Date"` | The date(s) of the entry. |
 | `location` | str | `"Location"` | The location of the entry. |
 | `description` | str \| array | `""` | The description of the entry. It can be a string or an array of content items. |
-| `logo` | content \| str | `""` | The logo of the society. If empty, no logo will be displayed. |
+| `logo` | content \| str | `""` | The logo of the society. If empty, no logo will be displayed. Pass `image("logo.png", alt: "Company logo")` so the PDF stays accessible (PDF/UA requires alt text). |
 | `tags` | array | `()` | The tags of the entry. |
 | `color` | color | `none` | (optional) override the accent color for this entry. |
 | `metadata` | dictionary | `none` | (optional) the metadata read from the TOML file. |
@@ -157,7 +157,7 @@ adds a role with its own dates, description, and tags.
 |-----------|------|---------|-------------|
 | `society` | str | `"Society"` | The society of the entry (company, university, etc.). |
 | `location` | str | `"Location"` | The location of the entry. |
-| `logo` | content \| str | `""` | The logo of the society. If empty, no logo will be displayed. |
+| `logo` | content \| str | `""` | The logo of the society. If empty, no logo will be displayed. Pass `image("logo.png", alt: "Company logo")` so the PDF stays accessible (PDF/UA requires alt text). |
 | `color` | color | `none` | (optional) override the accent color for this entry. |
 | `metadata` | dictionary | `none` | (optional) the metadata read from the TOML file. |
 | `awesome-colors` | dictionary | `_awesome-colors` | (optional) the awesome colors of the CV. |

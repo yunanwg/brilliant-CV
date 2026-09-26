@@ -92,7 +92,7 @@
     text(size: 8pt, fill: rgb("#999999"), smallcaps(str))
   }
 
-  table(
+  grid(
     columns: (1fr, auto),
     inset: 0pt,
     stroke: none,

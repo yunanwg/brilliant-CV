@@ -56,7 +56,7 @@ Thank you for considering my application. I look forward to the opportunity to d
 #block(breakable: false)[
   Sincerely,
 
-  #image("assets/signature.png", width: 25%)
+  #image("assets/signature.png", width: 25%, alt: "Signature")
 
   #signer
 ]

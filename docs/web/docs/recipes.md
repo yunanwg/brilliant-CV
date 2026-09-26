@@ -95,7 +95,7 @@ You pass the profile photo as an argument to `cv()` in your `cv.typ`. You do not
 ```typ
 #show: cv.with(
   metadata,
-  profile-photo: image("assets/avatar.png"),
+  profile-photo: image("assets/avatar.png", alt: "Profile photo"),
 )
 ```
 
@@ -125,7 +125,7 @@ To add a custom contact entry with an image icon in place of a Font Awesome icon
     ```typ
     #show: cv.with(
       metadata,
-      profile-photo: image("assets/avatar.png"),
+      profile-photo: image("assets/avatar.png", alt: "Profile photo"),
       custom-icons: (
         "custom-1": image("assets/my-icon.png"),
       ),
@@ -145,7 +145,7 @@ The default header makes a linked contact item from each `[personal.info]` entry
 
 #show: cv.with(
   metadata,
-  profile-photo: image("assets/avatar.png"),
+  profile-photo: image("assets/avatar.png", alt: "Profile photo"),
   header-info: [
     #link("mailto:" + info.email)[#info.email]
     #h-bar()
@@ -224,13 +224,13 @@ Dear Hiring Manager,
 #block(breakable: false)[
   Sincerely,
 
-  #image("assets/signature.png", width: 25%)
+  #image("assets/signature.png", width: 25%, alt: "Signature")
 
   John Doe
 ]
 ```
 
-You control the order and the alignment of the lines in the block. For example, to put the signature on the right, use `#align(right, image("assets/signature.png", width: 25%))`.
+You control the order and the alignment of the lines in the block. For example, to put the signature on the right, use `#align(right, image("assets/signature.png", width: 25%, alt: "Signature"))`.
 
 **Use the `signature` parameter.** `letter()` puts the image on the right, below the letter body:
 
@@ -238,7 +238,7 @@ You control the order and the alignment of the lines in the block. For example, 
 #show: letter.with(
   metadata,
   subject: "Application for Data Analyst Position",
-  signature: image("assets/signature.png"),
+  signature: image("assets/signature.png", alt: "Signature"),
 )
 ```
 

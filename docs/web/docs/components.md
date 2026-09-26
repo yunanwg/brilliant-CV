@@ -17,7 +17,7 @@ The supported package-root API is `cv`, `letter`, the nine documented `cv-*` com
 ```typ
 #show: cv.with(
   metadata,
-  profile-photo: image("assets/avatar.png"),
+  profile-photo: image("assets/avatar.png", alt: "Profile photo"),
 )
 ```
 
@@ -55,7 +55,7 @@ Your content inherits the normal typography and accent color of the header info.
   recipient-name: "Acme Analytics",
   recipient-address: "456 Business Ave, City, State 67890",
   subject: "Application for Data Analyst Position",
-  signature: image("assets/signature.png"),
+  signature: image("assets/signature.png", alt: "Signature"),
 )
 ```
 

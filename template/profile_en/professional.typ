@@ -8,7 +8,7 @@
 
 #cv-entry-start(
   society: [XYZ Corporation],
-  logo: image("../assets/logos/xyz_corp.png"),
+  logo: image("../assets/logos/xyz_corp.png", alt: "XYZ Corporation logo"),
   location: [San Francisco, CA],
 )
 
@@ -34,7 +34,7 @@
 #cv-entry(
   title: [Data Analyst],
   society: [ABC Company],
-  logo: image("../assets/logos/abc_company.png"),
+  logo: image("../assets/logos/abc_company.png", alt: "ABC Company logo"),
   date: [2017 - 2020],
   location: [New York, NY],
   description: list(
@@ -46,7 +46,7 @@
 #cv-entry(
   title: [Data Analysis Intern],
   society: [PQR Corporation],
-  logo: image("../assets/logos/pqr_corp.png"),
+  logo: image("../assets/logos/pqr_corp.png", alt: "PQR Corporation logo"),
   date: list(
     [Summer 2017],
     [Summer 2016],

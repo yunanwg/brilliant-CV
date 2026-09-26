@@ -8,7 +8,7 @@
 
 #cv-entry-start(
   society: [XYZ Corporation],
-  logo: image("../assets/logos/xyz_corp.png"),
+  logo: image("../assets/logos/xyz_corp.png", alt: "Logo XYZ Corporation"),
   location: [Paris, France],
 )
 
@@ -27,7 +27,7 @@
   society: [ABC Company],
   date: [2017 - 2020],
   location: [New York, NY],
-  logo: image("../assets/logos/abc_company.png"),
+  logo: image("../assets/logos/abc_company.png", alt: "Logo ABC Company"),
   description: list(
     [Analyser de grands ensembles de données avec SQL et Python, collaborer avec les équipes pour découvrir des insights commerciaux],
     [Créer des visualisations de données et des tableaux de bord dans Tableau, développer et maintenir des pipelines de données avec AWS],
@@ -42,7 +42,7 @@
     [été 2016],
   ),
   location: [Chicago, IL],
-  logo: image("../assets/logos/pqr_corp.png"),
+  logo: image("../assets/logos/pqr_corp.png", alt: "Logo PQR Corporation"),
   description: list(
     [Aider à la préparation, au traitement et à l'analyse de données à l'aide de Python et Excel, participer aux réunions d'équipe et contribuer à la planification et à l'exécution de projets],
   ),
