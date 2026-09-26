@@ -11,7 +11,7 @@ typst init @preview/brilliant-cv
 To use a specific release, add its version number. All releases after 2.0.0 are supported:
 
 ```bash
-typst init @preview/brilliant-cv:4.1.0
+typst init @preview/brilliant-cv:4.1.1
 ```
 
 ## Step 2: Install Fonts
@@ -66,7 +66,7 @@ Set these fields first:
 Open `profile_en/education.typ`. Replace its content with this code:
 
 ```typ
-#import "@preview/brilliant-cv:4.1.0": cv-section, cv-entry
+#import "@preview/brilliant-cv:4.1.1": cv-section, cv-entry
 
 #cv-section("Education")
 

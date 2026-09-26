@@ -26,7 +26,7 @@ The `cv()` function is the main entry point. It operates the schema-migration gu
 By default, `header-info: auto` renders the entries from `metadata.personal.info`. To replace that row, pass your own content. The name, the photo, and the header layout do not change:
 
 ```typ
-#import "@preview/brilliant-cv:4.1.0": cv, h-bar
+#import "@preview/brilliant-cv:4.1.1": cv, h-bar
 
 #let info = metadata.personal.info
 

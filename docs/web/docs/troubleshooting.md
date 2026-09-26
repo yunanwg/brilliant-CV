@@ -24,7 +24,7 @@ mappings, but it does not contain the font files.
 Make sure that you import `h-bar` from the package:
 
 ```typ
-#import "@preview/brilliant-cv:4.1.0": h-bar
+#import "@preview/brilliant-cv:4.1.1": h-bar
 ```
 
 v3 removed the old name `hBar`. See the [Migration Guide](migration.md) for all renamed functions.

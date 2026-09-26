@@ -139,7 +139,7 @@ If you give a `custom-icons` entry, it has priority over the `awesomeIcon` value
 The default header makes a linked contact item from each `[personal.info]` entry. It adds the icons and puts `h-bar()` between the items automatically. You can also control the separators, the line breaks, and the accent color of each span. To do this, pass your own content in `header-info`:
 
 ```typ
-#import "@preview/brilliant-cv:4.1.0": cv, h-bar
+#import "@preview/brilliant-cv:4.1.1": cv, h-bar
 
 #let info = metadata.personal.info
 
@@ -204,7 +204,7 @@ awesome_color = "#1E90FF"
 Create a cover letter with a signature image at the bottom:
 
 ```typ
-#import "@preview/brilliant-cv:4.1.0": letter
+#import "@preview/brilliant-cv:4.1.1": letter
 
 #let metadata = toml("metadata.toml")
 
