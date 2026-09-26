@@ -51,6 +51,9 @@ All user configuration flows through `template/profile_<name>/metadata.toml`. v4
 ### Visual tests are pixel-deterministic because they run in Docker
 Refs are generated in `tests/Dockerfile` on both maintainer machines and CI, so there is no cross-OS noise to absorb. `just test-fast` skipping the visual suite is the main way a regression slips through locally. CJK regression tests use Noto Sans CJK SC (Linux baseline) instead of macOS Heiti SC — Heiti SC visual fidelity is verified manually by the maintainer with `just dev`. See `tests/README.md` for the full layout.
 
+### `typst.toml` `exclude` globs use gitignore semantics
+Typst Universe's bundler applies `[package].exclude` like `.gitignore` lines: a pattern without a slash matches at any depth. Anchor repository-only paths with a leading `/` (for example `"/AGENTS.md"`), or a same-named file under `template/` disappears from the published starter. `scripts/release_contract.py` models the same rules, and `just package-check` fails on a mismatch.
+
 ### Releases are a PR flow, not a local tag push
 From a clean checkout of the latest `origin/main`: `just prepare-release <version>` updates the manifest and current-version examples only, then `just verify-release`. Review and merge that as a normal PR, and only then create the `v<version>` tag on that exact `main` commit. The tag workflow fails closed if the tag, manifest, starter imports, and documentation disagree. Full contract in [`CONTRIBUTING.md` §6](CONTRIBUTING.md).
 

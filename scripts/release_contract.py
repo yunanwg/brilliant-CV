@@ -231,21 +231,91 @@ def git_files() -> list[Path]:
     return paths
 
 
-def normalized_excludes() -> tuple[PurePosixPath, ...]:
+def normalized_excludes() -> tuple[str, ...]:
+    """Return the `[package].exclude` globs, validated.
+
+    Typst Universe's bundler applies these with gitignore semantics: a
+    pattern without a slash matches at any depth, a leading `/` anchors it
+    to the package root, and a trailing `/` matches directories only.
+    """
     raw = package_config().get("exclude", [])
     if not isinstance(raw, list) or not all(isinstance(item, str) for item in raw):
-        raise ContractError("[package].exclude must be an array of paths")
-    result: list[PurePosixPath] = []
+        raise ContractError("[package].exclude must be an array of globs")
+    result: list[str] = []
     for item in raw:
-        path = PurePosixPath(item)
-        if path.is_absolute() or ".." in path.parts or str(path) in {"", "."}:
-            raise ContractError(f"unsafe package exclude path: {item!r}")
-        result.append(path)
+        body = item.strip("/")
+        if not body or body == "." or ".." in PurePosixPath(body).parts:
+            raise ContractError(f"unsafe package exclude glob: {item!r}")
+        if item.startswith("!"):
+            raise ContractError(
+                f"negated exclude glob is not modeled by the release contract: {item!r}"
+            )
+        result.append(item)
     return tuple(result)
 
 
-def is_excluded(relative: PurePosixPath, excludes: tuple[PurePosixPath, ...]) -> bool:
-    return any(relative == item or item in relative.parents for item in excludes)
+def _glob_regex(glob: str) -> re.Pattern[str]:
+    """Translate a gitignore glob body: `*` and `?` stay within one path
+    segment, `**` spans segments."""
+    out = ""
+    i = 0
+    while i < len(glob):
+        char = glob[i]
+        if glob.startswith("**", i):
+            out += ".*"
+            i += 2
+            if glob.startswith("/", i):
+                i += 1
+                out += "(?:/)?"
+            continue
+        if char == "*":
+            out += "[^/]*"
+        elif char == "?":
+            out += "[^/]"
+        elif char == "[":
+            end = glob.find("]", i + 1)
+            if end == -1:
+                out += re.escape(char)
+            else:
+                out += "[" + glob[i + 1 : end].replace("!", "^", 1) + "]"
+                i = end
+        else:
+            out += re.escape(char)
+        i += 1
+    return re.compile(out)
+
+
+def _glob_matches(pattern: str, relative: PurePosixPath, is_dir: bool) -> bool:
+    if pattern.endswith("/") and not is_dir:
+        return False
+    body = pattern.rstrip("/")
+    anchored = body.startswith("/") or "/" in body
+    body = body.lstrip("/")
+    target = relative.as_posix() if anchored else relative.name
+    return _glob_regex(body).fullmatch(target) is not None
+
+
+def is_excluded(relative: PurePosixPath, excludes: tuple[str, ...]) -> bool:
+    """True when a file, or any directory above it, matches an exclude glob."""
+    candidates = [(relative, False)] + [
+        (parent, True) for parent in relative.parents if str(parent) != "."
+    ]
+    return any(
+        _glob_matches(pattern, path, is_dir)
+        for pattern in excludes
+        for path, is_dir in candidates
+    )
+
+
+def excluded_files(package_dir: Path, excludes: tuple[str, ...]) -> list[str]:
+    """Files under package_dir that the exclude globs would drop."""
+    leaked: list[str] = []
+    for path in package_dir.rglob("*"):
+        if path.is_file():
+            relative = PurePosixPath(path.relative_to(package_dir).as_posix())
+            if is_excluded(relative, excludes):
+                leaked.append(relative.as_posix())
+    return sorted(leaked)
 
 
 def required_payload_paths() -> tuple[PurePosixPath, ...]:
@@ -333,11 +403,7 @@ def check_payload(package_dir: Path) -> None:
     ]
     if missing:
         raise ContractError("payload is missing: " + ", ".join(missing))
-    leaked = [
-        str(item)
-        for item in normalized_excludes()
-        if (package_dir / Path(item)).exists()
-    ]
+    leaked = excluded_files(package_dir, normalized_excludes())
     if leaked:
         raise ContractError("payload contains excluded paths: " + ", ".join(leaked))
     check_readme_links(package_dir)

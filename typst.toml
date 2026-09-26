@@ -18,16 +18,16 @@ keywords = [
 categories = ["cv", "languages", "layout"]
 compiler = "0.14.0"
 exclude = [
-    "docs",
-    "tests",
-    "scripts",
-    "justfile",
-    ".github",
-    ".pre-commit-config.yaml",
-    ".gitignore",
-    "AGENTS.md",
-    "CLAUDE.md",
-    "CONTRIBUTING.md",
+    "/docs",
+    "/tests",
+    "/scripts",
+    "/justfile",
+    "/.github",
+    "/.pre-commit-config.yaml",
+    "/.gitignore",
+    "/AGENTS.md",
+    "/CLAUDE.md",
+    "/CONTRIBUTING.md",
 ]
 
 [template]

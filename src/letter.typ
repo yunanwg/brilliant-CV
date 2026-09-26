@@ -65,7 +65,14 @@
 #let _letter-signature(img) = {
   set image(width: 25%)
   linebreak()
-  place(right, dx: -5%, dy: 0%, img)
+  // Keep the signature in the flow so it reserves its height: a placed
+  // signature took no space and ran into the footer, or off the page, when
+  // the body filled the page. An unbreakable block moves to the next page
+  // instead.
+  block(breakable: false, above: 0pt, width: 100%, align(right, move(
+    dx: -5%,
+    img,
+  )))
 }
 
 #let _letter-footer(metadata) = {
