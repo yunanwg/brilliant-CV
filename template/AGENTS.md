@@ -40,8 +40,10 @@ only.
      `typst compile --root . applications/<company>/cv.typ`
    - To check the page count without rendering (Typst 0.15+):
      `typst eval --input brilliant-cv-query=1 'query(<brilliant-cv>).last().value.pages' --in cv.typ`.
-     Each element also reports the `page` on which it ends, so you can list
-     what spilled to page 2; the `cv()` doc-comment lists the fields.
+     On Typst 0.14, use `typst query cv.typ '<brilliant-cv>' --field value --input brilliant-cv-query=1`
+     and read `pages` from the last element. Each element also reports the
+     `page` on which it ends, so you can list what spilled to page 2; the
+     `cv()` doc-comment lists the fields.
    - To see the layout, compile to PNG, one file per page:
      `typst compile --root . applications/<company>/cv.typ "applications/<company>/cv-{p}.png"`.
      Typst does not create a missing output folder.
