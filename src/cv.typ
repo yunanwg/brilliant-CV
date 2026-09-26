@@ -7,7 +7,7 @@
   fa-pager, fa-phone, fa-researchgate, fa-square-github,
 )
 #import "./utils/injection.typ": _inject
-#import "./utils/identity.typ": _display-name
+#import "./utils/identity.typ": _display-name, _display-name-override
 #import "./utils/styles.typ": (
   _awesome-colors, _latin-font-list, _latin-header-font, _regular-colors,
   _resolve-accent-color, _set-accent-color, h-bar,
@@ -294,7 +294,7 @@
   // display_name overrides the Latin split (first light + last bold) with a
   // single styled string. Use this for CJK profiles or any profile where the
   // split feels wrong.
-  let display-name = metadata.personal.at("display_name", default: none)
+  let display-name = _display-name-override(metadata)
 
   let rendered-header-info = if header-info == auto {
     _make-header-info(
