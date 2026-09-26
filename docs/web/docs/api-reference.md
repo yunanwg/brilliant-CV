@@ -24,6 +24,10 @@ Render a CV document with header, footer, and page layout applied.
 
 Render a cover letter document with header, footer, and page layout applied.
 
+The letter body uses a 12pt font size. `[layout] font_size` applies only to
+`cv()`. To change the body size, add `#set text(size: ...)` after the
+`show` rule; the header and the footer keep their sizes.
+
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `metadata` | dictionary | — | The metadata dictionary read from `metadata.toml`. |
