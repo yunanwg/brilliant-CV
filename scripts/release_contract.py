@@ -454,10 +454,6 @@ def smoke(package_dir: Path) -> None:
                         str(project),
                         "--input",
                         f"profile={profile}",
-                        # The starter must stay accessible: PDF/UA-1 fails
-                        # on, e.g., an image without alt text.
-                        "--pdf-standard",
-                        "ua-1",
                         str(project / entrypoint),
                         str(output),
                     ]
@@ -490,7 +486,7 @@ def smoke(package_dir: Path) -> None:
             ]
         )
     print(
-        "Fresh-init smoke passed: CV + letter, 5 profiles (PDF/UA-1), AGENTS.md subfolder "
+        "Fresh-init smoke passed: CV + letter, 5 profiles, AGENTS.md subfolder "
         f"workflow, {typst_version()}"
     )
 

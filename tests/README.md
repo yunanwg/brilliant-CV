@@ -12,6 +12,7 @@ tests/
   panics/                       # Shell-script smoke tests (not tytanic)
   query/                        # Shell test for the experimental layout hooks (needs --input, so not tytanic)
   text/                         # Extracted-text snapshots (pdftotext) — what ATS/LLM parsers read
+  pdfua/                        # Starter CV + letter compile as PDF/UA-1 (accessibility, alt text)
     <name>/fixture.typ          # Invalid API input or legacy metadata fixture
     run.sh                      # Iterate fixtures, assert non-zero exit + stderr substring
   units/<name>/test.typ         # Tytanic compile-only — assert.eq() on pure helpers
