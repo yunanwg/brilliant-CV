@@ -104,74 +104,105 @@
   rows
 }
 
-/// Generate personal info section
+/// Render one personal-info item (icon, text, and link) as an unbreakable box.
+/// -> content
+#let _make-header-info-item(k, v, icons, custom-icons) = {
+  if k.contains("custom") {
+    let awesome-icon = v.at("awesomeIcon", default: "")
+    let text = v.at("text", default: "")
+    let link-value = v.at("link", default: "")
+    let icon = custom-icons.at(k, default: none)
+    if icon != none {
+      icon = box(width: 10pt, {
+        set image(width: 100%)
+        icon
+      })
+    } else if awesome-icon != "" {
+      icon = fa-icon(awesome-icon)
+    }
+    let body = if text != "" {
+      icon
+      h(5pt)
+      text
+    } else { icon }
+    box(if link-value != "" { link(link-value)[#body] } else { body })
+  } else {
+    let icon = icons.at(k)
+    let dest = if k == "email" {
+      "mailto:" + v
+    } else if k == "linkedin" {
+      "https://www.linkedin.com/in/" + v
+    } else if k == "github" {
+      "https://github.com/" + v
+    } else if k == "gitlab" {
+      "https://gitlab.com/" + v
+    } else if k == "homepage" {
+      "https://" + v
+    } else if k == "orcid" {
+      "https://orcid.org/" + v
+    } else if k == "researchgate" {
+      "https://www.researchgate.net/profile/" + v
+    } else if k == "phone" {
+      "tel:" + v.replace(" ", "")
+    } else {
+      ""
+    }
+    box(
+      if dest != "" {
+        link(dest, {
+          icon
+          h(5pt)
+          v
+        })
+      } else {
+        icon
+        h(5pt)
+        v
+      },
+    )
+  }
+}
+
+/// Generate personal info section.
+///
+/// Items are packed into lines by measuring them against the available width,
+/// and separators go only between items on the same line. Letting the
+/// paragraph wrap instead left a separator dangling at the end of a line,
+/// which both readers and text extraction see as a stray `|`.
 /// -> content
 #let _make-header-info(personal-info, icons, custom-icons) = {
   let rows = _normalize-header-info(personal-info, custom-icons: custom-icons)
+  let items = rows.map(row => row.map(((k, v)) => _make-header-info-item(
+    k,
+    v,
+    icons,
+    custom-icons,
+  )))
 
-  for (row-index, row) in rows.enumerate() {
-    if row-index > 0 { linebreak() }
-
-    for (item-index, item) in row.enumerate() {
-      let (k, v) = item
-      if item-index > 0 { h-bar() }
-
-      if k.contains("custom") {
-        let awesome-icon = v.at("awesomeIcon", default: "")
-        let text = v.at("text", default: "")
-        let link-value = v.at("link", default: "")
-        let icon = custom-icons.at(k, default: none)
-        if icon != none {
-          icon = box(width: 10pt, {
-            set image(width: 100%)
-            icon
-          })
-        } else if awesome-icon != "" {
-          icon = fa-icon(awesome-icon)
+  layout(size => {
+    let separator-width = measure(h-bar()).width
+    let lines = ()
+    for row in items {
+      let line = ()
+      let width = 0pt
+      for item in row {
+        let item-width = measure(item).width
+        let needed = if line.len() == 0 { item-width } else {
+          width + separator-width + item-width
         }
-        let body = if text != "" {
-          icon
-          h(5pt)
-          text
-        } else { icon }
-        box(if link-value != "" { link(link-value)[#body] } else { body })
-      } else {
-        let icon = icons.at(k)
-        let dest = if k == "email" {
-          "mailto:" + v
-        } else if k == "linkedin" {
-          "https://www.linkedin.com/in/" + v
-        } else if k == "github" {
-          "https://github.com/" + v
-        } else if k == "gitlab" {
-          "https://gitlab.com/" + v
-        } else if k == "homepage" {
-          "https://" + v
-        } else if k == "orcid" {
-          "https://orcid.org/" + v
-        } else if k == "researchgate" {
-          "https://www.researchgate.net/profile/" + v
-        } else if k == "phone" {
-          "tel:" + v.replace(" ", "")
+        if line.len() > 0 and needed > size.width {
+          lines.push(line)
+          line = (item,)
+          width = item-width
         } else {
-          ""
+          line.push(item)
+          width = needed
         }
-        box(
-          if dest != "" {
-            link(dest, {
-              icon
-              h(5pt)
-              v
-            })
-          } else {
-            icon
-            h(5pt)
-            v
-          },
-        )
       }
+      if line.len() > 0 { lines.push(line) }
     }
-  }
+    lines.map(line => line.join(h-bar())).join(linebreak())
+  })
 }
 
 /// Create header name section.

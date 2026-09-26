@@ -1,5 +1,5 @@
 王道尔
- yunanwg |  +86 138 0000 0000 |  john.doe@me.org |  johndoe |  yunanwg |  johndoe.dev |
+ yunanwg |  +86 138 0000 0000 |  john.doe@me.org |  johndoe |  yunanwg |  johndoe.dev
  0000-0000-0000-0000 |  上海 |  数据科学硕士 |  AWS Certified
 数据科学负责人，将复杂数据转化为业务决策
 教育经历

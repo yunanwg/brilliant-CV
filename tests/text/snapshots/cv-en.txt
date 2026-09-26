@@ -1,5 +1,5 @@
 John Doe
- yunanwg |  +1 (415) 555-0132 |  john.doe@me.org |  johndoe |  yunanwg |  johndoe.dev |
+ yunanwg |  +1 (415) 555-0132 |  john.doe@me.org |  johndoe |  yunanwg |  johndoe.dev
  0000-0000-0000-0000 |  San Francisco, CA |  Master of Data Science |  AWS Certified
 Data science leader turning complex data into business decisions
 Education

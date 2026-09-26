@@ -1,5 +1,5 @@
 John Doe
- yunanwg |  +39 02 12345678 |  john.doe@me.org |  johndoe |  yunanwg |  johndoe.dev |
+ yunanwg |  +39 02 12345678 |  john.doe@me.org |  johndoe |  yunanwg |  johndoe.dev
  0000-0000-0000-0000 |  Milano, Italia |  Master in Data Science |  AWS Certified
 Responsabile data science che trasforma dati complessi in decisioni di business
 Istruzione

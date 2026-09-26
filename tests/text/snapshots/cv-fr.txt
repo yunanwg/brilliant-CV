@@ -1,5 +1,5 @@
 John Doe
- yunanwg |  +33 6 12 34 56 78 |  john.doe@me.org |  johndoe |  yunanwg |  johndoe.dev |
+ yunanwg |  +33 6 12 34 56 78 |  john.doe@me.org |  johndoe |  yunanwg |  johndoe.dev
  0000-0000-0000-0000 |  Paris, France |  Master en Science des Données |  AWS Certified |  Permis B
 Responsable data science qui transforme des données complexes en décisions métier
 Formation
