@@ -117,6 +117,29 @@ def main() -> int:
         )
         assert "Release ref contract passed" in release_ref.stdout
 
+    sys.dont_write_bytecode = True
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import release_contract
+
+    with tempfile.TemporaryDirectory(prefix="readme-links-test-") as directory:
+        package = Path(directory)
+        write(package / "LICENSE", "license\n")
+        write(
+            package / "README.md",
+            '<img src="LICENSE"> [ok](LICENSE#top) [web](https://example.com)\n'
+            "[anchor](#usage) [missing](CONTRIBUTING.md)\n",
+        )
+        try:
+            release_contract.check_readme_links(package)
+        except release_contract.ContractError as error:
+            assert "CONTRIBUTING.md" in str(error)
+            assert "LICENSE" not in str(error)
+        else:
+            raise AssertionError("README link to an excluded file was not rejected")
+
+        write(package / "README.md", "[ok](LICENSE) [web](https://example.com)\n")
+        release_contract.check_readme_links(package)
+
     print("release-contract bump regression passed")
     return 0
 

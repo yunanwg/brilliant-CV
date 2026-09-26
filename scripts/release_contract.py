@@ -29,6 +29,8 @@ CURRENT_VERSION_SOURCES = (
 )
 MIGRATION_GUIDE = ROOT / "docs/web/docs/migration.md"
 MIGRATION_CURRENT_MARKER = "// release-current-version"
+# Markdown `[text](target)` / `![alt](target)` and HTML `src=` / `href=` targets.
+README_LINK = re.compile(r"\]\(\s*<?([^)\s>]+)|\b(?:src|href)=[\"']([^\"']+)")
 
 
 class ContractError(RuntimeError):
@@ -293,6 +295,26 @@ def assemble(output: Path) -> None:
     print(f"Assembled {len(copied)} files at {output}")
 
 
+def check_readme_links(package_dir: Path) -> None:
+    # Typst Universe rejects README links to files the package does not ship,
+    # which is easy to miss when a linked file sits under `exclude`.
+    readme = package_dir / "README.md"
+    broken: list[str] = []
+    for match in README_LINK.finditer(readme.read_text(encoding="utf-8")):
+        target = match.group(1) or match.group(2)
+        if re.match(r"^[a-z][a-z0-9+.-]*:", target, re.IGNORECASE) or target.startswith(
+            ("#", "//")
+        ):
+            continue
+        path = target.split("#", 1)[0].split("?", 1)[0].lstrip("/")
+        if path and not (package_dir / path).exists():
+            broken.append(target)
+    if broken:
+        raise ContractError(
+            "README.md links to files missing from the payload: " + ", ".join(broken)
+        )
+
+
 def check_payload(package_dir: Path) -> None:
     package_dir = package_dir.resolve()
     config = payload_package_config(package_dir)
@@ -318,6 +340,7 @@ def check_payload(package_dir: Path) -> None:
     ]
     if leaked:
         raise ContractError("payload contains excluded paths: " + ", ".join(leaked))
+    check_readme_links(package_dir)
     print(f"Package payload contract passed: {name}:{version}")
 
 
