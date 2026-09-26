@@ -183,7 +183,7 @@ _test-docker CMD: test-image
 # Run the full test suite — tytanic visual + panic smoke tests in Docker
 test: test-image
     @bash tests/guards.sh
-    @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} bash -c "tt run --no-fail-fast && bash tests/panics/run.sh && bash tests/query/run.sh"
+    @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} bash -c "tt run --no-fail-fast && bash tests/panics/run.sh && bash tests/query/run.sh && bash tests/text/run.sh"
 
 # No `link` prerequisite: units/ and panics/ fixtures use root-relative
 # imports (`/src/...`, `/tests/...`), never `@preview/brilliant-cv:...`, so
@@ -211,7 +211,7 @@ test-filter PAT: test-image
 
 # Regenerate ref PNGs in the pinned Docker toolchain
 test-update: test-image
-    @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} tt update --no-fail-fast
+    @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} bash -c "tt update --no-fail-fast; UPDATE=1 bash tests/text/run.sh"
 
 # Drop into an interactive shell inside the test image (debugging aid)
 test-shell: test-image

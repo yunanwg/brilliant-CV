@@ -11,6 +11,7 @@ tests/
   common.typ                    # Shared fixtures (not a tytanic test)
   panics/                       # Shell-script smoke tests (not tytanic)
   query/                        # Shell test for the experimental layout hooks (needs --input, so not tytanic)
+  text/                         # Extracted-text snapshots (pdftotext) — what ATS/LLM parsers read
     <name>/fixture.typ          # Invalid API input or legacy metadata fixture
     run.sh                      # Iterate fixtures, assert non-zero exit + stderr substring
   units/<name>/test.typ         # Tytanic compile-only — assert.eq() on pure helpers
@@ -24,7 +25,7 @@ Tytanic discovers tests by walking `tests/` for files literally named `test.typ`
 
 | Command                       | Where                  | What it does                                                    |
 | ----------------------------- | ---------------------- | --------------------------------------------------------------- |
-| `just test`                   | Docker (`linux/arm64`) | Full suite — tytanic visual + panic smoke + query-hook tests     |
+| `just test`                   | Docker (`linux/arm64`) | Full suite — tytanic visual + panic smoke + query hooks + text snapshots |
 | `just test-fast`              | native (host shell)    | Panic + unit tests only (compile-only, sub-second)              |
 | `just test-panics`            | native                 | Just the panic-fixture shell script                             |
 | `just test-filter '<glob>'`   | Docker                 | Visual tests matching a tytanic glob, e.g. `'components/*'`     |

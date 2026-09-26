@@ -1,0 +1,63 @@
+John Doe
+ yunanwg |  +39 02 12345678 |  john.doe@me.org |  johndoe |  yunanwg |  johndoe.dev |
+ 0000-0000-0000-0000 |  Milano, Italia |  Master in Data Science |  AWS Certified
+Responsabile data science che trasforma dati complessi in decisioni di business
+Istruzione
+Aurora State University
+Master in Data Science
+Aurora, WA
+2015 - 2017
+• Tesi: Previsione del tasso di abbandono dei clienti nel settore delle telecomunicazioni mediante algoritmi di apprendimento automatico
+e analisi delle reti
+• Corsi: Sistemi e tecnologie basati su Big Data | Data Mining | Natural language processing
+Aurora State University
+Laurea in informatica
+Aurora, WA
+2011 - 2015
+• Tesi: Esplorazione di algoritmi di apprendimento automatico per prevedere i prezzi delle azioni: uno studio comparativo di modelli di
+regressione e serie temporali
+• Corsi: Sistemi di database | Reti di calcolatori | Ingegneria del software | Intelligenza artificiale
+Esperienze di lavoro
+XYZ Corporation Milano, Italia
+Direttore di Data Science 2020 - Presente
+• Guido un team di data scientist e analisti per sviluppare e implementare strategie basate sui dati, sviluppo modelli predittivi e algoritmi
+per supportare il processo decisionale in tutta l’organizzazione
+• Collaboro con la dirigenza esecutiva per identificare opportunità di business e guidare la crescita, implemento le migliori pratiche per la
+governance dei dati, la qualità e la sicurezza
+Dataiku Snowflake SparkSQL
+ABC Company
+Data Analyst
+New York, NY
+2017 - 2020
+• Analizzo dataset di grandi dimensioni con SQL e Python, collaboro con i team per avere informazioni utili a livello di business
+• Creo visualizzazioni di dati e dashboard con Tableau, sviluppo e gestisco pipeline di dati con AWS
+PQR Corporation
+Tirocinio in Data Analysis
+Chicago, IL
+Summer 2017
+• Ho collaborato alla pulizia, all’elaborazione e all’analisi dei dati utilizzando Python ed Excel, ho partecipato alle riunioni del team e ho
+contribuito alla pianificazione e all’esecuzione del progetto
+Progetti
+ABC Nonprofit Organization
+Data Analyst volontario
+Da remoto
+2019 - Present
+• Analizzo i dati sui donatori e sulla raccolta fondi per identificare tendenze e opportunità di crescita
+• Creo visualizzazioni di dati e dashboard per comunicare informazioni al consiglio di amministrazione
+• Collaboro con altri volontari per sviluppare e implementare strategie basate sui dati
+Certificazioni
+2022 AWS Certified Security, Amazon Web Services (AWS)
+2017 Applied Data Science with Python, Coursera
+Fondamenti di SQL, Datacamp
+Pubblicazioni
+Doe, J., & Smith, A. (2020). An Introduction to Data Analysis Techniques. Journal of Data Science, 15(2), 123–145.
+Doe, J., & Wilson, D. (2022). Machine Learning for Data Analysis. Springer.
+Jones, S., Doe, J., & Brown, M. (2021). Exploratory Data Analysis for Predictive Modeling. Proceedings of the International Conference on
+Data Science, 256–267.
+Competenze
+Lingue Inglese | Francese | Cinese
+Tecnologie Tableau | Python (Pandas/Numpy) | PostgreSQL
+John Doe Curriculum vitae
+Interessi personali Nuoto | Cucina | Lettura
+John Doe Curriculum vitae
+

@@ -1,0 +1,63 @@
+John Doe
+ yunanwg |  +33 6 12 34 56 78 |  john.doe@me.org |  johndoe |  yunanwg |  johndoe.dev |
+ 0000-0000-0000-0000 |  Paris, France |  Master en Science des Données |  AWS Certified |  Permis B
+Responsable data science qui transforme des données complexes en décisions métier
+Formation
+Université d’État d’Aurora
+Master en Science des Données
+Aurora, WA
+2015 - 2017
+• Thèse : Prédiction du taux de désabonnement des clients dans l’industrie des télécommunications en utilisant des algorithmes
+d’apprentissage automatique et l’analyse de réseau
+• Cours : Systèmes et technologies Big Data | Exploration et exploitation de données | Traitement du langage naturel
+Université d’État d’Aurora
+Bachelors en Informatique
+Aurora, WA
+2011 - 2015
+• Thèse : Exploration de l’utilisation des algorithmes d’apprentissage automatique pour la prédiction des prix des actions : une étude
+comparative des modèles de régression et de séries chronologiques
+• Cours : Systèmes de base de données | Réseaux informatiques | Génie logiciel | Intelligence artificielle
+Expérience Professionnelle
+XYZ Corporation Paris, France
+Directeur de la Science des Données 2020 - Présent
+• Diriger une équipe de scientifiques et d’analystes de données pour développer et mettre en œuvre des stratégies axées sur les données,
+développer des modèles prédictifs et des algorithmes pour soutenir la prise de décisions dans toute l’organisation
+• Collaborer avec la direction pour identifier les opportunités d’affaires et stimuler la croissance, mettre en œuvre les meilleures pratiques
+en matière de gouvernance, de qualité et de sécurité des données
+Dataiku Snowflake SparkSQL
+ABC Company
+Analyste de Données
+New York, NY
+2017 - 2020
+• Analyser de grands ensembles de données avec SQL et Python, collaborer avec les équipes pour découvrir des insights commerciaux
+• Créer des visualisations de données et des tableaux de bord dans Tableau, développer et maintenir des pipelines de données avec AWS
+PQR Corporation
+Stagiaire en Analyse de Données
+Chicago, IL
+été 2017
+été 2016
+• Aider à la préparation, au traitement et à l’analyse de données à l’aide de Python et Excel, participer aux réunions d’équipe et contribuer
+à la planification et à l’exécution de projets
+Projets & Associations
+ABC Organisation à But Non Lucratif
+Analyste de Données Bénévole
+À distance
+2019 - Présent
+• Analyser les données de donateurs et de collecte de fonds pour identifier les tendances et les opportunités de croissance
+• Créer des visualisations de données et des tableaux de bord pour communiquer des insights au conseil d’administration
+Certificates
+2022 AWS Certified Security, Amazon Web Services (AWS)
+2017 Applied Data Science with Python, Coursera
+Bases de données et requêtes SQL, OpenClassrooms
+Publications
+Doe, J., & Smith, A. (2020). An Introduction to Data Analysis Techniques. Journal of Data Science, 15(2), 123–145.
+Doe, J., & Wilson, D. (2022). Machine Learning for Data Analysis. Springer.
+Jones, S., Doe, J., & Brown, M. (2021). Exploratory Data Analysis for Predictive Modeling. Proceedings of the International Conference on
+Data Science, 256–267.
+Compétences
+Langues Anglais | Français | Chinois
+Tech Stack Tableau | Python (Pandas/Numpy) | PostgreSQL
+John Doe Résumé
+Centres d’intérêt Natation | Cuisine | Lecture
+John Doe Résumé
+

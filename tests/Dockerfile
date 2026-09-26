@@ -24,7 +24,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 # TYPST_FONT_PATHS (colon-separated dirs).
 ENV TYPST_FONT_PATHS=/usr/share/fonts:/usr/local/share/fonts
 
-# System tools + Roboto + Noto CJK (substitutes for Heiti SC in zh tests
+# System tools (poppler-utils provides pdftotext for tests/text/) + Roboto +
+# Noto CJK (substitutes for Heiti SC in zh tests
 # — see tests/README.md for the rationale: Heiti SC isn't redistributable,
 # so the Linux baseline uses Noto CJK SC and the test fixture overrides
 # the font selection.)
@@ -37,6 +38,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         fonts-roboto=2:0~20170802-3 \
         fonts-roboto-unhinted=2:0~20170802-3 \
         fonts-noto-cjk=1:20230817+repack1-3 \
+        poppler-utils=24.02.0-1ubuntu9.9 \
         bash \
         just \
     && rm -rf /var/lib/apt/lists/*

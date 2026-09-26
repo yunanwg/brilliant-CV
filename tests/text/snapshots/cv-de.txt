@@ -1,0 +1,68 @@
+John Doe
+ yunanwg |  +49 30 12345678 |  john.doe@me.org |  johndoe |  yunanwg |  johndoe.dev |
+ 0000-0000-0000-0000 |  Berlin, Deutschland |  Master in Datenwissenschaft |  AWS Certified
+Data-Science-Führungskraft, die komplexe Daten in Geschäftsentscheidungen übersetzt
+Abschlüsse
+Aurora State University
+Master of Data Science
+Aurora, WA
+2015 - 2017
+• Dissertation: Vorhersage der Kundenabwanderung in der Telekommunikationsbranche mit Hilfe von Algorithmen des maschinellen
+Lernens und Netzwerkanalyse
+• Kurs: Big-Data-Systeme und -Technologien | Data Mining und Exploration | Natural Language Processing
+Aurora State University
+Bachelors of Science in Informatik
+Aurora, WA
+2011 - 2015
+• Dissertation: Erforschung des Einsatzes von Algorithmen des maschinellen Lernens zur Vorhersage von Aktienkursen: Eine
+vergleichende Studie von Regressions- und Zeitreihenmodellen
+• Kurs: Datenbanksysteme | Rechnernetze | Softwaretechnik | Künstliche Intelligenz
+Berufliche Erfahrung
+XYZ Gesellschaft Berlin, Deutschland
+Direktor für Datenwissenschaft 2020 - Heute
+• Leitung eines Teams von Datenwissenschaftlern und -analysten zur Entwicklung und Umsetzung datengesteuerter Strategien,
+Entwicklung von Prognosemodellen und Algorithmen zur Unterstützung der Entscheidungsfindung im gesamten Unternehmen
+• Zusammenarbeit mit der Geschäftsleitung, um Geschäftsmöglichkeiten zu ermitteln und das Wachstum voranzutreiben, Umsetzung
+bewährter Verfahren für Datenverwaltung, -qualität und -sicherheit
+Dataiku Snowflake SparkSQL
+ABC Unternehmen
+Datenanalyst
+New York, NY
+2017 - 2020
+• Analyse von großen Datenmengen mit SQL und Python, zusammenarbeit mit Teams, um geschäftliche Erkenntnisse zu gewinnen
+• Erstellung von Datenvisualisierungen und Dashboards in Tableau, Entwicklung und Pflege von Datenpipelines mit AWS
+PQR Gesellschaft
+Praktikant Datenanalyst
+Chicago, IL
+Sommer 2017
+Sommer 2016
+• Unterstützung bei der Datenbereinigung, -verarbeitung und -analyse mit Python und Excel, Teilnahme an Teambesprechungen und
+Mitwirkung bei der Projektplanung und -durchführung
+Projekte und Verbände
+ABC Gemeinnützige Organisation
+Ehrenamtlicher Datenanalyst
+Remote
+2019 - Heute
+• Analyse von Spender- und Fundraising-Daten zur Ermittlung von Trends und Wachstumsmöglichkeiten
+• Erstellung von Datenvisualisierungen und Dashboards zur Vermittlung von Erkenntnissen an den Vorstand
+• Zusammenarbeit mit anderen Freiwilligen bei der Entwicklung und Umsetzung datengestützter Strategien
+Zertifikate
+2022 AWS: Zertifizierte Sicherheit, Amazon Web Services (AWS)
+2017 Angewandte Datenwissenschaft mit Python, Coursera
+SQL-Grundlagenkurs, Datacamp
+Veröffentlichungen
+Doe, J., & Smith, A. (2020). An Introduction to Data Analysis Techniques. Journal of Data Science, 15(2), 123–145.
+Doe, J., & Wilson, D. (2022). Machine Learning for Data Analysis. Springer.
+Jones, S., Doe, J., & Brown, M. (2021). Exploratory Data Analysis for Predictive Modeling. Proceedings of the International Conference on
+Data Science, 256–267.
+John Doe Lebenslauf
+Fähigkeiten
+Sprachen      Deutsch (Muttersprache) | Englisch (Fließend) | Französisch (Konversation)
+Programmierung      Python | SQL | R
+Technologie Stack Tableau | Snowflake | AWS | Docker | Git
+Zertifizierungen AWS Zertifiziert Angewandte Datenwissenschaft SQL-Grundlagen
+Persönliche
+Interessen
+Schwimmen | Kochen | Lesen | Fotografie
+John Doe Lebenslauf
+

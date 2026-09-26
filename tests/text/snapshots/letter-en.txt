@@ -1,0 +1,20 @@
+John Doe
+123 Main St
+San Francisco, CA 94102
+Acme Analytics
+Hiring Team
+100 Market St
+San Francisco, CA 94105
+2026-01-15
+Subject: Senior Data Scientist application
+Dear Hiring Manager,
+This is a sample cover letter body used for visual-regression testing. It exercises the standard letter
+layout: header (sender name + address, recipient block, date, subject), body, and the metadata-driven
+footer.
+I am writing to express my interest in the Senior Data Scientist role. With over five years of experience in
+production ML systems, I believe my background aligns well with the responsibilities outlined in the
+posting.
+Best regards,
+Jane Doe
+John Doe Cover letter
+

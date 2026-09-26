@@ -52,7 +52,7 @@ jobs:
           docker run --rm \
             -v "$PWD:/workspace" \
             brilliant-cv-test \
-            tt update --no-fail-fast
+            bash -c "tt update --no-fail-fast; UPDATE=1 bash tests/text/run.sh"
 
       - name: Commit and push regenerated refs
         run: |

@@ -102,7 +102,7 @@ jobs:
           docker run --rm \
             -v "$PWD:/workspace" \
             brilliant-cv-test \
-            bash -c "tt run --no-fail-fast && bash tests/panics/run.sh && typstyle --check src template tests"
+            bash -c "tt run --no-fail-fast && bash tests/panics/run.sh && bash tests/query/run.sh && bash tests/text/run.sh && typstyle --check src template tests"
 
   publish:
     needs: [verify-contract, verify-minimum-typst, verify-tests]
