@@ -201,7 +201,9 @@
       }
       if line.len() > 0 { lines.push(line) }
     }
-    lines.map(line => line.join(h-bar())).join(linebreak())
+    // Each packed line is a box, so the paragraph can never wrap inside a
+    // line (h-bar() contains spaces) and strand a separator again.
+    lines.map(line => box(line.join(h-bar()))).join(linebreak())
   })
 }
 
