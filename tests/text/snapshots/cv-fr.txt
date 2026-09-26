@@ -58,6 +58,7 @@ Compétences
 Langues Anglais | Français | Chinois
 Tech Stack Tableau | Python (Pandas/Numpy) | PostgreSQL
 John Doe Résumé
-Centres d’intérêt Natation | Cuisine | Lecture
+
+--- page break ---
+Centres d’intérêt Natation | Cuisine | Lecture
 John Doe Résumé
-

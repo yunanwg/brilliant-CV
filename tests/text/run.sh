@@ -31,7 +31,17 @@ for name in "${FIXTURES[@]}"; do
     FAIL=$((FAIL + 1))
     continue
   fi
-  pdftotext -raw -enc UTF-8 "$OUT/$name.pdf" "$OUT/$name.txt"
+  # Normalize so the committed files survive the repo's pre-commit hooks
+  # (end-of-file-fixer, trailing-whitespace): page breaks become a marker
+  # line, trailing spaces go, and the file ends with exactly one newline.
+  pdftotext -raw -enc UTF-8 "$OUT/$name.pdf" - |
+    sed -e 's/\f/\n--- page break ---\n/g' -e 's/[[:space:]]*$//' |
+    awk '{ line[NR] = $0 }
+      END {
+        n = NR
+        while (n > 0 && (line[n] == "" || line[n] == "--- page break ---")) n--
+        for (i = 1; i <= n; i++) print line[i]
+      }' >"$OUT/$name.txt"
 
   if [[ "${UPDATE:-0}" == "1" ]]; then
     cp "$OUT/$name.txt" "$snapshot"

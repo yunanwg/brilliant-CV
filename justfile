@@ -211,7 +211,7 @@ test-filter PAT: test-image
 
 # Regenerate ref PNGs in the pinned Docker toolchain
 test-update: test-image
-    @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} bash -c "tt update --no-fail-fast; UPDATE=1 bash tests/text/run.sh"
+    @docker run --rm --platform={{DOCKER_PLATFORM}} -v "$(pwd):/workspace" {{DOCKER_IMAGE}} bash -c "tt update --no-fail-fast; rc=\$?; UPDATE=1 bash tests/text/run.sh && exit \$rc"
 
 # Drop into an interactive shell inside the test image (debugging aid)
 test-shell: test-image

@@ -54,4 +54,3 @@ Data Science, 256–267.
 技术栈 Tableau | Python (Pandas/Numpy) | PostgreSQL
 个人兴趣 游泳 | 烹饪 | 阅读
 王道尔 简历
-

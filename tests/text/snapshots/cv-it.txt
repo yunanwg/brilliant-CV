@@ -58,6 +58,7 @@ Competenze
 Lingue Inglese | Francese | Cinese
 Tecnologie Tableau | Python (Pandas/Numpy) | PostgreSQL
 John Doe Curriculum vitae
-Interessi personali Nuoto | Cucina | Lettura
+
+--- page break ---
+Interessi personali Nuoto | Cucina | Lettura
 John Doe Curriculum vitae
-

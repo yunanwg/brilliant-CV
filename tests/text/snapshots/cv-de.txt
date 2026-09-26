@@ -56,7 +56,9 @@ Doe, J., & Wilson, D. (2022). Machine Learning for Data Analysis. Springer.
 Jones, S., Doe, J., & Brown, M. (2021). Exploratory Data Analysis for Predictive Modeling. Proceedings of the International Conference on
 Data Science, 256–267.
 John Doe Lebenslauf
-Fähigkeiten
+
+--- page break ---
+Fähigkeiten
 Sprachen      Deutsch (Muttersprache) | Englisch (Fließend) | Französisch (Konversation)
 Programmierung      Python | SQL | R
 Technologie Stack Tableau | Snowflake | AWS | Docker | Git
@@ -65,4 +67,3 @@ Persönliche
 Interessen
 Schwimmen | Kochen | Lesen | Fotografie
 John Doe Lebenslauf
-

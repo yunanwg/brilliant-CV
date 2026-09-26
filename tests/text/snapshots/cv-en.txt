@@ -61,7 +61,9 @@ Remote
 Volunteer Work Non-profit Social Impact
 Python Data Science Libraries Remote
 John Doe Curriculum vitae
-Open Source Contributor 2018 - Present
+
+--- page break ---
+Open Source Contributor 2018 - Present
 • Contributed to pandas, scikit-learn, and matplotlib projects
 • Fixed bugs, improved documentation, and added new features
 • Mentored new contributors during Google Summer of Code
@@ -95,4 +97,3 @@ Pandas | NumPy | Scikit-learn | TensorFlow | FastAPI
 Certifications AWS Security Tableau Desktop Applied Data Science SQL Fundamentals
 Personal Interests Swimming | Cooking | Reading | Photography
 John Doe Curriculum vitae
-
