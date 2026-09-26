@@ -15,6 +15,11 @@
 //   typst compile letter.typ --input profile=fr
 #let profile = sys.inputs.at("profile", default: "en")
 #let metadata = toml("profile_" + profile + "/metadata.toml")
+// The name you sign with: display_name when the profile sets one.
+#let signer = metadata.personal.at(
+  "display_name",
+  default: metadata.personal.first_name + " " + metadata.personal.last_name,
+)
 
 
 #show: letter.with(
@@ -53,5 +58,5 @@ Thank you for considering my application. I look forward to the opportunity to d
 
   #image("assets/signature.png", width: 25%)
 
-  John Doe
+  #signer
 ]
