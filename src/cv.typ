@@ -484,6 +484,9 @@
   )
 }
 
+// Shipped default for `[layout] before_entry_skip`.
+#let _default-before-entry-skip = "1pt"
+
 /// Prepare common entry parameters
 /// -> dictionary
 #let _prepare-entry-params(metadata, awesome-colors, color: none) = {
@@ -491,7 +494,7 @@
   let accent-color = _resolve-accent-color(color, awesome-colors, metadata)
   let before-entry-skip = eval(metadata.layout.at(
     "before_entry_skip",
-    default: "1pt",
+    default: _default-before-entry-skip,
   ))
   let before-entry-description-skip = eval(metadata.layout.at(
     "before_entry_description_skip",
@@ -696,10 +699,14 @@
         (styles.a1)(society), (styles.a2)(location),
       )
     }
-    // With a logo, the image's natural row height pads the gap, so a more
-    // aggressive collapse is fine. Without a logo the row is just text height
-    // and -10pt overlaps the next title (issue #172).
-    v(if display-logo and logo != "" { -10pt } else { -6pt })
+    // A logo row pads the gap, so it can collapse further; -10pt without a
+    // logo overlaps the next title (issue #172). Cancel any non-default
+    // before_entry_skip so the company -> first role gap stays fixed (#243).
+    v(
+      (if display-logo and logo != "" { -10pt } else { -6pt })
+        + eval(_default-before-entry-skip)
+        - before-entry-skip,
+    )
   } else if entry-type == "continued" {
     // Entry continued layout (original cv-entry-continued logic)
     // If the date contains a linebreak, use legacy side-to-side layout
