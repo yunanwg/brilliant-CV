@@ -211,7 +211,7 @@ Create a cover letter with a signature image at the bottom:
 #show: letter.with(
   metadata,
   sender-address: "123 Main Street, City, State 12345",
-  recipient-name: "ABC Company",
+  recipient-name: "Acme Analytics",
   recipient-address: "456 Business Ave, City, State 67890",
   date: datetime.today().display(),
   subject: "Application for Data Analyst Position",

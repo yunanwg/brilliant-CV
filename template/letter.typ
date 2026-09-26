@@ -19,8 +19,9 @@
 
 #show: letter.with(
   metadata,
-  // sender-address defaults to metadata.personal.address if set, or override here:
-  sender-address: "123 Main St" + "\n" + "San Francisco, CA 94102",
+  // sender-address defaults to [personal] address in the profile's metadata.toml.
+  // Override it here only for a one-off letter:
+  // sender-address: "123 Main St" + "\n" + "San Francisco, CA 94102",
   recipient-name: "Acme Analytics",
   // Supports multiline addresses:
   recipient-address: "456 Market St" + "\n" + "New York, NY 10001",
@@ -42,7 +43,7 @@ I believe that my experience in data analysis makes me an ideal candidate for th
 
 In my current role, I have been responsible for leading data projects from initiation to completion. I work closely with cross-functional teams to identify business problems and use data to develop solutions that drive business outcomes. I have a proven track record of delivering high-quality work on time and within budget.
 
-Furthermore, I have extensive experience in developing and implementing data-driven solutions that improve business operations. For example, I have implemented predictive models that have improved sales forecasting accuracy by 10%, resulting in significant cost savings. I have also developed dashboards that provide real-time insights into business performance, enabling stakeholders to make more informed decisions.
+Furthermore, I have extensive experience in developing and implementing data-driven solutions that improve business operations. For example, as a volunteer analyst I built predictive models that increased donation efficiency by 25%. I have also built Tableau dashboards that give stakeholders a clear view of business performance, so that they can make more informed decisions.
 
 As a highly motivated and detail-oriented individual, I am confident that I would thrive in the fast-paced and dynamic environment at Acme Analytics. I am excited about the opportunity to work with a talented team of professionals and to continue developing my skills in data analysis.
 

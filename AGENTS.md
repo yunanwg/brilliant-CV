@@ -52,7 +52,7 @@ Users point their own agents at a fresh `typst init` folder, and those agents tr
 |---|---|
 | 2011–2015 | BSc, Aurora State University |
 | 2015–2017 | Master, Aurora State University (header `custom-degree` says Master, not PhD) |
-| Summers 2016–2017 | Internship, PQR Corporation |
+| Summer 2016 and/or 2017 | Internship, PQR Corporation |
 | 2017–2020 | Data Analyst, ABC Company |
 | 2020–present | XYZ Corporation, located in the profile's header city (`profile_en`: Data Scientist 2020–2022, Director 2022–present) |
 

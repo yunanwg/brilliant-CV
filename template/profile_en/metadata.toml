@@ -118,7 +118,7 @@ letter_footer = "Cover letter"
     # treatment feels wrong:
     # display_name = "王道尔"
     # Your mailing address, used as default sender-address in the cover letter
-    # address = "123 Main St, San Francisco, CA 94102"
+    address = "123 Main St\nSan Francisco, CA 94102"
 
     # The order of entries below controls the display order of icons/links in the header.
     # Custom entries use a `custom-<descriptive-name>` key (e.g. custom-degree,

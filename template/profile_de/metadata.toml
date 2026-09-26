@@ -46,6 +46,7 @@ letter_footer = "Anschreiben"
 [personal]
     first_name = "John"
     last_name = "Doe"
+    address = "Torstraße 140\n10119 Berlin"
 
     [personal.info]
         github = "yunanwg"

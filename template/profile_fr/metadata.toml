@@ -46,6 +46,7 @@ letter_footer = "Lettre de motivation"
 [personal]
     first_name = "John"
     last_name = "Doe"
+    address = "12 rue de Rivoli\n75004 Paris"
 
     [personal.info]
         github = "yunanwg"

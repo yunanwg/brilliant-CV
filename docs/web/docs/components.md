@@ -52,7 +52,7 @@ Your content inherits the normal typography and accent color of the header info.
 #show: letter.with(
   metadata,
   sender-address: "123 Main St, City, State 12345",
-  recipient-name: "ABC Company",
+  recipient-name: "Acme Analytics",
   recipient-address: "456 Business Ave, City, State 67890",
   subject: "Application for Data Analyst Position",
   signature: image("assets/signature.png"),

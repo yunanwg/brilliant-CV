@@ -46,6 +46,7 @@ letter_footer = "Lettera di presentazione"
 [personal]
     first_name = "John"
     last_name = "Doe"
+    address = "Via Dante 12\n20121 Milano"
 
     [personal.info]
         github = "yunanwg"

@@ -8,7 +8,7 @@
   title: [Ehrenamtlicher Datenanalyst],
   society: [ABC Gemeinnützige Organisation],
   date: [2019 - Heute],
-  location: [New York, NY],
+  location: [Remote],
   description: list(
     [Analyse von Spender- und Fundraising-Daten zur Ermittlung von Trends und Wachstumsmöglichkeiten],
     [Erstellung von Datenvisualisierungen und Dashboards zur Vermittlung von Erkenntnissen an den Vorstand],

@@ -13,6 +13,9 @@
 #       profile also exists in profile_en, the canonical/docs-driving
 #       profile, modulo a small explicit allowlist of legitimate per-locale
 #       keys (see ALLOWLIST below).
+#   (c) Starter-persona guard — every entry in the starter bibliography
+#       lists John Doe as an author (see "Starter profile content is read
+#       as facts" in AGENTS.md).
 
 set -uo pipefail
 
@@ -175,6 +178,34 @@ if [[ $python_rc -eq 0 ]]; then
   PASS=$((PASS + 1))
 else
   FAIL=$((FAIL + 1))
+fi
+
+echo
+echo "Guard: starter persona (John Doe co-authors every starter bib entry)"
+
+# --- (c) Starter-persona guard ----------------------------------------------
+#
+# Users' agents read the starter as the candidate's real record. A sample
+# publication the candidate did not write is a contradiction they flag or,
+# worse, repeat. Every @entry in template/assets/publications.bib must list
+# "Doe, John" in its author field.
+bib_violations=$(python3 - <<'PYEOF'
+import re
+from pathlib import Path
+
+text = Path("template/assets/publications.bib").read_text(encoding="utf-8")
+for key, body in re.findall(r"@\w+\{([^,]+),(.*?)\n\}", text, flags=re.S):
+    author = re.search(r"author\s*=\s*\{(.*?)\}", body)
+    if not author or "Doe, John" not in author.group(1):
+        print(key)
+PYEOF
+)
+
+if [[ -z "$bib_violations" ]]; then
+  pass "every entry in template/assets/publications.bib lists Doe, John"
+else
+  fail "starter bib entries without \"Doe, John\" as an author:"
+  printf '       %s\n' $bib_violations >&2
 fi
 
 echo
