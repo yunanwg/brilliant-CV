@@ -3,7 +3,7 @@
 # Experimental layout hooks (`--input brilliant-cv-query=1`).
 #
 # Tytanic cannot pass `--input`, so this script drives the CLI path that
-# agents use: `typst query ... '<brilliant-cv>' --field value`. For each
+# agents use: `typst eval 'query(<brilliant-cv>).map(it => it.value)'`. For each
 # regression fixture it checks that
 #   1. without the flag, the query returns no elements;
 #   2. with the flag, tests/query/check.typ accepts the result: known kinds,
@@ -21,6 +21,7 @@ trap 'rm -rf "$OUT"' EXIT
 
 PASS=0
 FAIL=0
+QUERY="query(<brilliant-cv>).map(it => it.value)"
 FIXTURES=(cv-en cv-de cv-fr cv-it cv-zh letter-en letter-zh)
 
 for name in "${FIXTURES[@]}"; do
@@ -28,8 +29,7 @@ for name in "${FIXTURES[@]}"; do
 
   # A failed query (e.g. a package download error) must not read as
   # "hooks emitted without the flag": report the command error instead.
-  if ! off=$(typst query --root . "$fixture" '<brilliant-cv>' --field value \
-    2>"$OUT/$name-off.err"); then
+  if ! off=$(typst eval --root . --in "$fixture" "$QUERY" 2>"$OUT/$name-off.err"); then
     printf '  \033[31m✗\033[0m %-12s query without the flag failed\n' "$name" >&2
     sed 's/^/       /' "$OUT/$name-off.err" >&2
     FAIL=$((FAIL + 1))
@@ -41,8 +41,8 @@ for name in "${FIXTURES[@]}"; do
     continue
   fi
 
-  if ! typst query --root . --input brilliant-cv-query=1 "$fixture" \
-    '<brilliant-cv>' --field value >"$OUT/$name.json" 2>"$OUT/$name.err"; then
+  if ! typst eval --root . --input brilliant-cv-query=1 --in "$fixture" \
+    "$QUERY" >"$OUT/$name.json" 2>"$OUT/$name.err"; then
     printf '  \033[31m✗\033[0m %-12s query failed\n' "$name" >&2
     sed 's/^/       /' "$OUT/$name.err" >&2
     FAIL=$((FAIL + 1))

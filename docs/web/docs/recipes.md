@@ -246,10 +246,10 @@ The closing lines that you write in the body do not move with this image. Use th
 
 ## Check the Layout Without Rendering (Experimental)
 
-Scripts and AI agents can read the layout as JSON, without rendering images. Add `--input brilliant-cv-query=1` to a `typst query` command:
+Scripts and AI agents can read the layout as JSON, without rendering images. Add `--input brilliant-cv-query=1` to a `typst eval` command (Typst 0.15 and later):
 
 ```bash
-typst query cv.typ '<brilliant-cv>' --field value --input brilliant-cv-query=1
+typst eval 'query(<brilliant-cv>).map(it => it.value)' --in cv.typ --input brilliant-cv-query=1
 ```
 
 The result has one object for each section, entry, skill, honor, and publication list, in document order. Each object has a `kind` and a `page`, which is the page on which the element ends. The last object has the kind `document` and the total number of pages in `pages`:
@@ -262,10 +262,10 @@ The result has one object for each section, entry, skill, honor, and publication
 ]
 ```
 
-Typst 0.15 marks `typst query` as deprecated and prints a warning, but the command works. The equivalent Typst 0.15 command is:
+On Typst 0.14, which has no `typst eval`, use `typst query`. Typst 0.15 still accepts it, but it prints a deprecation warning on stderr:
 
 ```bash
-typst eval 'query(<brilliant-cv>).map(it => it.value)' --in cv.typ --input brilliant-cv-query=1
+typst query cv.typ '<brilliant-cv>' --field value --input brilliant-cv-query=1
 ```
 
 Use it, for example, to find the entries that go to page 2, or to make sure that a cover letter has one page. Without the input, the package emits nothing, and the input does not change the layout. This function is experimental: the field names can change in a minor release. The `cv()` entry in the [API Reference](api-reference.md) lists all the fields.

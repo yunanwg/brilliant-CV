@@ -19,8 +19,10 @@ the name (`[personal] display_name` when set), and the keywords are
 **Experimental layout hooks.** Compile or query with
 `--input brilliant-cv-query=1` and every component also emits an
 invisible `metadata` element labelled `<brilliant-cv>`; the layout does
-not change. `typst query cv.typ '<brilliant-cv>' --field value --input
-brilliant-cv-query=1` returns one JSON object per element, each with
+not change. `typst eval 'query(<brilliant-cv>).map(it => it.value)' --in
+cv.typ --input brilliant-cv-query=1` (Typst 0.15+; on 0.14 use
+`typst query cv.typ '<brilliant-cv>' --field value`) returns one JSON
+object per element, each with
 `kind` and `page` (the physical page on which it ends): `section`
 (`title`), `entry` (`title`, `society`, `date`, `location`),
 `entry-start` (`society`, `location`), `entry-continued` (`title`,

@@ -1,4 +1,4 @@
-// Validates the JSON that `typst query ... '<brilliant-cv>' --field value`
+// Validates the JSON that `typst eval 'query(<brilliant-cv>).map(it => it.value)'`
 // returns for one fixture. tests/query/run.sh compiles this file with
 // --input result=<root-relative path> --input pages=<PDF page count>; any
 // failed assertion makes the compile, and so the test, fail.

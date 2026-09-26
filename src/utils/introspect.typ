@@ -2,9 +2,10 @@
  * Experimental: machine-readable layout hooks for agents and scripts.
  *
  * With `--input brilliant-cv-query=1`, every component also emits an
- * invisible `metadata` element labelled `<brilliant-cv>`. `typst query`
- * then returns what was rendered and on which page, without rendering
- * images. Field names may change in a minor release.
+ * invisible `metadata` element labelled `<brilliant-cv>`. `typst eval`
+ * (or `typst query` on Typst 0.14) then returns what was rendered and on
+ * which page, without rendering images. Field names may change in a minor
+ * release.
  */
 
 /// True when the caller asked for layout hooks with
