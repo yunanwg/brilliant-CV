@@ -70,7 +70,10 @@ done
 # initialized. Reusing that render keeps both in one pipeline, so the
 # thumbnail can no longer drift from the template. tests/guards.sh checks
 # that the two files stay identical.
-if [[ -f "$OUT_DIR/cv-en.png" ]]; then
+# Only a render into the canonical docs/previews updates the thumbnail, so a
+# scratch run (`render_previews.sh /tmp/x en`) cannot overwrite it.
+OUT_ABS="$(cd "$OUT_DIR" && pwd)"
+if [[ "$OUT_ABS" == "$ROOT/docs/previews" && -f "$OUT_DIR/cv-en.png" ]]; then
     cp "$OUT_DIR/cv-en.png" "$ROOT/thumbnail.png"
     echo "✅ copied $OUT_DIR/cv-en.png to thumbnail.png"
 fi
