@@ -18,6 +18,7 @@ Run `just link` before any local development. This registers the local package w
 | `just test` | Before committing | Full suite: tytanic visual, panic smoke, and query-hook tests. Needs a running Docker daemon |
 | `just test-update` | A layout change moved pixels on purpose | Regenerates ref PNGs in Docker; review the new PNGs before committing |
 | `just fmt-check` | Before committing | typstyle gate, same image as CI |
+| `just previews` | A change alters page 1 of a starter profile (en, fr, zh) | Regenerates the README previews and `thumbnail.png` in Docker; the Update preview images workflow does the same on the CI runner |
 | `just docs-generate` | You changed doc-comments in `src/` or comments in `template/profile_en/metadata.toml` | Regenerates the two generated pages |
 | `just verify-release` | Preparing a release | Full pre-release contract |
 

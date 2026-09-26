@@ -13,6 +13,8 @@
 #       profile also exists in profile_en, the canonical/docs-driving
 #       profile, modulo a small explicit allowlist of legitimate per-locale
 #       keys (see ALLOWLIST below).
+#   (d) Thumbnail guard — thumbnail.png is byte-identical to
+#       docs/previews/cv-en.png, the render it is copied from.
 #   (c) Starter-persona guard — every entry in the starter bibliography
 #       lists John Doe as an author (see "Starter profile content is read
 #       as facts" in AGENTS.md).
@@ -206,6 +208,44 @@ if [[ -z "$bib_violations" ]]; then
 else
   fail "starter bib entries without \"Doe, John\" as an author:"
   printf '       %s\n' $bib_violations >&2
+fi
+
+echo
+echo "Guard: thumbnail (thumbnail.png matches docs/previews/cv-en.png)"
+
+# --- (d) Thumbnail guard -----------------------------------------------------
+#
+# scripts/render_previews.sh copies the English preview to thumbnail.png (the
+# Typst Universe thumbnail and the README hero image). A hand-edited or stale
+# thumbnail breaks that link; regenerate with `just previews` or the "Update
+# preview images" workflow.
+if cmp -s thumbnail.png docs/previews/cv-en.png; then
+  pass "thumbnail.png is identical to docs/previews/cv-en.png"
+else
+  fail "thumbnail.png differs from docs/previews/cv-en.png — run \`just previews\`"
+fi
+
+# Typst Universe requires a PNG thumbnail whose longer edge is at least
+# 1080 px and whose size is at most 3 MiB (typst/packages docs/manifest.md).
+thumbnail_check=$(python3 - <<'PYEOF'
+import struct
+from pathlib import Path
+
+data = Path("thumbnail.png").read_bytes()
+if data[:8] != b"\x89PNG\r\n\x1a\n":
+    print("thumbnail.png is not a PNG")
+else:
+    width, height = struct.unpack(">II", data[16:24])
+    if max(width, height) < 1080:
+        print(f"longer edge is {max(width, height)} px (< 1080)")
+    if len(data) > 3 * 1024 * 1024:
+        print(f"size is {len(data)} bytes (> 3 MiB)")
+PYEOF
+)
+if [[ -z "$thumbnail_check" ]]; then
+  pass "thumbnail.png meets the Typst Universe size rules"
+else
+  fail "thumbnail.png breaks the Typst Universe rules: $thumbnail_check"
 fi
 
 echo

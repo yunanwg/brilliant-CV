@@ -65,6 +65,8 @@ A few cross-cutting invariants are cheap to check mechanically and easy to lose 
 
 - **Determinism** — fails if `datetime.today` appears in any `tests/**/test.typ` or `tests/**/fixture.typ` (see "Things that flap pixel diffs" below; comments merely *mentioning* the pattern, e.g. explaining why a fixture pins `date:`, don't count).
 - **Profile parity** — fails if any `template/profile_*/metadata.toml` key path doesn't also exist in `profile_en`, the canonical, docs-driving profile (see AGENTS.md), unless it's in the script's small explicit allowlist of legitimate per-locale keys (e.g. `profile_zh`'s real `personal.display_name` vs. `profile_en`'s commented-out example of the same key).
+- **Starter persona** — fails if an entry in `template/assets/publications.bib` does not list "Doe, John" as an author (see "Starter profile content is read as facts" in AGENTS.md).
+- **Thumbnail** — fails if `thumbnail.png` is not byte-identical to `docs/previews/cv-en.png`, or breaks the Typst Universe rules (longer edge ≥ 1080 px, ≤ 3 MiB). `just previews` regenerates both.
 
 `just test`, `just test-fast`, and CI all run `bash tests/guards.sh` after the tytanic/panic suites. It has no external dependencies, so it's the cheapest thing to run first when chasing a failure.
 

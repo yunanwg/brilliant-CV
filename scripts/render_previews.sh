@@ -64,3 +64,13 @@ for profile in "${PROFILES[@]}"; do
         "$out"
     echo "✅ rendered $out"
 done
+
+# The Typst Universe thumbnail (typst.toml [template] thumbnail, also the
+# README hero image) is the English preview: page 1 of the starter as
+# initialized. Reusing that render keeps both in one pipeline, so the
+# thumbnail can no longer drift from the template. tests/guards.sh checks
+# that the two files stay identical.
+if [[ -f "$OUT_DIR/cv-en.png" ]]; then
+    cp "$OUT_DIR/cv-en.png" "$ROOT/thumbnail.png"
+    echo "✅ copied $OUT_DIR/cv-en.png to thumbnail.png"
+fi
