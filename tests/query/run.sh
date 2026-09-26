@@ -69,6 +69,19 @@ for name in "${FIXTURES[@]}"; do
   fi
 done
 
+# The documented Typst 0.14 fallback (`typst query ... --field value`) must
+# return the same elements as `typst eval`. Compare with whitespace removed.
+fallback=$(typst query --root . --input brilliant-cv-query=1 \
+  tests/regression/cv-en/test.typ '<brilliant-cv>' --field value 2>/dev/null | tr -d ' \n')
+evaluated=$(tr -d ' \n' <"$OUT/cv-en.json")
+if [[ -n "$fallback" && "$fallback" == "$evaluated" ]]; then
+  printf '  \033[32m✓\033[0m %-12s typst query fallback matches typst eval\n' "cv-en"
+  PASS=$((PASS + 1))
+else
+  printf '  \033[31m✗\033[0m %-12s typst query fallback differs from typst eval\n' "cv-en" >&2
+  FAIL=$((FAIL + 1))
+fi
+
 echo
 echo "Query hook tests: $PASS passed, $FAIL failed"
 [[ $FAIL -eq 0 ]]
