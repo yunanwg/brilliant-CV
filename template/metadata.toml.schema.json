@@ -50,7 +50,7 @@
         },
         "font_size": {
           "$ref": "#/definitions/length",
-          "description": "Base font size for document body text."
+          "description": "Base font size for CV body text. The cover letter ignores it and uses a 12pt body."
         },
         "fonts": {
           "type": "object",

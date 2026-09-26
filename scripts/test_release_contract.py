@@ -140,6 +140,51 @@ def main() -> int:
         write(package / "README.md", "[ok](LICENSE) [web](https://example.com)\n")
         release_contract.check_readme_links(package)
 
+    # `[package].exclude` follows Typst Universe's bundler: gitignore
+    # semantics. An unanchored name matches at any depth, which would drop a
+    # starter file (e.g. template/AGENTS.md) that shares a name with a
+    # repository-only file.
+    from pathlib import PurePosixPath
+
+    def excluded(pattern: str, path: str) -> bool:
+        return release_contract.is_excluded(PurePosixPath(path), (pattern,))
+
+    assert excluded("/AGENTS.md", "AGENTS.md")
+    assert not excluded("/AGENTS.md", "template/AGENTS.md")
+    assert excluded("AGENTS.md", "template/AGENTS.md")
+    assert excluded("/docs", "docs/web/docs/index.md")
+    assert not excluded("/docs", "template/docs/notes.md")
+    assert excluded("docs/web", "docs/web/generate-api-reference.py")
+    assert not excluded("docs/web", "template/docs/web/x.typ")
+    assert excluded("*.pdf", "template/out/cv.pdf")
+    assert excluded("out/", "template/out/cv.pdf")
+    assert not excluded("out/", "template/out")
+    # `*` stays within one path segment; `**` spans segments.
+    assert excluded("/docs/*.md", "docs/index.md")
+    assert not excluded("/docs/*.md", "docs/web/docs/index.md")
+    assert excluded("/docs/**/*.md", "docs/web/docs/index.md")
+
+    with tempfile.TemporaryDirectory(prefix="payload-leak-test-") as directory:
+        package = Path(directory)
+        write(package / "AGENTS.md", "repo-only\n")
+        write(package / "template/AGENTS.md", "starter\n")
+        assert release_contract.excluded_files(package, ("/AGENTS.md",)) == ["AGENTS.md"]
+        assert release_contract.excluded_files(package, ("AGENTS.md",)) == [
+            "AGENTS.md",
+            "template/AGENTS.md",
+        ]
+
+    original_config = release_contract.package_config
+    release_contract.package_config = lambda: {"exclude": ["!template/keep.md"]}
+    try:
+        release_contract.normalized_excludes()
+    except release_contract.ContractError as error:
+        assert "negated" in str(error)
+    else:
+        raise AssertionError("negated exclude glob was not rejected")
+    finally:
+        release_contract.package_config = original_config
+
     print("release-contract bump regression passed")
     return 0
 

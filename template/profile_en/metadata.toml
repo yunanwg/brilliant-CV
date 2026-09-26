@@ -34,7 +34,8 @@ letter_footer = "Cover letter"
     # benefits from ~4.7cm, fr from ~3.4cm, it from ~3.9cm).
     date_width = "3.6cm"
 
-    # Overrides base font size for body text; affects overall density of content
+    # Overrides base font size for CV body text; affects overall density of content.
+    # The cover letter ignores it and uses a 12pt body (see the letter() docs).
     #font_size = "9pt"
 
     [layout.fonts]

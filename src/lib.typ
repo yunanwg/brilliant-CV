@@ -187,6 +187,10 @@
 
 /// Render a cover letter document with header, footer, and page layout applied.
 ///
+/// The letter body uses a 12pt font size. `[layout] font_size` applies only to
+/// `cv()`. To change the body size, add `#set text(size: ...)` after the
+/// `show` rule; the header and the footer keep their sizes.
+///
 /// - metadata (dictionary): The metadata dictionary read from `metadata.toml`.
 /// - doc (content): The body content of the letter.
 /// - sender-address (str | content | auto): The sender's mailing address. Defaults to `auto`, which reads from `metadata.personal.address` (falls back to `"Your Address Here"` if unset). Pass a string or content to override.
@@ -194,7 +198,7 @@
 /// - recipient-address (str): The recipient's mailing address displayed in the header. Supports multiline content.
 /// - date (str): The date displayed in the letter header. Defaults to today's date.
 /// - subject (str): The subject line of the letter.
-/// - signature (str | content): (optional) content to display as the signature. Pass `image("signature.png")` for an image; a string is rendered as text.
+/// - signature (str | content | none): (optional) content to display as the signature. Pass `image("signature.png")` for an image; a string is rendered as text. The signature reserves its height: when it does not fit below the body, it moves to the next page. `""` or `none` omits it.
 /// - address-style (str): Address rendering style. `"smallcaps"` (default) or `"normal"`.
 /// -> content
 #let letter(
@@ -219,10 +223,12 @@
   }
 
   let typography = _resolve-typography(metadata)
+  // The letter body is a fixed 12pt: [layout] font_size tunes CV density
+  // and does not apply here (see the doc-comment above).
   set text(
     font: typography.regular-fonts,
     weight: "regular",
-    size: typography.font-size,
+    size: 12pt,
     fill: _styles._regular-colors.lightgray,
   )
   set align(left)
@@ -232,7 +238,6 @@
     margin: _page-margin(paper-size, letter-style: true),
     footer: _letter._letter-footer(metadata),
   )
-  set text(size: 12pt)
 
   _letter._letter-header(
     sender-address: sender-address,
@@ -246,7 +251,7 @@
   )
   doc
 
-  if signature != "" {
+  if signature not in ("", none) {
     _letter._letter-signature(signature)
   }
 }

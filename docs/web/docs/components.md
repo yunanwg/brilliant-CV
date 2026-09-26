@@ -59,7 +59,7 @@ Your content inherits the normal typography and accent color of the header info.
 )
 ```
 
-`letter()` is equivalent to `cv()` for cover-letter pages. It uses formal letter margins and a 12pt body. The default value of `sender-address` is `auto`, which reads `metadata.personal.address`. If that field is not set, the value becomes `"Your Address Here"`. To remove the smallcaps from the addresses, use `address-style: "normal"`.
+`letter()` is equivalent to `cv()` for cover-letter pages. It uses formal letter margins and a 12pt body. The `[layout] font_size` field applies only to the CV. To change the size of the letter body, add a `set` rule after the `show` rule, for example `#set text(size: 11pt)`. This rule changes only the body text. The header and the footer keep their sizes. The default value of `sender-address` is `auto`, which reads `metadata.personal.address`. If that field is not set, the value becomes `"Your Address Here"`. To remove the smallcaps from the addresses, use `address-style: "normal"`.
 
 ---
 
