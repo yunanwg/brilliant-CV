@@ -91,8 +91,12 @@ jobs:
           # Show Claude's report in the job summary even if it posts nothing.
           # Safe here: the job skips fork PRs, so its input is trusted.
           display_report: true
+          # `best` resolves to the most capable model the installed Claude
+          # Code knows (Fable, else Opus). The action pins Claude Code, and
+          # Dependabot bumps the action weekly, so new models arrive without
+          # editing this file.
           claude_args: |
-            --model claude-sonnet-5
+            --model best
             --max-turns 60
             --allowedTools "Read,Grep,Glob,mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*),Write,Bash(typst compile:*),Bash(typst eval:*)"
 
