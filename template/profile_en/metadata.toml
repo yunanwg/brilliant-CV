@@ -83,6 +83,19 @@ letter_footer = "Cover letter"
         # false removes the footer entirely (no page text, no counter)
         display_footer = true
 
+    # (Optional) Restyle named parts of the CV. Each part accepts size,
+    # weight, style, fill (an awesome color name or "#rrggbb"), and font;
+    # unset properties keep the package default. An unknown part or property
+    # is an error. Available parts:
+    #   entry-primary - the bold first line of an entry: the society, or the
+    #                   title when display_entry_society_first = false
+    # Each part also carries the label <bcv-NAME>, so a show-set rule in
+    # cv.typ reaches it too (experimental):
+    #   #show <bcv-entry-primary>: set text(size: 11pt)
+    # [layout.parts.entry-primary]
+    #     size = "11pt"
+    #     weight = "semibold"
+
 
 [inject]
     # OPT-IN: hidden keyword text (2pt, white) placed in the PDF so automated

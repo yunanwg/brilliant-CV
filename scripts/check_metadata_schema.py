@@ -100,6 +100,20 @@ def main() -> int:
     empty_keywords["inject"] = {"injected_keywords_list": []}
     expect_rejected(validator, "an empty injection keyword list", empty_keywords)
 
+    valid_parts = copy.deepcopy(base)
+    valid_parts["layout"]["parts"] = {
+        "entry-primary": {"size": "11pt", "weight": 600, "fill": "#DC3522"}
+    }
+    validator.validate(valid_parts)
+
+    unknown_part = copy.deepcopy(base)
+    unknown_part["layout"]["parts"] = {"entry-title": {"size": "11pt"}}
+    expect_rejected(validator, "an unknown style part", unknown_part)
+
+    unknown_part_property = copy.deepcopy(base)
+    unknown_part_property["layout"]["parts"] = {"entry-primary": {"color": "red"}}
+    expect_rejected(validator, "an unknown style-part property", unknown_part_property)
+
     valid_custom_info = copy.deepcopy(base)
     valid_custom_info["personal"]["info"]["custom-test"] = {
         "text": "Custom image icon supplied from cv.typ",
