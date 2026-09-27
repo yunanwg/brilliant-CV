@@ -39,8 +39,15 @@ jobs:
         uses: typst-community/setup-typst@63ac138db421d586de61f7f5ac3bcef6a2e6c78c # v5
       - name: Set up just
         uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4
+      # Register this checkout as @preview/brilliant-cv:<version>, the same
+      # symlink tests/docker-entrypoint.sh makes. `just link` needs utpm,
+      # which this runner does not have, so every @claude run failed here.
       - name: Link local package
-        run: just link
+        run: |
+          version=$(sed -n 's/^version = "\(.*\)"/\1/p' typst.toml | head -1)
+          dir="$HOME/.local/share/typst/packages/preview/brilliant-cv/$version"
+          mkdir -p "$(dirname "$dir")"
+          ln -sfn "$GITHUB_WORKSPACE" "$dir"
 
       - name: Run Claude Code
         id: claude
@@ -62,5 +69,5 @@ jobs:
           claude_args: |
             --model claude-sonnet-5
             --max-turns 20
-            --allowedTools "Edit,Read,Write,Bash(just link),Bash(typst compile:*),Bash(bash tests/panics/run.sh),Bash(bash tests/guards.sh)"
+            --allowedTools "Edit,Read,Write,Bash(typst compile:*),Bash(bash tests/panics/run.sh),Bash(bash tests/guards.sh)"
 
