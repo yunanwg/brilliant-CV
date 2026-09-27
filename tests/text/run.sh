@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 #
 # Extracted-text snapshots: what a plain-text PDF parser (ATS, LLM
-# screener) reads from each regression fixture.
+# screener) reads from each fixture below, plus a check that no contact line
+# ends with a separator.
 #
 # For every fixture, compile the PDF and extract its text with
 # `pdftotext -raw` (content-stream order, the order naive extractors use),
@@ -17,6 +18,9 @@ OUT=tests/text/.out
 rm -rf "$OUT"
 mkdir -p "$OUT"
 trap 'rm -rf "$OUT"' EXIT
+
+# The separator check needs perl; without it the check would pass silently.
+command -v perl >/dev/null || { echo "tests/text/run.sh needs perl" >&2; exit 1; }
 
 PASS=0
 FAIL=0

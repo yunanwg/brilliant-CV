@@ -48,7 +48,7 @@
       margin: 1cm,
       _cv-header(
         metadata,
-        image("/template/assets/avatar.png"),
+        rect(width: 3.6cm, height: 3.6cm, fill: luma(200)),
         typography.header-font,
         _regular-colors,
         _awesome-colors,

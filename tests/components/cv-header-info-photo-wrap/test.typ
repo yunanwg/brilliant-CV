@@ -40,4 +40,9 @@
   ),
 )
 
-#show: cv.with(metadata, profile-photo: image("/template/assets/avatar.png"))
+// A plain shape stands in for the photo: the layout only needs the photo
+// column, and avatar.png bytes would flap the ref (tests/README.md).
+#show: cv.with(
+  metadata,
+  profile-photo: rect(width: 3.6cm, height: 3.6cm, fill: luma(200)),
+)
