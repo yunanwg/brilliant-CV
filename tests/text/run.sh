@@ -24,9 +24,12 @@ FIXTURES=(
   regression/cv-en regression/cv-de regression/cv-fr regression/cv-it
   regression/cv-zh regression/letter-en regression/letter-zh
   components/cv-header-info-photo-wrap
+  # `:check` runs the separator check only, with no snapshot to compare.
+  units/header-info-width-sweep:check
 )
 
-for fixture in "${FIXTURES[@]}"; do
+for entry in "${FIXTURES[@]}"; do
+  fixture="${entry%:check}"
   name="${fixture##*/}"
   snapshot="tests/text/snapshots/$name.txt"
   if ! typst compile --root . "tests/$fixture/test.typ" \
@@ -57,6 +60,12 @@ for fixture in "${FIXTURES[@]}"; do
     printf '  \033[31m✗\033[0m %-12s line ends with a separator\n' "$name" >&2
     sed 's/^/       /' "$OUT/$name.bars" >&2
     FAIL=$((FAIL + 1))
+    continue
+  fi
+
+  if [[ "$entry" == *:check ]]; then
+    printf '  \033[32m✓\033[0m %-12s no stray separators\n' "$name"
+    PASS=$((PASS + 1))
     continue
   fi
 
