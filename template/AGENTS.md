@@ -68,7 +68,7 @@ only.
 ## Useful patterns
 
 - To change the size, weight, style, color, or font of one kind of text,
-  for example all entry titles, set `[layout.parts.<name>]` in
+  for example all section titles, set `[layout.parts.<name>]` in
   `metadata.toml`. `metadata.toml.schema.json` lists the part names. Do not
   copy or edit the package for a style change.
 - The cover-letter body is 12pt. `[layout] font_size` applies to the CV only.

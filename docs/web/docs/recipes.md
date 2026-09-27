@@ -239,7 +239,7 @@ The parts have names that tell their position, not their meaning. For example, `
 
 An unknown part or property stops the compilation with an error that names the correct values. The schema in your template also shows these errors in the editor.
 
-A `fill` on `section-title` replaces the highlight colors of the title. If one call of `cv-section`, `cv-entry`, or `cv-honor` has a `color` argument, that argument has priority over `fill` for that call.
+A `fill` on `section-title` replaces the highlight colors of the title. The `color` argument of one `cv-section`, `cv-entry`, or `cv-honor` call has priority over `fill` for that call, on the parts that the argument colors: `section-title`, `entry-primary-aside`, `entry-secondary`, and `honor-location`.
 
 **Use a show rule (experimental).** Each part also has the label `<bcv-<name>>`. A show-set rule in `cv.typ` has priority over the package defaults and over `[layout.parts]`:
 
