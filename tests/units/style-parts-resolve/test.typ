@@ -5,7 +5,7 @@
 #import "/src/utils/styles.typ": _awesome-colors
 #import "/tests/common.typ": minimal-metadata
 
-#assert.eq(_resolve-parts(minimal-metadata, _awesome-colors), (:))
+#assert.eq(_resolve-parts(minimal-metadata), (:))
 
 #let metadata = (
   ..minimal-metadata,
@@ -22,7 +22,7 @@
     ),
   ),
 )
-#let parts = _resolve-parts(metadata, _awesome-colors)
+#let parts = _resolve-parts(metadata)
 #assert.eq(parts.at("entry-primary").size, 11pt)
 #assert.eq(parts.at("entry-primary").weight, 600)
 #assert.eq(parts.at("entry-primary").style, "italic")
@@ -37,6 +37,6 @@
   ),
 )
 #assert.eq(
-  _resolve-parts(hex, _awesome-colors).at("entry-primary").fill,
+  _resolve-parts(hex).at("entry-primary").fill,
   rgb("#123456"),
 )

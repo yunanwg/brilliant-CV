@@ -24,7 +24,7 @@
 /// -> dictionary
 #let _state-parts() = {
   let metadata = cv-metadata.get()
-  if metadata == none { (:) } else { _resolve-parts(metadata, _awesome-colors) }
+  if metadata == none { (:) } else { _resolve-parts(metadata) }
 }
 
 /// Resolve explicit component metadata or the state seeded by `cv()`.
@@ -376,7 +376,7 @@
     regular-colors,
     accent-color,
     header-info-font-size,
-    _resolve-parts(metadata, awesome-colors),
+    _resolve-parts(metadata),
   )
 
   // Create components
@@ -433,7 +433,7 @@
   }
 
   // Styles
-  let parts = _resolve-parts(metadata, _awesome-colors)
+  let parts = _resolve-parts(metadata)
   let footer-style(str) = _part(
     "footer",
     (size: 8pt, fill: rgb("#999999")),
@@ -524,7 +524,7 @@
 
   // The highlight colors are the part's default fill; a `fill` in
   // [layout.parts.section-title] recolors the whole title.
-  let parts = _resolve-parts(metadata, awesome-colors)
+  let parts = _resolve-parts(metadata)
   let section-title-style(str, color: black) = _part(
     "section-title",
     (size: 16pt, weight: "bold", fill: color),
@@ -662,7 +662,7 @@
   let styles = _entry-styles(
     accent-color,
     before-entry-description-skip,
-    _resolve-parts(metadata, params.awesome-colors),
+    _resolve-parts(metadata),
   )
 
   // Layout settings
@@ -1163,7 +1163,7 @@
   let metadata = _resolve-component-metadata(metadata)
   let accent-color = _resolve-accent-color(color, awesome-colors, metadata)
 
-  let parts = _resolve-parts(metadata, awesome-colors)
+  let parts = _resolve-parts(metadata)
   let honor-date-style(str) = align(right, _part("honor-date", (:), parts, str))
   let honor-title-style(str) = _part(
     "honor-title",

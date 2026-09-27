@@ -13,6 +13,8 @@
  * arguments outrank set and show rules and would lock the user out.
  */
 
+#import "./styles.typ": _awesome-colors
+
 /// Parts that `[layout.parts]` accepts. Positional names follow the layout,
 /// not the meaning: `entry-primary` is the bold first line of an entry,
 /// which is the society or the title depending on
@@ -101,10 +103,14 @@
 /// An unknown part or property panics instead of being ignored, so a typo
 /// cannot silently leave the CV unchanged.
 ///
+/// A named `fill` resolves against the package's awesome colors, the same
+/// value space as `[layout] awesome_color` and the schema, never against
+/// a component's `awesome-colors` argument: every component reads the same
+/// `[layout.parts]`, so it must resolve the same way everywhere.
+///
 /// - metadata (dictionary): the metadata object
-/// - awesome-colors (dictionary): named colors accepted for `fill`
 /// -> dictionary
-#let _resolve-parts(metadata, awesome-colors) = {
+#let _resolve-parts(metadata) = {
   let configured = metadata.layout.at("parts", default: (:))
   let resolved = (:)
   for (part, properties) in configured {
@@ -128,7 +134,7 @@
             + _part-properties.join(", "),
         )
       }
-      parsed.insert(key, _parse-part-value(part, key, value, awesome-colors))
+      parsed.insert(key, _parse-part-value(part, key, value, _awesome-colors))
     }
     resolved.insert(part, parsed)
   }

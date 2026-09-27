@@ -30,14 +30,14 @@
     keywords: keywords,
   )
 
-  let parts = _resolve-parts(metadata, awesome-colors)
-  let name-style(part, str) = _part(
+  let parts = _resolve-parts(metadata)
+  let name-part-style(part, str) = _part(
     part,
     (fill: accent-color, weight: "bold"),
     parts,
     str,
   )
-  let address-style-of(part, str) = _part(
+  let address-part-style(part, str) = _part(
     part,
     (fill: gray, size: 0.9em),
     parts,
@@ -56,13 +56,16 @@
     underline(str),
   )
 
-  name-style("letter-sender-name", sender-name)
+  name-part-style("letter-sender-name", sender-name)
   v(1pt)
-  address-style-of("letter-sender-address", sender-address)
+  address-part-style("letter-sender-address", sender-address)
   v(1pt)
-  align(right, name-style("letter-recipient-name", recipient-name))
+  align(right, name-part-style("letter-recipient-name", recipient-name))
   v(1pt)
-  align(right, address-style-of("letter-recipient-address", recipient-address))
+  align(right, address-part-style(
+    "letter-recipient-address",
+    recipient-address,
+  ))
   v(1pt)
   letter-date-style(date)
   v(1pt)
@@ -98,7 +101,7 @@
   }
 
   // Styles
-  let parts = _resolve-parts(metadata, _awesome-colors)
+  let parts = _resolve-parts(metadata)
   let footer-style(str) = _part(
     "footer",
     (size: 8pt, fill: rgb("#999999")),
