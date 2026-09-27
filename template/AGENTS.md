@@ -71,6 +71,11 @@ only.
   for example all section titles, set `[layout.parts.<name>]` in
   `metadata.toml`. `metadata.toml.schema.json` lists the part names. Do not
   copy or edit the package for a style change.
+- For a structural layout change that `[layout]` and `[layout.parts]`
+  cannot make, copy the package to `vendor/preview/brilliant-cv/<version>/`,
+  compile with `--package-path vendor`, and edit the copy. Record each change
+  in `vendor/CHANGES.md`: the copy gets no fixes from new versions. See
+  "Change the Layout Beyond the Configuration" in the documentation recipes.
 - The cover-letter body is 12pt. `[layout] font_size` applies to the CV only.
 - To keep the closing, the signature, and the name together on one page,
   put them in `#block(breakable: false)[…]` at the end of the letter.
