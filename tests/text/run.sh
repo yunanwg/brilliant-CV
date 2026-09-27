@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 #
 # Extracted-text snapshots: what a plain-text PDF parser (ATS, LLM
-# screener) reads from each regression fixture.
+# screener) reads from each fixture below, plus a check that no contact line
+# ends with a separator.
 #
 # For every fixture, compile the PDF and extract its text with
 # `pdftotext -raw` (content-stream order, the order naive extractors use),
@@ -18,13 +19,24 @@ rm -rf "$OUT"
 mkdir -p "$OUT"
 trap 'rm -rf "$OUT"' EXIT
 
+# The separator check needs perl; without it the check would pass silently.
+command -v perl >/dev/null || { echo "tests/text/run.sh needs perl" >&2; exit 1; }
+
 PASS=0
 FAIL=0
-FIXTURES=(cv-en cv-de cv-fr cv-it cv-zh letter-en letter-zh)
+FIXTURES=(
+  regression/cv-en regression/cv-de regression/cv-fr regression/cv-it
+  regression/cv-zh regression/letter-en regression/letter-zh
+  components/cv-header-info-photo-wrap
+  # `:check` runs the separator check only, with no snapshot to compare.
+  units/header-info-width-sweep:check
+)
 
-for name in "${FIXTURES[@]}"; do
+for entry in "${FIXTURES[@]}"; do
+  fixture="${entry%:check}"
+  name="${fixture##*/}"
   snapshot="tests/text/snapshots/$name.txt"
-  if ! typst compile --root . "tests/regression/$name/test.typ" \
+  if ! typst compile --root . "tests/$fixture/test.typ" \
     "$OUT/$name.pdf" 2>"$OUT/$name.err"; then
     printf '  \033[31m✗\033[0m %-12s compile failed\n' "$name" >&2
     sed 's/^/       /' "$OUT/$name.err" >&2
@@ -42,6 +54,24 @@ for name in "${FIXTURES[@]}"; do
         while (n > 0 && (line[n] == "" || line[n] == "--- page break ---")) n--
         for (i = 1; i <= n; i++) print line[i]
       }' >"$OUT/$name.txt"
+
+  # A contact line ending in a separator wrapped inside its box. Contact
+  # items carry a Font Awesome icon (a private-use glyph), which keeps user
+  # text such as a wrapped "Course: A | B" bullet out of this check.
+  perl -CSD -ne 'print "$.: $_" if /[\x{E000}-\x{F8FF}].*\|$/' \
+    "$OUT/$name.txt" >"$OUT/$name.bars"
+  if [[ -s "$OUT/$name.bars" ]]; then
+    printf '  \033[31m✗\033[0m %-12s line ends with a separator\n' "$name" >&2
+    sed 's/^/       /' "$OUT/$name.bars" >&2
+    FAIL=$((FAIL + 1))
+    continue
+  fi
+
+  if [[ "$entry" == *:check ]]; then
+    printf '  \033[32m✓\033[0m %-12s no stray separators\n' "$name"
+    PASS=$((PASS + 1))
+    continue
+  fi
 
   if [[ "${UPDATE:-0}" == "1" ]]; then
     cp "$OUT/$name.txt" "$snapshot"
