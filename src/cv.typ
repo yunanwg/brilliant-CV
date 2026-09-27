@@ -7,6 +7,7 @@
   fa-pager, fa-phone, fa-researchgate, fa-square-github,
 )
 #import "./utils/injection.typ": _inject
+#import "./utils/parts.typ": _part, _resolve-parts
 #import "./utils/identity.typ": _display-name, _display-name-override
 #import "./utils/introspect.typ": _emit
 #import "./utils/styles.typ": (
@@ -552,8 +553,8 @@
 
 /// Create entry style functions
 /// -> dictionary
-#let _entry-styles(accent-color, before-entry-description-skip) = (
-  a1: str => text(size: 10pt, weight: "bold", str),
+#let _entry-styles(accent-color, before-entry-description-skip, parts) = (
+  a1: str => _part("entry-primary", (size: 10pt, weight: "bold"), parts, str),
   a2: str => align(right, text(
     weight: "medium",
     fill: accent-color,
@@ -623,7 +624,11 @@
   let date-width = params.date-width
 
   // Create styles
-  let styles = _entry-styles(accent-color, before-entry-description-skip)
+  let styles = _entry-styles(
+    accent-color,
+    before-entry-description-skip,
+    _resolve-parts(metadata, params.awesome-colors),
+  )
 
   // Layout settings
   let display-logo = metadata.layout.entry.display_logo

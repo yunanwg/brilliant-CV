@@ -138,6 +138,17 @@
               "description": "Whether CV pages include a page counter."
             }
           }
+        },
+        "parts": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Restyle named parts of the CV. Each part also carries the label <bcv-NAME> for experimental show-set rules.",
+          "properties": {
+            "entry-primary": {
+              "$ref": "#/definitions/textPart",
+              "description": "The bold first line of an entry: the society, or the title when display_entry_society_first is false."
+            }
+          }
         }
       },
       "required": ["awesome_color", "header", "entry"]
@@ -213,6 +224,41 @@
   },
   "required": ["layout", "personal"],
   "definitions": {
+    "textPart": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Text properties for one style part. Unset properties keep the package default.",
+      "properties": {
+        "size": { "$ref": "#/definitions/length", "description": "Font size, e.g. \"11pt\"." },
+        "weight": {
+          "oneOf": [
+            {
+              "type": "string",
+              "enum": ["thin", "extralight", "light", "regular", "medium", "semibold", "bold", "extrabold", "black"]
+            },
+            { "type": "integer", "minimum": 100, "maximum": 900 }
+          ],
+          "description": "Font weight: a name or 100-900."
+        },
+        "style": {
+          "type": "string",
+          "enum": ["normal", "italic", "oblique"],
+          "description": "Font style."
+        },
+        "fill": {
+          "type": "string",
+          "pattern": "^(skyblue|red|nephritis|concrete|darknight|#[A-Fa-f0-9]{3}|#[A-Fa-f0-9]{6})$",
+          "description": "Text color: an awesome color name (skyblue, red, nephritis, concrete, darknight) or a three- or six-digit hex color such as \"#DC3522\"."
+        },
+        "font": {
+          "oneOf": [
+            { "type": "string", "minLength": 1 },
+            { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+          ],
+          "description": "Font family, or a fallback list."
+        }
+      }
+    },
     "length": {
       "type": "string",
       "pattern": "^(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?(?:pt|mm|cm|in|em)$"
