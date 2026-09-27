@@ -86,6 +86,12 @@ jobs:
             and what they directly depend on; skip binary files such as PNG
             refs.
 
+            Whether the default output changed is already checked by the
+            required Test job, which compares every page against its ref
+            PNG. Do not rebuild the main branch to compare renders yourself.
+            When the allowlist refuses a command, do not retry the same goal
+            with a different command; continue the review without it.
+
             Post each issue as soon as you confirm it, so nothing is lost if
             the run ends early.
 
@@ -103,9 +109,12 @@ jobs:
           # Code knows (Fable, else Opus). The action pins Claude Code, and
           # Dependabot bumps the action weekly, so new models arrive without
           # editing this file.
+          # The action checks --max-turns against the finished run, so a
+          # review that ends after the limit still fails the job (90 turns
+          # on #275). 80 leaves room for a large PR.
           claude_args: |
             --model best
-            --max-turns 60
+            --max-turns 80
             --allowedTools "Read,Grep,Glob,mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*),Write,Edit,Bash(typst compile:*),Bash(typst eval:*),Bash(typst --version),Bash(bash tests/panics/run.sh),Bash(bash tests/guards.sh),Bash(bash tests/query/run.sh),Bash(uv run --with-requirements scripts/requirements-checks.lock python scripts/check_metadata_schema.py)"
 
       # List every tool call and each call the allowlist refused, so a run
