@@ -63,11 +63,15 @@ jobs:
           additional_permissions: |
             actions: read
 
-          # Pin the model, cap iterations, and scope tools to this repo's
+          # Cap iterations and scope tools to this repo's
           # verification loop: typst compile + native panics + machine guards.
           # Visual regressions are verified by CI, not here.
+          # `best` resolves to the most capable model the installed Claude
+          # Code knows (Fable, else Opus). The action pins Claude Code, and
+          # Dependabot bumps the action weekly, so new models arrive without
+          # editing this file.
           claude_args: |
-            --model claude-sonnet-5
+            --model best
             --max-turns 20
             --allowedTools "Edit,Read,Write,Bash(typst compile:*),Bash(bash tests/panics/run.sh),Bash(bash tests/guards.sh)"
 
