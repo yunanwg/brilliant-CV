@@ -20,11 +20,16 @@ trap 'rm -rf "$OUT"' EXIT
 
 PASS=0
 FAIL=0
-FIXTURES=(cv-en cv-de cv-fr cv-it cv-zh letter-en letter-zh)
+FIXTURES=(
+  regression/cv-en regression/cv-de regression/cv-fr regression/cv-it
+  regression/cv-zh regression/letter-en regression/letter-zh
+  components/cv-header-info-photo-wrap
+)
 
-for name in "${FIXTURES[@]}"; do
+for fixture in "${FIXTURES[@]}"; do
+  name="${fixture##*/}"
   snapshot="tests/text/snapshots/$name.txt"
-  if ! typst compile --root . "tests/regression/$name/test.typ" \
+  if ! typst compile --root . "tests/$fixture/test.typ" \
     "$OUT/$name.pdf" 2>"$OUT/$name.err"; then
     printf '  \033[31m✗\033[0m %-12s compile failed\n' "$name" >&2
     sed 's/^/       /' "$OUT/$name.err" >&2
@@ -42,6 +47,14 @@ for name in "${FIXTURES[@]}"; do
         while (n > 0 && (line[n] == "" || line[n] == "--- page break ---")) n--
         for (i = 1; i <= n; i++) print line[i]
       }' >"$OUT/$name.txt"
+
+  # A separator ends a line only when a contact line wrapped inside its box.
+  if grep -n '[|]$' "$OUT/$name.txt" >"$OUT/$name.bars"; then
+    printf '  \033[31m✗\033[0m %-12s line ends with a separator\n' "$name" >&2
+    sed 's/^/       /' "$OUT/$name.bars" >&2
+    FAIL=$((FAIL + 1))
+    continue
+  fi
 
   if [[ "${UPDATE:-0}" == "1" ]]; then
     cp "$OUT/$name.txt" "$snapshot"

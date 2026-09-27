@@ -204,23 +204,22 @@
   )))
 
   layout(size => {
-    let separator-width = measure(h-bar()).width
+    // Measure each candidate line as it renders, separators included. The
+    // separator measured on its own loses its spaces, and with a profile
+    // photo the header column shrinks to the widest line, so any
+    // underestimate wraps a line inside its box and strands a separator.
     let lines = ()
     for row in items {
       let line = ()
-      let width = 0pt
       for item in row {
-        let item-width = measure(item).width
-        let needed = if line.len() == 0 { item-width } else {
-          width + separator-width + item-width
-        }
-        if line.len() > 0 and needed > size.width {
+        let candidate = line + (item,)
+        if (
+          line.len() > 0 and measure(candidate.join(h-bar())).width > size.width
+        ) {
           lines.push(line)
           line = (item,)
-          width = item-width
         } else {
-          line.push(item)
-          width = needed
+          line = candidate
         }
       }
       if line.len() > 0 { lines.push(line) }
