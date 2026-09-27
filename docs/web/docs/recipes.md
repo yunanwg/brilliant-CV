@@ -199,6 +199,56 @@ You can also set any hex color string directly:
 awesome_color = "#1E90FF"
 ```
 
+## Restyle One Part of the Text
+
+`[layout.parts.<name>]` changes the text style of one named part in all of the CV and the cover letter. For example, this makes the bold first line of each entry larger and red:
+
+```toml
+[layout.parts.entry-primary]
+size = "13pt"
+weight = "regular"
+fill = "red"
+```
+
+![entry-primary restyled](assets/components/style-part-entry-primary-theme.png)
+
+Each part accepts these properties. A property that you do not set keeps the package default.
+
+| Property | Value |
+|---|---|
+| `size` | A length in `pt`, `mm`, `cm`, `in`, or `em`, for example `"11pt"` |
+| `weight` | A weight name, for example `"regular"` or `"bold"`, or a number from 100 to 900 |
+| `style` | `"normal"`, `"italic"`, or `"oblique"` |
+| `fill` | A preset color name (see [Color Customization](#color-customization)) or `"#rrggbb"` |
+| `font` | A font name, or a list of font names |
+
+`font` replaces the full font fallback list for that part. If the part contains CJK text, include a CJK font in the list.
+
+The parts have names that tell their position, not their meaning. For example, `entry-primary` is the bold first line of an entry. This line is the society, or the title when `display_entry_society_first = false`.
+
+| Where | Parts |
+|---|---|
+| CV header | `name-first`, `name-last`, `header-info`, `header-quote` |
+| Sections | `section-title` |
+| Entries | `entry-primary`, `entry-primary-aside`, `entry-secondary`, `entry-secondary-aside`, `entry-description`, `entry-tag` |
+| Skills | `skill-type`, `skill-info`, `skill-tag` |
+| Honors | `honor-date`, `honor-title`, `honor-issuer`, `honor-location` |
+| Publications | `publication` |
+| Cover letter | `letter-sender-name`, `letter-sender-address`, `letter-recipient-name`, `letter-recipient-address`, `letter-date`, `letter-subject` |
+| CV and cover letter | `footer` |
+
+An unknown part or property stops the compilation with an error that names the correct values. The schema in your template also shows these errors in the editor.
+
+A `fill` on `section-title` replaces the highlight colors of the title. The `color` argument of one `cv-section`, `cv-entry`, or `cv-honor` call has priority over `fill` for that call, on the parts that the argument colors: `section-title`, `entry-primary-aside`, `entry-secondary`, and `honor-location`.
+
+**Use a show rule (experimental).** Each part also has the label `<bcv-<name>>`. A show-set rule in `cv.typ` has priority over the package defaults and over `[layout.parts]`:
+
+```typ
+#show <bcv-entry-primary>: set text(size: 13pt, fill: rgb("#27AE60"))
+```
+
+Use `[layout.parts]` for most changes. A show rule can use all `text` properties, but the labels can change in a minor release.
+
 ## Cover Letter with Signature
 
 There are two ways to add a signature to a cover letter.
