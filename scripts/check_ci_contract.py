@@ -95,7 +95,8 @@ def upstream_pr_body_errors(template: str | None, release: str) -> list[str]:
 
 def policy_errors(root: Path) -> list[str]:
     errors: list[str] = []
-    for path in sorted((root / ".github/workflows").glob("*.yaml")):
+    workflows = [*(root / ".github/workflows").glob("*.yaml"), *(root / ".github/workflows").glob("*.yml")]
+    for path in sorted(workflows):
         errors.extend(action_errors(path.relative_to(root), path.read_text()))
 
     errors.extend(docker_errors((root / "tests/Dockerfile").read_text()))
