@@ -17,7 +17,39 @@
 /// not the meaning: `entry-primary` is the bold first line of an entry,
 /// which is the society or the title depending on
 /// `display_entry_society_first`.
-#let _part-names = ("entry-primary",)
+#let _part-names = (
+  // CV header
+  "name-first",
+  "name-last",
+  "header-info",
+  "header-quote",
+  // Sections and entries
+  "section-title",
+  "entry-primary",
+  "entry-primary-aside",
+  "entry-secondary",
+  "entry-secondary-aside",
+  "entry-description",
+  "entry-tag",
+  // Skills, honors, publications
+  "skill-type",
+  "skill-info",
+  "skill-tag",
+  "honor-date",
+  "honor-title",
+  "honor-issuer",
+  "honor-location",
+  "publication",
+  // Cover letter
+  "letter-sender-name",
+  "letter-sender-address",
+  "letter-recipient-name",
+  "letter-recipient-address",
+  "letter-date",
+  "letter-subject",
+  // CV and cover letter
+  "footer",
+)
 
 /// Text properties a part accepts.
 #let _part-properties = ("size", "weight", "style", "fill", "font")
@@ -105,12 +137,20 @@
 
 /// Render `body` as the style part `name`.
 ///
+/// `parts` is the result of `_resolve-parts`, or a function returning it.
+/// Components that take no `metadata` argument pass a function, which runs
+/// in context around the text only, so they need no context wrapper of
+/// their own and still render with the defaults outside `cv()`.
+///
 /// - name (str): the part name, e.g. `"entry-primary"`
 /// - defaults (dictionary): the package's `text` properties for this part
-/// - parts (dictionary): the result of `_resolve-parts`
+/// - parts (dictionary | function): resolved parts, or `() => dictionary`
 /// - body (str | content): the text to render
 /// -> content
 #let _part(name, defaults, parts, body) = {
-  set text(..defaults, ..parts.at(name, default: (:)))
-  [#text(body)#label("bcv-" + name)]
+  let render(resolved) = {
+    set text(..defaults, ..resolved.at(name, default: (:)))
+    [#text(body)#label("bcv-" + name)]
+  }
+  if type(parts) == function { context render(parts()) } else { render(parts) }
 }

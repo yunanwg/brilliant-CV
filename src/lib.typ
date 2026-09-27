@@ -156,7 +156,13 @@
 /// `[layout.parts.entry-primary] size = "11pt"` enlarges the bold first line
 /// of every entry. Each part also carries the label `<bcv-<name>>`, so
 /// `#show <bcv-entry-primary>: set text(...)` reaches it too (experimental).
-/// Available parts: `entry-primary`.
+/// Parts: `name-first`, `name-last`, `header-info`, `header-quote`,
+/// `section-title`, `entry-primary`, `entry-primary-aside`,
+/// `entry-secondary`, `entry-secondary-aside`, `entry-description`,
+/// `entry-tag`, `skill-type`, `skill-info`, `skill-tag`, `honor-date`,
+/// `honor-title`, `honor-issuer`, `honor-location`, `publication`, and
+/// `footer`. Entry parts are named by position: `entry-primary` is the bold
+/// first line, `entry-secondary` the small-caps second line.
 ///
 /// *Experimental layout hooks.* Compile or query with
 /// `--input brilliant-cv-query=1` and every component also emits an
@@ -246,6 +252,11 @@
 /// Sets the PDF metadata: the title is `<name> — <subject>`, the author is
 /// the name (`[personal] display_name` when set), and the keywords are
 /// `[inject] injected_keywords_list`.
+///
+/// *Style parts.* `[layout.parts.<name>]` restyles the letter too (see
+/// `cv()`): `letter-sender-name`, `letter-sender-address`,
+/// `letter-recipient-name`, `letter-recipient-address`, `letter-date`,
+/// `letter-subject`, and `footer`.
 ///
 /// With `--input brilliant-cv-query=1`, the letter emits one experimental
 /// `<brilliant-cv>` element of kind `document` with its page count (see
