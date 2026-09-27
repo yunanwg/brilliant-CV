@@ -74,8 +74,8 @@ only.
 - For a structural layout change that `[layout]` and `[layout.parts]`
   cannot make, copy the package to `vendor/preview/brilliant-cv/<version>/`,
   compile with `--package-path vendor`, and edit the copy. Record each change
-  in `vendor/CHANGES.md`: the copy gets no fixes from new versions. See
-  "Change the Layout Beyond the Configuration" in the documentation recipes.
+  in `vendor/CHANGES.md`: the copy gets no fixes from new versions. Details:
+  https://yunanwg.github.io/brilliant-CV/recipes/#change-the-layout-beyond-the-configuration
 - The cover-letter body is 12pt. `[layout] font_size` applies to the CV only.
 - To keep the closing, the signature, and the name together on one page,
   put them in `#block(breakable: false)[…]` at the end of the letter.
