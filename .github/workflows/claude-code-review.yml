@@ -60,9 +60,15 @@ jobs:
 
             Tools: read files with Read, Grep, and Glob; see the change with
             `gh pr diff <number>` or `git diff`, `git log`, and `git show`.
-            Other shell commands are not available, so do not try them.
+            Run each command on its own: redirections (`>`), pipes, and
+            other shell commands are not allowed. Read only the changed files
+            and what they directly depend on; skip binary files such as PNG
+            refs.
 
-            Post each issue as an inline comment with
+            Post each issue as soon as you confirm it, so nothing is lost if
+            the run ends early.
+
+            Use an inline comment for each issue:
             `mcp__github_inline_comment__create_inline_comment` (confirmed: true).
             Always finish with one top-level `gh pr comment` that summarizes
             the review, or says that you found no issues.
@@ -71,18 +77,24 @@ jobs:
           display_report: true
           claude_args: |
             --model claude-sonnet-5
-            --max-turns 30
+            --max-turns 60
             --allowedTools "Read,Grep,Glob,mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*)"
 
-      # List the tool calls the allowlist refused, so a run that burns its
-      # turns on denials shows why. Prints only the tool name and its
-      # command or path, never tool output, so nothing sensitive leaks into
-      # the public log.
-      - name: List denied tool calls
+      # List every tool call and each call the allowlist refused, so a run
+      # that runs out of turns shows where they went. Prints only the tool
+      # name and its command or path, never tool output, so nothing
+      # sensitive leaks into the public log.
+      - name: List tool calls
         if: always() && steps.claude-review.outputs.execution_file != ''
         env:
           EXECUTION_FILE: ${{ steps.claude-review.outputs.execution_file }}
         run: |
+          jq -r '(if type == "array" then .[] else . end)
+            | select(.type == "assistant")
+            | .message.content[]?
+            | select(.type == "tool_use")
+            | "call \(.name): \(.input.command // .input.file_path // .input.pattern // .input.path // "")"' \
+            "$EXECUTION_FILE" || true
           jq -r '(if type == "array" then .[] else . end)
             | select(.type == "result")
             | .permission_denials[]?
