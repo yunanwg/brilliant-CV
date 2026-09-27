@@ -48,8 +48,12 @@ for fixture in "${FIXTURES[@]}"; do
         for (i = 1; i <= n; i++) print line[i]
       }' >"$OUT/$name.txt"
 
-  # A separator ends a line only when a contact line wrapped inside its box.
-  if grep -n '[|]$' "$OUT/$name.txt" >"$OUT/$name.bars"; then
+  # A contact line ending in a separator wrapped inside its box. Contact
+  # items carry a Font Awesome icon (a private-use glyph), which keeps user
+  # text such as a wrapped "Course: A | B" bullet out of this check.
+  perl -CSD -ne 'print "$.: $_" if /[\x{E000}-\x{F8FF}].*\|$/' \
+    "$OUT/$name.txt" >"$OUT/$name.bars"
+  if [[ -s "$OUT/$name.bars" ]]; then
     printf '  \033[31m✗\033[0m %-12s line ends with a separator\n' "$name" >&2
     sed 's/^/       /' "$OUT/$name.bars" >&2
     FAIL=$((FAIL + 1))
