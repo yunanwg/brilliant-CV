@@ -93,6 +93,18 @@ def upstream_pr_body_errors(template: str | None, release: str) -> list[str]:
     return errors
 
 
+def docs_deploy_errors(docs: str, release: str) -> list[str]:
+    """The site documents the released package: deploy it from the release only."""
+    errors: list[str] = []
+    if re.search(r"^  push:", docs, re.MULTILINE):
+        errors.append("documentation workflow must not deploy on push; the release calls it")
+    if "workflow_call:" not in docs:
+        errors.append("documentation workflow must be callable from the release workflow")
+    if "uses: ./.github/workflows/documentation.yaml" not in release:
+        errors.append("release workflow must deploy the documentation after publish")
+    return errors
+
+
 def policy_errors(root: Path) -> list[str]:
     errors: list[str] = []
     workflows = [*(root / ".github/workflows").glob("*.yaml"), *(root / ".github/workflows").glob("*.yml")]
@@ -108,6 +120,8 @@ def policy_errors(root: Path) -> list[str]:
         upstream_pr_body_path.read_text() if upstream_pr_body_path.is_file() else None
     )
     errors.extend(upstream_pr_body_errors(upstream_pr_body, release))
+    docs = (root / ".github/workflows/documentation.yaml").read_text()
+    errors.extend(docs_deploy_errors(docs, release))
     for forbidden in ("workflow_dispatch", "git reset --hard", "git push origin main --force"):
         if forbidden in release:
             errors.append(f"release workflow contains forbidden operation: {forbidden}")
@@ -164,6 +178,10 @@ fi
     assert not upstream_pr_body_errors(valid_pr_body, valid_release)
     assert upstream_pr_body_errors(None, valid_release)
     assert upstream_pr_body_errors(valid_pr_body, 'gh pr create --body "short"')
+    release_calls_docs = "uses: ./.github/workflows/documentation.yaml"
+    assert not docs_deploy_errors("on:\n  pull_request:\n  workflow_call:\n", release_calls_docs)
+    assert docs_deploy_errors("on:\n  push:\n    branches: [main]\n  workflow_call:\n", release_calls_docs)
+    assert docs_deploy_errors("on:\n  pull_request:\n  workflow_call:\n", "jobs: {}")
 
 
 def main() -> int:

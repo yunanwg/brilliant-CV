@@ -1,14 +1,16 @@
 name: Deploy Documentation
 
+# The site documents the released package, so it deploys only from a release
+# tag: release-and-publish.yaml calls this workflow after the release passes
+# every gate. Pull requests build the site without deploying it, so a broken
+# page still fails before merge.
 on:
-  push:
-    branches:
-      - main
   pull_request:
+  workflow_call:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: docs-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
@@ -65,7 +67,7 @@ jobs:
         run: test -s roundtrip-site/index.html
 
   deploy:
-    if: github.event_name == 'push'
+    if: github.ref_type == 'tag'
     needs: build
     runs-on: ubuntu-latest
     permissions:
