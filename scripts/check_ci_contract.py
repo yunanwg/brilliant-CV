@@ -96,8 +96,10 @@ def upstream_pr_body_errors(template: str | None, release: str) -> list[str]:
 def docs_deploy_errors(docs: str, release: str) -> list[str]:
     """The site documents the released package: deploy it from the release only."""
     errors: list[str] = []
-    if re.search(r"^  push:", docs, re.MULTILINE):
+    if re.search(r"^  push:|^on:.*\bpush\b", docs, re.MULTILINE):
         errors.append("documentation workflow must not deploy on push; the release calls it")
+    if "if: github.ref_type == 'tag'" not in docs:
+        errors.append("documentation deploy job must run only for a release tag")
     if "workflow_call:" not in docs:
         errors.append("documentation workflow must be callable from the release workflow")
     if "uses: ./.github/workflows/documentation.yaml" not in release:
@@ -179,9 +181,12 @@ fi
     assert upstream_pr_body_errors(None, valid_release)
     assert upstream_pr_body_errors(valid_pr_body, 'gh pr create --body "short"')
     release_calls_docs = "uses: ./.github/workflows/documentation.yaml"
-    assert not docs_deploy_errors("on:\n  pull_request:\n  workflow_call:\n", release_calls_docs)
-    assert docs_deploy_errors("on:\n  push:\n    branches: [main]\n  workflow_call:\n", release_calls_docs)
-    assert docs_deploy_errors("on:\n  pull_request:\n  workflow_call:\n", "jobs: {}")
+    docs_ok = "on:\n  pull_request:\n  workflow_call:\n    if: github.ref_type == 'tag'\n"
+    assert not docs_deploy_errors(docs_ok, release_calls_docs)
+    assert docs_deploy_errors(docs_ok.replace("  pull_request:", "  push:"), release_calls_docs)
+    assert docs_deploy_errors("on: [push, workflow_call]\n    if: github.ref_type == 'tag'\n", release_calls_docs)
+    assert docs_deploy_errors(docs_ok.replace("'tag'", "'branch'"), release_calls_docs)
+    assert docs_deploy_errors(docs_ok, "jobs: {}")
 
 
 def main() -> int:
