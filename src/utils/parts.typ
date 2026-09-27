@@ -33,8 +33,18 @@
     }
     eval(value)
   } else if key == "fill" {
-    if type(value) != str {
-      panic(where + " must be a color name or \"#rrggbb\", got " + repr(value))
+    let hex = regex("^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$")
+    if (
+      type(value) != str
+        or (value not in awesome-colors and value.match(hex) == none)
+    ) {
+      panic(
+        where
+          + " must be a color name ("
+          + awesome-colors.keys().join(", ")
+          + ") or \"#rrggbb\", got "
+          + repr(value),
+      )
     }
     if value in awesome-colors { awesome-colors.at(value) } else { rgb(value) }
   } else if key == "style" {

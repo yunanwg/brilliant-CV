@@ -85,8 +85,9 @@ letter_footer = "Cover letter"
 
     # (Optional) Restyle named parts of the CV. Each part accepts size,
     # weight, style, fill (an awesome color name or "#rrggbb"), and font;
-    # unset properties keep the package default. An unknown part or property
-    # is an error. Available parts:
+    # unset properties keep the package default. `font` replaces the whole
+    # fallback list for that part, so keep a CJK font in it if you need one.
+    # An unknown part or property is an error. Available parts:
     #   entry-primary - the bold first line of an entry: the society, or the
     #                   title when display_entry_society_first = false
     # Each part also carries the label <bcv-NAME>, so a show-set rule in

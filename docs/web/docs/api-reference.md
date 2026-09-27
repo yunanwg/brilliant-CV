@@ -16,6 +16,13 @@ Sets the PDF metadata: the title is `<name> — <cv_footer>`, the author is
 the name (`[personal] display_name` when set), and the keywords are
 `[inject] injected_keywords_list`.
 
+**Style parts.** `[layout.parts.<name>]` in `metadata.toml` restyles a named
+part with `size`, `weight`, `style`, `fill`, and `font`; for example
+`[layout.parts.entry-primary] size = "11pt"` enlarges the bold first line
+of every entry. Each part also carries the label `<bcv-<name>>`, so
+`#show <bcv-entry-primary>: set text(...)` reaches it too (experimental).
+Available parts: `entry-primary`.
+
 **Experimental layout hooks.** Compile or query with
 `--input brilliant-cv-query=1` and every component also emits an
 invisible `metadata` element labelled `<brilliant-cv>`; the layout does
