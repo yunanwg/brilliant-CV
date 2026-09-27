@@ -128,7 +128,7 @@ Recommended tool: the `simple-english` skill at <https://github.com/AminBlg/Simp
 
 In scope: `index.md`, `getting-started.md`, `troubleshooting.md`, `recipes.md`, `migration.md`, `components.md`.
 
-Out of scope: `api-reference.md` and `configuration.md` are generated. To change their prose, edit the doc-comments in `src/` or the comments in `template/profile_en/metadata.toml`, then run `just docs-generate`.
+Out of scope: `api-reference.md` and `configuration.md` come from source files. To change `api-reference.md`, edit the doc-comments in `src/`, then run `just docs-generate`. `configuration.md` includes `template/profile_en/metadata.toml` verbatim, so edit the comments in that file.
 
 Never rewrite code blocks, inline code, file paths, commands, config keys, or quoted errors. Reflow the prose around them. `just docs-check` does **not** gate these pages: it compiles the snippets in the generated `api-reference.md` only. Verify by diffing every code block and link target against the previous revision.
 

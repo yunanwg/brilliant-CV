@@ -19,7 +19,7 @@ Run `just link` before any local development. This registers the local package w
 | `just test-update` | A layout change moved pixels or extracted text on purpose | Regenerates ref PNGs and `tests/text/snapshots/` in Docker; review both diffs before committing |
 | `just fmt-check` | Before committing | typstyle gate, same image as CI |
 | `just previews` | A change alters page 1 of a starter profile (en, fr, zh) | Regenerates the README previews and `thumbnail.png` in Docker; the Update preview images workflow does the same on the CI runner |
-| `just docs-generate` | You changed doc-comments in `src/` or comments in `template/profile_en/metadata.toml` | Regenerates the two generated pages |
+| `just docs-generate` | You changed doc-comments in `src/` | Regenerates `api-reference.md` and copies the component refs into the docs |
 | `just verify-release` | Preparing a release | Full pre-release contract |
 
 ## Critical Architecture
@@ -37,14 +37,14 @@ Changes to `src/` affect all downstream users. To rename a parameter, keep the o
 ### Schema migration guards panic, they don't silently fall back
 `src/lib.typ:_check-v3-legacy` panics on v3-only fields (`language`, `non_latin_font`, `non_latin_name`, `[lang.*]`). The same applies to v2 inject keys (`inject_ai_prompt`, `inject_keywords`). These panics are **intentional**: the v4 design picks panic-with-migration-message over silent fallback to avoid hiding behavior changes. When one fires, migrate the offending `metadata.toml` to the replacement field the panic message names — leave the guard itself alone.
 
-### Two documentation pages are generated — edit the source, not the output
-- `docs/web/docs/api-reference.md` ← generated from `src/` doc-comments
-- `docs/web/docs/configuration.md` ← generated from `template/profile_en/metadata.toml` comments (profile_en is the canonical reference)
+### Two documentation pages come from source files — edit the source, not the page
+- `docs/web/docs/api-reference.md` ← generated from `src/` doc-comments; run `just docs-generate` after you edit them
+- `docs/web/docs/configuration.md` ← includes `template/profile_en/metadata.toml` verbatim through a live `pymdownx.snippets` include (profile_en is the canonical reference), so its comments appear on the page without a regeneration step
 
-Edit those source comments, then run `just docs-generate`. Every other page under `docs/web/docs/` is hand-written.
+Every other page under `docs/web/docs/` is hand-written.
 
 ### Each profile's metadata.toml is the single source of truth for that profile
-All user configuration flows through `template/profile_<name>/metadata.toml`. v4 has no merging or inheritance — one profile = one complete CV configuration. When adding new config options, update the comments in `template/profile_en/metadata.toml` first (it drives docs generation), then mirror to other profiles as needed.
+All user configuration flows through `template/profile_<name>/metadata.toml`. v4 has no merging or inheritance — one profile = one complete CV configuration. When adding new config options, update the comments in `template/profile_en/metadata.toml` first (the Configuration page shows that file), then mirror to other profiles as needed.
 
 ### Starter profile content is read as facts
 Users point their own agents at a fresh `typst init` folder, and those agents treat `template/profile_<name>/` as the candidate's real record — they flag or act on every contradiction. Each profile must be internally consistent: header badges, dates, locations, skill tags, bib authorship, and `template/letter.typ` must agree with the entries. Profiles are separate localized personas, so they do not have to match each other. The shared skeleton is:
