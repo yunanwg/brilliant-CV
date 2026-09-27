@@ -1,7 +1,7 @@
 // _resolve-parts turns [layout.parts] into `text` arguments: lengths are
 // parsed, colors accept awesome names and hex, other values pass through.
 
-#import "/src/utils/parts.typ": _resolve-parts
+#import "/src/utils/parts.typ": _resolve-parts, _yield-fill
 #import "/src/utils/styles.typ": _awesome-colors
 #import "/tests/common.typ": minimal-metadata
 
@@ -39,4 +39,16 @@
 #assert.eq(
   _resolve-parts(hex).at("entry-primary").fill,
   rgb("#123456"),
+)
+
+// An explicit per-call color drops the configured fill of the parts it
+// colors, and keeps every other property.
+#let both = (
+  "section-title": (fill: rgb("#123456"), size: 20pt),
+  "honor-title": (fill: rgb("#123456")),
+)
+#assert.eq(_yield-fill(both, none, ("section-title",)), both)
+#assert.eq(
+  _yield-fill(both, red, ("section-title", "entry-tag")),
+  ("section-title": (size: 20pt), "honor-title": (fill: rgb("#123456"))),
 )

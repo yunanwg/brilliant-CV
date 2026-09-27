@@ -141,6 +141,26 @@
   resolved
 }
 
+/// Let an explicit `color:` argument on a component call win over
+/// `[layout.parts]`: when `color` is set, drop the configured `fill` of the
+/// parts that argument colors. The more specific setting wins.
+///
+/// - parts (dictionary): the result of `_resolve-parts`
+/// - color (none | color): the component's `color:` argument
+/// - names (array): the parts that `color` colors
+/// -> dictionary
+#let _yield-fill(parts, color, names) = {
+  if color == none { return parts }
+  for name in names {
+    if name in parts {
+      let part = parts.at(name)
+      let _ = part.remove("fill", default: none)
+      parts.insert(name, part)
+    }
+  }
+  parts
+}
+
 /// Render `body` as the style part `name`.
 ///
 /// `parts` is the result of `_resolve-parts`, or a function returning it.

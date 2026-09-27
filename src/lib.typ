@@ -162,7 +162,9 @@
 /// `entry-tag`, `skill-type`, `skill-info`, `skill-tag`, `honor-date`,
 /// `honor-title`, `honor-issuer`, `honor-location`, `publication`, and
 /// `footer`. Entry parts are named by position: `entry-primary` is the bold
-/// first line, `entry-secondary` the small-caps second line.
+/// first line, `entry-secondary` the small-caps second line. A `color:`
+/// argument on one `cv-section`, `cv-entry`, or `cv-honor` call still wins
+/// over `fill` for that call.
 ///
 /// *Experimental layout hooks.* Compile or query with
 /// `--input brilliant-cv-query=1` and every component also emits an

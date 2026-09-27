@@ -162,7 +162,7 @@
             },
             "section-title": {
               "$ref": "#/definitions/textPart",
-              "description": "Section titles. A fill here replaces the highlight colors."
+              "description": "Section titles. A fill here replaces the highlight colors, unless a cv-section call passes its own color argument."
             },
             "entry-primary": {
               "$ref": "#/definitions/textPart",

@@ -102,6 +102,8 @@ letter_footer = "Cover letter"
     #                 letter-recipient-name, letter-recipient-address,
     #                 letter-date, letter-subject
     #   both:         footer
+    # A color: argument passed to one cv-section, cv-entry, or cv-honor call
+    # still wins over fill for that call.
     # Each part also carries the label <bcv-NAME>, so a show-set rule in
     # cv.typ reaches it too (experimental):
     #   #show <bcv-entry-primary>: set text(size: 11pt)

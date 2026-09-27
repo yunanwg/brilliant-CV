@@ -7,7 +7,7 @@
   fa-pager, fa-phone, fa-researchgate, fa-square-github,
 )
 #import "./utils/injection.typ": _inject
-#import "./utils/parts.typ": _part, _resolve-parts
+#import "./utils/parts.typ": _part, _resolve-parts, _yield-fill
 #import "./utils/identity.typ": _display-name, _display-name-override
 #import "./utils/introspect.typ": _emit
 #import "./utils/styles.typ": (
@@ -523,8 +523,9 @@
   let accent-color = _resolve-accent-color(color, awesome-colors, metadata)
 
   // The highlight colors are the part's default fill; a `fill` in
-  // [layout.parts.section-title] recolors the whole title.
-  let parts = _resolve-parts(metadata)
+  // [layout.parts.section-title] recolors the whole title, unless this
+  // call passes its own `color`.
+  let parts = _yield-fill(_resolve-parts(metadata), color, ("section-title",))
   let section-title-style(str, color: black) = _part(
     "section-title",
     (size: 16pt, weight: "bold", fill: color),
@@ -582,6 +583,7 @@
     before-entry-description-skip: before-entry-description-skip,
     date-width: date-width,
     awesome-colors: awesome-colors,
+    color: color,
   )
 }
 
@@ -662,7 +664,10 @@
   let styles = _entry-styles(
     accent-color,
     before-entry-description-skip,
-    _resolve-parts(metadata),
+    _yield-fill(_resolve-parts(metadata), params.color, (
+      "entry-primary-aside",
+      "entry-secondary",
+    )),
   )
 
   // Layout settings
@@ -1163,7 +1168,7 @@
   let metadata = _resolve-component-metadata(metadata)
   let accent-color = _resolve-accent-color(color, awesome-colors, metadata)
 
-  let parts = _resolve-parts(metadata)
+  let parts = _yield-fill(_resolve-parts(metadata), color, ("honor-location",))
   let honor-date-style(str) = align(right, _part("honor-date", (:), parts, str))
   let honor-title-style(str) = _part(
     "honor-title",
