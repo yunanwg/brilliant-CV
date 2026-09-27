@@ -9,6 +9,7 @@ tests/
   Dockerfile                    # Test environment (typst, tytanic, typstyle, fonts)
   docker-entrypoint.sh          # Registers /workspace as @preview/brilliant-cv:<v>
   common.typ                    # Shared fixtures (not a tytanic test)
+  style-parts.typ               # Shared fixtures for the style-parts tests
   panics/                       # Shell-script smoke tests (not tytanic)
   query/                        # Shell test for the experimental layout hooks (needs --input, so not tytanic)
   text/                         # Extracted-text snapshots (pdftotext) — what ATS/LLM parsers read
@@ -20,7 +21,7 @@ tests/
   regression/<name>/test.typ    # Tytanic persistent — full-profile snapshots
 ```
 
-Tytanic discovers tests by walking `tests/` for files literally named `test.typ`. Anything else (`common.typ`, `panics/*/fixture.typ`, `panics/run.sh`, `Dockerfile`) is invisible to `tt list` / `tt run`.
+Tytanic discovers tests by walking `tests/` for files literally named `test.typ`. Anything else (`common.typ`, `style-parts.typ`, `panics/*/fixture.typ`, `panics/run.sh`, `Dockerfile`) is invisible to `tt list` / `tt run`.
 
 ## Running
 

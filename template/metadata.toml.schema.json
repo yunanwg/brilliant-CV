@@ -142,11 +142,111 @@
         "parts": {
           "type": "object",
           "additionalProperties": false,
-          "description": "Restyle named parts of the CV. Each part also carries the label <bcv-NAME> for experimental show-set rules.",
+          "description": "Restyle named parts of the CV and the cover letter. Each part also carries the label <bcv-NAME> for experimental show-set rules.",
           "properties": {
+            "name-first": {
+              "$ref": "#/definitions/textPart",
+              "description": "The first name in the CV header (or the whole name when display_name is set)."
+            },
+            "name-last": {
+              "$ref": "#/definitions/textPart",
+              "description": "The last name in the CV header."
+            },
+            "header-info": {
+              "$ref": "#/definitions/textPart",
+              "description": "The contact row under the name."
+            },
+            "header-quote": {
+              "$ref": "#/definitions/textPart",
+              "description": "The header quote under the contact row."
+            },
+            "section-title": {
+              "$ref": "#/definitions/textPart",
+              "description": "Section titles. A fill here replaces the highlight colors, unless a cv-section call passes its own color argument."
+            },
             "entry-primary": {
               "$ref": "#/definitions/textPart",
               "description": "The bold first line of an entry: the society, or the title when display_entry_society_first is false."
+            },
+            "entry-primary-aside": {
+              "$ref": "#/definitions/textPart",
+              "description": "The right-hand text on an entry's first line (location or date)."
+            },
+            "entry-secondary": {
+              "$ref": "#/definitions/textPart",
+              "description": "The small-caps second line of an entry: the title, or the society when display_entry_society_first is false."
+            },
+            "entry-secondary-aside": {
+              "$ref": "#/definitions/textPart",
+              "description": "The right-hand text on an entry's second line (date or location)."
+            },
+            "entry-description": {
+              "$ref": "#/definitions/textPart",
+              "description": "The description under an entry."
+            },
+            "entry-tag": {
+              "$ref": "#/definitions/textPart",
+              "description": "Tags under an entry."
+            },
+            "skill-type": {
+              "$ref": "#/definitions/textPart",
+              "description": "The type column of cv-skill and cv-skill-with-level."
+            },
+            "skill-info": {
+              "$ref": "#/definitions/textPart",
+              "description": "The info column of cv-skill and cv-skill-with-level."
+            },
+            "skill-tag": {
+              "$ref": "#/definitions/textPart",
+              "description": "cv-skill-tag badges."
+            },
+            "honor-date": {
+              "$ref": "#/definitions/textPart",
+              "description": "The date column of cv-honor."
+            },
+            "honor-title": {
+              "$ref": "#/definitions/textPart",
+              "description": "The title of cv-honor."
+            },
+            "honor-issuer": {
+              "$ref": "#/definitions/textPart",
+              "description": "The issuer of cv-honor."
+            },
+            "honor-location": {
+              "$ref": "#/definitions/textPart",
+              "description": "The location column of cv-honor."
+            },
+            "publication": {
+              "$ref": "#/definitions/textPart",
+              "description": "The bibliography rendered by cv-publication."
+            },
+            "letter-sender-name": {
+              "$ref": "#/definitions/textPart",
+              "description": "The sender name in the cover-letter header."
+            },
+            "letter-sender-address": {
+              "$ref": "#/definitions/textPart",
+              "description": "The sender address in the cover-letter header."
+            },
+            "letter-recipient-name": {
+              "$ref": "#/definitions/textPart",
+              "description": "The recipient name in the cover-letter header."
+            },
+            "letter-recipient-address": {
+              "$ref": "#/definitions/textPart",
+              "description": "The recipient address in the cover-letter header."
+            },
+            "letter-date": {
+              "$ref": "#/definitions/textPart",
+              "description": "The date in the cover-letter header."
+            },
+            "letter-subject": {
+              "$ref": "#/definitions/textPart",
+              "description": "The subject line of the cover letter."
+            },
+            "footer": {
+              "$ref": "#/definitions/textPart",
+              "description": "The page footer of the CV and the cover letter."
             }
           }
         }

@@ -17,6 +17,9 @@
 #       docs/previews/cv-en.png, the render it is copied from.
 #   (e) Layout-grid guard — src/ uses `grid` for layout, never `table`,
 #       which Typst tags as a data table in the PDF.
+#   (f) Style-parts guard — every part in src/utils/parts.typ is in the
+#       schema, the profile_en comment, and the cv()/letter() doc-comments,
+#       and the schema lists no other part.
 #   (c) Starter-persona guard — every entry in the starter bibliography
 #       lists John Doe as an author (see "Starter profile content is read
 #       as facts" in AGENTS.md).
@@ -265,6 +268,50 @@ if [[ -z "$table_hits" ]]; then
 else
   fail "table() found in src/ — use grid() for layout:"
   printf '       %s\n' "$table_hits" >&2
+fi
+
+echo
+echo "Guard: style parts (registry, schema, and docs agree)"
+
+# --- (f) Style-parts guard ---------------------------------------------------
+#
+# _part-names in src/utils/parts.typ is the registry. The schema must list
+# exactly those parts, and the docs users and agents read (the profile_en
+# comment and the cv()/letter() doc-comments) must name every one.
+parts_check=$(python3 - <<'PYEOF'
+import json
+import re
+from pathlib import Path
+
+source = Path("src/utils/parts.typ").read_text(encoding="utf-8")
+block = re.search(r"#let _part-names = \((.*?)\n\)", source, re.S)
+registry = re.findall(r'"([a-z-]+)"', block.group(1)) if block else []
+schema = json.loads(Path("template/metadata.toml.schema.json").read_text(encoding="utf-8"))
+schema_parts = set(schema["properties"]["layout"]["properties"]["parts"]["properties"])
+profile = Path("template/profile_en/metadata.toml").read_text(encoding="utf-8")
+api = Path("src/lib.typ").read_text(encoding="utf-8")
+
+problems = []
+if not registry:
+    problems.append("could not read _part-names from src/utils/parts.typ")
+if set(registry) != schema_parts:
+    problems.append(
+        "schema parts differ from the registry: "
+        + ", ".join(sorted(set(registry) ^ schema_parts))
+    )
+for part in registry:
+    if not re.search(rf"\b{re.escape(part)}\b", profile):
+        problems.append(f"{part} missing from the profile_en metadata comment")
+    if f"`{part}`" not in api:
+        problems.append(f"{part} missing from the cv()/letter() doc-comments")
+print("\n".join(problems))
+PYEOF
+)
+if [[ -z "$parts_check" ]]; then
+  pass "style parts agree across parts.typ, the schema, and the docs"
+else
+  fail "style parts disagree:"
+  printf '%s\n' "$parts_check" | sed 's/^/       /' >&2
 fi
 
 echo

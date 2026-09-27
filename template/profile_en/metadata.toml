@@ -83,13 +83,27 @@ letter_footer = "Cover letter"
         # false removes the footer entirely (no page text, no counter)
         display_footer = true
 
-    # (Optional) Restyle named parts of the CV. Each part accepts size,
-    # weight, style, fill (an awesome color name or "#rrggbb"), and font;
-    # unset properties keep the package default. `font` replaces the whole
-    # fallback list for that part, so keep a CJK font in it if you need one.
-    # An unknown part or property is an error. Available parts:
-    #   entry-primary - the bold first line of an entry: the society, or the
-    #                   title when display_entry_society_first = false
+    # (Optional) Restyle named parts of the CV and the cover letter. Each
+    # part accepts size, weight, style, fill (an awesome color name or
+    # "#rrggbb"), and font; unset properties keep the package default. `font`
+    # replaces the whole fallback list for that part, so keep a CJK font in it
+    # if you need one. An unknown part or property is an error. Parts:
+    #   CV header:    name-first, name-last, header-info, header-quote
+    #   sections:     section-title (a fill replaces the highlight colors)
+    #   entries:      entry-primary (the bold first line: the society, or the
+    #                 title when display_entry_society_first = false),
+    #                 entry-primary-aside, entry-secondary (the small-caps
+    #                 second line), entry-secondary-aside, entry-description,
+    #                 entry-tag
+    #   skills:       skill-type, skill-info, skill-tag
+    #   honors:       honor-date, honor-title, honor-issuer, honor-location
+    #   publications: publication
+    #   letter:       letter-sender-name, letter-sender-address,
+    #                 letter-recipient-name, letter-recipient-address,
+    #                 letter-date, letter-subject
+    #   both:         footer
+    # A color: argument passed to one cv-section, cv-entry, or cv-honor call
+    # still wins over fill for that call.
     # Each part also carries the label <bcv-NAME>, so a show-set rule in
     # cv.typ reaches it too (experimental):
     #   #show <bcv-entry-primary>: set text(size: 11pt)

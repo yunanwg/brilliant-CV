@@ -13,11 +13,45 @@
  * arguments outrank set and show rules and would lock the user out.
  */
 
+#import "./styles.typ": _awesome-colors
+
 /// Parts that `[layout.parts]` accepts. Positional names follow the layout,
 /// not the meaning: `entry-primary` is the bold first line of an entry,
 /// which is the society or the title depending on
 /// `display_entry_society_first`.
-#let _part-names = ("entry-primary",)
+#let _part-names = (
+  // CV header
+  "name-first",
+  "name-last",
+  "header-info",
+  "header-quote",
+  // Sections and entries
+  "section-title",
+  "entry-primary",
+  "entry-primary-aside",
+  "entry-secondary",
+  "entry-secondary-aside",
+  "entry-description",
+  "entry-tag",
+  // Skills, honors, publications
+  "skill-type",
+  "skill-info",
+  "skill-tag",
+  "honor-date",
+  "honor-title",
+  "honor-issuer",
+  "honor-location",
+  "publication",
+  // Cover letter
+  "letter-sender-name",
+  "letter-sender-address",
+  "letter-recipient-name",
+  "letter-recipient-address",
+  "letter-date",
+  "letter-subject",
+  // CV and cover letter
+  "footer",
+)
 
 /// Text properties a part accepts.
 #let _part-properties = ("size", "weight", "style", "fill", "font")
@@ -69,10 +103,14 @@
 /// An unknown part or property panics instead of being ignored, so a typo
 /// cannot silently leave the CV unchanged.
 ///
+/// A named `fill` resolves against the package's awesome colors, the same
+/// value space as `[layout] awesome_color` and the schema, never against
+/// a component's `awesome-colors` argument: every component reads the same
+/// `[layout.parts]`, so it must resolve the same way everywhere.
+///
 /// - metadata (dictionary): the metadata object
-/// - awesome-colors (dictionary): named colors accepted for `fill`
 /// -> dictionary
-#let _resolve-parts(metadata, awesome-colors) = {
+#let _resolve-parts(metadata) = {
   let configured = metadata.layout.at("parts", default: (:))
   let resolved = (:)
   for (part, properties) in configured {
@@ -96,21 +134,49 @@
             + _part-properties.join(", "),
         )
       }
-      parsed.insert(key, _parse-part-value(part, key, value, awesome-colors))
+      parsed.insert(key, _parse-part-value(part, key, value, _awesome-colors))
     }
     resolved.insert(part, parsed)
   }
   resolved
 }
 
+/// Let an explicit `color:` argument on a component call win over
+/// `[layout.parts]`: when `color` is set, drop the configured `fill` of the
+/// parts that argument colors. The more specific setting wins.
+///
+/// - parts (dictionary): the result of `_resolve-parts`
+/// - color (none | color): the component's `color:` argument
+/// - names (array): the parts that `color` colors
+/// -> dictionary
+#let _yield-fill(parts, color, names) = {
+  if color == none { return parts }
+  for name in names {
+    if name in parts {
+      let part = parts.at(name)
+      let _ = part.remove("fill", default: none)
+      parts.insert(name, part)
+    }
+  }
+  parts
+}
+
 /// Render `body` as the style part `name`.
+///
+/// `parts` is the result of `_resolve-parts`, or a function returning it.
+/// Components that take no `metadata` argument pass a function, which runs
+/// in context around the text only, so they need no context wrapper of
+/// their own and still render with the defaults outside `cv()`.
 ///
 /// - name (str): the part name, e.g. `"entry-primary"`
 /// - defaults (dictionary): the package's `text` properties for this part
-/// - parts (dictionary): the result of `_resolve-parts`
+/// - parts (dictionary | function): resolved parts, or `() => dictionary`
 /// - body (str | content): the text to render
 /// -> content
 #let _part(name, defaults, parts, body) = {
-  set text(..defaults, ..parts.at(name, default: (:)))
-  [#text(body)#label("bcv-" + name)]
+  let render(resolved) = {
+    set text(..defaults, ..resolved.at(name, default: (:)))
+    [#text(body)#label("bcv-" + name)]
+  }
+  if type(parts) == function { context render(parts()) } else { render(parts) }
 }

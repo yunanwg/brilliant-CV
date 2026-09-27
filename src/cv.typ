@@ -7,7 +7,7 @@
   fa-pager, fa-phone, fa-researchgate, fa-square-github,
 )
 #import "./utils/injection.typ": _inject
-#import "./utils/parts.typ": _part, _resolve-parts
+#import "./utils/parts.typ": _part, _resolve-parts, _yield-fill
 #import "./utils/identity.typ": _display-name, _display-name-override
 #import "./utils/introspect.typ": _emit
 #import "./utils/styles.typ": (
@@ -17,6 +17,15 @@
 
 /// Metadata state to avoid passing metadata to every function
 #let cv-metadata = state("cv-metadata", none)
+
+/// Style parts for components without a `metadata` argument: read the
+/// metadata that `cv()` installed, or fall back to the defaults when the
+/// component is used on its own. Call it in context (`_part` does).
+/// -> dictionary
+#let _state-parts() = {
+  let metadata = cv-metadata.get()
+  if metadata == none { (:) } else { _resolve-parts(metadata) }
+}
 
 /// Resolve explicit component metadata or the state seeded by `cv()`.
 /// -> dictionary
@@ -38,21 +47,35 @@
   regular-colors,
   accent-color,
   header-info-font-size,
+  parts,
 ) = (
-  first-name: str => text(
-    font: header-font,
-    size: 32pt,
-    weight: "light",
-    fill: regular-colors.darkgray,
+  first-name: str => _part(
+    "name-first",
+    (
+      font: header-font,
+      size: 32pt,
+      weight: "light",
+      fill: regular-colors.darkgray,
+    ),
+    parts,
     str,
   ),
-  last-name: str => text(font: header-font, size: 32pt, weight: "bold", str),
-  info: body => text(size: header-info-font-size, fill: accent-color, body),
-  quote: str => text(
-    size: 10pt,
-    weight: "medium",
-    style: "italic",
-    fill: accent-color,
+  last-name: str => _part(
+    "name-last",
+    (font: header-font, size: 32pt, weight: "bold"),
+    parts,
+    str,
+  ),
+  info: body => _part(
+    "header-info",
+    (size: header-info-font-size, fill: accent-color),
+    parts,
+    body,
+  ),
+  quote: str => _part(
+    "header-quote",
+    (size: 10pt, weight: "medium", style: "italic", fill: accent-color),
+    parts,
     str,
   ),
 )
@@ -353,6 +376,7 @@
     regular-colors,
     accent-color,
     header-info-font-size,
+    _resolve-parts(metadata),
   )
 
   // Create components
@@ -409,9 +433,13 @@
   }
 
   // Styles
-  let footer-style(str) = {
-    text(size: 8pt, fill: rgb("#999999"), smallcaps(str))
-  }
+  let parts = _resolve-parts(metadata)
+  let footer-style(str) = _part(
+    "footer",
+    (size: 8pt, fill: rgb("#999999")),
+    parts,
+    smallcaps(str),
+  )
 
   if display-page-counter {
     // Name and page counter take their natural widths; the center
@@ -494,9 +522,16 @@
   ))
   let accent-color = _resolve-accent-color(color, awesome-colors, metadata)
 
-  let section-title-style(str, color: black) = {
-    text(size: 16pt, weight: "bold", fill: color, str)
-  }
+  // The highlight colors are the part's default fill; a `fill` in
+  // [layout.parts.section-title] recolors the whole title, unless this
+  // call passes its own `color`.
+  let parts = _yield-fill(_resolve-parts(metadata), color, ("section-title",))
+  let section-title-style(str, color: black) = _part(
+    "section-title",
+    (size: 16pt, weight: "bold", fill: color),
+    parts,
+    str,
+  )
 
   v(before-section-skip)
   block(
@@ -548,6 +583,7 @@
     before-entry-description-skip: before-entry-description-skip,
     date-width: date-width,
     awesome-colors: awesome-colors,
+    color: color,
   )
 }
 
@@ -555,37 +591,38 @@
 /// -> dictionary
 #let _entry-styles(accent-color, before-entry-description-skip, parts) = (
   a1: str => _part("entry-primary", (size: 10pt, weight: "bold"), parts, str),
-  a2: str => align(right, text(
-    weight: "medium",
-    fill: accent-color,
-    style: "oblique",
+  a2: str => align(right, _part(
+    "entry-primary-aside",
+    (weight: "medium", fill: accent-color, style: "oblique"),
+    parts,
     str,
   )),
-  b1: str => text(
-    size: 8pt,
-    fill: accent-color,
-    weight: "medium",
+  b1: str => _part(
+    "entry-secondary",
+    (size: 8pt, fill: accent-color, weight: "medium"),
+    parts,
     smallcaps(str),
   ),
-  b2: str => align(right, text(
-    size: 8pt,
-    weight: "medium",
-    fill: gray,
-    style: "oblique",
+  b2: str => align(right, _part(
+    "entry-secondary-aside",
+    (size: 8pt, weight: "medium", fill: gray, style: "oblique"),
+    parts,
     str,
   )),
   dates: dates => [
     #set list(marker: [])
     #dates
   ],
-  description: str => text(
-    fill: _regular-colors.lightgray,
-    {
-      v(before-entry-description-skip)
-      str
-    },
-  ),
-  tag: str => align(center, text(size: 8pt, weight: "regular", str)),
+  description: str => {
+    v(before-entry-description-skip)
+    _part("entry-description", (fill: _regular-colors.lightgray), parts, str)
+  },
+  tag: str => align(center, _part(
+    "entry-tag",
+    (size: 8pt, weight: "regular"),
+    parts,
+    str,
+  )),
 )
 
 /// Create entry tag list
@@ -627,7 +664,10 @@
   let styles = _entry-styles(
     accent-color,
     before-entry-description-skip,
-    _resolve-parts(metadata, params.awesome-colors),
+    _yield-fill(_resolve-parts(metadata), params.color, (
+      "entry-primary-aside",
+      "entry-secondary",
+    )),
   )
 
   // Layout settings
@@ -987,12 +1027,13 @@
 /// ```
 /// -> content
 #let cv-skill(type: "Type", info: "Info", type-width: 17%) = {
-  let skill-type-style(str) = {
-    align(right, text(size: 10pt, weight: "bold", str))
-  }
-  let skill-info-style(str) = {
-    text(str)
-  }
+  let skill-type-style(str) = align(right, _part(
+    "skill-type",
+    (size: 10pt, weight: "bold"),
+    _state-parts,
+    str,
+  ))
+  let skill-info-style(str) = _part("skill-info", (:), _state-parts, str)
 
   grid(
     columns: (type-width, 1fr),
@@ -1034,12 +1075,13 @@
   info: "Info",
   type-width: 17%,
 ) = {
-  let skill-type-style(str) = {
-    align(right, text(size: 10pt, weight: "bold", str))
-  }
-  let skill-info-style(str) = {
-    text(str)
-  }
+  let skill-type-style(str) = align(right, _part(
+    "skill-type",
+    (size: 10pt, weight: "bold"),
+    _state-parts,
+    str,
+  ))
+  let skill-info-style(str) = _part("skill-info", (:), _state-parts, str)
   let skill-level-style(str) = {
     set text(size: 10pt, fill: _regular-colors.darkgray)
     for x in range(0, level) {
@@ -1074,9 +1116,12 @@
 /// ```
 /// -> content
 #let cv-skill-tag(skill) = {
-  let entry-tag-style(str) = {
-    align(center, text(size: 10pt, weight: "regular", str))
-  }
+  let entry-tag-style(str) = align(center, _part(
+    "skill-tag",
+    (size: 10pt, weight: "regular"),
+    _state-parts,
+    str,
+  ))
   box(
     inset: (x: 0.5em, y: 0.5em),
     fill: _regular-colors.subtlegray,
@@ -1123,21 +1168,21 @@
   let metadata = _resolve-component-metadata(metadata)
   let accent-color = _resolve-accent-color(color, awesome-colors, metadata)
 
-  let honor-date-style(str) = {
-    align(right, text(str))
-  }
-  let honor-title-style(str) = {
-    text(weight: "bold", str)
-  }
-  let honor-issuer-style(str) = {
-    text(str)
-  }
-  let honor-location-style(str) = {
-    align(
-      right,
-      text(weight: "medium", fill: accent-color, style: "oblique", str),
-    )
-  }
+  let parts = _yield-fill(_resolve-parts(metadata), color, ("honor-location",))
+  let honor-date-style(str) = align(right, _part("honor-date", (:), parts, str))
+  let honor-title-style(str) = _part(
+    "honor-title",
+    (weight: "bold"),
+    parts,
+    str,
+  )
+  let honor-issuer-style(str) = _part("honor-issuer", (:), parts, str)
+  let honor-location-style(str) = align(right, _part(
+    "honor-location",
+    (weight: "medium", fill: accent-color, style: "oblique"),
+    parts,
+    str,
+  ))
 
   grid(
     columns: (16%, 1fr, 15%),
@@ -1180,20 +1225,18 @@
   ref-full: true,
   key-list: (),
 ) = {
-  let publication-style(str) = {
-    text(str)
-  }
-  show bibliography: it => publication-style(it)
-  set bibliography(title: none, style: ref-style, full: ref-full)
-
-  if ref-full {
-    bib
-  } else {
-    for key in key-list {
-      cite(label(key), form: none)
+  // Wrap the bibliography itself, not the output of a `show bibliography`
+  // rule: a label placed on a show rule's output is not queryable.
+  let body = {
+    set bibliography(title: none, style: ref-style, full: ref-full)
+    if not ref-full {
+      for key in key-list {
+        cite(label(key), form: none)
+      }
     }
     bib
   }
+  _part("publication", (:), _state-parts, body)
   _emit(
     "publication",
     mode: if ref-full { "full" } else { "selected" },
