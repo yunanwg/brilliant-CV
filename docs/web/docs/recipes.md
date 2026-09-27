@@ -249,6 +249,30 @@ A `fill` on `section-title` replaces the highlight colors of the title. The `col
 
 Use `[layout.parts]` for most changes. A show rule can use all `text` properties, but the labels can change in a minor release.
 
+## Change the Layout Beyond the Configuration
+
+`[layout]` and `[layout.parts]` change sizes, spacing, colors, and fonts. For a structural change, for example a date column on the left of each entry, edit a copy of the package in your project. This is known as vendoring.
+
+1. Find the installed package. Typst keeps it in `<cache>/typst/packages/preview/brilliant-cv/<version>/`, where `<cache>` is `~/Library/Caches` (macOS), `~/.cache` (Linux), or `%LOCALAPPDATA%` (Windows). If the directory does not exist, compile your CV once.
+2. Copy that directory to `vendor/preview/brilliant-cv/<version>/` in your project. Keep the same version, so that the `#import` lines do not change.
+3. Compile with `--package-path vendor`:
+
+    ```bash
+    typst compile --package-path vendor cv.typ
+    ```
+
+    Typst then loads brilliant-cv from `vendor/`. Other packages still load from the cache.
+
+4. Edit the copy. The components are in `src/cv.typ`, for example `_make-cv-entry` for the entry layout, and in `src/letter.typ`.
+
+Vendoring has these costs:
+
+- Your copy does not get the fixes of new package versions. To upgrade, copy the new version and make your change again. Record each change, for example in `vendor/CHANGES.md`, so that you can do it again.
+- Each command that compiles your CV must include `--package-path vendor`. Without it, Typst uses the installed package and your change does not show.
+- The Typst web app has no command-line options, so this method needs the Typst CLI.
+
+Use vendoring only when the configuration cannot make the change.
+
 ## Cover Letter with Signature
 
 There are two ways to add a signature to a cover letter.
