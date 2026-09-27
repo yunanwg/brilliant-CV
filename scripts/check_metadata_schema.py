@@ -110,6 +110,10 @@ def main() -> int:
     unknown_part["layout"]["parts"] = {"entry-title": {"size": "11pt"}}
     expect_rejected(validator, "an unknown style part", unknown_part)
 
+    invalid_part_fill = copy.deepcopy(base)
+    invalid_part_fill["layout"]["parts"] = {"entry-primary": {"fill": "skybluee"}}
+    expect_rejected(validator, "a misspelled style-part fill", invalid_part_fill)
+
     unknown_part_property = copy.deepcopy(base)
     unknown_part_property["layout"]["parts"] = {"entry-primary": {"color": "red"}}
     expect_rejected(validator, "an unknown style-part property", unknown_part_property)

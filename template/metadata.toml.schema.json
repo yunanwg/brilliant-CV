@@ -247,8 +247,8 @@
         },
         "fill": {
           "type": "string",
-          "minLength": 1,
-          "description": "Text color: an awesome color name (skyblue, red, nephritis, concrete, darknight) or a hex color such as \"#DC3522\"."
+          "pattern": "^(skyblue|red|nephritis|concrete|darknight|#[A-Fa-f0-9]{3}|#[A-Fa-f0-9]{6})$",
+          "description": "Text color: an awesome color name (skyblue, red, nephritis, concrete, darknight) or a three- or six-digit hex color such as \"#DC3522\"."
         },
         "font": {
           "oneOf": [

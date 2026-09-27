@@ -33,7 +33,8 @@
     }
     eval(value)
   } else if key == "fill" {
-    let hex = regex("^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$")
+    // Same value space as the schema and [layout] awesome_color.
+    let hex = regex("^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$")
     if (
       type(value) != str
         or (value not in awesome-colors and value.match(hex) == none)
