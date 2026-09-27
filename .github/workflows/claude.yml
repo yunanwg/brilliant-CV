@@ -26,7 +26,7 @@ jobs:
       actions: read # Required for Claude to read CI results on PRs
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 1
 
@@ -36,17 +36,21 @@ jobs:
       # test.yaml on the PR Claude opens — reproducing it here is heavy and the
       # pixel refs are not deterministic outside the test image.
       - name: Set up Typst
-        uses: typst-community/setup-typst@v5
+        uses: typst-community/setup-typst@63ac138db421d586de61f7f5ac3bcef6a2e6c78c # v5
       - name: Set up just
-        uses: extractions/setup-just@v4
+        uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4
       - name: Link local package
         run: just link
 
       - name: Run Claude Code
         id: claude
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@756cc22e19660d20e8cc9496b4f242475a7f7790 # v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+
+          # Public repo: only the maintainer's comments reach Claude, so text
+          # that others post in a thread cannot steer it (prompt injection).
+          include_comments_by_actor: "yunanwg"
 
           # Allows Claude to read CI results on PRs
           additional_permissions: |
