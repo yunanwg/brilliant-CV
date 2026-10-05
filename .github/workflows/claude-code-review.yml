@@ -38,7 +38,7 @@ jobs:
       # instead of guessing. Same pinned action and package symlink as
       # claude.yml.
       - name: Set up Typst
-        uses: typst-community/setup-typst@40d32bb6ccb235bd7f5164cb47cfd40a5ea3a314 # v5
+        uses: typst-community/setup-typst@fee4b65b091cc546f02ce3be15fad8760f38a108 # v5
       - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
       - name: Link local package
         run: |
