@@ -85,6 +85,15 @@ Brilliant CV deliberately balances simplicity against flexibility. Before adding
 
 See [`CONTRIBUTING.md` §4.2](CONTRIBUTING.md) for the contributor-facing rationale and decision checklist.
 
+## Answering Issues
+
+Most user-side issues repeat: fonts, Typst syntax, an option the user did not find, or a request the package declines. Two pages hold the answers: `docs/web/docs/troubleshooting.md` (problems) and `docs/web/docs/scope.md` (what the configuration already does, and what is not planned).
+
+- Before you draft a reply, look for the answer on those two pages, and link it.
+- When an answer is not there yet, add it in the same PR or commit that closes the issue: a troubleshooting entry, or a row in `scope.md`. End a troubleshooting entry with `Related issue: [#N](…)`. This is how the FAQ keeps up with the issues.
+- When the confusion comes from an error message, also make the message name the fix, with a panic fixture under `tests/panics/`.
+- Draft replies for the maintainer to post. Do not post on an issue in the maintainer's name.
+
 ## Documentation Style
 
 The hand-written pages under `docs/web/docs/` follow ASD-STE100 Simplified Technical English, with a fixed terminology table and a rule against rewriting code blocks. Read [`CONTRIBUTING.md` §4.4](CONTRIBUTING.md) before you write prose there — the terminology choices are already applied across the site, and CI does not gate them.

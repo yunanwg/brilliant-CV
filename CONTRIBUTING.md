@@ -126,7 +126,7 @@ The hand-written pages under `docs/web/docs/` follow ASD-STE100 Simplified Techn
 
 Recommended tool: the `simple-english` skill at <https://github.com/AminBlg/SimpleEnglish>. It carries the 53-rule catalog and a mandatory self-check. Use **pragmatic mode**, which keeps domain vocabulary (Typst, profile, metadata, compile). The skill is not vendored in this repository; install it yourself.
 
-In scope: `index.md`, `getting-started.md`, `troubleshooting.md`, `recipes.md`, `migration.md`, `components.md`.
+In scope: `index.md`, `getting-started.md`, `troubleshooting.md`, `scope.md`, `recipes.md`, `migration.md`, `components.md`.
 
 Out of scope: `api-reference.md` and `configuration.md` come from source files. To change `api-reference.md`, edit the doc-comments in `src/`, then run `just docs-generate`. `configuration.md` includes `template/profile_en/metadata.toml` verbatim, so edit the comments in that file.
 
