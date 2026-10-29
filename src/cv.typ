@@ -951,7 +951,12 @@
 ) = context {
   let metadata = _resolve-component-metadata(metadata)
   if not metadata.layout.entry.display_entry_society_first {
-    panic("display_entry_society_first must be true to use cv-entry-start")
+    panic(
+      "display_entry_society_first must be true to use cv-entry-start. Set "
+        + "[layout.entry] display_entry_society_first = true in metadata.toml, "
+        + "or replace each cv-entry-start and cv-entry-continued group with "
+        + "one cv-entry for each role.",
+    )
   }
 
   let params = _prepare-entry-params(metadata, awesome-colors, color: color)
@@ -992,7 +997,12 @@
 ) = context {
   let metadata = _resolve-component-metadata(metadata)
   if not metadata.layout.entry.display_entry_society_first {
-    panic("display_entry_society_first must be true to use cv-entry-continued")
+    panic(
+      "display_entry_society_first must be true to use cv-entry-continued. Set "
+        + "[layout.entry] display_entry_society_first = true in metadata.toml, "
+        + "or replace each cv-entry-start and cv-entry-continued group with "
+        + "one cv-entry for each role.",
+    )
   }
 
   let params = _prepare-entry-params(metadata, awesome-colors, color: color)
