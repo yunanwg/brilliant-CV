@@ -49,6 +49,7 @@ nav:
   - Migration & FAQ:
       - Migration Guide: migration.md
       - Troubleshooting: troubleshooting.md
+      - Design Scope: scope.md
 
 extra_css:
   - stylesheets/extra.css
