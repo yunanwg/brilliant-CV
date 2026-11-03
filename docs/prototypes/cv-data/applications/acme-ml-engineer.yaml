@@ -1,0 +1,31 @@
+# Tailoring for one posting. This file holds choices only: every id and
+# highlight index refers to resume.json, and an unknown reference fails the
+# build. Facts are changed in resume.json, never here.
+posting: acme-ml-engineer.md      # the job description this file answers
+label: "Data scientist shipping forecasting models to production on AWS"
+keywords: [Python, AWS, Forecasting, MLOps, SparkSQL]
+
+sections: [work, projects, education, skills]
+
+work:
+  - id: xyz-director
+    highlights: [1, 0]
+  - xyz-ds
+  - id: abc-analyst
+    highlights: [0, 2]
+
+projects:
+  - ts-research
+  - id: oss
+    highlights: [0]
+
+education:
+  - msc
+  - bsc
+
+skills:
+  - id: ml
+    keywords: [Scikit-learn, TensorFlow, FastAPI, Pandas]
+  - id: stack
+    keywords: [AWS, Snowflake, Docker, Git]
+  - programming
