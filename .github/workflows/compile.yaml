@@ -27,7 +27,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: typst-community/setup-typst@6a2cfaf0b28d636b00148f965e315bae81079aaa # v5
+      - uses: typst-community/setup-typst@00ad6338f0b34724ea002136bfb701a6c18585b0 # v5
         with:
           typst-version: ${{ matrix.typst-version }}
 
